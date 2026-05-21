@@ -1,0 +1,2315 @@
+[
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddContract1",
+        "params": {
+            "document": {
+                "ContractRoot": {
+                    "ContractName": "Health & Insurance",
+                    "LengthOfContract": 5,
+                    "ContractValue": 100,
+                    "Liability": 3.28,
+                    "CostToCustomer": 80,
+                    "CostPerCoInsured": 20,
+                    "MaxDiscount": "Jana has a 50% discount",
+                    "NoOfCoInsuredCustomers": 3,
+                    "Valid": true,
+                    "Type": "Health"
+                }
+            },
+            "documentModelName": "Contract",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddContract2",
+        "params": {
+            "document": {
+                "ContractRoot": {
+                    "ContractName": "Health Insurance",
+                    "LengthOfContract": 2,
+                    "ContractValue": 12000000,
+                    "Liability": 100,
+                    "CostToCustomer": 10800000,
+                    "CostPerCoInsured": 3600000,
+                    "MaxDiscount": "Jana has a 50% discount",
+                    "NoOfCoInsuredCustomers": 2,
+                    "Valid": true,
+                    "Type": "Health"
+                }
+            },
+            "documentModelName": "Contract",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddContract3",
+        "params": {
+            "document": {
+                "ContractRoot": {
+                    "ContractName": "Contract *",
+                    "LengthOfContract": 10,
+                    "ContractValue": 5000,
+                    "Liability": 10,
+                    "CostToCustomer": 2500,
+                    "CostPerCoInsured": 2500,
+                    "NoOfCoInsuredCustomers": 5,
+                    "MaxDiscount": "Jana has a 50% discount",
+                    "Valid": false,
+                    "Type": "Health"
+                }
+            },
+            "documentModelName": "Contract",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddContract4",
+        "params": {
+            "document": {
+                "ContractRoot": {
+                    "ContractName": "Health&Insurance",
+                    "LengthOfContract": 20,
+                    "ContractValue": 10000000,
+                    "Liability": 100,
+                    "CostToCustomer": 9000000,
+                    "CostPerCoInsured": 2250000,
+                    "MaxDiscount": "Jana has a 50% discount",
+                    "NoOfCoInsuredCustomers": 3,
+                    "Valid": true,
+                    "Type": "Travel"
+                }
+            },
+            "documentModelName": "Contract",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddContract5",
+        "params": {
+            "document": {
+                "ContractRoot": {
+                    "ContractName": "Hi I am Al",
+                    "LengthOfContract": 2,
+                    "ContractValue": 10000,
+                    "Liability": 30,
+                    "CostToCustomer": 5000,
+                    "CostPerCoInsured": 1666.67,
+                    "MaxDiscount": "Jana has a 50% discount",
+                    "NoOfCoInsuredCustomers": 2,
+                    "Valid": true,
+                    "Type": "Health"
+                }
+            },
+            "documentModelName": "Contract",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddContract6",
+        "params": {
+            "document": {
+                "ContractRoot": {
+                    "ContractName": "Health",
+                    "LengthOfContract": 3,
+                    "Liability": 25,
+                    "ContractValue": 75000,
+                    "CostPerCoInsured": 18750,
+                    "CostToCustomer": 75000,
+                    "MaxDiscount": "Jana has a 50% discount",
+                    "NoOfCoInsuredCustomers": 3,
+                    "Valid": false,
+                    "Type": "Travel"
+                }
+            },
+            "documentModelName": "Contract",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddContract7",
+        "params": {
+            "document": {
+                "ContractRoot": {
+                    "ContractName": "Health Contract",
+                    "LengthOfContract": 5,
+                    "Liability": 100,
+                    "ContractValue": 2000000,
+                    "CostPerCoInsured": 300000,
+                    "CostToCustomer": 1800000,
+                    "MaxDiscount": "Nora has a 50% discount",
+                    "NoOfCoInsuredCustomers": 5,
+                    "Valid": true,
+                    "Type": "Travel"
+                }
+            },
+            "documentModelName": "Contract",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddContract8",
+        "params": {
+            "document": {
+                "ContractRoot": {
+                    "ContractName": "He@lth Insurance",
+                    "LengthOfContract": 5,
+                    "Liability": 50,
+                    "ContractValue": 1000000,
+                    "CostPerCoInsured": 333333.33,
+                    "CostToCustomer": 1000000,
+                    "MaxDiscount": "Uli has a 10% discount",
+                    "NoOfCoInsuredCustomers": 2,
+                    "Valid": false
+                }
+            },
+            "documentModelName": "Contract",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddContract9",
+        "params": {
+            "document": {
+                "ContractRoot": {
+                    "CostToCustomer": 45000,
+                    "ContractName": "Health&Insurance",
+                    "LengthOfContract": 1,
+                    "Liability": 10,
+                    "ContractValue": 50000,
+                    "CostPerCoInsured": 15000,
+                    "MaxDiscount": "No-one has a discount",
+                    "NoOfCoInsuredCustomers": 2,
+                    "Valid": true,
+                    "Type": "Household"
+                }
+            },
+            "documentModelName": "Contract",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddContract10",
+        "params": {
+            "document": {
+                "ContractRoot": {
+                    "CostToCustomer": 360000,
+                    "ContractName": "*",
+                    "LengthOfContract": 2,
+                    "Liability": 90,
+                    "ContractValue": 450000,
+                    "CostPerCoInsured": 120000,
+                    "MaxDiscount": "Nora has a 50% discount",
+                    "NoOfCoInsuredCustomers": 2,
+                    "Valid": true
+                }
+            },
+            "documentModelName": "Contract",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddBusinessPartner1",
+        "params": {
+            "document": {
+                "BusinessPartnerRoot": {
+                    "Name": "Malcolm",
+                    "Industry": "IT",
+                    "StartOfRelationship": "2022-07-05",
+                    "CustomerDiscount": "80%",
+                    "PersonOrEntity": "Natural Person",
+                    "PremiumPartner": true,
+                    "TimeOfContractSignature": "12:12:12",
+                    "Employment": {
+                        "signingDateTime": "2012-12-12T12:12:12",
+                        "employedSince": "2000-05"
+                    },
+                    "SubtypeGroup": {}
+                }
+            },
+            "documentModelName": "BusinessPartner",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddBusinessPartner2",
+        "params": {
+            "document": {
+                "BusinessPartnerRoot": {
+                    "Name": "Jana",
+                    "Industry": "IT",
+                    "StartOfRelationship": "2022-07-05",
+                    "CustomerDiscount": "50%",
+                    "PersonOrEntity": "Natural Person",
+                    "TimeOfContractSignature": "08:30:00",
+                    "Employment": {
+                        "signingDateTime": "2021-06-30T08:30:00",
+                        "employedSince": "2000-05",
+                        "income": "3000.50"
+                    },
+                    "SubtypeGroup": {}
+                }
+            },
+            "documentModelName": "BusinessPartner",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddBusinessPartner3",
+        "params": {
+            "document": {
+                "BusinessPartnerRoot": {
+                    "Name": "Konstantin",
+                    "Industry": "IT",
+                    "StartOfRelationship": "2022-07-01",
+                    "CustomerDiscount": "90%",
+                    "PersonOrEntity": "Natural Person",
+                    "PremiumPartner": true,
+                    "TimeOfContractSignature": "15:00:00",
+                    "Employment": {
+                        "signingDateTime": "2021-06-30T15:00:00",
+                        "income": 0.01
+                    },
+                    "SubtypeGroup": {
+                        "Company": "None"
+                    }
+                }
+            },
+            "documentModelName": "BusinessPartner",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddBusinessPartner4",
+        "params": {
+            "document": {
+                "BusinessPartnerRoot": {
+                    "Name": "Eva",
+                    "Industry": "IT",
+                    "StartOfRelationship": "2022-06-01",
+                    "CustomerDiscount": "90%",
+                    "PersonOrEntity": "Natural Person",
+                    "TimeOfContractSignature": "23:59:59",
+                    "Employment": {
+                        "signingDateTime": "2020-12-31T23:59:59",
+                        "income": 3333.33
+                    },
+                    "SubtypeGroup": {
+                        "Company": "None"
+                    }
+                }
+            },
+            "documentModelName": "BusinessPartner",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddBusinessPartner5",
+        "params": {
+            "document": {
+                "BusinessPartnerRoot": {
+                    "Name": "Nora",
+                    "Industry": "IT",
+                    "StartOfRelationship": "2018-07-19",
+                    "CustomerDiscount": "50%",
+                    "PersonOrEntity": "Natural Person",
+                    "PremiumPartner": true,
+                    "TimeOfContractSignature": "23:59:59",
+                    "Employment": {
+                        "signingDateTime": "2022-12-31T23:59:59",
+                        "income": 2000
+                    },
+                    "SubtypeGroup": {
+                        "Company": "*"
+                    }
+                }
+            },
+            "documentModelName": "BusinessPartner",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddBusinessPartner6",
+        "params": {
+            "document": {
+                "BusinessPartnerRoot": {
+                    "Name": "Gordon",
+                    "Industry": "Banking",
+                    "StartOfRelationship": "2019-07-26",
+                    "CustomerDiscount": "90%",
+                    "PersonOrEntity": "Natural Person",
+                    "TimeOfContractSignature": "00:00:00",
+                    "Employment": {
+                        "signingDateTime": "2023-01-01T00:00:00",
+                        "income": 400
+                    },
+                    "SubtypeGroup": {
+                        "Company": "None"
+                    }
+                }
+            },
+            "documentModelName": "BusinessPartner",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddBusinessPartner7",
+        "params": {
+            "document": {
+                "BusinessPartnerRoot": {
+                    "Name": "Jörg",
+                    "Industry": "Accountancy",
+                    "StartOfRelationship": "2017-09-26",
+                    "CustomerDiscount": "100%",
+                    "PersonOrEntity": "Natural Person",
+                    "TimeOfContractSignature": "00:00:00",
+                    "Employment": {
+                        "signingDateTime": "2020-07-01T00:00:00",
+                        "income": 555
+                    },
+                    "SubtypeGroup": {
+                        "Company": "None"
+                    }
+                }
+            },
+            "documentModelName": "BusinessPartner",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddBusinessPartner8",
+        "params": {
+            "document": {
+                "BusinessPartnerRoot": {
+                    "Name": "Lydia",
+                    "Industry": "Healthcare",
+                    "StartOfRelationship": "2018-07-10",
+                    "CustomerDiscount": "100%",
+                    "PersonOrEntity": "Natural Person",
+                    "TimeOfContractSignature": "00:00:10",
+                    "Employment": {
+                        "signingDateTime": "2020-01-01T00:00:10",
+                        "employedSince": "",
+                        "income": 3500
+                    },
+                    "SubtypeGroup": {
+                        "Company": "None"
+                    }
+                }
+            },
+            "documentModelName": "BusinessPartner",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddBusinessPartner9",
+        "params": {
+            "document": {
+                "BusinessPartnerRoot": {
+                    "Name": "Fränze",
+                    "Industry": "Risk",
+                    "StartOfRelationship": "2022-07-15",
+                    "CustomerDiscount": "90%",
+                    "PersonOrEntity": "Natural Person",
+                    "TimeOfContractSignature": "00:10:00",
+                    "Employment": {
+                        "signingDateTime": "2020-01-01T00:10:00",
+                        "income": 8000
+                    },
+                    "SubtypeGroup": {
+                        "Company": ""
+                    }
+                }
+            },
+            "documentModelName": "BusinessPartner",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddBusinessPartner10",
+        "params": {
+            "document": {
+                "BusinessPartnerRoot": {
+                    "Name": "Linda",
+                    "Industry": "Legal",
+                    "StartOfRelationship": "2022-07-15",
+                    "PersonOrEntity": "Natural Person",
+                    "CustomerDiscount": "100%",
+                    "TimeOfContractSignature": "10:00:00",
+                    "Employment": {
+                        "signingDateTime": "2020-01-01T10:00:00",
+                        "income": 2525.25
+                    },
+                    "SubtypeGroup": {
+                        "Company": ""
+                    }
+                }
+            },
+            "documentModelName": "BusinessPartner",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddBusinessPartner11",
+        "params": {
+            "document": {
+                "BusinessPartnerRoot": {
+                    "Name": "Microoogle",
+                    "Industry": "Legal",
+                    "StartOfRelationship": "2022-08-01",
+                    "CustomerDiscount": "100%",
+                    "PersonOrEntity": "Legal Entity",
+                    "Employment": {
+                        "income": 9999
+                    },
+                    "SubtypeGroup": {
+                        "Type": "LLC"
+                    }
+                }
+            },
+            "documentModelName": "BusinessPartnerLTD",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddBusinessPartner12",
+        "params": {
+            "document": {
+                "BusinessPartnerRoot": {
+                    "Name": "Alphameta",
+                    "PersonOrEntity": "Legal Entity",
+                    "Industry": "IT",
+                    "StartOfRelationship": "2017-08-03",
+                    "CustomerDiscount": "90%",
+                    "Employment": {
+                        "income": 555.25
+                    },
+                    "SubtypeGroup": {
+                        "Type": "GmbH"
+                    }
+                }
+            },
+            "documentModelName": "BusinessPartnerLTD",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddBusinessPartner13",
+        "params": {
+            "document": {
+                "BusinessPartnerRoot": {
+                    "Name": "CraigsRainforest",
+                    "PersonOrEntity": "Legal Entity",
+                    "Industry": "Commerce",
+                    "StartOfRelationship": "2019-08-06",
+                    "CustomerDiscount": "80%",
+                    "Employment": {
+                        "income": 3333
+                    },
+                    "SubtypeGroup": {
+                        "Type": "KG"
+                    }
+                }
+            },
+            "documentModelName": "BusinessPartnerLTD",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddAddress1",
+        "params": {
+            "document": {
+                "AddressRoot": {
+                    "Location": "mgm - Leipzig",
+                    "Street": "Neumarkt",
+                    "HouseNumber": 2,
+                    "City": "Leipzig",
+                    "PostCode": 4106,
+                    "Country": "Germany"
+                }
+            },
+            "documentModelName": "Address",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddAddress2",
+        "params": {
+            "document": {
+                "AddressRoot": {
+                    "Location": "mgm - Nürnberg",
+                    "Street": "Vordere Cramergasse",
+                    "PostCode": 90478,
+                    "City": "Nürnberg",
+                    "HouseNumber": 11,
+                    "Country": "Germany"
+                }
+            },
+            "documentModelName": "Address",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddAddress3",
+        "params": {
+            "document": {
+                "AddressRoot": {
+                    "Location": "mgm - München",
+                    "Street": "Königstraße",
+                    "HouseNumber": 15,
+                    "City": "München",
+                    "PostCode": 99999,
+                    "Country": "Germany"
+                }
+            },
+            "documentModelName": "Address",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddAddress4",
+        "params": {
+            "document": {
+                "AddressRoot": {
+                    "Location": "mgm - München",
+                    "Street": "Königstraße",
+                    "HouseNumber": 15,
+                    "City": "München",
+                    "PostCode": 99999,
+                    "Country": "Germany"
+                }
+            },
+            "documentModelName": "Address",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddAddress5",
+        "params": {
+            "document": {
+                "AddressRoot": {
+                    "Location": "mgm - Dresden",
+                    "Street": "Königsbrücker Straße",
+                    "HouseNumber": 34,
+                    "City": "Dresden",
+                    "PostCode": "01099",
+                    "Country": "Germany"
+                }
+            },
+            "documentModelName": "Address",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddAddress6",
+        "params": {
+            "document": {
+                "AddressRoot": {
+                    "Location": "mgm - Vietnam",
+                    "Street": "Bis Phạm Ngọc Thạch",
+                    "HouseNumber": 1,
+                    "City": "Hồ Chí Minh",
+                    "PostCode": "Quận 1",
+                    "Country": "Vietnam"
+                }
+            },
+            "documentModelName": "Address",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddAddress7",
+        "params": {
+            "document": {
+                "AddressRoot": {
+                    "Location": "mgm - Prague",
+                    "Street": "Letenské náměstí",
+                    "HouseNumber": "4/157",
+                    "PostCode": "170 00",
+                    "City": "Praha 7",
+                    "Country": "Czech Republic"
+                }
+            },
+            "documentModelName": "Address",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "method": "ADD_DOCUMENT",
+        "id": "AddAddress8",
+        "params": {
+            "document": {
+                "AddressRoot": {
+                    "Location": "mgm - Vietnam",
+                    "Street": "Pasteur",
+                    "HouseNumber": 7,
+                    "PostCode": "Hải Châu 1",
+                    "City": "Đà Nẵng",
+                    "Country": "Vietnam"
+                }
+            },
+            "documentModelName": "Address",
+            "locale": "en"
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractToBusinessPartner1",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractBusinessPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract1.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner1.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractToBusinessPartner2",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractBusinessPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract2.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner3.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractToBusinessPartner3",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractBusinessPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract3.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner5.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractToBusinessPartner4",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractBusinessPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract4.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner3.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractToBusinessPartner5",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractBusinessPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract5.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner5.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractToBusinessPartner6",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractBusinessPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract6.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner7.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractToBusinessPartner7",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractBusinessPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract7.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner9.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractToBusinessPartner8",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractBusinessPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract8.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner11.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractToBusinessPartner9",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractBusinessPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract9.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner12.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractToBusinessPartner10",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractBusinessPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract10.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner13.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer1",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract1.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner2.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Kristian"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer2",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract1.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner3.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Otto"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer3",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract1.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner4.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Alexander"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer4",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract2.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner2.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Otto"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer5",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract2.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner4.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Konstantin"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer6",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract4.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner4.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Kristian"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer7",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract4.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner3.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Konstantin"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer8",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract4.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner2.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Konstantin"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer9",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract5.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner6.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Nora"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer10",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract5.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner2.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Nora"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer11",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract6.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner8.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Alison"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer12",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract6.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner6.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Alison"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer13",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract6.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner2.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Alison"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer14",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract7.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner7.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Uli"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer15",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract7.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner8.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Uli"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer16",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract7.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner6.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Uli"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer17",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract7.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner5.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Uli"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer18",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract7.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner10.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Uli"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer19",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract8.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner10.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Microoogle"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer20",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract8.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner9.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Microoogle"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer21",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract9.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner10.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Alphameta"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer22",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract9.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner11.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "Alphameta"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer23",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract10.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner12.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "CraigsRainforest"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractWithCoinsurer24",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractCoInsuredPartner",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract10.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner5.metadata.docRef}"
+                    }
+                ]
+            },
+            "linkDocument": {
+                "CoInsuredRoot": {
+                    "Name": "CraigsRainforest"
+                }
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner1",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress1.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner1.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner2",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress2.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner3.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner3",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress3.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner1.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner4",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress4.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner5.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner5",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress1.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner5.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner6",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress3.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner3.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner7",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress3.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner7.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner8",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress5.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner7.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner9",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress6.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner4.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner10",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress7.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner4.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner11",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress8.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner6.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner12",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress6.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner1.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner13",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress6.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner9.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner14",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress3.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner9.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner15",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress5.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner10.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner16",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress1.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner11.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner17",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress3.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner11.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner18",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress7.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner12.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner19",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress5.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner12.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner20",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress6.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner13.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddAddressToPartner21",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerAddresses",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress8.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner13.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddPostalAddressToPartner1",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerPostalAddress",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress2.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner3.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddPostalAddressToPartner2",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerPostalAddress",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress1.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner5.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddPostalAddressToPartner3",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerPostalAddress",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress5.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner7.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddPostalAddressToPartner4",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerPostalAddress",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress7.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner4.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddPostalAddressToPartner5",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerPostalAddress",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress6.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner6.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddPostalAddressToPartner6",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerPostalAddress",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress1.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner1.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddPostalAddressToPartner7",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerPostalAddress",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress3.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner9.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddPostalAddressToPartner8",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerPostalAddress",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress5.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner10.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddPostalAddressToPartner9",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerPostalAddress",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress1.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner11.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddPostalAddressToPartner10",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerPostalAddress",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress7.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner12.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddPostalAddressToPartner11",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "PartnerPostalAddress",
+                "entities": [
+                    {
+                        "role": "Address",
+                        "docRef": "#{#AddAddress6.metadata.docRef}"
+                    },
+                    {
+                        "role": "Partner",
+                        "docRef": "#{#AddBusinessPartner13.metadata.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractAndAmendment1",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractAmendment",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract8.docRef}"
+                    },
+                    {
+                        "role": "Amendment",
+                        "docRef": "#{#AddContract3.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractAndAmendment2",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractAmendment",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract1.docRef}"
+                    },
+                    {
+                        "role": "Amendment",
+                        "docRef": "#{#AddContract4.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractAndAmendment3",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractAmendment",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract1.docRef}"
+                    },
+                    {
+                        "role": "Amendment",
+                        "docRef": "#{#AddContract6.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractAndAmendment4",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractAmendment",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract2.docRef}"
+                    },
+                    {
+                        "role": "Amendment",
+                        "docRef": "#{#AddContract9.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractAndAmendment5",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractAmendment",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract1.docRef}"
+                    },
+                    {
+                        "role": "Amendment",
+                        "docRef": "#{#AddContract8.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractAndAmendment6",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractAmendment",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract8.docRef}"
+                    },
+                    {
+                        "role": "Amendment",
+                        "docRef": "#{#AddContract10.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractAndAmendment7",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractAmendment",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract4.docRef}"
+                    },
+                    {
+                        "role": "Amendment",
+                        "docRef": "#{#AddContract3.docRef}"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": "AddContractAndAmendment8",
+        "method": "ADD_LINK",
+        "params": {
+            "linkDescriptor": {
+                "relationshipModel": "ContractAmendment",
+                "entities": [
+                    {
+                        "role": "Contract",
+                        "docRef": "#{#AddContract3.docRef}"
+                    },
+                    {
+                        "role": "Amendment",
+                        "docRef": "#{#AddContract7.docRef}"
+                    }
+                ]
+            }
+        }
+    }
+]

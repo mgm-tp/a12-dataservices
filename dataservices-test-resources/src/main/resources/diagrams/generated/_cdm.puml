@@ -1,0 +1,562 @@
+@startuml
+
+!procedure group(x)
+class x << (G,#DDAAFF) >>
+!endprocedure
+
+!procedure cdmGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure field(x)
+class x << (F,#DDFFAA) >> #White
+!endprocedure
+
+!procedure embeddedField(name, type, fieldType)
+name <<type>>: fieldType
+!endprocedure
+
+!procedure rule(x)
+class x << (R,#DDBBAA) >> #FFDDEE
+!endprocedure
+
+!procedure embeddedRule(name, type)
+<back:FFDDEE>name() <<type>></back>
+!endprocedure
+
+!procedure embeddedRule(name, type, $errorCondition)
+.. <back:FFDDEE> name <<type>> </back> ..
+<back:FFDDEE>errorCondition:</back> $errorCondition
+!endprocedure
+
+!procedure computation(x)
+class x << (C,#DDBBAA) >> #FFEEDD
+!endprocedure
+
+!procedure computationAlternative($operation, $precondition)
+.. alternative ..
+operation: $operation
+precondition: $precondition
+!endprocedure
+
+!procedure embeddedComputation(name, type, $operation, $precondition)
+.. <back:FFEEDD> name <<type>> </back> ..
+<back:FFEEDD>operation:</back> $operation
+<back:FFEEDD>precondition:</back> $precondition
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure embeddedComputation(name, type )
+<back:FFEEDD>name() <<type>></back>
+!endprocedure
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure linkGroup(x)
+group(x) #PeachPuff
+!endprocedure
+
+!procedure relLink($name,$rmId,$link1,$link2,$ld="")
+circle $name as $rmId #PeachPuff
+$rmId $link1
+$rmId $link2
+!if $ld!=""
+$rmId -[#IndianRed]right $ld: <<linkDocument>>
+linkDocument($ld)
+!endif
+!endprocedure
+
+left to right direction
+
+title Document Models
+
+package "AnonymizedBusinessPartnerCDM<BusinessPartner>" as AnonymizedBusinessPartnerCDM <<Frame>> {
+	() "documentRoot" as AnonymizedBusinessPartnerCDMDocumentRoot
+	group('"BusinessPartnerRoot" as group_36405'){
+		embeddedField(Industry, Field, StringType)
+		embeddedField(StartOfRelationship, Field, DateType)
+		embeddedField(CustomerDiscount, Field, EnumerationType)
+	}
+
+	AnonymizedBusinessPartnerCDMDocumentRoot ||--o| "0..1" group_36405
+
+}
+package "ContractCDM<Contract>" as ContractCDM <<Frame>> {
+	() "documentRoot" as ContractCDMDocumentRoot
+	group('"ContractRoot" as include_71fc7'){
+		embeddedField(ContractName, Field, StringType)
+		embeddedField(ContractDescription, Field, StringType)
+		embeddedField(LengthOfContract, Field, NumberType)
+		embeddedField(ContractValue, Field, NumberType)
+		embeddedField(Liability, Field, NumberType)
+		embeddedField(CostToCustomer, Field, NumberType)
+		embeddedField(NoOfCoInsuredCustomers, Field, NumberType)
+		embeddedField(MaxDiscount, Field, StringType)
+		embeddedField(CostPerCoInsured, Field, NumberType)
+		embeddedField(Valid, Field, BooleanType)
+		embeddedField(Type, Field, EnumerationType)
+	}
+	group('"ContractDates" as include_71fc7_G2'){
+		embeddedField(ContractStartDate, Field, DateTimeType)
+		embeddedField(ContractEndDate, Field, DateType)
+		embeddedField(ContractEndTime, Field, TimeType)
+		embeddedField(ContractReviewDate, Field, DateFragmentType)
+		embeddedField(LastPremiumPaidDate, Field, DateType)
+		embeddedField(CoveragePeriod, Field, DateRangeType)
+	}
+
+	include_71fc7 ||--o| "0..1" include_71fc7_G2
+	group('"ChangeLog" as include_71fc7_group_7a5d0'){
+		embeddedField(ID, Field, StringType)
+		embeddedField(Number, Field, NumberType)
+		embeddedField(ChangeTimestamp, Field, DateType)
+		embeddedField(Description, Field, StringType)
+		embeddedField(User, Field, StringType)
+		embeddedField(Status, Field, TypeDefType)
+		embeddedField(Priority, Field, EnumerationType)
+	}
+	group('"Changes" as include_71fc7_group_61e6a'){
+		embeddedField(ID, Field, StringType)
+		embeddedField(Title, Field, StringType)
+		embeddedField(Details, Field, StringType)
+		embeddedField(Priority, Field, EnumerationType)
+		embeddedField(Status, Field, TypeDefType)
+		embeddedField(LastModified, Field, DateType)
+	}
+	group('"SubChanges" as include_71fc7_group_c4a35'){
+		embeddedField(ID, Field, StringType)
+		embeddedField(TItle, Field, StringType)
+		embeddedField(Details, Field, StringType)
+		embeddedField(Priority, Field, EnumerationType)
+		embeddedField(Status, Field, TypeDefType)
+		embeddedField(CreatedAt, Field, DateFragmentType)
+	}
+
+	include_71fc7_group_61e6a ||--o{ "0..99" include_71fc7_group_c4a35
+
+	include_71fc7_group_7a5d0 ||--o{ "0..99" include_71fc7_group_61e6a
+
+	include_71fc7 ||--o{ "0..10000" include_71fc7_group_7a5d0
+
+	ContractCDMDocumentRoot ||--o| "0..1" include_71fc7
+
+	cdmGroup('"ContractBusinessPartner" as group_f3eb0'){
+		embeddedField(t_docRef, Field, StringType)
+	}
+	group('"BusinessPartnerRoot" as include_c08c7'){
+		embeddedField(Name, Field, StringType)
+		embeddedField(Industry, Field, EnumerationType)
+		embeddedField(StartOfRelationship, Field, DateType)
+		embeddedField(CustomerDiscount, Field, EnumerationType)
+		embeddedField(PersonOrEntity, Field, StringType)
+	}
+	group('"Attachment" as include_c08c7_G77'){
+		embeddedField(original_filename, Field, StringType)
+		embeddedField(internal_filename, Field, StringType)
+		embeddedField(content, Field, StringType)
+		embeddedField(attachment_id, Field, StringType)
+		embeddedField(size, Field, NumberType)
+		embeddedField(mime_type, Field, StringType)
+		embeddedField(category, Field, StringType)
+		embeddedField(description, Field, StringType)
+		embeddedRule(AttachmentInternalFilenameRequired, Rule)
+		embeddedRule(AttachmentMimeTypeRequired, Rule)
+		embeddedRule(AttachmentIdOrContentFilled, Rule)
+		embeddedRule(SizeOfContentFilled, Rule)
+	}
+
+	include_c08c7 ||--o{ "0..99" include_c08c7_G77
+	group('"Employment" as include_c08c7_G2'){
+		embeddedField(income, Field, NumberType)
+		embeddedField(tax, Field, NumberType)
+		embeddedComputation(TaxComputation, Computation)
+	}
+
+	include_c08c7 ||--o| "0..1" include_c08c7_G2
+
+	group_f3eb0 ||--o| "0..1" include_c08c7
+	cdmGroup('"PartnerAddresses" as group_513ee'){
+		embeddedField(t_docRef, Field, StringType)
+	}
+	group('"AddressRoot" as include_4be24'){
+		embeddedField(AddressType, Field, EnumerationType)
+		embeddedField(Location, Field, StringType)
+		embeddedField(Street, Field, StringType)
+		embeddedField(HouseNumber, Field, StringType)
+		embeddedField(City, Field, StringType)
+		embeddedField(PostCode, Field, StringType)
+		embeddedField(Country, Field, StringType)
+		embeddedField(PostalAddress, Field, ConfirmType)
+		embeddedRule(MustContainCountry, Rule)
+	}
+
+	group_513ee ||--o| "0..1" include_4be24
+
+	group_f3eb0 ||--o{ "0..100" group_513ee
+	cdmGroup('"PartnerPostalAddress" as group_368d1'){
+		embeddedField(HasPostalAddress, Field, BooleanType)
+		embeddedField(HasBusinessPartner, Field, BooleanType)
+		embeddedComputation(HasPostalAddressComp, Computation)
+		embeddedComputation(HasbusinessPartnerComp, Computation)
+	}
+	group('"AddressRoot" as include_19e70'){
+		embeddedField(AddressType, Field, EnumerationType)
+		embeddedField(Location, Field, StringType)
+		embeddedField(Street, Field, StringType)
+		embeddedField(HouseNumber, Field, StringType)
+		embeddedField(City, Field, StringType)
+		embeddedField(PostCode, Field, StringType)
+		embeddedField(Country, Field, StringType)
+		embeddedField(PostalAddress, Field, ConfirmType)
+		embeddedRule(MustContainCountry, Rule)
+	}
+
+	group_368d1 ||--o| "0..1" include_19e70
+
+	group_f3eb0 ||--o| "0..1" group_368d1
+
+	ContractCDMDocumentRoot ||--o| "0..1" group_f3eb0
+
+	cdmGroup('"ContractCoInsuredPartner" as group_4bc78'){
+	}
+	group('"BusinessPartnerRoot" as include_46ee3'){
+		embeddedField(Name, Field, StringType)
+		embeddedField(Industry, Field, EnumerationType)
+		embeddedField(StartOfRelationship, Field, DateType)
+		embeddedField(CustomerDiscount, Field, EnumerationType)
+		embeddedField(PersonOrEntity, Field, StringType)
+	}
+	group('"Attachment" as include_46ee3_G77'){
+		embeddedField(original_filename, Field, StringType)
+		embeddedField(internal_filename, Field, StringType)
+		embeddedField(content, Field, StringType)
+		embeddedField(attachment_id, Field, StringType)
+		embeddedField(size, Field, NumberType)
+		embeddedField(mime_type, Field, StringType)
+		embeddedField(category, Field, StringType)
+		embeddedField(description, Field, StringType)
+		embeddedRule(AttachmentInternalFilenameRequired, Rule)
+		embeddedRule(AttachmentMimeTypeRequired, Rule)
+		embeddedRule(AttachmentIdOrContentFilled, Rule)
+		embeddedRule(SizeOfContentFilled, Rule)
+	}
+
+	include_46ee3 ||--o{ "0..99" include_46ee3_G77
+	group('"Employment" as include_46ee3_G2'){
+		embeddedField(income, Field, NumberType)
+		embeddedField(tax, Field, NumberType)
+		embeddedComputation(TaxComputation, Computation)
+	}
+
+	include_46ee3 ||--o| "0..1" include_46ee3_G2
+
+	group_4bc78 ||--o| "0..1" include_46ee3
+	group('"relationship" as group_4da5e'){
+	}
+	group('"CoInsuredRoot" as include_50c1e'){
+		embeddedField(Name, Field, StringType)
+		embeddedField(ID, Field, StringType)
+		embeddedField(Role, Field, EnumerationType)
+		embeddedField(Percentage, Field, NumberType)
+		embeddedField(SigningDate, Field, DateType)
+		embeddedComputation(AddID, Computation)
+	}
+
+	group_4da5e ||--o| "0..1" include_50c1e
+
+	group_4bc78 ||--o| "0..1" group_4da5e
+
+	ContractCDMDocumentRoot ||--o{ "0..100" group_4bc78
+
+	group('"CalculatedFields" as group_f66bc'){
+		embeddedField(CostToCustomerCDM, Field, NumberType)
+	}
+
+	ContractCDMDocumentRoot ||--o| "0..1" group_f66bc
+
+linkGroup(group_4da5e)
+}
+package "ContractCompactCDM<Contract>" as ContractCompactCDM <<Frame>> {
+	() "documentRoot" as ContractCompactCDMDocumentRoot
+	group('"ContractRoot" as include_71fc7'){
+		embeddedField(ContractName, Field, StringType)
+		embeddedField(ContractValue, Field, NumberType)
+		embeddedField(Valid, Field, BooleanType)
+		embeddedField(Type, Field, StringType)
+	}
+	group('"ContractDates" as G2'){
+		embeddedField(ContractStartDate, Field, DateTimeType)
+		embeddedField(ContractEndDate, Field, DateType)
+		embeddedField(ContractEndTime, Field, TimeType)
+		embeddedField(ContractReviewDate, Field, DateFragmentType)
+		embeddedField(LastPremiumPaidDate, Field, DateType)
+		embeddedField(CoveragePeriod, Field, DateRangeType)
+	}
+
+	include_71fc7 ||--o| "0..1" G2
+	group('"ChangeLog" as group_7a5d0'){
+		embeddedField(Number, Field, NumberType)
+		embeddedField(ChangeTimestamp, Field, DateType)
+		embeddedField(Description, Field, StringType)
+		embeddedField(User, Field, StringType)
+		embeddedField(Status, Field, StringType)
+		embeddedField(Priority, Field, StringType)
+	}
+	group('"Changes" as group_61e6a'){
+		embeddedField(Title, Field, StringType)
+		embeddedField(Details, Field, StringType)
+		embeddedField(Priority, Field, StringType)
+		embeddedField(Status, Field, StringType)
+	}
+
+	group_7a5d0 ||--o{ "0..99" group_61e6a
+
+	include_71fc7 ||--o{ "0..10000" group_7a5d0
+
+	ContractCompactCDMDocumentRoot ||--o| "0..1" include_71fc7
+
+	cdmGroup('"ContractBusinessPartner" as group_f3eb0'){
+	}
+	group('"BusinessPartnerRoot" as group_36785'){
+		embeddedField(Name, Field, StringType)
+		embeddedField(Industry, Field, StringType)
+	}
+
+	group_f3eb0 ||--o| "0..1" group_36785
+	cdmGroup('"PartnerAddresses" as group_513ee'){
+	}
+	group('"AddressRoot" as include_4be24'){
+		embeddedField(Country, Field, StringType)
+		embeddedField(AddressType, Field, StringType)
+	}
+
+	group_513ee ||--o| "0..1" include_4be24
+
+	group_f3eb0 ||--o{ "0..100" group_513ee
+	cdmGroup('"PartnerPostalAddress" as group_368d1'){
+	}
+	group('"AddressRoot" as include_19e70'){
+		embeddedField(Country, Field, StringType)
+		embeddedField(AddressType, Field, StringType)
+	}
+
+	group_368d1 ||--o| "0..1" include_19e70
+
+	group_f3eb0 ||--o| "0..1" group_368d1
+
+	ContractCompactCDMDocumentRoot ||--o| "0..1" group_f3eb0
+
+	cdmGroup('"ContractCoInsuredPartner" as group_4bc78'){
+	}
+	group('"BusinessPartnerRoot" as group_36405'){
+		embeddedField(Name, Field, StringType)
+		embeddedField(Industry, Field, StringType)
+	}
+
+	group_4bc78 ||--o| "0..1" group_36405
+	group('"relationship" as group_4da5e'){
+	}
+	group('"CoInsuredRoot" as include_50c1e'){
+		embeddedField(Name, Field, StringType)
+	}
+
+	group_4da5e ||--o| "0..1" include_50c1e
+
+	group_4bc78 ||--o| "0..1" group_4da5e
+
+	ContractCompactCDMDocumentRoot ||--o{ "0..100" group_4bc78
+
+linkGroup(group_4da5e)
+}
+package "RecursiveBusinessPartnerCDM<BusinessPartnerSuper>" as RecursiveBusinessPartnerCDM <<Frame>> {
+	() "documentRoot" as RecursiveBusinessPartnerCDMDocumentRoot
+	group('"BusinessPartnerRoot" as include_1f446'){
+		embeddedField(Name, Field, StringType)
+		embeddedField(Industry, Field, EnumerationType)
+		embeddedField(StartOfRelationship, Field, DateType)
+		embeddedField(CustomerDiscount, Field, EnumerationType)
+		embeddedField(PersonOrEntity, Field, StringType)
+	}
+	group('"Attachment" as include_1f446_G77'){
+		embeddedField(original_filename, Field, StringType)
+		embeddedField(internal_filename, Field, StringType)
+		embeddedField(content, Field, StringType)
+		embeddedField(attachment_id, Field, StringType)
+		embeddedField(size, Field, NumberType)
+		embeddedField(mime_type, Field, StringType)
+		embeddedField(category, Field, StringType)
+		embeddedField(description, Field, StringType)
+		embeddedRule(AttachmentInternalFilenameRequired, Rule)
+		embeddedRule(AttachmentMimeTypeRequired, Rule)
+		embeddedRule(AttachmentIdOrContentFilled, Rule)
+		embeddedRule(SizeOfContentFilled, Rule)
+	}
+
+	include_1f446 ||--o{ "0..99" include_1f446_G77
+	group('"Employment" as include_1f446_G2'){
+		embeddedField(income, Field, NumberType)
+		embeddedField(tax, Field, NumberType)
+		embeddedComputation(TaxComputation, Computation)
+	}
+
+	include_1f446 ||--o| "0..1" include_1f446_G2
+
+	RecursiveBusinessPartnerCDMDocumentRoot ||--o| "0..1" include_1f446
+
+	cdmGroup('"ContractBusinessPartner" as include_4af42'){
+	}
+	group('"ContractRoot" as include_c08c7'){
+		embeddedField(ContractName, Field, StringType)
+		embeddedField(ContractDescription, Field, StringType)
+		embeddedField(LengthOfContract, Field, NumberType)
+		embeddedField(ContractValue, Field, NumberType)
+		embeddedField(Liability, Field, NumberType)
+		embeddedField(CostToCustomer, Field, NumberType)
+		embeddedField(NoOfCoInsuredCustomers, Field, NumberType)
+		embeddedField(MaxDiscount, Field, StringType)
+		embeddedField(CostPerCoInsured, Field, NumberType)
+		embeddedField(Valid, Field, BooleanType)
+		embeddedField(Type, Field, EnumerationType)
+	}
+	group('"ContractDates" as include_c08c7_G2'){
+		embeddedField(ContractStartDate, Field, DateTimeType)
+		embeddedField(ContractEndDate, Field, DateType)
+		embeddedField(ContractEndTime, Field, TimeType)
+		embeddedField(ContractReviewDate, Field, DateFragmentType)
+		embeddedField(LastPremiumPaidDate, Field, DateType)
+		embeddedField(CoveragePeriod, Field, DateRangeType)
+	}
+
+	include_c08c7 ||--o| "0..1" include_c08c7_G2
+	group('"ChangeLog" as include_c08c7_group_7a5d0'){
+		embeddedField(ID, Field, StringType)
+		embeddedField(Number, Field, NumberType)
+		embeddedField(ChangeTimestamp, Field, DateType)
+		embeddedField(Description, Field, StringType)
+		embeddedField(User, Field, StringType)
+		embeddedField(Status, Field, TypeDefType)
+		embeddedField(Priority, Field, EnumerationType)
+	}
+	group('"Changes" as include_c08c7_group_61e6a'){
+		embeddedField(ID, Field, StringType)
+		embeddedField(Title, Field, StringType)
+		embeddedField(Details, Field, StringType)
+		embeddedField(Priority, Field, EnumerationType)
+		embeddedField(Status, Field, TypeDefType)
+		embeddedField(LastModified, Field, DateType)
+	}
+	group('"SubChanges" as include_c08c7_group_c4a35'){
+		embeddedField(ID, Field, StringType)
+		embeddedField(TItle, Field, StringType)
+		embeddedField(Details, Field, StringType)
+		embeddedField(Priority, Field, EnumerationType)
+		embeddedField(Status, Field, TypeDefType)
+		embeddedField(CreatedAt, Field, DateFragmentType)
+	}
+
+	include_c08c7_group_61e6a ||--o{ "0..99" include_c08c7_group_c4a35
+
+	include_c08c7_group_7a5d0 ||--o{ "0..99" include_c08c7_group_61e6a
+
+	include_c08c7 ||--o{ "0..10000" include_c08c7_group_7a5d0
+
+	include_4af42 ||--o| "0..1" include_c08c7
+	cdmGroup('"ContractAmendment" as group_4bc79'){
+		embeddedField(ContractName, Field, StringType)
+		embeddedField(ContractDescription, Field, StringType)
+		embeddedField(LengthOfContract, Field, NumberType)
+		embeddedField(ContractValue, Field, NumberType)
+		embeddedField(Liability, Field, NumberType)
+		embeddedField(CostToCustomer, Field, NumberType)
+		embeddedField(NoOfCoInsuredCustomers, Field, NumberType)
+		embeddedField(MaxDiscount, Field, StringType)
+		embeddedField(CostPerCoInsured, Field, NumberType)
+		embeddedField(Valid, Field, BooleanType)
+		embeddedField(Type, Field, EnumerationType)
+	}
+	group('"ContractDates" as group_4bc79_G2'){
+		embeddedField(ContractStartDate, Field, DateTimeType)
+		embeddedField(ContractEndDate, Field, DateType)
+		embeddedField(ContractEndTime, Field, TimeType)
+		embeddedField(ContractReviewDate, Field, DateFragmentType)
+		embeddedField(LastPremiumPaidDate, Field, DateType)
+		embeddedField(CoveragePeriod, Field, DateRangeType)
+	}
+
+	group_4bc79 ||--o| "0..1" group_4bc79_G2
+	group('"ChangeLog" as group_4bc79_group_7a5d0'){
+		embeddedField(ID, Field, StringType)
+		embeddedField(Number, Field, NumberType)
+		embeddedField(ChangeTimestamp, Field, DateType)
+		embeddedField(Description, Field, StringType)
+		embeddedField(User, Field, StringType)
+		embeddedField(Status, Field, TypeDefType)
+		embeddedField(Priority, Field, EnumerationType)
+	}
+	group('"Changes" as group_4bc79_group_61e6a'){
+		embeddedField(ID, Field, StringType)
+		embeddedField(Title, Field, StringType)
+		embeddedField(Details, Field, StringType)
+		embeddedField(Priority, Field, EnumerationType)
+		embeddedField(Status, Field, TypeDefType)
+		embeddedField(LastModified, Field, DateType)
+	}
+	group('"SubChanges" as group_4bc79_group_c4a35'){
+		embeddedField(ID, Field, StringType)
+		embeddedField(TItle, Field, StringType)
+		embeddedField(Details, Field, StringType)
+		embeddedField(Priority, Field, EnumerationType)
+		embeddedField(Status, Field, TypeDefType)
+		embeddedField(CreatedAt, Field, DateFragmentType)
+	}
+
+	group_4bc79_group_61e6a ||--o{ "0..99" group_4bc79_group_c4a35
+
+	group_4bc79_group_7a5d0 ||--o{ "0..99" group_4bc79_group_61e6a
+
+	group_4bc79 ||--o{ "0..10000" group_4bc79_group_7a5d0
+
+	include_4af42 ||--o{ "0..100" group_4bc79
+
+	RecursiveBusinessPartnerCDMDocumentRoot ||--o{ "0..100" include_4af42
+
+}
+
+linkDocument('"CoInsuredAdditionalFields" as CoInsuredAdditionalFields')
+group_4da5e .> CoInsuredAdditionalFields: <<target>>
+
+group_f3eb0 .> BusinessPartnerSuper: <<target>>
+document('"BusinessPartnerSuper" as BusinessPartnerSuper')
+
+group_513ee .> Address: <<target>>
+document('"Address" as Address')
+
+group_368d1 .> Address: <<target>>
+document('"Address" as Address')
+
+group_4bc78 .> BusinessPartnerSuper: <<target>>
+document('"BusinessPartnerSuper" as BusinessPartnerSuper')
+
+include_4af42 .> Contract: <<target>>
+document('"Contract" as Contract')
+
+group_4bc79 .> Contract: <<target>>
+document('"Contract" as Contract')
+
+AnonymizedBusinessPartnerCDMDocumentRoot .> BusinessPartner: <<target>>
+document('"BusinessPartner" as BusinessPartner')
+
+ContractCDMDocumentRoot .> Contract: <<target>>
+document('"Contract" as Contract')
+
+ContractCompactCDMDocumentRoot .> Contract: <<target>>
+document('"Contract" as Contract')
+
+RecursiveBusinessPartnerCDMDocumentRoot .> BusinessPartnerSuper: <<target>>
+document('"BusinessPartnerSuper" as BusinessPartnerSuper')
+@enduml

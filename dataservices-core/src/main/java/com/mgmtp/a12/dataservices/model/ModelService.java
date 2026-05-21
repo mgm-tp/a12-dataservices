@@ -1,0 +1,130 @@
+/*
+ * SPDX-License-Identifier: EUPL-1.2 OR LicenseRef-commercial
+ *
+ * Copyright (c) 2012-2026 mgm technology partners GmbH
+ *
+ * Dual License
+ * ------------
+ * This source file is part of the mgm A12 Platform and available under
+ * a choice of two different licenses:
+ *
+ * 1. Open-Source License – EUPL v1.2
+ *    You may redistribute and/or modify this file under the terms of the
+ *    European Union Public License, version 1.2 - see https://eupl.eu/.
+ *
+ * 2. Commercial License
+ *    Alternatively, you may obtain a commercial license from
+ *    mgm technology partners GmbH, that permits use of this software
+ *    under different terms (including support and maintenance services).
+ *
+ *    Please contact a12-license@mgm-tp.com for more information.
+ *
+ * You must select and comply with exactly one of the above license options.
+ *
+ * Warranty Disclaimer (applies to either option)
+ * ----------------------------------------------
+ * THIS SOFTWARE IS PROVIDED “AS IS” AND WITHOUT WARRANTY OF ANY KIND,
+ * WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
+ * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
+ */
+package com.mgmtp.a12.dataservices.model;
+
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.transaction.annotation.Transactional;
+
+import com.mgmtp.a12.dataservices.common.exception.UnexpectedException;
+import com.mgmtp.a12.dataservices.model.persistence.IModelRepository;
+import com.mgmtp.a12.model.header.Header;
+
+import lombok.NonNull;
+
+/**
+ * Main interface to perform CRUD operations on models.
+ * Implementation is provided by DataServices.
+ */
+public interface ModelService {
+
+	/**
+	 * Creates a new model with passed content.
+	 *
+	 * @param modelContent The model content
+	 * @return The created model as a {@link GenericModel}
+	 */
+	@Transactional
+	GenericModel create(@NonNull String modelContent);
+
+	/**
+	 * Updates an existing model with the passed content.
+	 *
+	 * @param modelContent The new model content
+	 * @return The updated model as a {@link GenericModel}
+	 */
+	@Transactional
+	GenericModel update(@NonNull String modelContent);
+
+	/**
+	 * Deletes the model with passed modelId.
+	 *
+	 * @param modelId The id of the model that should be deleted.
+	 * @return true if the model could be deleted or if it didn't exist
+	 */
+	@Transactional
+	boolean delete(@NonNull String modelId);
+
+	/**
+	 * Loads the model with passed modelId.
+	 *
+	 * @param modelId The id of the model that should be loaded.
+	 * @return The model as a {@link GenericModel}
+	 */
+	@Transactional(readOnly = true)
+	GenericModel load(@NonNull String modelId);
+
+	/**
+	 * Loads models with model ids as inputs.
+	 * @param modelIds the model ids.
+	 * @return A collection of models.
+	 */
+	Collection<GenericModel> load(@NonNull Collection<String> modelIds);
+
+	/**
+	 * Returns all model headers for the passed model type.
+	 *
+	 * @param type The model type
+	 * @return The list of found models
+	 */
+	@Transactional(readOnly = true)
+	List<Header> findAllHeadersByType(String type);
+
+	/**
+	 * Returns all model headers.
+	 *
+	 * @return The list of found models
+	 */
+	@Transactional(readOnly = true)
+	default Collection<Header> findAllHeaders() {
+		throw new UnsupportedOperationException("To use this functionality you must implement this.");
+	}
+
+	/**
+	 * Checks if the model specified by the passed header exists in persistent storage.
+	 *
+	 * @param header The model header
+	 * @return true if the model exists
+	 */
+	@Transactional(readOnly = true)
+	boolean exists(@NonNull Header header);
+
+	/**
+	 * Returns an instance of {@link IModelRepository} that supports the model depending on the model's header.
+	 *
+	 * @param header The model header
+	 * @return A suitable instance of {@link IModelRepository}. If none is found a {@link UnexpectedException} is thrown.
+	 */
+	IModelRepository getSupportingRepository(@NonNull Header header);
+
+}

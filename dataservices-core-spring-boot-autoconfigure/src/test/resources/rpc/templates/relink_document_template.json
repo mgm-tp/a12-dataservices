@@ -1,0 +1,24 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "relinkDocument",
+    "method": "RELINK_DOCUMENT",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "%s",
+        "entities": [
+          {
+            "role": "%s",
+            "docRef": "%s"
+          },
+          {
+            "role": "%s",
+            "docRef": "%s"
+          }
+        ],
+        "predecessorLinkRef": "%s"
+      },
+      "linkRef": "%s"
+    }
+  }
+]

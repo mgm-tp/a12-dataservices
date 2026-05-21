@@ -1,0 +1,281 @@
+{
+  "header": {
+    "id": "CoInsuredAdditionalFields",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Co-Insured Additional Fields"
+      },
+      {
+        "locale": "de",
+        "text": "Mitversicherte Zusatzfelder"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "CoInsuredAdditionalFields"
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "group_3cab4",
+          "name": "CoInsuredRoot",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_aa07e",
+                "name": "Name",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Name of Policy Holder"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Name of Policy Holder"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Name des Versicherungsnehmers"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_d5f5f",
+                "name": "ID",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_d6580",
+                "name": "Role",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "EXP",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Expert"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Third Party Expert"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Experte"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "CON",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Consultant"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Chief Consultant Officer"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Berater"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "LAW",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Barrister"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Attorney"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Anwalt"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "CUS",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Customer"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Client"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Kunde"
+                            }
+                          ]
+                        }
+                      ],
+                      "categories": []
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Role of co-insured partner"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Role of co-insured partner"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Rolle des mitversicherten Partners"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_142e3",
+                "name": "Percentage",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "minValue": 0,
+                      "maxValue": 100,
+                      "trait": "percent"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Percentage"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Percentage"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Prozentsatz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_2e8e0",
+                "name": "SigningDate",
+                "annotations": [
+                  {
+                    "name": "indexed",
+                    "value": "true"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Signing Date"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Signing Date"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Datum der Unterzeichnung"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Computation",
+                "id": "computation_65146",
+                "name": "AddID",
+                "Computation": {
+                  "computedFieldRelPath": "../ID",
+                  "computationAlternatives": [
+                    {
+                      "operation": "\"0000-0000-0000-0000\""
+                    }
+                  ],
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "error text for computation of AddID"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "error text for computation of AddID"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "error text for computation of AddID"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

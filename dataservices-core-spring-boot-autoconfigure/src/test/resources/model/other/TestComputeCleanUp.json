@@ -1,0 +1,97 @@
+{
+  "header": {
+    "id": "TestComputeCleanUp",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "TestComputeCleanUp",
+      "immutable": false,
+      "joinedModelsInfo": "TestComputeCleanUp-document-meta-data+Add"
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "group_7d153",
+          "name": "TestComputeCleanUp",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_b9f44",
+                "name": "Field1",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_89801",
+                "name": "Field2",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_b5868",
+                "name": "CompField",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  }
+                }
+              },
+              {
+                "type": "Computation",
+                "id": "computation_ae65c",
+                "name": "CompRule",
+                "Computation": {
+                  "computedFieldRelPath": "../CompField",
+                  "computationAlternatives": [
+                    {
+                      "precondition": "[Field1] == \"A\" and [Field2] == \"B\"",
+                      "operation": "\"AB\""
+                    }
+                  ],
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "error text for computation of CompRule"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

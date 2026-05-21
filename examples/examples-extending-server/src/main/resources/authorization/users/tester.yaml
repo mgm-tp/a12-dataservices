@@ -1,0 +1,7 @@
+username: "tester"
+password: "tester"
+authorities:
+  - "ModelRead"
+email: tester@localhost
+firstname: Tester
+lastname: Tester

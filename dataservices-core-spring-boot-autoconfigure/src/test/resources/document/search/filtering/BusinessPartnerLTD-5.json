@@ -1,0 +1,12 @@
+{
+  "BusinessPartnerRoot": {
+    "Name": "Geschäftspartner",
+    "Industry": "Commerce",
+    "StartOfRelationship": "2005-05-05",
+    "CustomerDiscount": "80%",
+    "PersonOrEntity": "Legal entity",
+    "Employment": {
+      "income": "100"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+	"jsonrpc": "2.0",
+	"id": "AddLink",
+	"method": "ADD_LINK",
+	"params": {
+		"linkDescriptor": {
+			"relationshipModel": "ContractBusinessPartner",
+			"entities": [
+				{
+					"role": "Contract",
+					"docRef": "Contract/1"
+				},
+				{
+					"role": "Partner",
+					"docRef": "BusinessPartner/2"
+				}
+			]
+		},
+		"linkDocument": {
+			"CoInsuredRoot": {
+				"Name": "Tester"
+			}
+		}
+	}
+}

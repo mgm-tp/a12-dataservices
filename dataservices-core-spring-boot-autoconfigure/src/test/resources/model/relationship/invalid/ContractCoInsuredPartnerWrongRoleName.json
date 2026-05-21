@@ -1,0 +1,101 @@
+{
+  "header": {
+    "id": "ContractCoInsuredPartnerWrongRoleName",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "ContractCoInsuredPartner"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "guest,admin,systemAdmin"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Contract",
+        "reference": "Contract"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "BusinessPartnerSuper",
+        "reference": "BusinessPartnerSuper"
+      },
+      {
+        "purpose": "Link Document model",
+        "modelType": "document",
+        "alias": "Link Model",
+        "reference": "CoInsuredAdditionalFields"
+      }
+    ]
+  },
+  "content": {
+    "duplicatesAllowed": false,
+    "associationType": "SHARED",
+    "storage": "EXTERNAL",
+    "labels": [
+      {
+        "locale": "en",
+        "text": "ContractCoInsuredPartner"
+      }
+    ],
+    "linkDocumentModel": "CoInsuredAdditionalFields",
+    "entityCharacteristics": [
+      {
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {},
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Contract"
+          }
+        ],
+        "role": "Contract %23$!%",
+        "documentModel": "Contract"
+      },
+      {
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {},
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Co-insured Business Partners"
+          }
+        ],
+        "role": "Partner",
+        "documentModel": "BusinessPartnerSuper"
+      }
+    ]
+  }
+}

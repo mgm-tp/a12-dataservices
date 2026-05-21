@@ -1,0 +1,97 @@
+{
+  "header": {
+    "id": "PersonOverview",
+    "modelType": "overview",
+    "modelVersion": "28.0.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en"
+      },
+      {
+        "locale": "de",
+        "text": "Persons"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "document-model-for-overview",
+        "modelType": "document",
+        "alias": "DM",
+        "reference": "DomainPerson.xml"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest,oreader,owriter"
+      }
+    ]
+  },
+  "content": {
+    "pagingSize": 10,
+    "hideFilter": false,
+    "subHeaderBox": {
+      "minorButtons": {
+        "buttons": [
+          {
+            "type": "Button",
+            "label": {
+              "texts": [
+                {
+                  "lang": "en"
+                },
+                {
+                  "lang": "de"
+                }
+              ]
+            },
+            "event": "add",
+            "icon": "0xE145",
+            "primary": false,
+            "destructive": false
+          }
+        ]
+      }
+    },
+    "footerBox": {},
+    "columns": [
+      {
+        "title": {},
+        "id": "column-5bd25",
+        "elementRef": "F3",
+        "sortable": true,
+        "width": 1.0
+      },
+      {
+        "title": {},
+        "id": "column-5847d",
+        "elementRef": "F4",
+        "sortable": true,
+        "width": 1.0
+      },
+      {
+        "title": {},
+        "id": "column-3eb14",
+        "elementRef": "F7",
+        "sortable": false,
+        "width": 1.0
+      },
+      {
+        "title": {},
+        "id": "column-d37d5",
+        "elementRef": "F9",
+        "sortable": false,
+        "width": 1.0
+      }
+    ],
+    "rowActionGroup": {}
+  }
+}

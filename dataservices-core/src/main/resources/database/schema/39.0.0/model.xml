@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd"
+				   logicalFilePath="database/schema/39.0.0/model.xml">
+
+	<changeSet id="A12S-6620" author="A12S-6620-author" dbms="postgresql" ignore="true">
+		<addColumn tableName="document_fields">
+			<column name="source" type="varchar(255)">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+		<createIndex tableName="document_fields" indexName="idx_document_fields_source">
+			<column name="source"/>
+		</createIndex>
+	</changeSet>
+
+	<changeSet id="A12S-6728" author="A12S-6728-author" dbms="postgresql">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="document_fields" columnName="source"/>
+			</not>
+		</preConditions>
+		<addColumn tableName="document_fields">
+			<column name="source" type="varchar(255)" value="core">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+		<createIndex tableName="document_fields" indexName="idx_document_fields_source">
+			<column name="source"/>
+		</createIndex>
+	</changeSet>
+
+</databaseChangeLog>

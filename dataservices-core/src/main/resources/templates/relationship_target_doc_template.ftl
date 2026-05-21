@@ -1,0 +1,4 @@
+{
+    "target" : ${targetDoc},
+    "relationship" : ${relationshipDoc}
+}

@@ -1,0 +1,105 @@
+import org.skyscreamer.jsonassert.JSONAssert
+import org.skyscreamer.jsonassert.JSONCompareMode
+
+import static org.gradle.language.base.plugins.LifecycleBasePlugin.VERIFICATION_GROUP
+
+
+buildscript {
+	dependencies {
+		classpath libs.jsonassert
+	}
+}
+
+plugins {
+	id 'com.mgmtp.a12.dataservices.spring-boot-conventions'
+}
+
+configurations {
+	modelGraph
+	bootServerJar.canBeResolved = false
+}
+
+artifacts {
+	bootServerJar(tasks.bootJar)
+}
+
+dependencies {
+
+	implementation project(':dataservices-core-spring-boot-autoconfigure')
+	implementation project(':dataservices-server-spring-boot-autoconfigure')
+	implementation project(':dataservices-data-seed')
+	implementation project(':examples:examples-static-validation-code')
+
+//	In your external project, you should also specify Data Services BOM by specifying:
+//		api platform("com.mgmtp.a12.dataservices:dataservices-parent:${DS_VERSION}")
+//	Then you can omit version for DataServices artifacts like:
+//		implementation 'com.mgmtp.a12.dataservices:dataservices-server-app'
+//		api 'com.mgmtp.a12.dataservices.common:dataservices-common-lib'
+//		api 'com.mgmtp.a12.dataservices.common:dataservices-common-api'
+
+	implementation libs.uaaAuthenticationPrincipalExtension
+	implementation libs.uaaAuthorization
+	implementation libs.uaaAuthorizationA12Extension
+	implementation libs.hazelcast
+	implementation libs.hazelcastSpring
+	modelGraph project(path: ':dataservices-core-tooling', configuration: 'runtimeElements')
+
+	testImplementation libs.testng
+	testImplementation libs.springTest
+	testImplementation libs.springBootTest
+	testImplementation libs.springSecurityTest
+	testImplementation libs.hamcrest
+	testImplementation libs.jsonassert
+	testImplementation libs.mockitoCore
+	testImplementation(testFixtures(project(':dataservices-core-spring-boot-autoconfigure')))
+	testImplementation(testFixtures(project(':dataservices-core')))
+}
+
+springBoot {
+	mainClass.set 'com.mgmtp.a12.examples.ExampleExtendingServerApplication'
+}
+
+bootRun {
+	systemProperties 'workDir': "${project.rootDir}/"
+}
+
+test {
+	systemProperty 'spring.datasources.dataservices.embedded-postgres.enabled', true
+	systemProperty 'spring.datasources.contentstore.embedded-postgres.enabled', true
+}
+
+def buildModelGraphTask = tasks.register('buildModelGraph', JavaExec) {
+	group = VERIFICATION_GROUP
+	classpath = configurations.modelGraph
+	mainClass.set 'com.mgmtp.a12.dataservices.tooling.modelgraph.ModelGraphGenerator'
+	outputs.file project.layout.buildDirectory.file('modelGraph.json').map { it.asFile }.get()
+	args '--logging.level.com.mgmtp.a12.dataservices.tooling=DEBUG'
+	args "--output=${outputs.files.files.find()}"
+	args "file:${projectDir}/src/test/resources/modelgraph/"
+
+	dependsOn ':dataservices-core-tooling:bootJar'
+}
+
+tasks.register('testModelGraph') {
+	group = VERIFICATION_GROUP
+	dependsOn buildModelGraph
+	inputs.files buildModelGraph.outputs
+	doLast {
+		JSONAssert.assertEquals(file("${projectDir}/src/test/resources/modelGraph.json").text as String, buildModelGraph.outputs.files.files.find().text as String, JSONCompareMode.LENIENT)
+	}
+}
+
+final String CLAMAV_IMAGE = "clamav/clamav"
+
+/**
+ * The DockerPullImage takes a lot of time to pull the image.
+ * Here we are using the docker client directly from local machine.
+ */
+tasks.register("pullClamAVImage", Exec) {
+	commandLine "docker", "pull", CLAMAV_IMAGE
+}
+
+tasks.check.dependsOn testModelGraph
+
+description = 'Data Services Server Example - Demonstrates usage of the Server App and its extension points'
+

@@ -1,0 +1,635 @@
+{
+	"documentModels": [
+		{
+			"modelId": "DomainRule",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "ComputationModel",
+			"displayLabels": [],
+			"relations": [
+				"ComputationCategory"
+			],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DomainProduct",
+			"displayLabels": [],
+			"relations": [
+				"ProductBundle",
+				"ProductBrand"
+			],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "NoLabels",
+			"relations": [],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "GroupElement_child____generated",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DomainCategory",
+			"displayLabels": [],
+			"relations": [
+				"ComputationCategory"
+			],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DomainColorfulGroup",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DomainBundle",
+			"displayLabels": [],
+			"relations": [
+				"ProductBundle"
+			],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DomainField",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "TreeProduct",
+			"displayLabels": [],
+			"relations": [
+				"ProductTree"
+			],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DomainBrand",
+			"displayLabels": [],
+			"relations": [
+				"ProductBrand"
+			],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DomainGroup",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [
+				"DomainColorfulGroup"
+			],
+			"abstractModel": false
+		},
+		{
+			"modelId": "GroupElement_parent____generated",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DomainElement",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [
+				"DomainGroup",
+				"DomainRule",
+				"DomainField",
+				"DomainColorfulGroup"
+			],
+			"abstractModel": false
+		}
+	],
+	"composeDocumentModels": [
+		{
+			"modelId": "NaturalPerson",
+			"displayLabels": [
+				{
+					"locale": "en",
+					"text": "NaturalPerson CDM"
+				}
+			]
+		},
+		{
+			"modelId": "FullProduct",
+			"displayLabels": [
+				{
+					"locale": "en",
+					"text": "FullProduct CDM"
+				}
+			]
+		}
+	],
+	"relationshipModels": [
+		{
+			"header": {
+				"id": "ProductBundle",
+				"modelType": "relationship",
+				"modelVersion": "3.0.0",
+				"locales": [
+					{
+						"code": "de"
+					},
+					{
+						"code": "en"
+					}
+				],
+				"labels": [
+					{
+						"locale": "de",
+						"text": "ProductBundle_DE"
+					},
+					{
+						"locale": "en",
+						"text": "ProductBundle"
+					}
+				],
+				"modelReferences": [
+					{
+						"purpose": "Document model",
+						"modelType": "document",
+						"alias": "ProductRole",
+						"reference": "DomainProduct"
+					},
+					{
+						"purpose": "Document model",
+						"modelType": "document",
+						"alias": "BundleRole",
+						"reference": "DomainBundle"
+					}
+				],
+				"annotations": [
+					{
+						"name": "roles",
+						"value": "guest,admin,systemAdmin"
+					}
+				]
+			},
+			"content": {
+				"labels": [
+					{
+						"locale": "de",
+						"text": "ProductBundle_DE"
+					},
+					{
+						"locale": "en",
+						"text": "ProductBundle"
+					}
+				],
+				"associationType": "SHARED",
+				"linkDocumentModel": null,
+				"duplicatesAllowed": false,
+				"entityCharacteristics": [
+					{
+						"role": "ProductRole",
+						"labels": [
+							{
+								"locale": "de",
+								"text": "ProductRole_DE"
+							},
+							{
+								"locale": "en",
+								"text": "ProductRole"
+							}
+						],
+						"documentModel": "DomainProduct",
+						"ordered": false,
+						"navigable": true,
+						"linkConstraints": {
+							"multiplicity": {
+								"lowerLimit": 0,
+								"unbounded": true,
+								"upperLimit": 1
+							}
+						},
+						"candidateConstraints": {
+							"population": "",
+							"populationParameters": []
+						}
+					},
+					{
+						"role": "BundleRole",
+						"labels": [
+							{
+								"locale": "de",
+								"text": "BundleRole_DE"
+							},
+							{
+								"locale": "en",
+								"text": "BundleRole"
+							}
+						],
+						"documentModel": "DomainBundle",
+						"ordered": false,
+						"navigable": true,
+						"linkConstraints": {
+							"multiplicity": {
+								"lowerLimit": 0,
+								"unbounded": true,
+								"upperLimit": null
+							}
+						},
+						"candidateConstraints": {
+							"population": "",
+							"populationParameters": []
+						}
+					}
+				],
+				"storage": "EXTERNAL",
+				"embeddedGroupPath": ""
+			}
+		},
+		{
+			"header": {
+				"id": "ProductBrand",
+				"modelType": "relationship",
+				"modelVersion": "3.0.0",
+				"locales": [
+					{
+						"code": "de"
+					},
+					{
+						"code": "en"
+					}
+				],
+				"labels": [
+					{
+						"locale": "de",
+						"text": "ProductBrand_DE"
+					},
+					{
+						"locale": "en",
+						"text": "ProductBrand"
+					}
+				],
+				"modelReferences": [
+					{
+						"purpose": "Document model",
+						"modelType": "document",
+						"alias": "ProductRole",
+						"reference": "DomainProduct"
+					},
+					{
+						"purpose": "Document model",
+						"modelType": "document",
+						"alias": "BrandRole",
+						"reference": "DomainBrand"
+					}
+				],
+				"annotations": [
+					{
+						"name": "roles",
+						"value": "guest,admin,systemAdmin"
+					}
+				]
+			},
+			"content": {
+				"labels": [
+					{
+						"locale": "de",
+						"text": "ProductBrand_DE"
+					},
+					{
+						"locale": "en",
+						"text": "ProductBrand"
+					}
+				],
+				"associationType": "SHARED",
+				"linkDocumentModel": null,
+				"duplicatesAllowed": false,
+				"entityCharacteristics": [
+					{
+						"role": "ProductRole",
+						"labels": [
+							{
+								"locale": "de",
+								"text": "ProductRole_DE"
+							},
+							{
+								"locale": "en",
+								"text": "ProductRole"
+							}
+						],
+						"documentModel": "DomainProduct",
+						"ordered": false,
+						"navigable": true,
+						"linkConstraints": {
+							"multiplicity": {
+								"lowerLimit": 1,
+								"unbounded": true,
+								"upperLimit": 1
+							}
+						},
+						"candidateConstraints": {
+							"population": "",
+							"populationParameters": [
+								{
+									"name": "requiredField",
+									"value": "requiredField"
+								}
+							]
+						}
+					},
+					{
+						"role": "BrandRole",
+						"labels": [
+							{
+								"locale": "de",
+								"text": "BrandRole_DE"
+							},
+							{
+								"locale": "en",
+								"text": "BrandRole"
+							}
+						],
+						"documentModel": "DomainBrand",
+						"ordered": false,
+						"navigable": true,
+						"linkConstraints": {
+							"multiplicity": {
+								"lowerLimit": 0,
+								"unbounded": true,
+								"upperLimit": null
+							}
+						},
+						"candidateConstraints": {
+							"population": "",
+							"populationParameters": [
+								{
+									"name": "requiredField",
+									"value": "requiredField"
+								}
+							]
+						}
+					}
+				],
+				"storage": "EXTERNAL",
+				"embeddedGroupPath": ""
+			}
+		},
+		{
+			"header": {
+				"id": "ProductTree",
+				"modelType": "relationship",
+				"modelVersion": "3.0.0",
+				"locales": [
+					{
+						"code": "de"
+					},
+					{
+						"code": "en"
+					}
+				],
+				"labels": [
+					{
+						"locale": "de",
+						"text": "ProductTree_DE"
+					},
+					{
+						"locale": "en",
+						"text": "ProductTree_EN"
+					}
+				],
+				"modelReferences": [
+					{
+						"purpose": "Document model",
+						"modelType": "document",
+						"alias": "Node",
+						"reference": "TreeProduct"
+					},
+					{
+						"purpose": "Document model",
+						"modelType": "document",
+						"alias": "ParentRef",
+						"reference": "TreeProduct"
+					}
+				],
+				"annotations": [
+					{
+						"name": "roles",
+						"value": "guest,admin,systemAdmin"
+					}
+				]
+			},
+			"content": {
+				"labels": [
+					{
+						"locale": "de",
+						"text": "ProductTree_DE"
+					},
+					{
+						"locale": "en",
+						"text": "ProductTree_EN"
+					}
+				],
+				"associationType": "SHARED",
+				"linkDocumentModel": null,
+				"duplicatesAllowed": false,
+				"entityCharacteristics": [
+					{
+						"role": "Node",
+						"labels": [
+							{
+								"locale": "de",
+								"text": "Node_DE"
+							},
+							{
+								"locale": "en",
+								"text": "Node"
+							}
+						],
+						"documentModel": "TreeProduct",
+						"ordered": false,
+						"navigable": true,
+						"linkConstraints": {
+							"multiplicity": {
+								"lowerLimit": 1,
+								"unbounded": true,
+								"upperLimit": 1
+							}
+						},
+						"candidateConstraints": {
+							"population": "",
+							"populationParameters": [
+								{
+									"name": "requiredField",
+									"value": "requiredField"
+								}
+							]
+						}
+					},
+					{
+						"role": "ParentRef",
+						"labels": [
+							{
+								"locale": "de",
+								"text": "ParentRef_DE"
+							},
+							{
+								"locale": "en",
+								"text": "ParentRef"
+							}
+						],
+						"documentModel": "TreeProduct",
+						"ordered": false,
+						"navigable": true,
+						"linkConstraints": {
+							"multiplicity": {
+								"lowerLimit": 0,
+								"unbounded": true,
+								"upperLimit": 1
+							}
+						},
+						"candidateConstraints": {
+							"population": "",
+							"populationParameters": [
+								{
+									"name": "requiredField",
+									"value": "requiredField"
+								}
+							]
+						}
+					}
+				],
+				"storage": "EXTERNAL",
+				"embeddedGroupPath": ""
+			}
+		},
+		{
+			"header": {
+				"id": "ComputationCategory",
+				"modelType": "relationship",
+				"modelVersion": "3.0.0",
+				"locales": [
+					{
+						"code": "de"
+					},
+					{
+						"code": "en"
+					}
+				],
+				"labels": [
+					{
+						"locale": "de",
+						"text": "ComputationCategory_DE"
+					},
+					{
+						"locale": "en",
+						"text": "ComputationCategory"
+					}
+				],
+				"modelReferences": [
+					{
+						"purpose": "Document model",
+						"modelType": "document",
+						"alias": "ComputationRole",
+						"reference": "ComputationModel"
+					},
+					{
+						"purpose": "Document model",
+						"modelType": "document",
+						"alias": "CategoryRole",
+						"reference": "DomainCategory"
+					}
+				],
+				"annotations": [
+					{
+						"name": "roles",
+						"value": "guest,admin,systemAdmin"
+					}
+				]
+			},
+			"content": {
+				"labels": [
+					{
+						"locale": "de",
+						"text": "ComputationCategory_DE"
+					},
+					{
+						"locale": "en",
+						"text": "ComputationCategory"
+					}
+				],
+				"associationType": "SHARED",
+				"linkDocumentModel": null,
+				"duplicatesAllowed": true,
+				"entityCharacteristics": [
+					{
+						"role": "ComputationRole",
+						"labels": [
+							{
+								"locale": "de",
+								"text": "ComputationRole_DE"
+							},
+							{
+								"locale": "en",
+								"text": "ComputationRole"
+							}
+						],
+						"documentModel": "ComputationModel",
+						"ordered": false,
+						"navigable": true,
+						"linkConstraints": {
+							"multiplicity": {
+								"lowerLimit": 0,
+								"unbounded": true,
+								"upperLimit": 1
+							}
+						},
+						"candidateConstraints": {
+							"population": "",
+							"populationParameters": []
+						}
+					},
+					{
+						"role": "CategoryRole",
+						"labels": [
+							{
+								"locale": "de",
+								"text": "CategoryRole_DE"
+							},
+							{
+								"locale": "en",
+								"text": "CategoryRole"
+							}
+						],
+						"documentModel": "DomainCategory",
+						"ordered": false,
+						"navigable": true,
+						"linkConstraints": {
+							"multiplicity": {
+								"lowerLimit": 0,
+								"unbounded": true,
+								"upperLimit": null
+							}
+						},
+						"candidateConstraints": {
+							"population": "",
+							"populationParameters": []
+						}
+					}
+				],
+				"storage": "EXTERNAL",
+				"embeddedGroupPath": ""
+			}
+		}
+	]
+}

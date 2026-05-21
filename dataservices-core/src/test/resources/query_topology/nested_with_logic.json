@@ -1,0 +1,64 @@
+{
+	"targetDocumentModel": "Contract",
+	"constraint": {
+		"operator": "and",
+		"operands": [
+			{
+				"operator": "exact_match",
+				"field": "/RootGroup/SomeField",
+				"value": "any value",
+				"caseSensitive": true
+			},
+			{
+				"operator": "date_range",
+				"field": "/RootGroup/SomeField",
+				"from": "2023-11-26T14:54:45.000",
+				"to": "2023-12-24T17:00:00.000"
+			}
+		]
+	},
+	"links": [
+		{
+			"relationshipModel": "BusinessContractRM",
+			"targetRole": "PartnerRole",
+			"constraint": {
+				"operator": "and",
+				"operands": [
+					{
+						"operator": "exact_match",
+						"field": "/RootGroup/SomeField",
+						"value": "any value",
+						"caseSensitive": true
+					},
+					{
+						"operator": "date_range",
+						"field": "/RootGroup/SomeField",
+						"from": "2023-11-26T14:54:45.000",
+						"to": "2023-12-24T17:00:00.000"
+					}
+				]
+			}
+		},
+		{
+			"relationshipModel": "BusinessContractRM",
+			"targetRole": "PartnerRole",
+			"constraint": {
+				"operator": "and",
+				"operands": [
+					{
+						"operator": "exact_match",
+						"field": "/RootGroup/SomeField",
+						"value": "any value",
+						"caseSensitive": true
+					},
+					{
+						"operator": "date_range",
+						"field": "/RootGroup/SomeField",
+						"from": "2023-11-26T14:54:45.000",
+						"to": "2023-12-24T17:00:00.000"
+					}
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,32 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+
+	api project(':dataservices-common:dataservices-common-api')
+	api project(':dataservices-domain')
+
+	api libs.commonsCollections4
+
+	api libs.kernelMdFacade
+
+	api libs.bundles.tika,
+			libs.junitApi,
+			libs.indriya,
+			libs.jimFs
+
+	implementation libs.springWeb,
+			libs.springContext
+
+	// This is only needed to avoid compilation time warnings of missing enums from this library.
+	// There is no known functional impact of this library not being included in dependencies
+	compileOnly libs.guardianAPI
+
+
+	testImplementation libs.testng,
+			libs.mockitoCore,
+			libs.assertjCore
+}
+
+description = 'Data Services common executable code that is reused in other modules'

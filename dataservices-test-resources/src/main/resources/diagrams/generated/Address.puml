@@ -1,0 +1,105 @@
+@startuml
+
+!procedure group(x)
+class x << (G,#DDAAFF) >>
+!endprocedure
+
+!procedure cdmGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure field(x)
+class x << (F,#DDFFAA) >> #White
+!endprocedure
+
+!procedure embeddedField(name, type, fieldType)
+name <<type>>: fieldType
+!endprocedure
+
+!procedure rule(x)
+class x << (R,#DDBBAA) >> #FFDDEE
+!endprocedure
+
+!procedure embeddedRule(name, type)
+<back:FFDDEE>name() <<type>></back>
+!endprocedure
+
+!procedure embeddedRule(name, type, $errorCondition)
+.. <back:FFDDEE> name <<type>> </back> ..
+<back:FFDDEE>errorCondition:</back> $errorCondition
+!endprocedure
+
+!procedure computation(x)
+class x << (C,#DDBBAA) >> #FFEEDD
+!endprocedure
+
+!procedure computationAlternative($operation, $precondition)
+.. alternative ..
+operation: $operation
+precondition: $precondition
+!endprocedure
+
+!procedure embeddedComputation(name, type, $operation, $precondition)
+.. <back:FFEEDD> name <<type>> </back> ..
+<back:FFEEDD>operation:</back> $operation
+<back:FFEEDD>precondition:</back> $precondition
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure embeddedComputation(name, type )
+<back:FFEEDD>name() <<type>></back>
+!endprocedure
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure linkGroup(x)
+group(x) #PeachPuff
+!endprocedure
+
+!procedure relLink($name,$rmId,$link1,$link2,$ld="")
+circle $name as $rmId #PeachPuff
+$rmId $link1
+$rmId $link2
+!if $ld!=""
+$rmId -[#IndianRed]right $ld: <<linkDocument>>
+linkDocument($ld)
+!endif
+!endprocedure
+
+skinparam linetype polyline
+left to right direction
+
+title Document Model Address
+
+package "Address" as Address <<Frame>> {
+	() "documentRoot" as AddressDocumentRoot
+	group('"AddressRoot" as group_48575')
+	field('"AddressType" as field_a48cs <<EnumerationType>>')
+	group_48575 -- field_a48cs
+	field('"Location" as field_c51b9 <<StringType>>')
+	group_48575 -- field_c51b9
+	field('"Street" as field_7bc6c <<StringType>>')
+	group_48575 -- field_7bc6c
+	field('"HouseNumber" as field_38cf3 <<StringType>>')
+	group_48575 -- field_38cf3
+	field('"City" as field_42965 <<StringType>>')
+	group_48575 -- field_42965
+	field('"PostCode" as field_623a3 <<StringType>>')
+	group_48575 -- field_623a3
+	field('"Country" as field_804c7 <<StringType>>')
+	group_48575 -- field_804c7
+	field('"PostalAddress" as field_ce1e7 <<ConfirmType>>')
+	group_48575 -- field_ce1e7
+	rule('"MustContainCountry" as rule_7c66e') {
+}
+	group_48575 -- rule_7c66e
+
+	AddressDocumentRoot ||--o| "0..1" group_48575
+
+}
+@enduml

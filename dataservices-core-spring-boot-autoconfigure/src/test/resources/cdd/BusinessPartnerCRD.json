@@ -1,0 +1,9 @@
+{
+  "BusinessPartnerRoot": {
+	"Name": "Business partner CRD",
+	"Industry": "Technology",
+	"StartOfRelationship": "2022-01-01",
+	"CustomerDiscount": "10%",
+	"PersonOrEntity": "Jose"
+  }
+}

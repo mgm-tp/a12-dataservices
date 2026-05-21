@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+                   logicalFilePath="database/schema/30.0.0/model.xml">
+
+	<changeSet id="A12S-1188" author="tbajus">
+		<addColumn tableName="RELATIONSHIP_LINK">
+			<column name="ORDER_1" type="VARCHAR(2000 ${varcharUnit})">
+				<constraints nullable="true"/>
+			</column>
+		</addColumn>
+		<addColumn tableName="RELATIONSHIP_LINK">
+			<column name="ORDER_2" type="VARCHAR(2000 ${varcharUnit})">
+				<constraints nullable="true"/>
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<!--
+	This bug fix is originally for version 31.0.0 but I have added it here to version 30.0.0 because of possible porting issues. If
+	A12S-1662 will have to be ported back to 30.0.0 we would have to create this change set here and the change set in 31.0.0/model.xml
+	would fail. This wait we can port it without issues because there will be no issues. The only difference is that it will
+	be executed (for some projects) before change set 31.0.0/model.xml#A12S-1621, which does not cause any issue
+	-->
+	<changeSet id="A12S-1662" author="tbajus" dbms="postgresql">
+		<sql>
+			-- remember the old OID values
+			create temp table old_oids
+			as
+			select distinct content::oid as lo_ptr
+			from model;
+
+			-- convert the large object to text
+			UPDATE model
+			SET content = convert_from(loread(lo_open(content::oid, 262144), 100000000), 'UTF8');
+
+			-- remove the old large objects as they are not removed automatically
+			select lo_unlink(lo_ptr)
+			from old_oids;
+
+			drop table old_oids;
+		</sql>
+	</changeSet>
+</databaseChangeLog>

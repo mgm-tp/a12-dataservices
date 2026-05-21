@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd"
+				   logicalFilePath="database/schema/36.0.0/model.xml">
+
+	<changeSet id="A12S-3401-model" author="A12S-3401-author">
+		<addColumn tableName="attachment_header">
+			<column name="ATTACHMENT_SIZE" type="bigint"/>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="A12S-3246" author="A12S-3246-author">
+		<addNotNullConstraint tableName="DOCUMENT" columnName="model_name"/>
+		<addNotNullConstraint tableName="DOCUMENT" columnName="created_by"/>
+		<addNotNullConstraint tableName="DOCUMENT" columnName="created_at"/>
+		<addNotNullConstraint tableName="DOCUMENT" columnName="modified_by"/>
+		<addNotNullConstraint tableName="DOCUMENT" columnName="modified_at"/>
+		<addNotNullConstraint tableName="DOCUMENT" columnName="xml_doc"/>
+		<addNotNullConstraint tableName="ATTACHMENT_HEADER" columnName="mime_type"/>
+		<addNotNullConstraint tableName="ATTACHMENTS" columnName="content"/>
+		<addNotNullConstraint tableName="RELATIONSHIP_ORDER" columnName="role_order"/>
+	</changeSet>
+
+	<changeSet id="A12S-3614-model" author="A12S-3614-author">
+		<addColumn tableName="attachment_header">
+			<column name="thumbnail_big_id" type="varchar(500)"/>
+			<column name="thumbnail_small_id" type="varchar(500)"/>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="A12S-3683" author="A12S-3683-author">
+		<addColumn tableName="DIRTY_ATTACHMENT">
+			<column name="last_try" type="datetime"/>
+			<column name="exec_count" type="bigint" defaultValue="0"/>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="A12S-4145" author="A12S-4145-author">
+		<addColumn tableName="MIGRATION_STEP">
+			<column name="metadata" type="json"/>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="A12S-4112" author="A12S-4112-author" ignore="true">
+
+		<!-- this changeset is disabled because it is buggy. Replacement comes in A12S-4408 -->
+
+		<createIndex tableName="RELATIONSHIP_ORDER" indexName="IDX_RELATIONSHIP_ORDER">
+			<column name="ROLE_ORDER"/>
+		</createIndex>
+
+		<createIndex tableName="RELATIONSHIP_ROLE" indexName="IDX_RELATIONSHIP_ROLE_RELATIONSHIP_ID">
+			<column name="RELATIONSHIP_ID"/>
+		</createIndex>
+
+		<createIndex tableName="RELATIONSHIP_ROLE" indexName="IDX_RELATIONSHIP_ROLE_ROLE_DOCREF">
+			<column name="ROLE_DOCREF"/>
+		</createIndex>
+
+		<createIndex tableName="RELATIONSHIP_LINK" indexName="IDX_RELATIONSHIP_LINK_DOC_REF">
+			<column name="LINK_DOCUMENT_DOCREF"/>
+		</createIndex>
+
+		<dropIndex tableName="MODEL_LABELS" indexName="model_labels_model_id_idx"/>
+		<dropIndex tableName="MODEL_ANNOTATIONS" indexName="model_annotations_model_id_idx"/>
+		<dropIndex tableName="MODEL_LOCALES" indexName="model_locales_model_id_idx"/>
+	</changeSet>
+
+	<changeSet id="A12S-4408" author="A12S-4408-author">
+
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="IDX_RELATIONSHIP_ORDER"/>
+			</not>
+		</preConditions>
+
+		<createIndex tableName="RELATIONSHIP_ORDER" indexName="IDX_RELATIONSHIP_ORDER">
+			<column name="ROLE_ORDER"/>
+		</createIndex>
+
+		<createIndex tableName="RELATIONSHIP_ROLE" indexName="IDX_RELATIONSHIP_ROLE_RELATIONSHIP_ID">
+			<column name="RELATIONSHIP_ID"/>
+		</createIndex>
+
+		<createIndex tableName="RELATIONSHIP_ROLE" indexName="IDX_RELATIONSHIP_ROLE_ROLE_DOCREF">
+			<column name="ROLE_DOCREF"/>
+		</createIndex>
+
+		<createIndex tableName="RELATIONSHIP_LINK" indexName="IDX_RELATIONSHIP_LINK_DOC_REF">
+			<column name="LINK_DOCUMENT_DOCREF"/>
+		</createIndex>
+	</changeSet>
+
+</databaseChangeLog>

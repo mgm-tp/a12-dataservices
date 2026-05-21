@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+                   logicalFilePath="database/data/data.xml">
+
+	<changeSet id="A12-5235" author="tkupka">
+		<validCheckSum>7:455f5eeb347c44669739509cafe6a11a</validCheckSum>
+		<validCheckSum>8:7bedb5e1be48d92a81f0004f5b9655bf</validCheckSum>
+		<validCheckSum>9:c9ceab673414b41c29d041abdbeacd21</validCheckSum>
+		<validCheckSum>9:f098ce63774db4625e857add4b611486</validCheckSum>
+		<insert tableName="ROLE">
+			<column name="ID" valueSequenceNext="ROLE_SEQ" />
+			<column name="NAME" value="admin" />
+			<column name="PERMISSION" value="formData:show:all" />
+			<column name="CREATED_AT" valueComputed="CURRENT_TIMESTAMP" />
+			<column name="MODIFIED_AT" valueComputed="CURRENT_TIMESTAMP" />
+		</insert>
+		<insert tableName="ROLE">
+			<column name="ID" valueSequenceNext="ROLE_SEQ" />
+			<column name="NAME" value="guest" />
+			<column name="PERMISSION" value="read" />
+			<column name="CREATED_AT" valueComputed="CURRENT_TIMESTAMP" />
+			<column name="MODIFIED_AT" valueComputed="CURRENT_TIMESTAMP" />
+		</insert>
+		<insert tableName="SERVER_USER">
+			<column name="ID" valueSequenceNext="USER_SEQ" />
+			<column name="USER_NAME" value="admin" />
+			<column name="EMAIL" value="ad.min@localhost" />
+			<column name="FIRST_NAME" value="ad" />
+			<column name="LAST_NAME" value="min" />
+			<column name="SALT" value="cf41c880e9b55316c3b8ccb0e8aad01f" />
+			<column name="PASSWORD"
+				value="9d94e2de7c38910b6b6279b02be2af824f30d8132d322e59e458b91fc5b551d66a3605a8d42ee62d7a60f03b8253195e303a7de3a34463394f3e0d1a3876557a" />
+			<column name="EXPIRE_AT" valueDate="2222-12-11" />
+			<column name="CREATED_AT" valueComputed="CURRENT_TIMESTAMP" />
+			<column name="MODIFIED_AT" valueComputed="CURRENT_TIMESTAMP" />
+		</insert>
+		<insert tableName="USER_ROLE">
+			<column name="USER_ID" valueComputed="(select ID from SERVER_USER where user_name = 'admin')" />
+			<column name="ROLE_ID" valueComputed="(select ID from role where name = 'admin')"></column>
+		</insert>
+	</changeSet>
+
+</databaseChangeLog>

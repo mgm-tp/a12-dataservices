@@ -1,0 +1,35 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.spring-boot-conventions'
+}
+
+dependencies {
+	implementation(project(':dataservices-core')) {
+		exclude group: 'com.mgmtp.a12.dataservices', module: 'dataservices-content-store-client'
+		exclude group: 'com.mgmtp.a12.uaa', module: 'uaa-authentication'
+		exclude group: 'com.mgmtp.a12.uaa', module: 'uaa-authentication-principal-extension'
+		exclude group: 'com.mgmtp.a12.uaa', module: 'uaa-authorization'
+		exclude group: 'org.hibernate.validator', module: 'hibernate-validator'
+		exclude group: 'org.quartz-scheduler', module: 'quartz'
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-data-jpa'
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-data-jpa'
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-jdbc'
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-quartz'
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-security'
+		exclude group: 'org.springframework.data', module: 'spring-data-jpa'
+		exclude group: 'org.springframework.ldap', module: 'spring-ldap-core'
+		exclude group: 'org.springframework.security', module: 'spring-security-core'
+		exclude group: 'com.hazelcast', module: 'hazelcast'
+		exclude group: 'com.hazelcast', module: 'hazelcast-hibernate53'
+		exclude group: 'com.hazelcast', module: 'hazelcast-spring'
+	}
+	implementation libs.springBootStarter
+	implementation libs.commonsCollections4
+	implementation libs.picocli
+}
+
+
+springBoot {
+	mainClass.set 'com.mgmtp.a12.dataservices.tooling.modelgraph.ModelGraphGenerator'
+}
+
+description = 'Tooling for model graph generation and file-based model API support'

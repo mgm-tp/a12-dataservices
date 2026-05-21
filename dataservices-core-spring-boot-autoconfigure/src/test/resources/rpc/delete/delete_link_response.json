@@ -1,0 +1,18 @@
+[
+  {
+    "idRef": "removeLinkMutation",
+    "result": null
+  },
+  {
+    "idRef": "CampaignsOfProductRole",
+    "result": {
+      "fullSize": 0,
+      "page": {
+        "offset": 0,
+        "limit": 0
+      },
+      "entries": [
+      ]
+    }
+  }
+]

@@ -1,0 +1,10 @@
+{
+	"ContractRoot": {
+		"ContractName": "beth",
+		"ContractDescription": "Below",
+		"LengthOfContract": 100,
+		"ContractValue": 8.6,
+		"CostToCustomer": 10,
+		"MaxDiscount": "Über"
+	}
+}

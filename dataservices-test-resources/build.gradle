@@ -1,0 +1,22 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+configurations {
+	testResources.canBeResolved = false
+}
+
+TaskProvider<Jar> insuranceDomainJar = tasks.register('insuranceDomainJar', Jar) {
+	from { configurations.runtimeClasspath.files }
+	include '/models/**'
+	archiveFileName.set 'dataservices-insurance-domain.jar'
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	with jar
+}
+
+artifacts {
+	testResources(insuranceDomainJar)
+}
+
+description = 'Test resources for Data Services testing'
+

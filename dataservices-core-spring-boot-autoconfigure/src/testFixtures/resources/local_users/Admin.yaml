@@ -1,0 +1,8 @@
+username: "admin"
+password: "admin"
+authorities:
+  - "admin"
+  - "systemAdmin"
+email: test.admin@a12.dev.mgm-tp.com
+firstname: Ad
+lastname: Min

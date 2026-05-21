@@ -1,0 +1,43 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+	api project(":content-store:dataservices-content-store-domain")
+	api libs.jaxbApi
+	api libs.springBootAutoconfigure
+	api libs.springBootConfigurationProcessor
+	api libs.annotationApi
+	api libs.restServerConnectorSpringBootAutoconfigure
+	api libs.uaaRestClientSpringBootAutoconfigure
+	implementation libs.uaaRestClient
+	implementation libs.mgmModelApi
+	implementation libs.modelMarshalling
+	implementation libs.jacksonJaxrsJsonProvider
+	implementation libs.jacksonDatabind
+	implementation libs.springCore
+	implementation libs.springContext
+	implementation libs.springWeb
+	implementation libs.julToSlf4j
+	implementation libs.slf4jApi
+	implementation libs.commonsLang3
+	implementation libs.commonsCollections4
+
+	testImplementation libs.springBootStarterWeb
+	testImplementation libs.springTest
+	testImplementation libs.springBootTest
+	testImplementation libs.springBootStarterSecurity
+	testImplementation libs.springSecurityTest
+	testImplementation libs.testng
+	testImplementation libs.festAssertCore
+	testImplementation libs.assertjCore
+	testImplementation libs.jsonassert
+	testImplementation libs.xercesImpl
+	testImplementation libs.json
+	testImplementation libs.mgmModelApi
+	testImplementation libs.mockitoCore
+	testImplementation libs.mockServer
+
+}
+
+description = 'Spring Boot AutoConfiguration for Content Store REST client'

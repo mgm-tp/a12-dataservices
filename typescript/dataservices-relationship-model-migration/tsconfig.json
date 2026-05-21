@@ -1,0 +1,15 @@
+{
+	"extends": "@com.mgmtp.a12.devtools/tsconfig",
+	"exclude": ["./node_modules/**", "lib"],
+	"include": ["./src"],
+	"compilerOptions": {
+		"types": ["jest", "node"],
+		"inlineSourceMap": true,
+		"sourceMap": false,
+		"outDir": "./lib",
+		"incremental": false,
+		"allowSyntheticDefaultImports": true,
+		"noEmitOnError": false,
+		"skipLibCheck": true
+	}
+}

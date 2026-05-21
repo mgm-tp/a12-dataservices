@@ -1,0 +1,7 @@
+username: model_update_user
+password: model_update_user
+firstname: model_update
+lastname: model_update
+email: model_update@min.com
+authorities:
+  - "ModelUpdate"

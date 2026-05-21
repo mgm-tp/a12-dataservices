@@ -1,0 +1,16 @@
+{
+	"businessPartner": {
+		"id": "c18a8568-e2da-4a32-a9d1-71eef5328fa6",
+		"name": "Our testing CoInsurer",
+		"notes": [
+			{
+				"day": "2022-05-13",
+				"note": "First note"
+			},
+			{
+				"day": "2022-03-01",
+				"note": "March note"
+			}
+		]
+	}
+}

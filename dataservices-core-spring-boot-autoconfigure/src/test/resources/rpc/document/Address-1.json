@@ -1,0 +1,10 @@
+{
+	"AddressRoot": {
+		"Location": "Anywhere",
+		"Country": "Czech Republic",
+		"City": "Prague",
+		"PostCode": "12345",
+		"Street": "Letenské náměstí",
+		"HouseNumber": "1"
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"Group1": {
+		"Field11": 12.1,
+		"TypedField": true,
+		"BooleanField": false,
+		"StringField": "First",
+		"SampleDate": "0000-00-00",
+		"SampleDateFragment": "12-30",
+		"SamplePatternString": "abczABCZ",
+		"SampleEnum": "two",
+		"SampleDateTime": "1999-12-12T19:27:00",
+		"SampleTime": "03:00:00"
+	}
+}

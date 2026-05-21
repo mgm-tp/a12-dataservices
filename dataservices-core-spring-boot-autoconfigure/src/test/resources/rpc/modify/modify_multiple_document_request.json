@@ -1,0 +1,42 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "ModifyDocument1",
+    "method": "MODIFY_DOCUMENT",
+    "params": {
+      "docRef": "%s",
+      "document": %s,
+      "locale": null
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "ModifyDocument2",
+    "method": "MODIFY_DOCUMENT",
+    "params": {
+      "docRef": "%s",
+      "document": %s,
+      "locale": null
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "ModifyDocument3",
+    "method": "MODIFY_DOCUMENT",
+    "params": {
+      "docRef": "%s",
+      "document": %s,
+      "locale": null
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "ModifyDocument4",
+    "method": "MODIFY_DOCUMENT",
+    "params": {
+      "docRef": "%s",
+      "document": %s,
+      "locale": null
+    }
+  }
+]

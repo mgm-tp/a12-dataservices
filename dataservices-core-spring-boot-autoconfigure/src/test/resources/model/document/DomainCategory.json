@@ -1,0 +1,73 @@
+{
+  "header": {
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "id": "DomainCategory",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,systemAdmin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "DomainCategory",
+      "immutable": false,
+      "comment": "Brand"
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G7",
+          "name": "Properties",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F1",
+                "name": "name",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F2",
+                "name": "taxId",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

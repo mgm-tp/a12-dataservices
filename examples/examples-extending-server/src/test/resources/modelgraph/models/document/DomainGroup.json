@@ -1,0 +1,91 @@
+{
+  "header": {
+    "id": "DomainGroup",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "subTypes",
+        "value": "DomainColorfulGroup"
+      },
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": [
+      {
+        "alias": "DomainElement",
+        "modelType": "document",
+        "purpose": "include",
+        "reference": "DomainElement"
+      }
+    ]
+  },
+  "content": {
+    "modelInfo": {
+      "name": "DomainGroup",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "include_40b3c",
+          "name": "GeneralInformation",
+          "Group": {
+            "repeatability": 1,
+            "modelAlias": "DomainElement"
+          }
+        },
+        {
+          "type": "Group",
+          "id": "group_93341",
+          "name": "Group",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_67e4f",
+                "name": "Repeatability",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "zeroNotAllowed": true,
+                      "minValue": 0,
+                      "trait": "amount"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Repeatability"
+                    }
+                  ],
+                  "requirednessConfig": {
+                    "mode": "absoluteOrRelativeToNextRepAncestor"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,2 @@
+"RootGroup.TestDate","RootGroup.Wohngeldnummer","RootGroup.Telefonnummer","RootGroup.SubGroup.Field_1","RootGroup.SubGroup.Field_2","RootGroup.DateTime_Field","RootGroup.Time_Field","RootGroup.Boolean_Filed","RootGroup.Confirm_Field","RootGroup.Enumeration_Filed","RootGroup.TypeDef_Field","RootGroup.Number_Field","RootGroup.NumberUnit_Field"
+"2018-11-05","87675434232","594000000000","1","2","2018-11-19T15:30:00","15:30:00","false","true","ENUM1","false","12.345","11.33"

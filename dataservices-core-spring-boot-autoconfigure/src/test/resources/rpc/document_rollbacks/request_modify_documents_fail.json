@@ -1,0 +1,20 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "ModifyDocument1",
+    "method": "MODIFY_DOCUMENT",
+    "params": {
+      "docRef": "%s",
+      "document": %s,
+      "locale": "de"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "fail",
+    "method": "FAIL",
+    "params": {
+      "how": "miserably"
+    }
+  }
+]

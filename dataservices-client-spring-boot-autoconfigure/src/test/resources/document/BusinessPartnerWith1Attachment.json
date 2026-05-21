@@ -1,0 +1,18 @@
+{
+  "BusinessPartnerRoot": {
+    "Attachment": [
+	    {
+	    	"original_filename": "originalFileName1",
+	    	"internal_filename": "internalFilename1",
+			"content": "",
+			"attachment_id": "%s",
+			"size": 1000,
+	    	"mime_type": "image/png"
+	    }
+    ],
+    "Name": "Microoogle",
+    "Industry": "Legal",
+    "CustomerDiscount": "80%%",
+    "StartOfRelationship": "2022-08-01"
+  }
+}

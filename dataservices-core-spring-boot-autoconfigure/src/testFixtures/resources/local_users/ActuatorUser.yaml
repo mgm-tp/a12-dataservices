@@ -1,0 +1,7 @@
+username: "actuator"
+password: "actuator"
+authorities:
+  - "ActuatorAccess"
+email: Actuator@custom.com
+firstname: User
+lastname: Actuator

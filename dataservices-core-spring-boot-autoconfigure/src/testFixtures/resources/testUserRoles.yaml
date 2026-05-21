@@ -1,0 +1,105 @@
+roles:
+  - name: admin
+    description: admin role
+    accessRights:
+      - MODEL_CREATE
+      - MODEL_UPDATE
+      - MODEL_READ
+      - MODEL_DELETE
+      - QUERY
+      - DOCUMENT_CREATE
+      - DOCUMENT_UPDATE
+      - DOCUMENT_PARTIAL_UPDATE
+      - DOCUMENT_DELETE
+      - DOCUMENT_MULTI_DELETE
+      - ATTACHMENT_UPLOAD
+      - LINK_WRITE
+      - LINK_READ
+  - name: systemAdmin
+    description: system admin role
+    accessRights:
+      - MANAGE_CACHES
+  - name: guest
+    description: guest role
+    accessRights:
+      - MODEL_READ
+      - QUERY
+      - LINK_READ
+  - name: noAccessRights
+    description: noAccessRights role
+  - name: ROLE WITH SPACE
+    description: ROLE WITH SPACE
+    accessRights:
+      - ACCESS RIGHT WITH SPACE
+  - name: ActuatorAccess
+    description: Role should allow access to actuator endpoint to user
+    accessRights:
+      - ACCESS_ACTUATOR
+  - name: modelManager
+    description: super model user role has create, update, delete model.
+    accessRights:
+      - MODEL_MANAGE
+  - name: ModelCreate
+    description: allows creation of models
+    accessRights:
+      - MODEL_CREATE
+  - name: ModelRead
+    description: allows read of models
+    accessRights:
+      - MODEL_READ
+  - name: ModelUpdate
+    description: allows update of models
+    accessRights:
+      - MODEL_UPDATE
+  - name: ModelDelete
+    description: allows deletion of models
+    accessRights:
+      - MODEL_DELETE
+  - name: DocumentWrite
+    description: Role should allow write permissions to user
+    accessRights:
+      - MODEL_CREATE
+      - MODEL_UPDATE
+      - MODEL_READ
+      - MODEL_DELETE
+      - DOCUMENT_CREATE
+      - DOCUMENT_UPDATE
+      - DOCUMENT_PARTIAL_UPDATE
+      - DOCUMENT_DELETE
+      - LINK_WRITE
+  - name: DocumentRead
+    description: Role with document read rights
+    accessRights:
+      - MODEL_READ
+      - QUERY
+  - name: DocumentCreate
+    description: Role with document create right
+    accessRights:
+      - MODEL_READ
+      - DOCUMENT_CREATE
+  - name: DocumentUpdate
+    description: Role with document update right
+    accessRights:
+      - MODEL_READ
+      - DOCUMENT_UPDATE
+  - name: DocumentPartialUpdate
+    description: Role with document partial update right
+    accessRights:
+      - MODEL_READ
+      - DOCUMENT_PARTIAL_UPDATE
+  - name: DocumentDelete
+    description: Role with document delete right
+    accessRights:
+      - MODEL_READ
+      - DOCUMENT_DELETE
+  - name: MultiDocumentDelete
+    description: Role with multi document delete right
+    accessRights:
+      - MODEL_READ
+      - DOCUMENT_MULTI_DELETE
+  - name: DocumentCopy
+    description: Role with needed rights to copy document
+    accessRights:
+      - MODEL_READ
+      - QUERY
+      - DOCUMENT_CREATE

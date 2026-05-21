@@ -1,0 +1,1 @@
+[{"jsonrpc":"2.0","method":"GET_DOCUMENT","id":"À€ET_DOCUMENT-0","params":{"docRef":"BusinessPartner/1"}}]

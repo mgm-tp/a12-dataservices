@@ -1,0 +1,57 @@
+== Embedded Postgres Database
+
+Set up the application to use an embedded file-based Postgres database. Default superuser is `postgres` and db name is `postgres`.
+If `spring.datasources.dataservices.embedded-postgres.path` is not provided, a temp folder will be used to persist data.
+Temp folder will depend on OS:
+
+* Linux and MacOS: `/tmp/embedded-pg`
+* Windows: `${user.home}\AppData\Local\Temp`
+
+Set `spring.datasources.dataservices.embedded-postgres.override-working-directory` to a directory to cache the extracted PostgreSQL binaries (e.g. initdb, postgres) across application runs instead of the default temporary location.
+
+IMPORTANT: This embedded Postgres profile should be used only for development or testing purposes. Persistent data might be lost after restarting the server.
+
+== Additional Possible Configuration:
+
+[source,properties]
+----
+spring.datasources.dataservices.embedded-postgres.path=file:./ds-embedded-postgres
+spring.datasources.dataservices.embedded-postgres.port=5434
+spring.datasources.dataservices.embedded-postgres.connect-config.autosave=always
+spring.datasources.dataservices.embedded-postgres.locale-c-type=en_US.UTF-8
+spring.datasources.dataservices.embedded-postgres.override-working-directory=file:./postgres-bin
+----
+
+For more `connect-config` configuration, please refer to `org.postgresql.PGProperty` or the Postgres official documentation.
+
+For more `postgres-config` configuration, please refer to the Postgres documentation on https://www.postgresql.org/docs/16/app-pg-ctl.html[pg_ctl].
+
+====
+To ensure a graceful shutdown of the embedded Postgres database, please be aware of the following considerations.
+
+When you use the IDE's (e.g., IntelliJ, Visual Studio Code) Stop button (Red Square), the system attempts a graceful shutdown.
+This process allows EmbeddedPostgres to rely on a shutdown hook for proper cleanup, resource release, and database stopping.
+However, in some environments, particularly on Windows and macOS, the shutdown hook may not execute as expected, preventing the embedded Postgres database from shutting down properly.
+Even if you delete the Postgres data folder, the Postgres process might still be running in the background, which can lead to residual old data.
+Consequently, restarting the application may lead to errors indicating the Postgres instance is already running, or you may face port binding issues.
+
+If this issue occurs, you must manually stop the Postgres process and delete the temporary postgres folder. Methods include:
+
+* Using Task Manager (Windows) or Activity Monitor (macOS).
+* Using the command line to kill the process.
+
+To ensure a reliable graceful shutdown, consider the following alternative:
+
+**Use the following properties to enable the Actuator shutdown endpoint:**
+----
+management.endpoint.shutdown.access=unrestricted
+management.endpoints.web.exposure.include=shutdown
+----
+**Then, send a POST request to the shutdown endpoint to properly trigger the application exit procedure:**
+----
+curl --location --request POST '{YOUR_HOST_URL}/actuator/shutdown'
+----
+**Your application will then shut down properly. Note that this method should only be used in your local environment. In production or other environments where the application is run as a standard Java process, this issue typically does not occur, and the application will shut down gracefully. Remember, embedded Postgres is only for development purposes.**
+
+*Note: If you cannot gracefully shut down the embedded Postgres database, you must manually kill the Postgres process to avoid data corruption, as the graceful shutdown method fails in this scenario.*
+====

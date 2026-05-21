@@ -1,0 +1,865 @@
+{
+  "header": {
+    "id": "DomainUser",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "modelReferences": [
+      {
+        "purpose": "include",
+        "modelType": "document",
+        "alias": "DomainCustomUser",
+        "reference": "DomainCustomUser"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,systemAdmin"
+      }
+    ]
+  },
+  "content": {
+    "modelInfo": {
+      "name": "DomainUser",
+      "branch": null,
+      "baseYear": null,
+      "revision": null,
+      "immutable": false,
+      "comment": "DomainUser extension of A12 User"
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "typeDefinitions": [],
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "SystemProperties",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F5",
+                "name": "login",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "pattern": "[a-zA-Z0-9_]*",
+                      "errorMessage": [
+                        {
+                          "locale": "de",
+                          "text": "Der Login darf nur Buchstaben, Ziffern und Unterstriche enthalten."
+                        },
+                        {
+                          "locale": "en",
+                          "text": "The login can only contain letters, numbers and underscore."
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Login"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Login"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R34",
+                "name": "ruleLoginRequired",
+                "Rule": {
+                  "errorEntityRelPath": "../login",
+                  "errorCode": "Error R34",
+                  "errorCondition": "FieldNotFilled(login)",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Bitte $login$ angeben."
+                    },
+                    {
+                      "locale": "en",
+                      "text": "$login$ is required."
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F3",
+                "name": "firstname",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Vorname"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "firstname"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F4",
+                "name": "lastname",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Nachname"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "lastname"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F6",
+                "name": "email",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "pattern": "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+",
+                      "errorMessage": [
+                        {
+                          "locale": "de",
+                          "text": "Bitte gültige E-Mailadresse einegeben"
+                        },
+                        {
+                          "locale": "en",
+                          "text": "Please enter valid email address"
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "E-Mailadresse"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "email address"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R46",
+                "name": "EmailRequired",
+                "Rule": {
+                  "errorEntityRelPath": "../email",
+                  "errorCode": "Error R45",
+                  "errorCondition": "FieldNotFilled(email)",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "Please enter valid email address."
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Bitte gültige E-Mailadresse einegeben."
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F10",
+                "name": "password",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Passwort"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "password"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R27",
+                "name": "rulePasswordMinSixChars",
+                "Rule": {
+                  "errorEntityRelPath": "../password",
+                  "errorCode": "Error R27",
+                  "errorCondition": "FieldFilled(password) And Length(password) < 6\n\t\t\t",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Das Passwort muss mindestens aus 6 Zeichen bestehen"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Passwords must have at least 6 characters"
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R28",
+                "name": "rulePasswordMandatoryUpperCase",
+                "Rule": {
+                  "errorEntityRelPath": "../password",
+                  "errorCode": "Error R27",
+                  "errorCondition": "FieldFilled(password) And [password] PatternViolated\".*(?=.*[A-Z]).*\"",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Das Passwort muss mindestens einen Großbuchstaben enthalten"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Passwords must contain at least one upper case letter"
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R29",
+                "name": "rulePasswordMandatorySpecialChar",
+                "Rule": {
+                  "errorEntityRelPath": "../password",
+                  "errorCode": "Error R27",
+                  "errorCondition": "FieldFilled(password) And [password] PatternViolated \".*(?=.*[!§%&=#äöüßÄÖÜ]).*\"",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Das Passwort muss mindestens ein Sonderzeichen enthalten (!, §, %, &, =, #, ä, ö, ü, ß, Ä, Ö, Ü)"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Passwords must contain at least one special character (!, §, %, &, =, #, ä, ö, ü, ß, Ä, Ö, Ü)"
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R30",
+                "name": "rulePasswordMandatoryLowerCase",
+                "Rule": {
+                  "errorEntityRelPath": "../password",
+                  "errorCode": "Error R27",
+                  "errorCondition": "FieldFilled(password) And [password] PatternViolated\".*(?=.*[a-z]).*\"",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Das Passwort muss mindestens einen Kleinbuchstaben enthalten"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Passwords must contain at least one lower case letter"
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R31",
+                "name": "rulePasswordMandatoryNumber",
+                "Rule": {
+                  "errorEntityRelPath": "../password",
+                  "errorCode": "Error R27",
+                  "errorCondition": "FieldFilled(password) And [password] PatternViolated \".*(?=.*[0-9]).*\"",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Das Passwort muss mindestens eine Zahl enthalten"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Passwords must contain at least one number"
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R32",
+                "name": "rulePasswordMaxTenChars",
+                "Rule": {
+                  "errorEntityRelPath": "../password",
+                  "errorCode": "Error R27",
+                  "errorCondition": "FieldFilled(password) And Length(password) > 10",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Das Passwort darf höchstens aus 10 Zeichen bestehen"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Passwords must have at most 10 characters"
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F11",
+                "name": "passwordRepeat",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Passwort Wiederholung"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "password repeat"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R26",
+                "name": "rulePasswordMatch",
+                "Rule": {
+                  "errorEntityRelPath": "../passwordRepeat",
+                  "errorCode": "Error R26",
+                  "errorCondition": "FieldFilled(passwordRepeat) And [password] !=[passwordRepeat]",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "$password$ und $passwordRepeat$ müssen gleich sein"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "$password$ and $passwordRepeat$ have to match"
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G24",
+                "name": "passwordHistories",
+                "Group": {
+                  "repeatability": 10000,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F22",
+                      "name": "passwordHash",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType",
+                          "StringType": {}
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F23",
+                      "name": "createdAt",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType",
+                          "StringType": {}
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R35",
+                "name": "ruleRoleMandatory",
+                "Rule": {
+                  "errorEntityRelPath": "../roles/roleIdent",
+                  "errorCode": "Error R35",
+                  "errorCondition": "AtLeastOneGroupFilled(roles)",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Bitte klicken sie 'ADD' und wählen sie ein Rolle aus."
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Please click 'ADD' and select a role."
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G13",
+                "name": "roles",
+                "Group": {
+                  "repeatability": 10000,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F14",
+                      "name": "roleIdent",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType",
+                          "StringType": {
+                            "pattern": "[a-zA-Z0-9_]*",
+                            "errorMessage": [
+                              {
+                                "locale": "de",
+                                "text": "Der Name darf nur Buchstaben, Ziffern und Unterstriche enthalten."
+                              },
+                              {
+                                "locale": "en",
+                                "text": "The name can only contain letters, numbers and underscore."
+                              }
+                            ]
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "de",
+                            "text": "Rollen id"
+                          },
+                          {
+                            "locale": "en",
+                            "text": "role id"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "R45",
+                      "name": "RoleRequired",
+                      "Rule": {
+                        "errorEntityRelPath": "../roleIdent",
+                        "errorCode": "Error R45",
+                        "errorCondition": "GroupFilled(RuleGroup) AND FieldNotFilled(roleIdent)",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "Please select a role."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bitte wählen sie eine Rolle."
+                          }
+                        ],
+                        "guiPatterns": {
+                          "dynamicEnumerationRule": "false"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "externalDescription": [
+                  {
+                    "locale": "de",
+                    "text": "Rollen"
+                  },
+                  {
+                    "locale": "en",
+                    "text": "roles"
+                  }
+                ]
+              },
+              {
+                "type": "Field",
+                "id": "F15",
+                "name": "salt",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F16",
+                "name": "lastLoginAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F17",
+                "name": "failedLoginAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "misslungener Login am"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "failed Login At"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F18",
+                "name": "failedLoginAttempts",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Anzahl Login Versuche"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "failed Login Attempts count"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R37",
+                "name": "attemptsRequired",
+                "Rule": {
+                  "errorEntityRelPath": "../failedLoginAttempts",
+                  "errorCode": "Error R37",
+                  "errorCondition": "FieldNotFilled(failedLoginAttempts)",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "$failedLoginAttempts$ ist pflicht. Zum Reaktivieren auf 0 setzen."
+                    },
+                    {
+                      "locale": "en",
+                      "text": "$failedLoginAttempts$ is required. Set '0' to reactivate."
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F19",
+                "name": "passwordChangedAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F20",
+                "name": "restorePasswordToken",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F21",
+                "name": "passwordTokenCreatedAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F24",
+                "name": "createdAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F39",
+                "name": "active",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Nutzer aktiv"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "activate user"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F42",
+                "name": "existing",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "existierender Nutzer"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "existing user"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F43",
+                "name": "documentId",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "document id"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "document id"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R40",
+                "name": "ruleActiveMandatory",
+                "Rule": {
+                  "errorEntityRelPath": "../active",
+                  "errorCode": "Error R40",
+                  "errorCondition": "FieldNotFilled(active)",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Bitte wählen: Nutzer aktive oder inaktiv."
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Please select: user active or inactive."
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F41",
+                "name": "enforcePasswordChange",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Passwortänderung erzwingen?"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Enforce password change?"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R42",
+                "name": "ruleEnforcePasswordChnageMandatory",
+                "Rule": {
+                  "errorEntityRelPath": "../enforcePasswordChange",
+                  "errorCode": "Error R40",
+                  "errorCondition": "FieldNotFilled(enforcePasswordChange)",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Passwortänderung erzwingen?"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Enforce password change?"
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R43",
+                "name": "rulePasswordMandatoryOnCreate",
+                "Rule": {
+                  "errorEntityRelPath": "../password",
+                  "errorCode": "Error R43",
+                  "errorCondition": "[existing] == False And FieldNotFilled(password)",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Bitte ein Passwort erstellen."
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Please enter a password."
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              }
+            ]
+          },
+          "internalDescription": [
+            {
+              "locale": "de",
+              "text": "Notwendige Systemfelder - nicht änderbar!"
+            },
+            {
+              "locale": "en",
+              "text": "Required system properties - do not change!"
+            }
+          ]
+        },
+        {
+          "type": "Group",
+          "id": "I9",
+          "name": "CustomProperties",
+          "Group": {
+            "repeatability": 1,
+            "modelAlias": "DomainCustomUser"
+          }
+        }
+      ]
+    }
+  }
+}

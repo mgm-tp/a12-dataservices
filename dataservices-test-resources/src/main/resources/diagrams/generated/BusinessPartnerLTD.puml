@@ -1,0 +1,156 @@
+@startuml
+
+!procedure group(x)
+class x << (G,#DDAAFF) >>
+!endprocedure
+
+!procedure cdmGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure field(x)
+class x << (F,#DDFFAA) >> #White
+!endprocedure
+
+!procedure embeddedField(name, type, fieldType)
+name <<type>>: fieldType
+!endprocedure
+
+!procedure rule(x)
+class x << (R,#DDBBAA) >> #FFDDEE
+!endprocedure
+
+!procedure embeddedRule(name, type)
+<back:FFDDEE>name() <<type>></back>
+!endprocedure
+
+!procedure embeddedRule(name, type, $errorCondition)
+.. <back:FFDDEE> name <<type>> </back> ..
+<back:FFDDEE>errorCondition:</back> $errorCondition
+!endprocedure
+
+!procedure computation(x)
+class x << (C,#DDBBAA) >> #FFEEDD
+!endprocedure
+
+!procedure computationAlternative($operation, $precondition)
+.. alternative ..
+operation: $operation
+precondition: $precondition
+!endprocedure
+
+!procedure embeddedComputation(name, type, $operation, $precondition)
+.. <back:FFEEDD> name <<type>> </back> ..
+<back:FFEEDD>operation:</back> $operation
+<back:FFEEDD>precondition:</back> $precondition
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure embeddedComputation(name, type )
+<back:FFEEDD>name() <<type>></back>
+!endprocedure
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure linkGroup(x)
+group(x) #PeachPuff
+!endprocedure
+
+!procedure relLink($name,$rmId,$link1,$link2,$ld="")
+circle $name as $rmId #PeachPuff
+$rmId $link1
+$rmId $link2
+!if $ld!=""
+$rmId -[#IndianRed]right $ld: <<linkDocument>>
+linkDocument($ld)
+!endif
+!endprocedure
+
+skinparam linetype polyline
+left to right direction
+
+title Document Model BusinessPartnerLTD
+
+package "BusinessPartnerLTD" as BusinessPartnerLTD <<Frame>> {
+	() "documentRoot" as BusinessPartnerLTDDocumentRoot
+	group('"BusinessPartnerRoot" as group_36405')
+	group('"Attachment" as G77')
+	field('"original_filename" as F21 <<StringType>>')
+	G77 -- F21
+	field('"internal_filename" as F22 <<StringType>>')
+	G77 -- F22
+	field('"content" as F23 <<StringType>>')
+	G77 -- F23
+	field('"attachment_id" as F24 <<StringType>>')
+	G77 -- F24
+	field('"size" as F25 <<NumberType>>')
+	G77 -- F25
+	field('"mime_type" as F26 <<StringType>>')
+	G77 -- F26
+	field('"category" as F27 <<StringType>>')
+	G77 -- F27
+	field('"description" as F28 <<StringType>>')
+	G77 -- F28
+	rule('"AttachmentInternalFilenameRequired" as R29') {
+}
+	G77 -- R29
+	rule('"AttachmentMimeTypeRequired" as R30') {
+}
+	G77 -- R30
+	rule('"AttachmentIdOrContentFilled" as R31') {
+}
+	G77 -- R31
+	rule('"SizeOfContentFilled" as R32') {
+}
+	G77 -- R32
+
+	group_36405 ||--o{ "0..99" G77
+	field('"Name" as field_fe6b2 <<StringType>>')
+	group_36405 -- field_fe6b2
+	rule('"NameFilled" as R33') {
+}
+	group_36405 -- R33
+	field('"Industry" as field_d6580 <<EnumerationType>>')
+	group_36405 -- field_d6580
+	rule('"IndustryFilled" as R34') {
+}
+	group_36405 -- R34
+	field('"StartOfRelationship" as field_663d2 <<DateType>>')
+	group_36405 -- field_663d2
+	group('"Employment" as G2')
+	field('"income" as field_3920 <<NumberType>>')
+	G2 -- field_3920
+	field('"tax" as field_1c326 <<NumberType>>')
+	G2 -- field_1c326
+	computation('"TaxComputation" as computation_8a180') {
+computes: ../tax
+}
+	G2 -- computation_8a180
+
+	group_36405 ||--o| "0..1" G2
+	field('"CustomerDiscount" as field_74a24 <<EnumerationType>>')
+	group_36405 -- field_74a24
+	rule('"CustomerDiscountFilled" as R35') {
+}
+	group_36405 -- R35
+	field('"PersonOrEntity" as field_ab26d <<StringType>>')
+	group_36405 -- field_ab26d
+	group('"SubtypeGroup" as group_b7bb6')
+	field('"Type" as field_0f29a <<EnumerationType>>')
+	group_b7bb6 -- field_0f29a
+	computation('"EntityComp" as computation_f8ee5') {
+computes: ../../PersonOrEntity
+}
+	group_b7bb6 -- computation_f8ee5
+
+	group_36405 ||--o| "0..1" group_b7bb6
+
+	BusinessPartnerLTDDocumentRoot ||--o| "0..1" group_36405
+
+}
+@enduml

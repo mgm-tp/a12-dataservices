@@ -1,0 +1,12 @@
+{
+  "BusinessPartnerRoot": {
+    "Name": "Engine*",
+    "Industry": "IT",
+    "StartOfRelationship": "2020-01-01",
+    "CustomerDiscount": "70%",
+    "PersonOrEntity": "Person",
+    "Employment": {
+      "income": "1500"
+    }
+  }
+}

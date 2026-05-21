@@ -1,0 +1,7 @@
+username: model_read_user
+password: model_read_user
+firstname: model_read
+lastname: model_read
+email: model_read@min.com
+authorities:
+  - "ModelRead"

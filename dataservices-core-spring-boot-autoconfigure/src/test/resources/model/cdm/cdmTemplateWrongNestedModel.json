@@ -1,0 +1,168 @@
+{
+  "header": {
+    "id": "%s",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "NaturalPerson CDM"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "cdm.queryRoot",
+        "value": "Contract"
+      },
+      {
+        "name": "roles",
+        "value": "admin,sysadmin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "NewDocumentModel",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "group_0548e",
+          "name": "r_postAddress",
+          "annotations": [
+            {
+              "name": "cdm.targetDocumentModel",
+              "value": "Address-document"
+            },
+            {
+              "name": "cdm.targetRole",
+              "value": "Partner"
+            },
+            {
+              "name": "cdm.relationship",
+              "value": "PartnerAddresses"
+            },
+            {
+              "name": "cdm.sourceRole",
+              "value": "Address"
+            }
+          ],
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_8d767",
+                "name": "hasPostalAddress",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "has postal address"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "hat Postanschrift"
+                    }
+                  ],
+                  "transient": true
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "id": "group_86397",
+          "name": "r_CoInsurer",
+          "annotations": [
+            {
+              "name": "cdm.relationship",
+              "value": "ContractCoInsuredPartner"
+            },
+            {
+              "name": "cdm.targetDocumentModel",
+              "value": "contract-document"
+            },
+            {
+              "name": "cdm.targetRole",
+              "value": "Contract"
+            },
+            {
+              "name": "cdm.sourceRole",
+              "value": "Partner"
+            }
+          ],
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_41751",
+                "name": "t_docRef",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": ""
+                    },
+                    {
+                      "locale": "de",
+                      "text": ""
+                    }
+                  ],
+                  "transient": true
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_7759c",
+                "name": "isCoInsured",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": ""
+                    },
+                    {
+                      "locale": "de",
+                      "text": ""
+                    }
+                  ],
+                  "transient": true
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

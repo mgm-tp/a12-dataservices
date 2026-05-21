@@ -1,0 +1,10 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+	api libs.springSecurityCore
+	implementation libs.jacksonAnnotations
+}
+
+description = 'Data Services Security: User, Roles, and Access Rights API'

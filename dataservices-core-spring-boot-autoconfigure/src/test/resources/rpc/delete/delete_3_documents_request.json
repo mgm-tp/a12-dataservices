@@ -1,0 +1,29 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "deleteDocument1",
+    "method": "DELETE_DOCUMENT",
+    "params": {
+      "docRef": "%s",
+      "locale": null
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "deleteDocument2",
+    "method": "DELETE_DOCUMENT",
+    "params": {
+      "docRef": "%s",
+      "locale": null
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "deleteDocument3",
+    "method": "DELETE_DOCUMENT",
+    "params": {
+      "docRef": "%s",
+      "locale": null
+    }
+  }
+]

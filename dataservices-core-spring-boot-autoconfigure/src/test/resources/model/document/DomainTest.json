@@ -1,0 +1,219 @@
+{
+  "header": {
+    "id": "DomainTest",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "DomainTest",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "NewGroup_1",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F3",
+                "name": "NewField_1",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "string"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "string"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F4",
+                "name": "NewField_2",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "nummer"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "number"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F5",
+                "name": "NewField_3",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Boolean"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "boolean"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G6",
+                "name": "NewGroup_2",
+                "Group": {
+                  "repeatability": 10,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F7",
+                      "name": "NewField_1",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateType",
+                          "DateType": {
+                            "format": "yyyy-MM-dd"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "de",
+                            "text": "Datum"
+                          },
+                          {
+                            "locale": "en",
+                            "text": "Date"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F8",
+                      "name": "NewField_2",
+                      "Field": {
+                        "fieldType": {
+                          "type": "EnumerationType",
+                          "EnumerationType": {
+                            "values": [
+                              {
+                                "value": "NEW_VALUE_2",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "hallo"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "hello"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "NEW_VALUE_1",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "welt"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "world"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "3",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "guten"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "good"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "NEW_VALUE_4",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "morgen"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "morning"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "de",
+                            "text": "Enumeration"
+                          },
+                          {
+                            "locale": "en",
+                            "text": "enumeration"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,266 @@
+{
+  "header": {
+    "id": "TypesModel",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "TypesModel",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "typeDefinitions": [
+      {
+        "id": "typedef_776f2cbf-f56f-410c-9842-af55ab1f0fd1",
+        "name": "SampleType",
+        "fieldType": {
+          "type": "BooleanType"
+        }
+      }
+    ],
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "RootGroup",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F16",
+                "name": "TestDate",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "TestDate"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F4",
+                "name": "Wohngeldnummer",
+                "externalDescription": [
+                  {
+                    "locale": "en",
+                    "text": "falls bekannt"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Wohngeldnummer"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F21",
+                "name": "Telefonnummer",
+                "annotations": [
+                  {
+                    "name": "faker",
+                    "value": "faker.phoneNumber"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "errorMessage": [
+                        {
+                          "locale": "en",
+                          "text": "Bitte geben Sie eine gültige Telefonnummer an."
+                        }
+                      ],
+                      "pattern": "[0-9\\+\\(\\)\\-\\s]+"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Telefonnummer"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G22",
+                "name": "SubGroup",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F23",
+                      "name": "Field_1",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F24",
+                      "name": "Field_2",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F25",
+                "name": "DateTime_Field",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F26",
+                "name": "Time_Field",
+                "Field": {
+                  "fieldType": {
+                    "type": "TimeType",
+                    "TimeType": {
+                      "format": "HH:mm:ss"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F27",
+                "name": "Boolean_Filed",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F28",
+                "name": "Confirm_Field",
+                "Field": {
+                  "fieldType": {
+                    "type": "ConfirmType"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F29",
+                "name": "Enumeration_Filed",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "ENUM1"
+                        },
+                        {
+                          "value": "ENUM2"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F7",
+                "name": "TypeDef_Field",
+                "Field": {
+                  "fieldType": {
+                    "type": "TypeDefType",
+                    "TypeDefType": {
+                      "typeDefinitionId": "typedef_776f2cbf-f56f-410c-9842-af55ab1f0fd1"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F31",
+                "name": "Number_Field",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "minFractionalDigits": 2,
+                      "maxFractionalDigits": 5
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F32",
+                "name": "NumberUnit_Field",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "minFractionalDigits": 2,
+                      "maxFractionalDigits": 2,
+                      "trait": "percent"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

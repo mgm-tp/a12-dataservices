@@ -1,0 +1,10 @@
+@startuml
+
+!include _common.puml
+!include generated/_documents.puml
+!include generated/_links.puml
+left to right direction
+
+title Insurance domain
+
+@enduml

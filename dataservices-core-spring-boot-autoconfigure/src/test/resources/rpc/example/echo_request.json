@@ -1,0 +1,10 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "EchoString",
+    "method": "ECHO",
+    "params": {
+      "message": "Hello I'm test operation"
+    }
+  }
+]

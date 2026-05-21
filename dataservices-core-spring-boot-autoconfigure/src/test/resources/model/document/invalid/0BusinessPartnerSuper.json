@@ -1,0 +1,392 @@
+{
+  "header": {
+    "id": "0BusinessPartnerSuper",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      },
+      {
+        "name": "abstract",
+        "value": "true"
+      },
+      {
+        "name": "subTypes",
+        "value": "BusinessPartner,BusinessPartnerLTD"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "0BusinessPartnerSuper"
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "group_36405",
+          "name": "BusinessPartnerRoot",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Group",
+                "id": "G77",
+                "name": "Attachment",
+                "Group": {
+                  "repeatability": 99,
+                  "usageType": "attachment",
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F21",
+                      "name": "original_filename",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F22",
+                      "name": "internal_filename",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F23",
+                      "name": "content",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType",
+                          "StringType": {
+                            "lineBreaksPermitted": true,
+                            "noValueValidation": true
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F24",
+                      "name": "attachment_id",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F25",
+                      "name": "size",
+                      "Field": {
+                        "fieldType": {
+                          "type": "NumberType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F26",
+                      "name": "mime_type",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F27",
+                      "name": "category",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F28",
+                      "name": "description",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "R29",
+                      "name": "AttachmentInternalFilenameRequired",
+                      "Rule": {
+                        "errorEntityRelPath": "../internal_filename",
+                        "errorCode": "ErrorR29",
+                        "errorCondition": "GroupFilled(RuleGroup) and FieldNotFilled(internal_filename)",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "Internal Error: Field $internal_filename$ of customType attachment is not filled."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Internal Error: Field $internal_filename$ of customType attachment is not filled."
+                          }
+                        ],
+                        "guiPatterns": {
+                          "dynamicEnumerationRule": "false"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "R30",
+                      "name": "AttachmentMimeTypeRequired",
+                      "Rule": {
+                        "errorEntityRelPath": "../mime_type",
+                        "errorCode": "ErrorR30",
+                        "errorCondition": "GroupFilled(RuleGroup) and FieldNotFilled(mime_type)",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "Internal Error: Field $mime_type$ of customType attachment is not filled."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Internal Error: Field $mime_type$ of customType attachment is not filled."
+                          }
+                        ],
+                        "guiPatterns": {
+                          "dynamicEnumerationRule": "false"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "R31",
+                      "name": "AttachmentIdOrContentFilled",
+                      "Rule": {
+                        "errorEntityRelPath": "../content",
+                        "errorCode": "ErrorR31",
+                        "errorCondition": "GroupFilled(RuleGroup) and NotExactlyOneFieldFilled(attachment_id, content)",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "Internal Error: Either attachment_id or content must be filled in a customType attachment, but not both."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Internal Error: Either attachment_id or content must be filled in a customType attachment, but not both."
+                          }
+                        ],
+                        "guiPatterns": {
+                          "dynamicEnumerationRule": "false"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "R32",
+                      "name": "SizeOfContentFilled",
+                      "Rule": {
+                        "errorEntityRelPath": "../content",
+                        "errorCode": "ErrorR32",
+                        "errorCondition": "FieldFilled(content) and FieldNotFilled(size)",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "Internal Error: If the content is filled, the size must be also filled."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Internal Error: If the content is filled, the size must be also filled."
+                          }
+                        ],
+                        "guiPatterns": {
+                          "dynamicEnumerationRule": "false"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_fe6b2",
+                "name": "Name",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Name"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_d6580",
+                "name": "Industry",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Industry or business sector"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_663d2",
+                "name": "StartOfRelationship",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Start of business relationship"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_74a24",
+                "name": "CustomerDiscount",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "100%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "no discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "100%"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "90%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "10% discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "90%"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "80%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "20% discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "80%"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "50%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "50% discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "50%"
+                            }
+                          ]
+                        }
+                      ],
+                      "categories": []
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Customer Discount"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_114de",
+                "name": "PersonOrEntity",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Natural Person or Legal Entity"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

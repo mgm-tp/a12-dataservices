@@ -1,0 +1,135 @@
+[
+	{
+		"idRef": "addAirJordanToBreakASweatCampaign",
+		"result": {
+			"linkDescriptor": {
+				"relationshipModel": "ProductCampaign",
+				"entities": [
+					{
+						"role": "ProductRole",
+						"docRef": "Product/29"
+					},
+					{
+						"role": "Campaign",
+						"docRef": "Campaign/35"
+					}
+				]
+			},
+			"id": "1"
+		}
+	},
+	{
+		"idRef": "addSweatShirtToBreakASweatCampaign",
+		"result": {
+			"linkDescriptor": {
+				"relationshipModel": "ProductCampaign",
+				"entities": [
+					{
+						"role": "ProductRole",
+						"docRef": "Product/30"
+					},
+					{
+						"role": "Campaign",
+						"docRef": "Campaign/35"
+					}
+				]
+			},
+			"id": "2"
+		}
+	},
+	{
+		"idRef": "addPaperToPrintCampaign",
+		"result": {
+			"linkDescriptor": {
+				"relationshipModel": "ProductCampaign",
+				"entities": [
+					{
+						"role": "ProductRole",
+						"docRef": "Product/31"
+					},
+					{
+						"role": "Campaign",
+						"docRef": "Campaign/36"
+					}
+				]
+			},
+			"id": "3"
+		}
+	},
+	{
+		"idRef": "addSocksToAutumnSale",
+		"result": {
+			"linkDescriptor": {
+				"relationshipModel": "ProductCampaign",
+				"entities": [
+					{
+						"role": "ProductRole",
+						"docRef": "Product/32"
+					},
+					{
+						"role": "Campaign",
+						"docRef": "Campaign/36"
+					}
+				]
+			},
+			"id": "4"
+		}
+	},
+	{
+		"idRef": "addTshirtToBreakASweatCampaign",
+		"result": {
+			"linkDescriptor": {
+				"relationshipModel": "ProductCampaign",
+				"entities": [
+					{
+						"role": "ProductRole",
+						"docRef": "Product/33"
+					},
+					{
+						"role": "Campaign",
+						"docRef": "Campaign/35"
+					}
+				]
+			},
+			"id": "5"
+		}
+	},
+	{
+		"idRef": "addTshirtToAutumnSaleCampaign",
+		"result": {
+			"linkDescriptor": {
+				"relationshipModel": "ProductCampaign",
+				"entities": [
+					{
+						"role": "ProductRole",
+						"docRef": "Product/33"
+					},
+					{
+						"role": "Campaign",
+						"docRef": "Campaign/36"
+					}
+				]
+			},
+			"id": "6"
+		}
+	},
+	{
+		"idRef": "addTonerToPrintCampaign",
+		"result": {
+			"linkDescriptor": {
+				"relationshipModel": "ProductCampaign",
+				"entities": [
+					{
+						"role": "ProductRole",
+						"docRef": "Product/29"
+					},
+					{
+						"role": "Campaign",
+						"docRef": "Campaign/37"
+					}
+				]
+			},
+			"id": "7"
+		}
+	}
+]

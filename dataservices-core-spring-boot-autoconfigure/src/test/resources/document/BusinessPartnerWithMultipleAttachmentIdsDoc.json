@@ -1,0 +1,31 @@
+{
+	"BusinessPartnerRoot": {
+		"Test": {
+		"attachment_id": "TestValue"
+		},
+		"Name": "Business Partner with Attachments",
+		"CustomerDiscount": "90%",
+		"Attachment": [
+		{
+			"original_filename": "Attachment",
+			"internal_filename": "Attachment",
+			"content": "",
+			"attachment_id": "{{ATTACHMENT_ID}}",
+			"size": "",
+			"mime_type": "image/jpg",
+			"category": "",
+			"description": ""
+		},
+		{
+			"original_filename": "Attachment2",
+			"internal_filename": "Attachment2",
+			"content": "",
+			"attachment_id": "{{ATTACHMENT_ID2}}",
+			"size": "",
+			"mime_type": "image/jpg",
+			"category": "",
+			"description": ""
+		}
+		]
+	}
+}

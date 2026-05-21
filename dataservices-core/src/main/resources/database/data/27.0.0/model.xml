@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+	logicalFilePath="database/schema/27.0.0/model.xml">
+
+	<changeSet id="A12S-59-delete" author="pvranik">
+		<delete tableName="ROLE_ACCESS_RIGHT">
+			<where>
+	ROLE_ID in (SELECT ID FROM ROLE WHERE NAME = 'admin')
+		and ACCESS_RIGHT_ID in (SELECT ID FROM ACCESS_RIGHT WHERE NAME in ('DOCUMENT_READ', 'DOCUMENT_WRITE', 'MODEL_READ', 'MODEL_WRITE'))
+	or ROLE_ID in (SELECT ID FROM ROLE WHERE NAME = 'guest')
+		and ACCESS_RIGHT_ID in (SELECT ID FROM ACCESS_RIGHT WHERE NAME in ('DOCUMENT_READ', 'MODEL_READ'))
+			</where>
+		</delete>
+		<delete tableName="USER_ROLE">
+			<where>
+USER_ID in (select ID from SERVER_USER where user_name = 'admin') and ROLE_ID in (select ID from role where name = 'admin')
+or USER_ID in (select ID from SERVER_USER where user_name = 'guest') and ROLE_ID in (select ID from role where name = 'guest')
+			</where>
+		</delete>
+		<delete tableName="ACCESS_RIGHT">
+			<where>NAME in ('DOCUMENT_READ', 'DOCUMENT_WRITE', 'MODEL_READ', 'MODEL_WRITE', 'DOCUMENT_READ')</where>
+		</delete>
+		<delete tableName="ROLE">
+			<where>name in ('admin', 'guest')</where>
+		</delete>
+		<delete tableName="SERVER_USER">
+			<where>user_name in ('admin', 'guest')</where>
+		</delete>
+	</changeSet>
+</databaseChangeLog>

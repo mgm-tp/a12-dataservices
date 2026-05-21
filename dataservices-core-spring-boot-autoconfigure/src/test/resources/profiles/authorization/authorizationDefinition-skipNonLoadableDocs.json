@@ -1,0 +1,43 @@
+{
+  "name": "Campaign Authorization Definition",
+  "description": "Example Permission Definition for documents of model Campaign",
+  "policies": [
+    {
+      "name": "HasCampaign_Policy",
+      "description": "Checks if the document being loaded has the campaign name that the user is allowed to see",
+        "target": "hasRole('guest') && #resource instanceof T(com.mgmtp.a12.dataservices.document.DataServicesDocument) && #resource.getDocRef().getDocumentModelName() == 'Campaign'",
+	        "dataPreload": [
+	        ],
+	      "rules": [
+	      		"#resource.kernelDocument.Properties.name == principal.campaignName"
+      		]
+    },
+    {
+      "name": "GuestHasPersonFirstName_Policy",
+      "description": "Checks if the document being loaded has the first name that the user is allowed to see",
+        "target": "hasRole('guest') && #resource instanceof T(com.mgmtp.a12.dataservices.document.DataServicesDocument) && #resource.getDocRef().getDocumentModelName() == 'DomainPerson'",
+	        "dataPreload": [
+	        ],
+	      "rules": [
+	      		"#resource.kernelDocument.Person.PersonalData.FirstName == principal.personFirstName"
+      		]
+    }
+  ],
+  "repositoryPolicies": [],
+  "permissions": [
+    {
+      "name": "Read Document",
+      "description": "",
+      "policy-refs": [
+        "HasCampaign_Policy",
+        "GuestHasPersonFirstName_Policy"
+      ],
+      "repository-refs" : [],
+      "call-parent-scope": "false",
+      "scopes": [
+        "Query",
+        "Model Read"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+	"jsonrpc": "2.0",
+	"id": "listValidationCodes1",
+	"result": {
+		"documentValidationCodes": {
+			"Contract": "JS1",
+			"BusinessPartner": "JS2",
+			"Address": "JS3"
+		}
+	}
+}

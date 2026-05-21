@@ -1,0 +1,192 @@
+/*
+ * SPDX-License-Identifier: EUPL-1.2 OR LicenseRef-commercial
+ *
+ * Copyright (c) 2012-2026 mgm technology partners GmbH
+ *
+ * Dual License
+ * ------------
+ * This source file is part of the mgm A12 Platform and available under
+ * a choice of two different licenses:
+ *
+ * 1. Open-Source License – EUPL v1.2
+ *    You may redistribute and/or modify this file under the terms of the
+ *    European Union Public License, version 1.2 - see https://eupl.eu/.
+ *
+ * 2. Commercial License
+ *    Alternatively, you may obtain a commercial license from
+ *    mgm technology partners GmbH, that permits use of this software
+ *    under different terms (including support and maintenance services).
+ *
+ *    Please contact a12-license@mgm-tp.com for more information.
+ *
+ * You must select and comply with exactly one of the above license options.
+ *
+ * Warranty Disclaimer (applies to either option)
+ * ----------------------------------------------
+ * THIS SOFTWARE IS PROVIDED “AS IS” AND WITHOUT WARRANTY OF ANY KIND,
+ * WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
+ * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
+ */
+package com.mgmtp.a12.dataservices.client.autoconfigure;
+
+import java.lang.reflect.Modifier;
+
+import org.reflections.Reflections;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+import com.mgmtp.a12.connector.rest.RestDeleteConnector;
+import com.mgmtp.a12.connector.rest.RestGetConnector;
+import com.mgmtp.a12.connector.rest.RestPostConnector;
+import com.mgmtp.a12.connector.rest.RestPutConnector;
+import com.mgmtp.a12.dataservices.client.attachment.AttachmentClientV2;
+import com.mgmtp.a12.dataservices.client.attachment.RestAttachmentV2Client;
+import com.mgmtp.a12.dataservices.client.enumeration.EnumerationClient;
+import com.mgmtp.a12.dataservices.client.enumeration.rest.RestEnumerationClient;
+import com.mgmtp.a12.dataservices.client.model.ModelsClient;
+import com.mgmtp.a12.dataservices.client.model.rest.RestModelsClient;
+import com.mgmtp.a12.dataservices.client.relationship.RelationshipClient;
+import com.mgmtp.a12.dataservices.client.relationship.rest.RestRelationshipClient;
+import com.mgmtp.a12.dataservices.client.rpc.RequestBuilderFactory;
+import com.mgmtp.a12.dataservices.client.rpc.RestRpcOperationsClient;
+import com.mgmtp.a12.dataservices.client.rpc.RpcOperationsClient;
+import com.mgmtp.a12.dataservices.query.annotation.QueryAggregationFunction;
+import com.mgmtp.a12.dataservices.query.annotation.QueryOperator;
+
+/**
+ * Spring Boot auto-configuration for the Data Services client.
+ *
+ * Registers client beans (RPC, enumeration, relationship, models, attachments) and configures Jackson polymorphic subtypes
+ * for {@link com.mgmtp.a12.dataservices.query.annotation.QueryOperator} and {@link com.mgmtp.a12.dataservices.query.annotation.QueryAggregationFunction}.
+ * Scans packages from {@link com.mgmtp.a12.dataservices.client.configuration.ClientConfiguration#getQuery()} and registers discovered types with the provided {@link com.fasterxml.jackson.databind.ObjectMapper}.
+ */
+@EnableConfigurationProperties(ClientProperties.class)
+@PropertySource("classpath:dataservices-client-default.properties")
+@Configuration public class ClientAutoConfiguration implements InitializingBean {
+
+	private final ClientProperties restProperties;
+	private final RestPostConnector postConnector;
+	private final ObjectMapper objectMapper;
+
+	/**
+	 * Creates the auto-configuration with explicit {@link ClientProperties} and {@link com.mgmtp.a12.connector.rest.RestPostConnector}.
+	 *
+	 * The {@link com.fasterxml.jackson.databind.ObjectMapper} is not provided in this constructor and remains `null`.
+	 * Using {@link #afterPropertiesSet()} requires a non-null mapper; ensure the alternative constructor is used if subtype registration is needed.
+	 *
+	 * @param restProperties Data Services client properties; must not be null.
+	 * @param postConnector REST connector used for POST operations; must not be null.
+	 */
+	public ClientAutoConfiguration(ClientProperties restProperties, RestPostConnector postConnector) {
+		this.restProperties = restProperties;
+		this.postConnector = postConnector;
+		this.objectMapper = null;
+	}
+
+	/**
+	 * Creates the auto-configuration with explicit {@link ClientProperties}, REST connectors, and an {@link com.fasterxml.jackson.databind.ObjectMapper}.
+	 * The mapper is used to register discovered query subtypes.
+	 *
+	 * @param restProperties Data Services client properties; must not be null.
+	 * @param postConnector REST connector used for POST operations; must not be null.
+	 * @param objectMapper Jackson {@link com.fasterxml.jackson.databind.ObjectMapper} used for subtype registration; must not be null.
+	 */
+	@Autowired
+	public ClientAutoConfiguration(ClientProperties restProperties, RestPostConnector postConnector, ObjectMapper objectMapper) {
+		this.restProperties = restProperties;
+		this.postConnector = postConnector;
+		this.objectMapper = objectMapper;
+	}
+
+	@Bean RequestBuilderFactory requestBuilderFactory(ObjectMapper objectMapper) {
+		return new RequestBuilderFactory(objectMapper);
+	}
+
+	/**
+	 * Creates the {@link com.mgmtp.a12.dataservices.client.rpc.RpcOperationsClient} using the configured base URL and POST connector.
+	 *
+	 * @param restProperties Client properties providing the base URL; must not be null.
+	 * @param postConnector REST connector for POST requests; must not be null.
+	 * @return A configured {@link com.mgmtp.a12.dataservices.client.rpc.RpcOperationsClient} instance.
+	 */
+	@Bean public RpcOperationsClient createRestRpcOperationsClient(ClientProperties restProperties, RestPostConnector postConnector) {
+		return new RestRpcOperationsClient(restProperties.getConfiguration().getBaseUrl(), postConnector);
+	}
+
+	/**
+	 * Creates the {@link com.mgmtp.a12.dataservices.client.enumeration.EnumerationClient} backed by REST.
+	 *
+	 * @param restProperties Client properties providing the base URL; must not be null.
+	 * @param getConnector REST connector for GET requests; must not be null.
+	 * @return A configured {@link com.mgmtp.a12.dataservices.client.enumeration.EnumerationClient}.
+	 */
+	@Bean public EnumerationClient createRestEnumerationClient(ClientProperties restProperties, RestGetConnector getConnector) {
+		return new RestEnumerationClient(restProperties.getConfiguration().getBaseUrl(), getConnector);
+	}
+
+	/**
+	 * Creates the {@link com.mgmtp.a12.dataservices.client.relationship.RelationshipClient} backed by REST.
+	 *
+	 * @param restProperties Client properties providing the base URL; must not be null.
+	 * @param getConnector REST connector for GET requests; must not be null.
+	 * @return A configured {@link com.mgmtp.a12.dataservices.client.relationship.RelationshipClient}.
+	 */
+	@Bean public RelationshipClient createRestRelationshipClient(ClientProperties restProperties, RestGetConnector getConnector) {
+		return new RestRelationshipClient(restProperties.getConfiguration().getBaseUrl(), getConnector);
+	}
+
+	/**
+	 * Creates the {@link com.mgmtp.a12.dataservices.client.model.ModelsClient} backed by REST.
+	 *
+	 * @param restProperties Client properties providing the base URL; must not be null.
+	 * @param getConnector REST connector for GET requests; must not be null.
+	 * @param postConnector REST connector for POST requests; must not be null.
+	 * @param putConnector REST connector for PUT requests; must not be null.
+	 * @param deleteConnector REST connector for DELETE requests; must not be null.
+	 * @return A configured {@link com.mgmtp.a12.dataservices.client.model.ModelsClient}.
+	 */
+	@Bean public ModelsClient createRestModelsClient(ClientProperties restProperties, RestGetConnector getConnector, RestPostConnector postConnector,
+		RestPutConnector putConnector, RestDeleteConnector deleteConnector) {
+		return new RestModelsClient(restProperties.getConfiguration().getBaseUrl(), getConnector, postConnector, putConnector, deleteConnector);
+	}
+
+	/**
+	 * Creates the {@link com.mgmtp.a12.dataservices.client.attachment.AttachmentClientV2} backed by REST.
+	 *
+	 * @return A configured {@link com.mgmtp.a12.dataservices.client.attachment.AttachmentClientV2}.
+	 */
+	@Bean public AttachmentClientV2 createRestAttachmentClientV2() {
+		return new RestAttachmentV2Client(restProperties.getConfiguration().getBaseUrl(), postConnector);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * Scans the packages configured via {@link com.mgmtp.a12.dataservices.client.configuration.ClientConfiguration#getQuery()} and
+	 * registers discovered {@link com.mgmtp.a12.dataservices.query.annotation.QueryOperator} and
+	 * {@link com.mgmtp.a12.dataservices.query.annotation.QueryAggregationFunction} subtypes with the {@link com.fasterxml.jackson.databind.ObjectMapper}.
+	 * TODO: Clarify contract (uncertain behavior) — {@code objectMapper} must be non-null; otherwise subtype registration fails.
+	 */
+	@Override public void afterPropertiesSet() {
+		Reflections reflections = new Reflections(restProperties.getConfiguration().getQuery().getScanPackages());
+
+		reflections.getTypesAnnotatedWith(QueryOperator.class).stream()
+			.filter(c -> !Modifier.isAbstract(c.getModifiers()))
+			.map(c -> new NamedType(c, c.getAnnotation(QueryOperator.class).value()))
+			.forEach(objectMapper::registerSubtypes);
+
+		reflections.getTypesAnnotatedWith(QueryAggregationFunction.class).stream()
+			.filter(c -> !Modifier.isAbstract(c.getModifiers()))
+			.map(c -> new NamedType(c, c.getAnnotation(QueryAggregationFunction.class).value()))
+			.forEach(objectMapper::registerSubtypes);
+	}
+}
+

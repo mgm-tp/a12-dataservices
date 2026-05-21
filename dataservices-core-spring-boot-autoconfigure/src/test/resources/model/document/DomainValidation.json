@@ -1,0 +1,121 @@
+{
+  "header": {
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "id": "ValidationModel",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,DocumentWrite"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "ValidationModel",
+      "immutable": false,
+      "comment": "Brand"
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G7",
+          "name": "Items",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F1",
+                "name": "name",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F2",
+                "name": "price",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  }
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "rule_f06c8",
+                "name": "name_check",
+                "Rule": {
+                  "errorEntityRelPath": "../name",
+                  "errorCode": "Error rule_f06c8",
+                  "errorCondition": "FieldNotFilled(name)",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Field name cannot be empty"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Field name cannot be empty"
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "rule_9fa93",
+                "name": "price_check",
+                "Rule": {
+                  "errorEntityRelPath": "../price",
+                  "errorCode": "Error rule_9fa93",
+                  "errorCondition": "FieldNotFilled(price)",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Field price cannot be empty"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Field price cannot be empty"
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,380 @@
+@startuml
+
+!procedure group(x)
+class x << (G,#DDAAFF) >>
+!endprocedure
+
+!procedure cdmGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure field(x)
+class x << (F,#DDFFAA) >> #White
+!endprocedure
+
+!procedure embeddedField(name, type, fieldType)
+name <<type>>: fieldType
+!endprocedure
+
+!procedure rule(x)
+class x << (R,#DDBBAA) >> #FFDDEE
+!endprocedure
+
+!procedure embeddedRule(name, type)
+<back:FFDDEE>name() <<type>></back>
+!endprocedure
+
+!procedure embeddedRule(name, type, $errorCondition)
+.. <back:FFDDEE> name <<type>> </back> ..
+<back:FFDDEE>errorCondition:</back> $errorCondition
+!endprocedure
+
+!procedure computation(x)
+class x << (C,#DDBBAA) >> #FFEEDD
+!endprocedure
+
+!procedure computationAlternative($operation, $precondition)
+.. alternative ..
+operation: $operation
+precondition: $precondition
+!endprocedure
+
+!procedure embeddedComputation(name, type, $operation, $precondition)
+.. <back:FFEEDD> name <<type>> </back> ..
+<back:FFEEDD>operation:</back> $operation
+<back:FFEEDD>precondition:</back> $precondition
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure embeddedComputation(name, type )
+<back:FFEEDD>name() <<type>></back>
+!endprocedure
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure linkGroup(x)
+group(x) #PeachPuff
+!endprocedure
+
+!procedure relLink($name,$rmId,$link1,$link2,$ld="")
+circle $name as $rmId #PeachPuff
+$rmId $link1
+$rmId $link2
+!if $ld!=""
+$rmId -[#IndianRed]right $ld: <<linkDocument>>
+linkDocument($ld)
+!endif
+!endprocedure
+
+skinparam linetype polyline
+left to right direction
+
+title Compose Document Model ContractCDM<Contract}>
+
+package "ContractCDM<Contract>" as ContractCDM <<Frame>> {
+	() "documentRoot" as ContractCDMDocumentRoot
+	group('"ContractRoot" as include_71fc7')
+	field('"ContractName" as include_71fc7_field_770f2 <<StringType>>')
+	include_71fc7 -- include_71fc7_field_770f2
+	field('"ContractDescription" as include_71fc7_field_770f3 <<StringType>>')
+	include_71fc7 -- include_71fc7_field_770f3
+	field('"LengthOfContract" as include_71fc7_field_828da <<NumberType>>')
+	include_71fc7 -- include_71fc7_field_828da
+	field('"ContractValue" as include_71fc7_field_29708 <<NumberType>>')
+	include_71fc7 -- include_71fc7_field_29708
+	field('"Liability" as include_71fc7_field_edb7e <<NumberType>>')
+	include_71fc7 -- include_71fc7_field_edb7e
+	field('"CostToCustomer" as include_71fc7_field_502f7 <<NumberType>>')
+	include_71fc7 -- include_71fc7_field_502f7
+	field('"NoOfCoInsuredCustomers" as include_71fc7_field_f8187 <<NumberType>>')
+	include_71fc7 -- include_71fc7_field_f8187
+	field('"MaxDiscount" as include_71fc7_field_c472d <<StringType>>')
+	include_71fc7 -- include_71fc7_field_c472d
+	field('"CostPerCoInsured" as include_71fc7_field_24959 <<NumberType>>')
+	include_71fc7 -- include_71fc7_field_24959
+	field('"Valid" as include_71fc7_field_a09a6 <<BooleanType>>')
+	include_71fc7 -- include_71fc7_field_a09a6
+	field('"Type" as include_71fc7_field_48s48 <<EnumerationType>>')
+	include_71fc7 -- include_71fc7_field_48s48
+	group('"ContractDates" as include_71fc7_G2')
+	field('"ContractStartDate" as include_71fc7_G2F1 <<DateTimeType>>')
+	include_71fc7_G2 -- include_71fc7_G2F1
+	field('"ContractEndDate" as include_71fc7_G2F2 <<DateType>>')
+	include_71fc7_G2 -- include_71fc7_G2F2
+	field('"ContractEndTime" as include_71fc7_G2F3 <<TimeType>>')
+	include_71fc7_G2 -- include_71fc7_G2F3
+	field('"ContractReviewDate" as include_71fc7_G2F4 <<DateFragmentType>>')
+	include_71fc7_G2 -- include_71fc7_G2F4
+	field('"LastPremiumPaidDate" as include_71fc7_G2F5 <<DateType>>')
+	include_71fc7_G2 -- include_71fc7_G2F5
+	field('"CoveragePeriod" as include_71fc7_G2F6 <<DateRangeType>>')
+	include_71fc7_G2 -- include_71fc7_G2F6
+
+	include_71fc7 ||--o| "0..1" include_71fc7_G2
+	group('"ChangeLog" as include_71fc7_group_7a5d0')
+	field('"ID" as include_71fc7_field_fbee9 <<StringType>>')
+	include_71fc7_group_7a5d0 -- include_71fc7_field_fbee9
+	field('"Number" as include_71fc7_field_f9502 <<NumberType>>')
+	include_71fc7_group_7a5d0 -- include_71fc7_field_f9502
+	field('"ChangeTimestamp" as include_71fc7_field_5b05b <<DateType>>')
+	include_71fc7_group_7a5d0 -- include_71fc7_field_5b05b
+	field('"Description" as include_71fc7_field_e1113 <<StringType>>')
+	include_71fc7_group_7a5d0 -- include_71fc7_field_e1113
+	field('"User" as include_71fc7_field_ccb79 <<StringType>>')
+	include_71fc7_group_7a5d0 -- include_71fc7_field_ccb79
+	field('"Status" as include_71fc7_field_980c8 <<TypeDefType>>')
+	include_71fc7_group_7a5d0 -- include_71fc7_field_980c8
+	field('"Priority" as include_71fc7_field_18ea0 <<EnumerationType>>')
+	include_71fc7_group_7a5d0 -- include_71fc7_field_18ea0
+	group('"Changes" as include_71fc7_group_61e6a')
+	field('"ID" as include_71fc7_field_cdba0 <<StringType>>')
+	include_71fc7_group_61e6a -- include_71fc7_field_cdba0
+	field('"Title" as include_71fc7_field_bf1d6 <<StringType>>')
+	include_71fc7_group_61e6a -- include_71fc7_field_bf1d6
+	field('"Details" as include_71fc7_field_7de61 <<StringType>>')
+	include_71fc7_group_61e6a -- include_71fc7_field_7de61
+	field('"Priority" as include_71fc7_field_69efa <<EnumerationType>>')
+	include_71fc7_group_61e6a -- include_71fc7_field_69efa
+	field('"Status" as include_71fc7_field_1ecc4 <<TypeDefType>>')
+	include_71fc7_group_61e6a -- include_71fc7_field_1ecc4
+	field('"LastModified" as include_71fc7_field_3695e <<DateType>>')
+	include_71fc7_group_61e6a -- include_71fc7_field_3695e
+	group('"SubChanges" as include_71fc7_group_c4a35')
+	field('"ID" as include_71fc7_field_26340 <<StringType>>')
+	include_71fc7_group_c4a35 -- include_71fc7_field_26340
+	field('"TItle" as include_71fc7_field_3c130 <<StringType>>')
+	include_71fc7_group_c4a35 -- include_71fc7_field_3c130
+	field('"Details" as include_71fc7_field_89b43 <<StringType>>')
+	include_71fc7_group_c4a35 -- include_71fc7_field_89b43
+	field('"Priority" as include_71fc7_field_6df38 <<EnumerationType>>')
+	include_71fc7_group_c4a35 -- include_71fc7_field_6df38
+	field('"Status" as include_71fc7_field_797cc <<TypeDefType>>')
+	include_71fc7_group_c4a35 -- include_71fc7_field_797cc
+	field('"CreatedAt" as include_71fc7_field_eb669 <<DateFragmentType>>')
+	include_71fc7_group_c4a35 -- include_71fc7_field_eb669
+
+	include_71fc7_group_61e6a ||--o{ "0..99" include_71fc7_group_c4a35
+
+	include_71fc7_group_7a5d0 ||--o{ "0..99" include_71fc7_group_61e6a
+
+	include_71fc7 ||--o{ "0..10000" include_71fc7_group_7a5d0
+
+	ContractCDMDocumentRoot ||--o| "0..1" include_71fc7
+
+	cdmGroup('"ContractBusinessPartner" as group_f3eb0')
+	group('"BusinessPartnerRoot" as include_c08c7')
+	group('"Attachment" as include_c08c7_G77')
+	field('"original_filename" as include_c08c7_F21 <<StringType>>')
+	include_c08c7_G77 -- include_c08c7_F21
+	field('"internal_filename" as include_c08c7_F22 <<StringType>>')
+	include_c08c7_G77 -- include_c08c7_F22
+	field('"content" as include_c08c7_F23 <<StringType>>')
+	include_c08c7_G77 -- include_c08c7_F23
+	field('"attachment_id" as include_c08c7_F24 <<StringType>>')
+	include_c08c7_G77 -- include_c08c7_F24
+	field('"size" as include_c08c7_F25 <<NumberType>>')
+	include_c08c7_G77 -- include_c08c7_F25
+	field('"mime_type" as include_c08c7_F26 <<StringType>>')
+	include_c08c7_G77 -- include_c08c7_F26
+	field('"category" as include_c08c7_F27 <<StringType>>')
+	include_c08c7_G77 -- include_c08c7_F27
+	field('"description" as include_c08c7_F28 <<StringType>>')
+	include_c08c7_G77 -- include_c08c7_F28
+	rule('"AttachmentInternalFilenameRequired" as include_c08c7_R29') {
+}
+	include_c08c7_G77 -- include_c08c7_R29
+	rule('"AttachmentMimeTypeRequired" as include_c08c7_R30') {
+}
+	include_c08c7_G77 -- include_c08c7_R30
+	rule('"AttachmentIdOrContentFilled" as include_c08c7_R31') {
+}
+	include_c08c7_G77 -- include_c08c7_R31
+	rule('"SizeOfContentFilled" as include_c08c7_R32') {
+}
+	include_c08c7_G77 -- include_c08c7_R32
+
+	include_c08c7 ||--o{ "0..99" include_c08c7_G77
+	field('"Name" as include_c08c7_field_fe6b2 <<StringType>>')
+	include_c08c7 -- include_c08c7_field_fe6b2
+	field('"Industry" as include_c08c7_field_d6580 <<EnumerationType>>')
+	include_c08c7 -- include_c08c7_field_d6580
+	field('"StartOfRelationship" as include_c08c7_field_663d2 <<DateType>>')
+	include_c08c7 -- include_c08c7_field_663d2
+	field('"CustomerDiscount" as include_c08c7_field_74a24 <<EnumerationType>>')
+	include_c08c7 -- include_c08c7_field_74a24
+	group('"Employment" as include_c08c7_G2')
+	field('"income" as include_c08c7_field_3920 <<NumberType>>')
+	include_c08c7_G2 -- include_c08c7_field_3920
+	field('"tax" as include_c08c7_field_1c326 <<NumberType>>')
+	include_c08c7_G2 -- include_c08c7_field_1c326
+	computation('"TaxComputation" as include_c08c7_computation_8a180') {
+computes: ../tax
+}
+	include_c08c7_G2 -- include_c08c7_computation_8a180
+
+	include_c08c7 ||--o| "0..1" include_c08c7_G2
+	field('"PersonOrEntity" as include_c08c7_field_114de <<StringType>>')
+	include_c08c7 -- include_c08c7_field_114de
+
+	group_f3eb0 ||--o| "0..1" include_c08c7
+	field('"t_docRef" as field_53829 <<StringType>>')
+	group_f3eb0 -- field_53829
+	cdmGroup('"PartnerAddresses" as group_513ee')
+	group('"AddressRoot" as include_4be24')
+	field('"AddressType" as include_4be24_field_a48cs <<EnumerationType>>')
+	include_4be24 -- include_4be24_field_a48cs
+	field('"Location" as include_4be24_field_c51b9 <<StringType>>')
+	include_4be24 -- include_4be24_field_c51b9
+	field('"Street" as include_4be24_field_7bc6c <<StringType>>')
+	include_4be24 -- include_4be24_field_7bc6c
+	field('"HouseNumber" as include_4be24_field_38cf3 <<StringType>>')
+	include_4be24 -- include_4be24_field_38cf3
+	field('"City" as include_4be24_field_42965 <<StringType>>')
+	include_4be24 -- include_4be24_field_42965
+	field('"PostCode" as include_4be24_field_623a3 <<StringType>>')
+	include_4be24 -- include_4be24_field_623a3
+	field('"Country" as include_4be24_field_804c7 <<StringType>>')
+	include_4be24 -- include_4be24_field_804c7
+	field('"PostalAddress" as include_4be24_field_ce1e7 <<ConfirmType>>')
+	include_4be24 -- include_4be24_field_ce1e7
+	rule('"MustContainCountry" as include_4be24_rule_7c66e') {
+}
+	include_4be24 -- include_4be24_rule_7c66e
+
+	group_513ee ||--o| "0..1" include_4be24
+	field('"t_docRef" as field_52577 <<StringType>>')
+	group_513ee -- field_52577
+
+	group_f3eb0 ||--o{ "0..100" group_513ee
+	cdmGroup('"PartnerPostalAddress" as group_368d1')
+	group('"AddressRoot" as include_19e70')
+	field('"AddressType" as include_19e70_field_a48cs <<EnumerationType>>')
+	include_19e70 -- include_19e70_field_a48cs
+	field('"Location" as include_19e70_field_c51b9 <<StringType>>')
+	include_19e70 -- include_19e70_field_c51b9
+	field('"Street" as include_19e70_field_7bc6c <<StringType>>')
+	include_19e70 -- include_19e70_field_7bc6c
+	field('"HouseNumber" as include_19e70_field_38cf3 <<StringType>>')
+	include_19e70 -- include_19e70_field_38cf3
+	field('"City" as include_19e70_field_42965 <<StringType>>')
+	include_19e70 -- include_19e70_field_42965
+	field('"PostCode" as include_19e70_field_623a3 <<StringType>>')
+	include_19e70 -- include_19e70_field_623a3
+	field('"Country" as include_19e70_field_804c7 <<StringType>>')
+	include_19e70 -- include_19e70_field_804c7
+	field('"PostalAddress" as include_19e70_field_ce1e7 <<ConfirmType>>')
+	include_19e70 -- include_19e70_field_ce1e7
+	rule('"MustContainCountry" as include_19e70_rule_7c66e') {
+}
+	include_19e70 -- include_19e70_rule_7c66e
+
+	group_368d1 ||--o| "0..1" include_19e70
+	field('"HasPostalAddress" as field_ee835 <<BooleanType>>')
+	group_368d1 -- field_ee835
+	computation('"HasPostalAddressComp" as computation_d062f') {
+computes: ../HasPostalAddress
+}
+	group_368d1 -- computation_d062f
+	field('"HasBusinessPartner" as field_920ea <<BooleanType>>')
+	group_368d1 -- field_920ea
+	computation('"HasbusinessPartnerComp" as computation_a0677') {
+computes: ../HasBusinessPartner
+}
+	group_368d1 -- computation_a0677
+
+	group_f3eb0 ||--o| "0..1" group_368d1
+
+	ContractCDMDocumentRoot ||--o| "0..1" group_f3eb0
+
+	cdmGroup('"ContractCoInsuredPartner" as group_4bc78')
+	group('"BusinessPartnerRoot" as include_46ee3')
+	group('"Attachment" as include_46ee3_G77')
+	field('"original_filename" as include_46ee3_F21 <<StringType>>')
+	include_46ee3_G77 -- include_46ee3_F21
+	field('"internal_filename" as include_46ee3_F22 <<StringType>>')
+	include_46ee3_G77 -- include_46ee3_F22
+	field('"content" as include_46ee3_F23 <<StringType>>')
+	include_46ee3_G77 -- include_46ee3_F23
+	field('"attachment_id" as include_46ee3_F24 <<StringType>>')
+	include_46ee3_G77 -- include_46ee3_F24
+	field('"size" as include_46ee3_F25 <<NumberType>>')
+	include_46ee3_G77 -- include_46ee3_F25
+	field('"mime_type" as include_46ee3_F26 <<StringType>>')
+	include_46ee3_G77 -- include_46ee3_F26
+	field('"category" as include_46ee3_F27 <<StringType>>')
+	include_46ee3_G77 -- include_46ee3_F27
+	field('"description" as include_46ee3_F28 <<StringType>>')
+	include_46ee3_G77 -- include_46ee3_F28
+	rule('"AttachmentInternalFilenameRequired" as include_46ee3_R29') {
+}
+	include_46ee3_G77 -- include_46ee3_R29
+	rule('"AttachmentMimeTypeRequired" as include_46ee3_R30') {
+}
+	include_46ee3_G77 -- include_46ee3_R30
+	rule('"AttachmentIdOrContentFilled" as include_46ee3_R31') {
+}
+	include_46ee3_G77 -- include_46ee3_R31
+	rule('"SizeOfContentFilled" as include_46ee3_R32') {
+}
+	include_46ee3_G77 -- include_46ee3_R32
+
+	include_46ee3 ||--o{ "0..99" include_46ee3_G77
+	field('"Name" as include_46ee3_field_fe6b2 <<StringType>>')
+	include_46ee3 -- include_46ee3_field_fe6b2
+	field('"Industry" as include_46ee3_field_d6580 <<EnumerationType>>')
+	include_46ee3 -- include_46ee3_field_d6580
+	field('"StartOfRelationship" as include_46ee3_field_663d2 <<DateType>>')
+	include_46ee3 -- include_46ee3_field_663d2
+	field('"CustomerDiscount" as include_46ee3_field_74a24 <<EnumerationType>>')
+	include_46ee3 -- include_46ee3_field_74a24
+	group('"Employment" as include_46ee3_G2')
+	field('"income" as include_46ee3_field_3920 <<NumberType>>')
+	include_46ee3_G2 -- include_46ee3_field_3920
+	field('"tax" as include_46ee3_field_1c326 <<NumberType>>')
+	include_46ee3_G2 -- include_46ee3_field_1c326
+	computation('"TaxComputation" as include_46ee3_computation_8a180') {
+computes: ../tax
+}
+	include_46ee3_G2 -- include_46ee3_computation_8a180
+
+	include_46ee3 ||--o| "0..1" include_46ee3_G2
+	field('"PersonOrEntity" as include_46ee3_field_114de <<StringType>>')
+	include_46ee3 -- include_46ee3_field_114de
+
+	group_4bc78 ||--o| "0..1" include_46ee3
+	group('"relationship" as group_4da5e')
+	group('"CoInsuredRoot" as include_50c1e')
+	field('"Name" as include_50c1e_field_aa07e <<StringType>>')
+	include_50c1e -- include_50c1e_field_aa07e
+	field('"ID" as include_50c1e_field_d5f5f <<StringType>>')
+	include_50c1e -- include_50c1e_field_d5f5f
+	field('"Role" as include_50c1e_field_d6580 <<EnumerationType>>')
+	include_50c1e -- include_50c1e_field_d6580
+	field('"Percentage" as include_50c1e_field_142e3 <<NumberType>>')
+	include_50c1e -- include_50c1e_field_142e3
+	field('"SigningDate" as include_50c1e_field_2e8e0 <<DateType>>')
+	include_50c1e -- include_50c1e_field_2e8e0
+	computation('"AddID" as include_50c1e_computation_65146') {
+computes: ../ID
+}
+	include_50c1e -- include_50c1e_computation_65146
+
+	group_4da5e ||--o| "0..1" include_50c1e
+
+	group_4bc78 ||--o| "0..1" group_4da5e
+
+	ContractCDMDocumentRoot ||--o{ "0..100" group_4bc78
+
+	group('"CalculatedFields" as group_f66bc')
+	field('"CostToCustomerCDM" as field_65c8f <<NumberType>>')
+	group_f66bc -- field_65c8f
+
+	ContractCDMDocumentRoot ||--o| "0..1" group_f66bc
+
+}
+@enduml

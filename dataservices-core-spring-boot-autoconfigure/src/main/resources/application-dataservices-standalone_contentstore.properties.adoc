@@ -1,0 +1,5 @@
+= Active Content Store Standalone Mode Integration
+
+With this profile enabled, `Dataservices` attachment repository will choose standalone-mode implementation, including all properties for supporting communication between `Dataservices` and standalone `Content Store` service.
+
+Please note that, this profile also includes required UAA properties to initialize `Content Store Client`

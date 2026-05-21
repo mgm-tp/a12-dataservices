@@ -1,0 +1,378 @@
+# Unified Version Catalog
+# Consolidated from: libs.shared.versions.toml, libs.ds.versions.toml, libs.cs.versions.toml, libs.common.versions.toml, libs.build.versions.toml
+
+[versions]
+a12BaseVersion = "29.3.0"
+a12KernelVersion = "30.8.1"
+a12UaaUtilsVersion = "8.2.1"
+a12UaaVersion = "9.3.2"
+wcfVersion = "0.2.0"
+rmcVersion = "0.3.3"
+apacheHttpVersion = "4.5.14"
+# @pin keep jMeter in version 5.2
+apacheJMeterVersion = "5.6.3"
+asciidoctorjVersion = "2.5.13"
+asciidoctorPluginVersion = "4.0.4"
+commonsIoVersion = "2.19.0"
+devtoolsVersion = "9.0.0"
+dockerComposeVersion = "0.17.12"
+dockerRemoteApiVersion = "9.4.0"
+embeddedPostgresServerVersion = "16.2.0"
+freemarkerVersion = "2.3.34"
+groovyVersion = "3.0.24"
+hibernateVersion = "6.6.4.Final"
+hazelcastVersion = "5.5.0"
+hazelcastHibernateVersion = "5.2.0"
+htmlSanityCheckVersion = "1.1.6"
+ivyVersion = "2.5.3"
+jsonPathVersion = "2.9.0"
+jsonVersion = "20250107"
+jacksonVersion = "2.20.1"
+jacksonAnnotationsVersion = "2.20"
+jmhCore = "1.37"
+jmhGeneratorAnnprocessor = "1.37"
+jsonUnitVersion = "4.1.0"
+licensePluginVersion = "0.16.1"
+lombokPluginVersion = "8.4"
+lombokVersion = "1.18.38"
+mapstructVersion = "1.6.3"
+nodePluginVersion = "7.0.2"
+owaspPluginVersion = "12.1.1"
+picocliVersion = "4.7.7"
+plantumlPluginVersion = "8.4"
+postgresqlVersion = "42.7.7"
+resilience4jVersion = "2.3.0"
+slf4jVersion = "2.0.17"
+sonarQubePluginVersion = "5.1.0.4882"
+spotlessPluginVersion = "7.0.3"
+springBootVersion = "3.5.9"
+springDataVersion = "3.5.7"
+springSecurityVersion = "6.5.7"
+springVersion = "6.2.15"
+sshPluginVersion = "2.11.2"
+verPluginVersion = "0.52.0"
+xmlunitVersion = "2.10.0"
+testngVersion = "7.11.0"
+tikaVersion = "2.9.3"
+twelvemonkeysVersion = "3.12.0"
+batikVersion = "1.18"
+
+[libraries]
+# From shared
+dataFaker = 'net.datafaker:datafaker:2.4.3'
+annotationApi = "jakarta.annotation:jakarta.annotation-api:2.1.1"
+annotations = "com.google.code.findbugs:annotations:3.0.1"
+asciiDoclet = "org.asciidoctor:asciidoclet:2.0.0"
+assertjCore = "org.assertj:assertj-core:3.27.3"
+commonsCollections4 = "org.apache.commons:commons-collections4:4.5.0"
+commonsFileupload = "commons-fileupload:commons-fileupload:1.6.0"
+commonsIo = { module = "commons-io:commons-io", version.ref = "commonsIoVersion" }
+commonsLang3 = "org.apache.commons:commons-lang3:3.17.0"
+embeddedPostgres = 'io.zonky.test:embedded-postgres:2.1.0'
+embeddedPostgresServer = { module = "io.zonky.test.postgres:embedded-postgres-binaries-bom", version.ref = "embeddedPostgresServerVersion" }
+festAssertCore = "org.easytesting:fest-assert-core:2.0M10"
+guardianAPI = "org.apiguardian:apiguardian-api:1.1.2"
+h2 = "com.h2database:h2:2.2.224"
+hamcrest = "org.hamcrest:hamcrest:3.0"
+hamcrestOptional = "com.github.npathai:hamcrest-optional:2.0.0"
+hazelcast = { module = "com.hazelcast:hazelcast", version.ref = "hazelcastVersion" }
+hazelcastSpring = { module = "com.hazelcast:hazelcast-spring", version.ref = "hazelcastVersion" }
+hibernateCore = { module = "org.hibernate.orm:hibernate-core", version.ref = "hibernateVersion" }
+httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "apacheHttpVersion" }
+# needed to support range types in Hibernate/JPA entities
+hypersistenceUtils = "io.hypersistence:hypersistence-utils-hibernate-63:3.9.10"
+jacksonAnnotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jacksonAnnotationsVersion" }
+jacksonDatabind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonVersion" }
+jacksonDatatypeJdk8 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jdk8", version.ref = "jacksonVersion" }
+jacksonDatatypeJsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jacksonVersion" }
+jacksonJaxrsJsonProvider = { module = "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider", version.ref = "jacksonVersion" }
+jaxbApi = "jakarta.xml.bind:jakarta.xml.bind-api:4.0.2"
+jmh = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmhCore" }
+jmhAnnprocessor = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmhGeneratorAnnprocessor" }
+json = { module = "org.json:json", version.ref = "jsonVersion" }
+jsonassert = "org.skyscreamer:jsonassert:1.5.3"
+jsonpath = { module = "com.jayway.jsonpath:json-path", version.ref = "jsonPathVersion" }
+julToSlf4j = { module = "org.slf4j:jul-to-slf4j", version.ref = "slf4jVersion" }
+liquibaseCore = "org.liquibase:liquibase-core:4.33.0"
+mgmModelApi = { module = "com.mgmtp.a12.base:base-model-api", version.ref = "a12BaseVersion" }
+micrometerRegistryPrometheus = "io.micrometer:micrometer-registry-prometheus:1.14.6"
+mockitoCore = "org.mockito:mockito-core:5.17.0"
+modelMarshalling = { module = "com.mgmtp.a12.base:base-model-marshalling", version.ref = "a12BaseVersion" }
+persistenceApi = "jakarta.persistence:jakarta.persistence-api:3.1.0"
+picocli = { module = "info.picocli:picocli-spring-boot-starter", version.ref = "picocliVersion" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresqlVersion" }
+reflections = "org.reflections:reflections:0.10.2"
+restServerConnectorSpringBootAutoconfigure = { module = "com.mgmtp.a12.utils:utils-rest-server-connector-spring-boot-autoconfigure", version.ref = "a12UaaUtilsVersion" }
+servletApi = "jakarta.servlet:jakarta.servlet-api:6.1.0"
+slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4jVersion" }
+springBoot = { module = "org.springframework.boot:spring-boot", version.ref = "springBootVersion" }
+springBootAutoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure", version.ref = "springBootVersion" }
+springBootConfigurationProcessor = { module = "org.springframework.boot:spring-boot-configuration-processor", version.ref = "springBootVersion" }
+springBootPropertiesMigrator = { module = "org.springframework.boot:spring-boot-properties-migrator", version.ref = "springBootVersion" }
+springBootStarter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "springBootVersion" }
+springBootStarterActuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "springBootVersion" }
+springBootStarterDataJpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "springBootVersion" }
+springBootStarterJdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc", version.ref = "springBootVersion" }
+springBootStarterLogging = { module = "org.springframework.boot:spring-boot-starter-logging", version.ref = "springBootVersion" }
+springBootStarterSecurity = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "springBootVersion" }
+springBootStarterWeb = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "springBootVersion" }
+springBootTest = { module = "org.springframework.boot:spring-boot-test", version.ref = "springBootVersion" }
+springBootTestAutoconfigure = { module = "org.springframework.boot:spring-boot-test-autoconfigure", version.ref = "springBootVersion" }
+springContext = { module = "org.springframework:spring-context", version.ref = "springVersion" }
+springCore = { module = "org.springframework:spring-core", version.ref = "springVersion" }
+springDataJpa = { module = "org.springframework.data:spring-data-jpa", version.ref = "springDataVersion" }
+springDataCommons = { module = "org.springframework.data:spring-data-commons", version.ref = "springDataVersion" }
+springSecurityTest = { module = "org.springframework.security:spring-security-test", version.ref = "springSecurityVersion" }
+springTest = { module = "org.springframework:spring-test", version.ref = "springVersion" }
+springWeb = { module = "org.springframework:spring-web", version.ref = "springVersion" }
+springWebmvc = { module = "org.springframework:spring-webmvc", version.ref = "springVersion" }
+testng = { module = "org.testng:testng", version.ref = "testngVersion" }
+uaaAuthenticationSpringBootAutoconfigure = { module = "com.mgmtp.a12.uaa:uaa-authentication-spring-boot-autoconfigure", version.ref = "a12UaaVersion" }
+uaaAuthenticationPrincipalExtensionSpringBootAutoconfigure = { module = "com.mgmtp.a12.uaa:uaa-authentication-principal-extension-spring-boot-autoconfigure", version.ref = "a12UaaVersion" }
+uaaRestClient = { module = "com.mgmtp.a12.uaa:uaa-rest-client", version.ref = "a12UaaVersion" }
+uaaRestClientSpringBootAutoconfigure = { module = "com.mgmtp.a12.uaa:uaa-rest-client-spring-boot-autoconfigure", version.ref = "a12UaaVersion" }
+uaaAuthenticationPrincipalExtensionSpringbootAutoconfigure = { module = "com.mgmtp.a12.uaa:uaa-authentication-principal-extension-spring-boot-autoconfigure", version.ref = "a12UaaVersion" }
+xercesImpl = "xerces:xercesImpl:2.12.2"
+xmlunitCore = { module = "org.xmlunit:xmlunit-core", version.ref = "xmlunitVersion" }
+xmlunitMatchers = { module = "org.xmlunit:xmlunit-matchers", version.ref = "xmlunitVersion" }
+
+# From ds
+baseModelConsistency = { module = "com.mgmtp.a12.base:base-model-consistency" }
+baseModelMigrationApi = { module = "com.mgmtp.a12.base:base-model-migration-api" }
+baseBom = { module = "com.mgmtp.a12.base:base-bom", version.ref = "a12BaseVersion" }
+# @keep this library because it is used in build-gradle project
+freemarker = { module = "org.freemarker:freemarker", version.ref = "freemarkerVersion" }
+hibernateJcache = { module = "org.hibernate.orm:hibernate-jcache", version.ref = "hibernateVersion" }
+hibernateValidator = "org.hibernate.validator:hibernate-validator:8.0.2.Final"
+hikariConnectionPool = "com.zaxxer:HikariCP:5.1.0"
+httpmime = { module = "org.apache.httpcomponents:httpmime", version.ref = "apacheHttpVersion" }
+indriya = "tech.units:indriya:2.2.3"
+# @keep this library because it is used in build-gradle project
+ivy = { module = "org.apache.ivy:ivy", version.ref = "ivyVersion" }
+jacksonBom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "jacksonVersion" }
+jacksonDataformatSmile = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-smile", version.ref = "jacksonVersion" }
+jacksonDataformatCsv = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-csv", version.ref = "jacksonVersion" }
+jacksonDataformatXml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml", version.ref = "jacksonVersion" }
+jacksonDataformatYaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jacksonVersion" }
+jacksonSchema = { module = "com.fasterxml.jackson.module:jackson-module-jsonSchema", version.ref = "jacksonVersion" }
+javaxElApi = "javax.el:javax.el-api:3.0.0"
+jaxb2BasicsRuntime = "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:2.0.12"
+jaxbImpl = "com.sun.xml.bind:jaxb-impl:4.0.5"
+jdom2 = "org.jdom:jdom2:2.0.6.1"
+jimFs = "com.google.jimfs:jimfs:1.3.0"
+jsonUnitAssertj = { module = "net.javacrumbs.json-unit:json-unit-assertj", version.ref = "jsonUnitVersion" }
+jsonUnitJsonPath = { module = "net.javacrumbs.json-unit:json-unit-json-path", version.ref = "jsonUnitVersion" }
+jsonrpc4j = "com.github.briandilley.jsonrpc4j:jsonrpc4j:1.6"
+jsr181 = "javax.jws:jsr181-api:1.0-MR1"
+jwsApi = "jakarta.jws:jakarta.jws-api:3.0.0"
+kernelConversion = { module = "com.mgmtp.a12.kernel:kernel-conversion-java", version.ref = "a12KernelVersion" }
+kernelDocumentApi = { module = "com.mgmtp.a12.kernel:kernel-md-document-api" }
+kernelDocumentService = { module = "com.mgmtp.a12.kernel:kernel-md-document-service" }
+kernelMdFacade = { module = "com.mgmtp.a12.kernel:kernel-md-facade" }
+kernelMdDocumentV2 = { module = "com.mgmtp.a12.kernel:kernel-md-document-v2" }
+kernelMdModel = { module = "com.mgmtp.a12.kernel:kernel-md-model" }
+kernelMdJoin = { module = "com.mgmtp.a12.kernel:kernel-md-join" }
+kernelMdModelApi = { module = "com.mgmtp.a12.kernel:kernel-md-model-api" }
+kernelCoreToolApi = { module = "com.mgmtp.a12.kernel:kernel-core-tool-api" }
+kernelRuntime = { module = "com.mgmtp.a12.kernel:kernel-core-runtime-30-8", version.ref = "a12KernelVersion" }
+kernelMdA12internal = { module = "com.mgmtp.a12.kernel:kernel-md-a12internal", version.ref = "a12KernelVersion" }
+kernelBom = { module = "com.mgmtp.a12.kernel:kernel-bom", version.ref = "a12KernelVersion" }
+mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstructVersion" }
+mapsturctAnnotationProcessor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstructVersion" }
+mockitoTestNG = "org.mockito:mockito-testng:0.5.2"
+modelAssert = "uk.org.webcompere:model-assert:1.1.0"
+perfTestTool = "com.mgmtp.a12.dataservices.internal.tooling:perf-test-tool:0.3.0"
+quartz = "org.quartz-scheduler:quartz:2.5.0"
+resilience4jRetry = { module = "io.github.resilience4j:resilience4j-retry", version.ref = "resilience4jVersion" }
+semver4j = "com.vdurmont:semver4j:3.1.0"
+# @keep this library because it is used in build-gradle project
+springAop = { module = "org.springframework:spring-aop", version.ref = "springVersion" }
+springBootStarterBatch = { module = "org.springframework.boot:spring-boot-starter-batch", version.ref = "springBootVersion" }
+springBootStarterQuartz = { module = "org.springframework.boot:spring-boot-starter-quartz", version.ref = "springBootVersion" }
+springBootStarterWebsocket = { module = "org.springframework.boot:spring-boot-starter-websocket", version.ref = "springBootVersion" }
+springContextSupport = { module = "org.springframework:spring-context-support", version.ref = "springVersion" }
+springSecurityCore = { module = "org.springframework.security:spring-security-core", version.ref = "springSecurityVersion" }
+springSecurityWeb = { module = "org.springframework.security:spring-security-web", version.ref = "springSecurityVersion" }
+sqlworkbench = "net.sqlworkbench:sqlworkbench:130.1"
+thumbnailator = "net.coobird:thumbnailator:0.4.20"
+transactionApi = "jakarta.transaction:jakarta.transaction-api:2.0.1"
+uaaAuthentication = { module = "com.mgmtp.a12.uaa:uaa-authentication" }
+uaaAuthenticationBackend = { module = "com.mgmtp.a12.uaa:uaa-authentication-backend" }
+uaaAuthenticationBackendSpringBootAutoconfigure = { module = "com.mgmtp.a12.uaa:uaa-authentication-backend-spring-boot-autoconfigure" }
+uaaAuthenticationPrincipalExtension = { module = "com.mgmtp.a12.uaa:uaa-authentication-principal-extension" }
+uaaAuthorization = { module = "com.mgmtp.a12.uaa:uaa-authorization" }
+uaaAuthorizationA12Extension = { module = "com.mgmtp.a12.uaa:uaa-authorization-a12-extension" }
+uaaAuthorizationSpringBootAutoconfigure = { module = "com.mgmtp.a12.uaa:uaa-authorization-spring-boot-autoconfigure" }
+uaaAuthorizationWebSpringBootAutoconfigure = { module = "com.mgmtp.a12.uaa:uaa-authorization-web-spring-boot-autoconfigure" }
+uaaBom = { module = "com.mgmtp.a12.uaa:uaa-bom", version.ref = "a12UaaVersion" }
+victoolsJacksonJsonSchemaGenerator = "com.github.victools:jsonschema-generator:4.38.0"
+victoolsJacksonJsonSchemaModule = "com.github.victools:jsonschema-module-jackson:4.38.0"
+wcf = { module = "com.mgmtp.a12.dataservices.wcf:dataservices-wcf-core", version.ref = "wcfVersion" }
+rmc = { module = "com.mgmtp.a12.rmc:conversion", version.ref = "rmcVersion" }
+webpImageio = "com.twelvemonkeys.imageio:imageio-webp:3.12.0"
+xmlunitAssertj = { module = "org.xmlunit:xmlunit-assertj", version.ref = "xmlunitVersion" }
+imageIOSvgExtension = { module = "com.twelvemonkeys.imageio:imageio-batik", version.ref = "twelvemonkeysVersion" }
+batikRasterizerExt = { module = "org.apache.xmlgraphics:batik-rasterizer-ext", version.ref = "batikVersion" }
+batikSvgGen = { module = "org.apache.xmlgraphics:batik-svggen", version.ref = "batikVersion" }
+batikTranscoder = { module = "org.apache.xmlgraphics:batik-transcoder", version.ref = "batikVersion" }
+
+# From cs (content-store)
+jakartaValidationApi = "jakarta.validation:jakarta.validation-api:3.1.1"
+mockServer = "org.mock-server:mockserver-netty-no-dependencies:5.15.0"
+tikaCore = { module = "org.apache.tika:tika-core", version.ref = "tikaVersion" }
+tikaParsersStandardPackage = { module = "org.apache.tika:tika-parsers-standard-package", version.ref = "tikaVersion" }
+
+# From common
+junitApi = "javax.measure:unit-api:2.2"
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombokVersion" }
+
+# From build (for buildSrc)
+apacheJMeterCore = { module = "org.apache.jmeter:ApacheJMeter_core", version.ref = "apacheJMeterVersion" }
+apacheJMeterHttp = { module = "org.apache.jmeter:ApacheJMeter_http", version.ref = "apacheJMeterVersion" }
+apacheJMeterJorphan = { module = "org.apache.jmeter:jorphan", version.ref = "apacheJMeterVersion" }
+asciidoctorjApi = { module = "org.asciidoctor:asciidoctorj-api", version.ref = "asciidoctorjVersion" }
+# @keep this library because it is used in build-gradle project
+asciidoctorjImpl = { module = "org.asciidoctor:asciidoctorj", version.ref = "asciidoctorjVersion" }
+asciiTable = "com.github.freva:ascii-table:1.8.0"
+# @keep this library because it is used in build-gradle project
+atlasEngine = "com.mgmsp.mgm-atlas:engine:2.4.0"
+commonsCsv = "org.apache.commons:commons-csv:1.14.0"
+# @keep this library because it is used in build-gradle project
+commonsMath3 = "org.apache.commons:commons-math3:3.6.1"
+commonsText = "org.apache.commons:commons-text:1.13.1"
+faker = "com.github.javafaker:javafaker:1.0.2"
+gpars = "org.codehaus.gpars:gpars:1.2.1"
+groovyAll = { module = "org.codehaus.groovy:groovy-all", version.ref = "groovyVersion" }
+# @keep this library because it is used in build-gradle project
+groovyHttpBuilder = "org.codehaus.groovy.modules.http-builder:http-builder:0.7.2"
+groovyJson = { module = "org.codehaus.groovy:groovy-json", version.ref = "groovyVersion" }
+# @keep this library because it is used in build-gradle project
+groovyYaml = { module = "org.codehaus.groovy:groovy-yaml", version.ref = "groovyVersion" }
+# @keep this library because it is used in build-gradle project
+influxdb = "org.influxdb:influxdb-java:2.24"
+instancio = "org.instancio:instancio-core:5.4.1"
+picocliGroovy = { module = "info.picocli:picocli-groovy", version.ref = "picocliVersion" }
+# @keep this library because it is used in build-gradle project
+pluginAsciidoctor = { module = "org.asciidoctor.jvm.convert:org.asciidoctor.jvm.convert.gradle.plugin", version.ref = "asciidoctorPluginVersion" }
+# @keep this library because it is used in build-gradle project
+pluginAsciidoctorPdf = { module = "org.asciidoctor.jvm.pdf:org.asciidoctor.jvm.pdf.gradle.plugin", version.ref = "asciidoctorPluginVersion" }
+pluginDockerCompose = { module = "com.avast.gradle:gradle-docker-compose-plugin", version.ref = "dockerComposeVersion" }
+# @keep this library because it is used in build-gradle project
+pluginDockerRemoteApi = { module = "com.bmuschko:gradle-docker-plugin", version.ref = "dockerRemoteApiVersion" }
+# @keep this library because it is used in build-gradle project
+pluginHtmlSanityCheck = { module = "org.aim42.htmlSanityCheck:org.aim42.htmlSanityCheck.gradle.plugin", version.ref = "htmlSanityCheckVersion" }
+# @keep this library because it is used in build-gradle project
+pluginJiraReport = "de.virtimo.jira-report:de.virtimo.jira-report.gradle.plugin:1.0.0"
+# @keep this library because it is used in build-gradle project
+# @keep this library because it is used in build-gradle project
+pluginLombok = { module = "io.freefair.lombok:io.freefair.lombok.gradle.plugin", version.ref = "lombokPluginVersion" }
+# @keep this library because it is used in build-gradle project
+pluginNode = { module = "com.github.node-gradle.node:com.github.node-gradle.node.gradle.plugin", version.ref = "nodePluginVersion" }
+# @keep this library because it is used in build-gradle project
+pluginOwasp = { module = "org.owasp:dependency-check-gradle", version.ref = "owaspPluginVersion" }
+# @keep this library because it is used in build-gradle project
+pluginPlantuml = { module = "io.freefair.gradle:plantuml-plugin", version.ref = "plantumlPluginVersion" }
+# @keep this library because it is used in build-gradle project
+pluginSbom = { module = "com.mgmtp.a12.devtools:devtools-sbom-plugin", version.ref = "devtoolsVersion" }
+# @keep this library because it is used in build-gradle project
+pluginSonarQube = { module = "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin", version.ref = "sonarQubePluginVersion" }
+# @keep this library because it is used in build-gradle project
+pluginSpotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotlessPluginVersion" }
+# @keep this library because it is used in build-gradle project
+pluginSpringBoot = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "springBootVersion" }
+# @keep this library because it is used in build-gradle project
+pluginSsh = { module = "org.hidetake.ssh:org.hidetake.ssh.gradle.plugin", version.ref = "sshPluginVersion" }
+# @keep this library because it is used in build-gradle project
+pluginVersions = { module = "com.github.ben-manes.versions:com.github.ben-manes.versions.gradle.plugin", version.ref = "verPluginVersion" }
+# @keep this library because it is used in build-gradle project
+revapiBasicFeatures = "org.revapi:revapi-basic-features:0.13.0"
+# @keep this library because it is used in build-gradle project
+revapiJava = "org.revapi:revapi-java:0.28.1"
+# @keep this library because it is used in build-gradle project
+revapiReporterJson = "org.revapi:revapi-reporter-json:0.5.0"
+# @keep this library because it is used in build-gradle project
+revapiReporterText = "org.revapi:revapi-reporter-text:0.15.0"
+slf4jSimple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4jVersion" }
+# @keep this library because it is used in build-gradle project
+snakeyaml = "org.yaml:snakeyaml:2.2"
+springFrameworkBom = { module = "org.springframework:spring-framework-bom", version.ref = "springVersion" }
+springSecurityBom = { module = "org.springframework.security:spring-security-bom", version.ref = "springSecurityVersion" }
+
+[bundles]
+# From ds
+imageIOExtension = [
+    "imageIOSvgExtension",
+    "batikRasterizerExt",
+    "batikSvgGen",
+    "batikTranscoder"
+]
+
+# From cs
+tika = [
+    "tikaCore",
+    "tikaParsersStandardPackage"
+]
+
+# From build
+jmeter = [
+    "apacheJMeterCore",
+    "apacheJMeterHttp",
+    "apacheJMeterJorphan",
+]
+revapi = [
+    "revapiBasicFeatures",
+    "revapiJava",
+    "revapiReporterJson",
+    "revapiReporterText",
+]
+
+[plugins]
+# From shared
+a12Publish = "com.mgmtp.a12.bd.artifact-publish:0.4.2"
+# @keep this library because it is used in build-gradle project
+asciidoctorPdfPlugin = { id = "org.asciidoctor.jvm.pdf", version.ref = "asciidoctorPluginVersion" }
+asciidoctorPlugin = { id = "org.asciidoctor.jvm.convert", version.ref = "asciidoctorPluginVersion" }
+dockerComposePlugin = { id = "com.avast.gradle.docker-compose", version.ref = "dockerComposeVersion" }
+dockerRemoteApiPlugin = { id = "com.bmuschko.docker-remote-api", version.ref = "dockerRemoteApiVersion" }
+nodePlugin = { id = "com.github.node-gradle.node", version.ref = "nodePluginVersion" }
+spotlessPlugin = { id = "com.diffplug.spotless", version.ref = "spotlessPluginVersion" }
+sshPlugin = { id = "org.hidetake.ssh", version.ref = "sshPluginVersion" }
+verPlugin = { id = "com.github.ben-manes.versions", version.ref = "verPluginVersion" }
+dsAi = "com.mgmtp.a12.dataservices.gradle.internal.ai:1.1.3"
+dsAnsible = "com.mgmtp.a12.dataservices.gradle.internal.ansible:1.1.0"
+dsAppserver = "com.mgmtp.a12.dataservices.gradle.internal.appserver:1.1.0"
+dsAtlas = "com.mgmtp.a12.dataservices.gradle.internal.atlas:1.1.9"
+dsBitbucket = "com.mgmtp.a12.dataservices.gradle.internal.bitbucket:1.1.0"
+dsCompose = "com.mgmtp.a12.dataservices.gradle.internal.compose:1.1.4"
+dsDocker = "com.mgmtp.a12.dataservices.gradle.internal.docker:1.1.2"
+dsDocumentation = "com.mgmtp.a12.dataservices.gradle.internal.documentation:1.1.7"
+dsIntegration = "com.mgmtp.a12.dataservices.gradle.internal.test.integration:1.1.3"
+dsJacoco = "com.mgmtp.a12.dataservices.gradle.internal.jacoco.report:1.1.0"
+dsJava = "com.mgmtp.a12.dataservices.gradle.internal.java:1.1.9"
+dsJira = "com.mgmtp.a12.dataservices.gradle.internal.jira:1.1.1"
+dsK8s = "com.mgmtp.a12.dataservices.gradle.internal.k8s:1.1.1"
+dsPerformance = "com.mgmtp.a12.dataservices.gradle.internal.performance:1.3.1"
+dsPublishing = "com.mgmtp.a12.dataservices.gradle.internal.publishing:1.1.2"
+dsQftest = "com.mgmtp.a12.dataservices.gradle.internal.qftest:1.1.0"
+dsSpringboot = "com.mgmtp.a12.dataservices.gradle.internal.springboot:1.1.5"
+dsTestReport = "com.mgmtp.a12.dataservices.gradle.internal.test.report:1.1.0"
+dsTypescript = "com.mgmtp.a12.dataservices.gradle.internal.typescript:1.1.5"
+
+# From ds
+# @keep this library because it is used in build-gradle project
+catalogUpdatePlugin = "nl.littlerobots.version-catalog-update:1.0.0"
+## @keep this library because it is used in build-gradle project
+nebulaLintPlugin = "nebula.lint:20.5.8"
+## @keep this plugin
+owaspPlugin = { id = "org.owasp.dependencycheck", version.ref = "owaspPluginVersion" }
+plantumlPlugin = { id = "io.freefair.plantuml", version.ref = "plantumlPluginVersion" }
+# @keep this plugin
+sonarPlugin = { id = "org.sonarqube", version.ref = "sonarQubePluginVersion" }
+
+# From build
+# @keep this plugin
+jiraReportPlugin = "de.virtimo.jira-report:1.0.0"
+lombokPlugin = { id = "io.freefair.lombok", version.ref = "lombokPluginVersion" }
+shadowJar = { id = "com.gradleup.shadow", version = "8.3.6" }
+springBootPlugin = { id = "org.springframework.boot", version.ref = "springBootVersion" }
+taskTreePlugin = "com.dorongold.task-tree:4.0.1"

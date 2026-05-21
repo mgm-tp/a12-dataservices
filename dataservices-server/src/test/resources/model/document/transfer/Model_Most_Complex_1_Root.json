@@ -1,0 +1,402 @@
+{
+  "header": {
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "id": "Model_Most_Complex_1_Root",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "Model_Most_Complex_1_Root",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G24",
+          "name": "root",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Group",
+                "id": "G3",
+                "name": "field_types",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F4",
+                      "name": "String1",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType",
+                          "StringType": {
+                            "errorMessage": [
+                              {
+                                "locale": "de",
+                                "text": "String entspricht nicht den Muster"
+                              },
+                              {
+                                "locale": "en",
+                                "text": "pattern violation"
+                              }
+                            ],
+                            "pattern": "[a-zA-Z]+"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F5",
+                      "name": "String2",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType",
+                          "StringType": {
+                            "lineBreaksPermitted": true,
+                            "minLength": 1,
+                            "maxLength": 5
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F6",
+                      "name": "Date1",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateType",
+                          "DateType": {
+                            "format": "yyyy-MM-dd"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F7",
+                      "name": "Date2",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateType",
+                          "DateType": {
+                            "format": "yyyy-MM-dd"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F8",
+                      "name": "Boolean",
+                      "Field": {
+                        "fieldType": {
+                          "type": "BooleanType",
+                          "BooleanType": {}
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F9",
+                      "name": "Number1",
+                      "Field": {
+                        "fieldType": {
+                          "type": "NumberType",
+                          "NumberType": {
+                            "minValue": 100.0,
+                            "maxValue": 200.0
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F10",
+                      "name": "Number2",
+                      "Field": {
+                        "fieldType": {
+                          "type": "NumberType",
+                          "NumberType": {
+                            "minFractionalDigits": 1,
+                            "maxFractionalDigits": 3
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F11",
+                      "name": "Number3",
+                      "Field": {
+                        "fieldType": {
+                          "type": "NumberType",
+                          "NumberType": {
+                            "maxFractionalDigits": 3
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F29",
+                      "name": "Enum",
+                      "Field": {
+                        "fieldType": {
+                          "type": "EnumerationType",
+                          "EnumerationType": {
+                            "values": [
+                              {
+                                "value": "GREEN",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "grün"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "green"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "WHITE",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "weiß"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "white"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "BLACK",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "black"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "black"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "YELLOW",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "yellow"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "yellow"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "BLUE",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "blue"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "blue"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "RED",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "rot"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "red"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G12",
+                "name": "start",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "id": "G13",
+                      "name": "intermediate",
+                      "Group": {
+                        "repeatability": 1,
+                        "elements": [
+                          {
+                            "type": "Group",
+                            "id": "G14",
+                            "name": "end",
+                            "Group": {
+                              "repeatability": 1,
+                              "elements": [
+                                {
+                                  "type": "Field",
+                                  "id": "F15",
+                                  "name": "SampleField",
+                                  "Field": {
+                                    "fieldType": {
+                                      "type": "StringType",
+                                      "StringType": {}
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G20",
+                "name": "start2",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "id": "G21",
+                      "name": "intermediate2",
+                      "Group": {
+                        "repeatability": 10,
+                        "elements": [
+                          {
+                            "type": "Group",
+                            "id": "G22",
+                            "name": "end2",
+                            "Group": {
+                              "repeatability": 1,
+                              "elements": [
+                                {
+                                  "type": "Field",
+                                  "id": "F23",
+                                  "name": "SampleField2",
+                                  "Field": {
+                                    "fieldType": {
+                                      "type": "StringType",
+                                      "StringType": {}
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G30",
+                "name": "start5",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "id": "G31",
+                      "name": "intermediate5",
+                      "Group": {
+                        "repeatability": 10,
+                        "elements": [
+                          {
+                            "type": "Group",
+                            "id": "G32",
+                            "name": "end5",
+                            "Group": {
+                              "repeatability": 1,
+                              "elements": [
+                                {
+                                  "type": "Field",
+                                  "id": "F33",
+                                  "name": "SampleField5",
+                                  "Field": {
+                                    "fieldType": {
+                                      "type": "StringType",
+                                      "StringType": {}
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "Field",
+                                  "id": "F34",
+                                  "name": "SampleField5_1",
+                                  "Field": {
+                                    "fieldType": {
+                                      "type": "StringType",
+                                      "StringType": {}
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

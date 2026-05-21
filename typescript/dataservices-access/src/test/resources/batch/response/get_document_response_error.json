@@ -1,0 +1,6 @@
+{
+	"errorCode": "88810",
+	"errorType": "RESOURCE_NOT_FOUND",
+	"message": "Document [DomainUser/3] has different model assigned to it [DomainAccessRight]",
+	"data": null
+}

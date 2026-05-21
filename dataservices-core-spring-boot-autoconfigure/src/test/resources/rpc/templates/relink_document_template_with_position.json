@@ -1,0 +1,25 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "relinkDocument",
+    "method": "RELINK_DOCUMENT",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ContractCoInsuredPartner",
+        "entities": [
+          {
+            "role": "%s",
+            "docRef": "%s"
+          },
+          {
+            "role": "%s",
+            "docRef": "%s"
+          }
+        ],
+        "predecessorLinkRef": "%s",
+        "position": "%s"
+      },
+      "linkRef": "%s"
+    }
+  }
+]

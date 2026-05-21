@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+	logicalFilePath="database/schema/23.3.0/model.xml">
+
+	<changeSet id="A12S-104" author="tkupka">
+		<createTable tableName="MIGRATION_STEP">
+			<column name="NAME" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="false" />
+			</column>
+			<column name="AUTHOR" type="VARCHAR(100 ${varcharUnit})">
+				<constraints nullable="true" />
+			</column>
+			<column name="CLASS_NAME" type="VARCHAR(1000 ${varcharUnit})">
+				<constraints nullable="false" />
+			</column>
+			<column name="TASK" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="false" />
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR(4000 ${varcharUnit})">
+				<constraints nullable="true" />
+			</column>
+			<column name="VERSION" type="VARCHAR(30 ${varcharUnit})">
+				<constraints nullable="true" />
+			</column>
+			<column name="EXECUTED_VERSION" type="VARCHAR(30 ${varcharUnit})">
+				<constraints nullable="true" />
+			</column>
+			<column name="EXECUTION_DATE" type="TIMESTAMP">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<createIndex tableName="MIGRATION_STEP" indexName="IDX_CLASS">
+			<column name="CLASS_NAME" />
+		</createIndex>
+		<createIndex tableName="MIGRATION_STEP" indexName="IDX_TASK">
+			<column name="TASK" />
+		</createIndex>
+	</changeSet>
+
+</databaseChangeLog>

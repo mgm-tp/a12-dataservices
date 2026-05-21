@@ -1,0 +1,7 @@
+username: "guest"
+password: "guest"
+authorities:
+  - "guest"
+email: guest@localhost
+firstname: guest
+lastname: guest

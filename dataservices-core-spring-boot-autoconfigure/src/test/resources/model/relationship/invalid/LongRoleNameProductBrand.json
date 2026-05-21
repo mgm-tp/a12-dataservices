@@ -1,0 +1,128 @@
+{
+  "header": {
+    "id": "ProductBrandWithoutLinkDocument",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ProductBrandWithoutLinkDocument_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ProductBrandWithoutLinkDocument"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "ProductRole",
+        "reference": "Product"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Brand",
+        "reference": "Brand"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "guest,admin,systemAdmin"
+      }
+    ]
+  },
+  "content": {
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ProductBrandWithoutLinkDocument_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ProductBrandWithoutLinkDocument"
+      }
+    ],
+    "associationType": "SHARED",
+    "linkDocumentModel": null,
+    "duplicatesAllowed": true,
+    "entityCharacteristics": [
+      {
+        "role": "MoreThan85CharactersLongRoleNameLongRoleNameLongRoleNameLongRoleNameLongRoleNameLongNm",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "produziert"
+          },
+          {
+            "locale": "en",
+            "text": "produces"
+          }
+        ],
+        "documentModel": "Product",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 1,
+            "unbounded": true,
+            "upperLimit": 1
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": [
+            {
+              "name": "requiredField",
+              "value": "requiredField"
+            }
+          ]
+        }
+      },
+      {
+        "role": "Brand",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "produziert"
+          },
+          {
+            "locale": "en",
+            "text": "produces"
+          }
+        ],
+        "documentModel": "Brand",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": [
+            {
+              "name": "requiredField",
+              "value": "requiredField"
+            }
+          ]
+        }
+      }
+    ],
+    "storage": "EXTERNAL",
+    "embeddedGroupPath": ""
+  }
+}

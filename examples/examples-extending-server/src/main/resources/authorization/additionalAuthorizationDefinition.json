@@ -1,0 +1,87 @@
+{
+	"name": "Data Services Example Permission Definition",
+	"description": "",
+	"policies": [
+		{
+			"name": "User Has Global Link Write Right",
+			"description": "Check the current user has a role which has access right to write links.",
+			"rules": [
+				"!principal.authorities.?[!accessRights.?[name == 'LINK_WRITE'].isEmpty()].isEmpty()"
+			]
+		},
+		{
+			"name": "User Has Global Link Read Right",
+			"description": "Check the current user has a role which has access right to read links.",
+			"rules": [
+				"!principal.authorities.?[!accessRights.?[name == 'LINK_READ'].isEmpty()].isEmpty()"
+			]
+		},
+		{
+			"name": "User Has Attachment Upload Right",
+			"description": "Overwrite to restrict access to attachment upload functionality",
+			"rules": [
+				"#resource.getFilename != 'AttachmentNameNotValid' || #resource.getFilename() != 'AttachmentNameNotValid' || !#resource.getFilename().equals('AttachmentNameNotValid')"
+			]
+		}
+	],
+  	"repositoryPolicies": [
+		{
+			"name": "All addresses but with city Hamburg",
+			"description": "Disable the the retrieval of addresses with city Hamburg via an ABAC rule",
+			"target": "#resource == 'Address'",
+			"templates": [
+				{
+					"operator": "not",
+					"operand": {
+						"operator": "exact_match",
+						"field": "/AddressRoot/City",
+						"value": "Hamburg"
+
+					}
+				}
+			]
+		}
+	],
+	"permissions": [
+		{
+			"name": "Link Write Access",
+			"description": "Check the current user has a role which has access right to write links.",
+			"policy-refs": [
+				"User Has Global Link Write Right"
+			],
+			"scopes": [
+				"Link Write"
+			]
+		},
+		{
+			"name": "Link Read Access",
+			"description": "Check the current user has a role which has access right to read links.",
+			"policy-refs": [
+				"User Has Global Link Read Right"
+			],
+			"scopes": [
+				"Link Read"
+			]
+		},
+		{
+			"name": "Attachment Upload Access",
+			"description": "Check the current user has correct rule which has access right to upload Attachment.",
+			"policy-refs": [
+				"User Has Attachment Upload Right"
+			],
+			"scopes": [
+				"Attachment Upload"
+			]
+		},
+		{
+			"name": "Check query permission via ABAC",
+			"description": "You can define permission rules for executing queries.",
+			"repository-refs": [
+				"All addresses but with city Hamburg"
+			],
+			"scopes": [
+				"Query"
+			]
+		}
+	]
+}

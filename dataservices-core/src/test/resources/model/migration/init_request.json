@@ -1,0 +1,444 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "Node1",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "id": "111",
+        "Properties": {
+          "name": "Node1",
+          "price": 100
+        }
+      },
+      "documentModelName": "TreeProduct",
+      "locale": "en"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "Node2",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "id": "222",
+        "Properties": {
+          "name": "Node2",
+          "price": 100
+        }
+      },
+      "documentModelName": "TreeProduct",
+      "locale": "en"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "Node3",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "id": "333",
+        "Properties": {
+          "name": "Node3",
+          "price": 100
+        }
+      },
+      "documentModelName": "TreeProduct",
+      "locale": "en"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "Node4",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "id": "444",
+        "Properties": {
+          "name": "Node4",
+          "price": 100
+        }
+      },
+      "documentModelName": "TreeProduct",
+      "locale": "en"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "Node5",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "id": "555",
+        "Properties": {
+          "name": "Node5",
+          "price": 100
+        }
+      },
+      "documentModelName": "TreeProduct",
+      "locale": "en"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "Node6",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "id": "666",
+        "Properties": {
+          "name": "Node6",
+          "price": 100
+        }
+      },
+      "documentModelName": "TreeProduct",
+      "locale": "en"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "Node7",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "id": "777",
+        "Properties": {
+          "name": "Node7",
+          "price": 100
+        }
+      },
+      "documentModelName": "TreeProduct",
+      "locale": "en"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "addGroup1",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "GeneralInformation": {
+          "Name": "Group1",
+          "Description": "Group1"
+        },
+        "Group": {
+          "Repeatability": 24
+        }
+      },
+      "documentModelName": "DomainGroup",
+      "locale": null
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "addColorfulBlueGroup",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "GeneralInformation": {
+          "Name": "BlueGroup",
+          "Description": "BlueGroup"
+        },
+        "Group": {
+          "Repeatability": 24
+        },
+        "AdditionalInfo": {
+          "Color": "Blue"
+        }
+      },
+      "documentModelName": "DomainColorfulGroup",
+      "locale": null
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "addColorfulYellow",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "GeneralInformation": {
+          "Name": "YellowGroup",
+          "Description": "YellowGroup"
+        },
+        "Group": {
+          "Repeatability": 24
+        },
+        "AdditionalInfo": {
+          "Color": "Yellow"
+        }
+      },
+      "documentModelName": "DomainColorfulGroup",
+      "locale": null
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "addGroup2",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "GeneralInformation": {
+          "Name": "Group2",
+          "Description": "Group2"
+        },
+        "Group": {
+          "Repeatability": 24
+        }
+      },
+      "documentModelName": "DomainGroup",
+      "locale": null
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "addNumberField1",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "GeneralInformation": {
+          "Name": "Field1",
+          "Description": "Field1"
+        },
+        "Field": {
+          "Type": "NUMBER",
+          "Required": false
+        }
+      },
+      "documentModelName": "DomainField",
+      "locale": null
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "addNumberField2",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "GeneralInformation": {
+          "Name": "Field2",
+          "Description": "Field2"
+        },
+        "Field": {
+          "Type": "NUMBER",
+          "Required": false
+        }
+      },
+      "documentModelName": "DomainField",
+      "locale": null
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "addTimeField",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "GeneralInformation": {
+          "Name": "Field3",
+          "Description": "Field3"
+        },
+        "Field": {
+          "Type": "TIME",
+          "Required": true
+        }
+      },
+      "documentModelName": "DomainField",
+      "locale": null
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "addRule",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "GeneralInformation": {
+          "Name": "Rule1",
+          "Description": "Rule1"
+        }
+      },
+      "documentModelName": "DomainRule",
+      "locale": null
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "addNumberField1ToGroup",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "GroupElement",
+        "entities": [
+          {
+            "role": "parent",
+            "docRef": "#{#addGroup1.metadata.docRef}"
+          },
+          {
+            "role": "child",
+            "docRef": "#{#addNumberField1.metadata.docRef}"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "addRuleToGroup",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "GroupElement",
+        "entities": [
+          {
+            "role": "parent",
+            "docRef": "#{#addGroup1.metadata.docRef}"
+          },
+          {
+            "role": "child",
+            "docRef": "#{#addRule.metadata.docRef}"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "addRuleToBlueGroup",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "GroupElement",
+        "entities": [
+          {
+            "role": "parent",
+            "docRef": "#{#addColorfulBlueGroup.metadata.docRef}"
+          },
+          {
+            "role": "child",
+            "docRef": "#{#addRule.metadata.docRef}"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "AddProductToBrand",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ProductTree",
+        "entities": [
+          {
+            "role": "Node",
+            "docRef": "#{#Node2.metadata.docRef}"
+          },
+          {
+            "role": "ParentRef",
+            "docRef": "#{#Node1.metadata.docRef}"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "AddProductToBrand",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ProductTree",
+        "entities": [
+          {
+            "role": "Node",
+            "docRef": "#{#Node4.metadata.docRef}"
+          },
+          {
+            "role": "ParentRef",
+            "docRef": "#{#Node2.metadata.docRef}"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "AddProductToBrand",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ProductTree",
+        "entities": [
+          {
+            "role": "Node",
+            "docRef": "#{#Node3.metadata.docRef}"
+          },
+          {
+            "role": "ParentRef",
+            "docRef": "#{#Node2.metadata.docRef}"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "AddProductToBrand",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ProductTree",
+        "entities": [
+          {
+            "role": "Node",
+            "docRef": "#{#Node5.metadata.docRef}"
+          },
+          {
+            "role": "ParentRef",
+            "docRef": "#{#Node3.metadata.docRef}"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "AddProductToBrand",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ProductTree",
+        "entities": [
+          {
+            "role": "Node",
+            "docRef": "#{#Node6.metadata.docRef}"
+          },
+          {
+            "role": "ParentRef",
+            "docRef": "#{#Node1.metadata.docRef}"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "AddProductToBrand",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ProductTree",
+        "entities": [
+          {
+            "role": "Node",
+            "docRef": "#{#Node5.metadata.docRef}"
+          },
+          {
+            "role": "ParentRef",
+            "docRef": "#{#Node6.metadata.docRef}"
+          }
+        ]
+      }
+    }
+  }
+]

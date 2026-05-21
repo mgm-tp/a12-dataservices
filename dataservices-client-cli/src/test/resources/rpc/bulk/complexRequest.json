@@ -1,0 +1,31 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "AddDocument1",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "ContractRoot": {
+          "ContractName": "Contract 1",
+          "LengthOfContract": 5,
+          "ContractValue": 100,
+          "Liability": 500,
+          "CostToCustomer": 80,
+          "CostPerCoInsured": 20,
+          "MaxDiscount": "Jana has a 50% discount",
+          "NoOfCoInsuredCustomers": 3
+        }
+      },
+      "documentModelName": "Contract",
+      "locale": "en"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "deleteDocument",
+    "method": "DELETE_DOCUMENT",
+    "params": {
+      "docRef": "#{#AddDocument1.metadata.docRef}"
+    }
+  }
+]

@@ -1,0 +1,7 @@
+username: document_delete_user
+password: document_delete_user
+firstname: document_delete
+lastname: document_delete
+email: document_delete@min.com
+authorities:
+  - "DocumentDelete"

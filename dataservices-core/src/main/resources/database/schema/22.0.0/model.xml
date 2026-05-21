@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+                   logicalFilePath="database/schema/21.0.0/model.xml">
+
+	<changeSet id="A12-9500-1" author="tbajus">
+		<preConditions onFail="MARK_RAN">
+			<columnExists tableName="UI_MODEL" columnName="DOCUMENT_MODEL_ID" />
+		</preConditions>
+		<dropColumn columnName="DOCUMENT_MODEL_ID" tableName="UI_MODEL"/>
+	</changeSet>
+	<changeSet id="A12-9500-2" author="tbajus">
+		<preConditions onFail="MARK_RAN">
+			<columnExists tableName="UI_MODEL" columnName="GENERATED_FORM" />
+		</preConditions>
+		<dropColumn columnName="GENERATED_FORM" tableName="UI_MODEL"/>
+	</changeSet>
+</databaseChangeLog>

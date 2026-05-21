@@ -1,0 +1,30 @@
+{
+  "BusinessPartnerRoot": {
+    "Name": "Engineer",
+    "Industry": "IT",
+    "StartOfRelationship": "2023-02-28",
+    "EndOfRelationship": "2019-02-28T09:57:00",
+    "TimeOfContractSignature": "22:37:00",
+    "ApproximateOfferDate": "08-17",
+    "PremiumPartner": "",
+    "CustomerDiscount": "90%",
+    "PersonOrEntity": "Legal Entity",
+    "SubtypeGroup": {
+      "Company": null
+    },
+    "Offer": {
+      "Discount": "40%",
+      "ValidityPeriod": "2023-02-01/2023-08-30"
+    },
+    "Employment": {
+      "signingDateTime": "2020-02-28T09:30:00",
+      "employedSince": "2010-02",
+      "employedTill": "2050-12",
+      "currentlyEmployed": true,
+      "role": "Senior Software Engineer",
+      "income": "5000"
+    },
+    "birthday": "2000-01-01",
+    "accountNumber": "12875"
+  }
+}

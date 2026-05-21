@@ -1,0 +1,53 @@
+roles:
+  - name: admin
+    description: Role should allow all operations to be allowed to user
+    accessRights:
+      - DOCUMENT_CREATE
+      - DOCUMENT_UPDATE
+      - DOCUMENT_PARTIAL_UPDATE
+      - DOCUMENT_DELETE
+      - DOCUMENT_LIST
+      - DOCUMENT_MULTI_DELETE
+      - QUERY
+      - MODEL_CREATE
+      - MODEL_UPDATE
+      - MODEL_READ
+      - MODEL_DELETE
+      - ACCESS_ACTUATOR
+      - LINK_WRITE
+      - LINK_READ
+      - ATTACHMENT_UPLOAD
+  - name: systemAdmin
+    description: Role should allow working with caches
+    accessRights:
+      - MANAGE_CACHES
+  - name: guest
+    description: guest role
+    accessRights:
+      - QUERY
+      - DOCUMENT_CREATE
+      - DOCUMENT_LIST
+      - MODEL_READ
+      - LINK_READ
+  - name: ActuatorAccess
+    description: Role should allow access to actuator endpoint to user
+    accessRights:
+      - ACCESS_ACTUATOR
+  - name: admin2323
+    description: Role should allow all operations to be allowed to user
+    accessRights:
+      - DOCUMENT_CREATE
+      - DOCUMENT_UPDATE
+      - DOCUMENT_PARTIAL_UPDATE
+      - QUERY
+      - DOCUMENT_DELETE
+      - DOCUMENT_LIST
+      - DOCUMENT_MULTI_DELETE
+      - MODEL_CREATE
+      - MODEL_UPDATE
+      - MODEL_READ
+      - MODEL_DELETE
+      - ACCESS_ACTUATOR
+      - LINK_WRITE
+      - LINK_READ
+      - ATTACHMENT_UPLOAD    

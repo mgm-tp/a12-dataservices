@@ -1,0 +1,65 @@
+/*
+ * SPDX-License-Identifier: EUPL-1.2 OR LicenseRef-commercial
+ *
+ * Copyright (c) 2012-2026 mgm technology partners GmbH
+ *
+ * Dual License
+ * ------------
+ * This source file is part of the mgm A12 Platform and available under
+ * a choice of two different licenses:
+ *
+ * 1. Open-Source License – EUPL v1.2
+ *    You may redistribute and/or modify this file under the terms of the
+ *    European Union Public License, version 1.2 - see https://eupl.eu/.
+ *
+ * 2. Commercial License
+ *    Alternatively, you may obtain a commercial license from
+ *    mgm technology partners GmbH, that permits use of this software
+ *    under different terms (including support and maintenance services).
+ *
+ *    Please contact a12-license@mgm-tp.com for more information.
+ *
+ * You must select and comply with exactly one of the above license options.
+ *
+ * Warranty Disclaimer (applies to either option)
+ * ----------------------------------------------
+ * THIS SOFTWARE IS PROVIDED “AS IS” AND WITHOUT WARRANTY OF ANY KIND,
+ * WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
+ * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
+ */
+package com.mgmtp.a12.dataservices.marshalling;
+
+import java.io.IOException;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import com.mgmtp.a12.dataservices.document.DocumentReference;
+
+/**
+ * Serializes a {@link DocumentReference} in a client-understood single-string form wrapped in a JSON object.
+ * The output uses the field name `docRef`.
+ */
+public class DocumentReferenceSerializer extends StdSerializer<DocumentReference> {
+
+	protected DocumentReferenceSerializer() {
+		super(DocumentReference.class);
+	}
+
+	/**
+	 * Writes the given {@link DocumentReference} as a JSON object containing a single `docRef` field.
+	 *
+	 * @param documentReference the reference to serialize; never null.
+	 * @param jsonGenerator the generator to write JSON output; never null.
+	 * @param serializerProvider the provider passed by Jackson; never null.
+	 * @throws IOException in case of I/O errors during serialization.
+	 */
+	@Override public void serialize(DocumentReference documentReference, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+		jsonGenerator.writeStartObject();
+		jsonGenerator.writeStringField("docRef", documentReference.toString());
+		jsonGenerator.writeEndObject();
+	}
+}
+

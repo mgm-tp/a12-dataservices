@@ -1,0 +1,13 @@
+{
+	"ContractRoot": {
+		"ContractName": "Insurance",
+		"LengthOfContract": 1,
+		"ContractValue": 10,
+		"CostToCustomer": 1,
+		"MaxDiscount": "1%",
+		"Car": {
+			"Make": "Škoda",
+			"Model": "Octavia"
+		}
+	}
+}

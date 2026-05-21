@@ -1,0 +1,89 @@
+{
+	"header": {
+		"id": "ContractCoInsuredPartner",
+		"modelType": "relationship",
+		"modelVersion": "3.0.0",
+		"locales": [{ "code": "de" }, { "code": "en" }, { "code": "en_US" }],
+		"modelReferences": [
+			{
+				"modelType": "document",
+				"reference": "Contract",
+				"purpose": "Document model",
+				"alias": "Contract"
+			},
+			{
+				"modelType": "document",
+				"reference": "BusinessPartnerSuper",
+				"purpose": "Document model",
+				"alias": "BusinessPartnerSuper"
+			},
+			{
+				"modelType": "document",
+				"reference": "CoInsuredAdditionalFields",
+				"purpose": "Link Document model",
+				"alias": "Link Model"
+			}
+		],
+		"annotations": [{ "name": "roles", "value": "admin,guest,ModelRead" }],
+		"labels": [
+			{ "locale": "de", "text": "Vertrag und Mitversicherter" },
+			{ "locale": "en", "text": "Contract and CoInsured Partner" }
+		],
+		"description": ""
+	},
+	"content": {
+		"labels": [
+			{ "locale": "en", "text": "Contract and CoInsured Partner" },
+			{ "locale": "de", "text": "Vertrag und Mitversicherter" }
+		],
+		"associationType": "SHARED",
+		"linkDocumentModel": "CoInsuredAdditionalFields",
+		"duplicatesAllowed": false,
+		"entityCharacteristics": [
+			{
+				"role": "Contract",
+				"labels": [
+					{ "locale": "en", "text": "Contract" },
+					{ "locale": "de", "text": "Vertrag" }
+				],
+				"documentModel": "Contract",
+				"ordered": true,
+				"navigable": true,
+				"linkConstraints": {
+					"multiplicity": {
+						"lowerLimit": 0,
+						"unbounded": true,
+						"upperLimit": null
+					}
+				},
+				"candidateConstraints": {
+					"population": null,
+					"populationParameters": null
+				}
+			},
+			{
+				"role": "Partner",
+				"labels": [
+					{ "locale": "en", "text": "Co-insured Business Partners" },
+					{ "locale": "de", "text": "Mitversicherte Geschäftspartner" }
+				],
+				"documentModel": "BusinessPartnerSuper",
+				"ordered": true,
+				"navigable": true,
+				"linkConstraints": {
+					"multiplicity": {
+						"lowerLimit": 1,
+						"unbounded": false,
+						"upperLimit": 8
+					}
+				},
+				"candidateConstraints": {
+					"population": null,
+					"populationParameters": null
+				}
+			}
+		],
+		"storage": "EXTERNAL",
+		"embeddedGroupPath": null
+	}
+}

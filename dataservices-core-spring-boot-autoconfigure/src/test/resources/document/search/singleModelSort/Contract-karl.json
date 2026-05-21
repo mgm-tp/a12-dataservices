@@ -1,0 +1,10 @@
+{
+	"ContractRoot": {
+		"ContractName": "karl",
+		"ContractDescription": "Below",
+		"LengthOfContract": 100,
+		"ContractValue": 8.06,
+		"CostToCustomer": 10,
+		"MaxDiscount": "ABC"
+	}
+}

@@ -1,0 +1,134 @@
+{
+  "header": {
+    "id": "ProductDateTestModel",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ProductDateTestModel_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ProductDateTestModel"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "ProductRole",
+        "reference": "Product"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "TestModel",
+        "reference": "DateTestModel"
+      },
+      {
+        "purpose": "Link Document model",
+        "modelType": "document",
+        "alias": "Link Model",
+        "reference": "AdditionalFieldsModel"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "guest,admin,systemAdmin"
+      }
+    ]
+  },
+  "content": {
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ProductDateTestModel_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ProductDateTestModel"
+      }
+    ],
+    "associationType": "SHARED",
+    "linkDocumentModel": "AdditionalFieldsModel",
+    "duplicatesAllowed": false,
+    "entityCharacteristics": [
+      {
+        "role": "ProductRole",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "ist partz of"
+          },
+          {
+            "locale": "en",
+            "text": "is part of"
+          }
+        ],
+        "documentModel": "Product",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": false,
+            "upperLimit": 5
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": [
+            {
+              "name": "requiredField",
+              "value": "requiredField"
+            }
+          ]
+        }
+      },
+      {
+        "role": "TestModel",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "konzistz of"
+          },
+          {
+            "locale": "en",
+            "text": "consists of"
+          }
+        ],
+        "documentModel": "DateTestModel",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": [
+            {
+              "name": "requiredField",
+              "value": "requiredField"
+            }
+          ]
+        }
+      }
+    ],
+    "storage": "EXTERNAL",
+    "embeddedGroupPath": ""
+  }
+}

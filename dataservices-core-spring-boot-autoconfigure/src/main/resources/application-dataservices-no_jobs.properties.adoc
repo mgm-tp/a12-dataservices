@@ -1,0 +1,5 @@
+= Disable Jobs
+
+Disables Data Services jobs *but not the scheduler itself*. It means that you can still add your custom jobs.
+
+See <<jobs-configuration, jobs properties>> for advanced configuration.

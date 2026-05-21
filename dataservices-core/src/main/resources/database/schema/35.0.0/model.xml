@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd"
+				   logicalFilePath="database/schema/35.0.0/model.xml">
+
+	<changeSet id="A12S-2309-model" author="A12S-2309-author">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<changeSetExecuted id="A12S-2309-model" author="A12S-2309-author" changeLogFile="database/schema/34.0.0/model.xml"/>
+			</not>
+		</preConditions>
+		<createIndex tableName="relationship_role" indexName="relationship_role_name_docref_idx">
+			<column name="role_name"/>
+			<column name="role_docref"/>
+		</createIndex>
+		<dropIndex tableName="relationship_role" indexName="relationship_role_role_docref_idx"/>
+		<dropIndex tableName="relationship_role" indexName="relationship_role_role_name_idx"/>
+	</changeSet>
+
+	<changeSet id="A12S-3130-model-prepare" author="A12S-3130-author-prepare">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<changeSetExecuted id="A12S-3130-model-prepare" author="A12S-3130-author-prepare" changeLogFile="database/schema/34.0.0/model.xml"/>
+			</not>
+		</preConditions>
+		<createTable tableName="attachment_reference_backup_v34">
+			<column name="id" type="bigint">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+			<column name="attachment_header_id" type="varchar(500)">
+			</column>
+			<column name="type" type="varchar(500)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="reference" type="varchar(500)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<sql>
+			insert into attachment_reference_backup_v34 (id, attachment_header_id, type, reference)
+			select id, attachment_header_id, type, reference
+			from attachment_reference;
+		</sql>
+
+		<delete tableName="attachment_reference">
+			<where>id in (
+				select r.id
+				from attachment_reference r
+				where exists (
+					select 1
+					from attachment_reference r2
+					where r2.reference = r.reference and r2.attachment_header_id = r.attachment_header_id
+					and not r2.id = r.id)
+				and r.id not in (
+					select min(r3.id)
+					from attachment_reference r3
+					group by r3.reference, r3.attachment_header_id
+					having count(*) > 1))
+			</where>
+		</delete>
+	</changeSet>
+
+	<changeSet id="A12S-3130-model" author="A12S-3130-author">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<changeSetExecuted id="A12S-3130-model" author="A12S-3130-author" changeLogFile="database/schema/34.0.0/model.xml"/>
+			</not>
+		</preConditions>
+		<addUniqueConstraint
+			tableName="attachment_reference"
+			constraintName="uniqueAttachmentReference"
+			columnNames="reference, attachment_header_id"
+		/>
+	</changeSet>
+</databaseChangeLog>

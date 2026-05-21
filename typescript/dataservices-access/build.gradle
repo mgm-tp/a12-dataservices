@@ -1,0 +1,5 @@
+plugins {
+	id 'base'
+}
+
+description 'TypeScript client library for Dataservices REST APIs'

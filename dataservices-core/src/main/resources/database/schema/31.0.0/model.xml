@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+                   logicalFilePath="database/schema/31.0.0/model.xml">
+
+	<changeSet id="A12S-1621" author="khanus">
+		<createTable tableName="BACKUP_USER">
+			<column name="ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="BACKUP_USER_PK" nullable="false" />
+			</column>
+			<column name="XML_DOC" type="clob" />
+			<column name="CREATED_BY" type="VARCHAR(100 ${varcharUnit})" />
+			<column name="MODIFIED_BY" type="VARCHAR(100 ${varcharUnit})" />
+			<column name="CREATED_AT" type="TIMESTAMP" />
+			<column name="MODIFIED_AT" type="TIMESTAMP" />
+			<column name="MODEL_NAME" type="VARCHAR(100 ${varcharUnit})" />
+		</createTable>
+		<createTable tableName="BACKUP_ROLE">
+			<column name="ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="BACKUP_ROLE_PK" nullable="false" />
+			</column>
+			<column name="XML_DOC" type="clob" />
+			<column name="CREATED_BY" type="VARCHAR(100 ${varcharUnit})" />
+			<column name="MODIFIED_BY" type="VARCHAR(100 ${varcharUnit})" />
+			<column name="CREATED_AT" type="TIMESTAMP" />
+			<column name="MODIFIED_AT" type="TIMESTAMP" />
+			<column name="MODEL_NAME" type="VARCHAR(100 ${varcharUnit})" />
+		</createTable>
+		<createTable tableName="BACKUP_ACCESS_RIGHT">
+			<column name="ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="BACKUP_ACCESS_RIGHT_PK" nullable="false" />
+			</column>
+			<column name="XML_DOC" type="clob" />
+			<column name="CREATED_BY" type="VARCHAR(100 ${varcharUnit})" />
+			<column name="MODIFIED_BY" type="VARCHAR(100 ${varcharUnit})" />
+			<column name="CREATED_AT" type="TIMESTAMP" />
+			<column name="MODIFIED_AT" type="TIMESTAMP" />
+			<column name="MODEL_NAME" type="VARCHAR(100 ${varcharUnit})" />
+		</createTable>
+	</changeSet>
+</databaseChangeLog>

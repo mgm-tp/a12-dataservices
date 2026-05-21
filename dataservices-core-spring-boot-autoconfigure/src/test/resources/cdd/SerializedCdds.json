@@ -1,0 +1,66 @@
+[
+  {
+	"ContractRoot": {
+	  "ContractName": "Insurance"
+	},
+	"ContractBusinessPartner": {
+	  "BusinessPartnerRoot": {
+		"Name": "Our testing Policy Holder",
+		"Industry": "Biology",
+		"StartOfRelationship": "2022-02-01",
+		"CustomerDiscount": "20%",
+		"PersonOrEntity": "Emilio"
+	  },
+	  "PartnerPostalAddress": {
+		"AddressRoot": {
+		  "Street": "Letenské náměstí",
+		  "HouseNumber": "2",
+		  "City": "Prague",
+		  "Country": "Czech Republic"
+		}
+	  },
+	  "PartnerAddresses": [
+		{
+		  "AddressRoot": {
+			"Street": "Letenské náměstí",
+			"HouseNumber": "2",
+			"City": "Prague",
+			"Country": "Czech Republic"
+		  }
+		}
+	  ]
+	},
+	"ContractCoInsuredPartner": [
+	  {
+		"relationship": {
+		  "CoInsuredRoot": {
+			"Name": "Beatrice"
+		  }
+		},
+		"BusinessPartnerRoot": {
+		  "Name": "Our testing CoInsurer",
+		  "Industry": "Chemistry",
+		  "StartOfRelationship": "2022-03-01",
+		  "CustomerDiscount": "30%",
+		  "PersonOrEntity": "Julio"
+		}
+	  },
+	  {
+		"BusinessPartnerRoot": {
+		  "Name": "Our testing CoInsurer Two",
+		  "Industry": "Government",
+		  "StartOfRelationship": "2022-04-01",
+		  "CustomerDiscount": "40%",
+		  "PersonOrEntity": "Hana"
+		}
+	  }
+	]
+  },
+  {
+	"BusinessPartnerRoot": {
+	  "Industry": "Chemistry",
+	  "StartOfRelationship": "2022-03-01",
+	  "CustomerDiscount": "30%"
+	}
+  }
+]

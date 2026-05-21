@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hazelcast xmlns="http://www.hazelcast.com/schema/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		   xsi:schemaLocation="http://www.hazelcast.com/schema/config http://www.hazelcast.com/schema/config/hazelcast-config-5.0.xsd">
+
+	<instance-name>A12S</instance-name>
+
+	<cluster-name>dev</cluster-name>
+
+	<properties>
+		<property name="hazelcast.diagnostics.enabled">true</property>
+		<property name="hazelcast.logging.type">slf4j</property>
+	</properties>
+
+	<import resource="hazelcast-caches.xml"/>
+
+	<!-- Default ehcache regions-->
+	<map name="org.hibernate.cache.spi.UpdateTimestampsCache">
+		<time-to-live-seconds>0</time-to-live-seconds>
+		<eviction size="5" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+	</map>
+
+	<cache name="*">
+		<statistics-enabled>true</statistics-enabled>
+		<management-enabled>true</management-enabled>
+		<eviction size="1200"/>
+		<read-through>true</read-through>
+		<write-through>true</write-through>
+	</cache>
+
+	<cache name="default">
+		<statistics-enabled>true</statistics-enabled>
+		<management-enabled>true</management-enabled>
+		<eviction size="1200"/>
+	</cache>
+
+</hazelcast>

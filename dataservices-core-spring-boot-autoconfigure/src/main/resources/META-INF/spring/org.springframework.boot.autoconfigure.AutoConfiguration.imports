@@ -1,0 +1,6 @@
+com.mgmtp.a12.dataservices.autoconfigure.DataServicesRepositoryConfiguration
+com.mgmtp.a12.dataservices.autoconfigure.ServiceFactoryConfiguration
+com.mgmtp.a12.dataservices.autoconfigure.DataServicesHazelcastConfiguration
+com.mgmtp.a12.dataservices.autoconfigure.DataServicesCoreAutoconfiguration
+com.mgmtp.a12.dataservices.autoconfigure.internal.RpcOperationConfiguration
+com.mgmtp.a12.dataservices.autoconfigure.internal.QueryConfiguration

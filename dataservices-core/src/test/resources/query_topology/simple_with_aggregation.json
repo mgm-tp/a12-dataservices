@@ -1,0 +1,19 @@
+{
+  "targetDocumentModel": "Contract",
+  "aggregation": {
+	"docRef": "xxx",
+	"aggregations": [
+	  {
+		"function": "count",
+		"field": "countField",
+		"alias": "countAlias"
+	  }
+	],
+	"group": [
+	  {
+		"field": "groupField",
+		"alias": "groupAlias"
+	  }
+	]
+  }
+}

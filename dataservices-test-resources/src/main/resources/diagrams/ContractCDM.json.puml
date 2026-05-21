@@ -1,0 +1,34 @@
+@startjson
+
+#highlight "header" / "annotations"
+#highlight "header" / "annotations" / "1" / "name"
+#highlight "header" / "annotations" / "1" / "value"
+
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"annotations"
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"annotations"/"cdm.targetDocumentModel"
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"annotations"/"cdm.targetRole"
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"annotations"/"cdm.relationship"
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"annotations"/"cdm.sourceRole"
+
+#highlight "content"/"modelRoot"/"rootGroups"/"2"/"annotations"
+#highlight "content"/"modelRoot"/"rootGroups"/"2"/"annotations"/"cdm.targetDocumentModel"
+#highlight "content"/"modelRoot"/"rootGroups"/"2"/"annotations"/"cdm.targetRole"
+#highlight "content"/"modelRoot"/"rootGroups"/"2"/"annotations"/"cdm.relationship"
+#highlight "content"/"modelRoot"/"rootGroups"/"2"/"annotations"/"cdm.sourceRole"
+
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"Group"/"elements"/"2"/"annotations"
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"Group"/"elements"/"2"/"annotations"/"cdm.targetDocumentModel"
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"Group"/"elements"/"2"/"annotations"/"cdm.targetRole"
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"Group"/"elements"/"2"/"annotations"/"cdm.relationship"
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"Group"/"elements"/"2"/"annotations"/"cdm.sourceRole"
+
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"Group"/"elements"/"3"/"annotations"
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"Group"/"elements"/"3"/"annotations"/"cdm.targetDocumentModel"
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"Group"/"elements"/"3"/"annotations"/"cdm.targetRole"
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"Group"/"elements"/"3"/"annotations"/"cdm.relationship"
+#highlight "content"/"modelRoot"/"rootGroups"/"1"/"Group"/"elements"/"3"/"annotations"/"cdm.sourceRole"
+
+#highlight "content"/"modelRoot"/"rootGroups"/"2"/"Group"/"elements"/"1"/"name"
+
+!include ../models/cdm/ContractCDM.json
+@endjson

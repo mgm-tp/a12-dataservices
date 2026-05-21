@@ -1,0 +1,93 @@
+{
+  "header": {
+    "id": "Product",
+    "modelType": "form",
+    "modelVersion": "24.0.0",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "subHeaderBox": {
+      "id": "subHeaderBox1"
+    },
+    "footerBox": {
+      "majorButtons": {
+        "button": [
+          {
+            "label": {
+              "text": [
+                {
+                  "value": "Cancel",
+                  "lang": "en"
+                },
+                {
+                  "value": "Abbrechen",
+                  "lang": "de"
+                }
+              ]
+            },
+            "parameter": [
+              {
+                "value": "event_cancel",
+                "name": "event"
+              }
+            ],
+            "showReadonly": true,
+            "type": "EVENT",
+            "primary": false,
+            "destructive": true,
+            "id": "button-b4acc",
+            "name": "Cancel"
+          },
+          {
+            "label": {
+              "text": [
+                {
+                  "value": "Save",
+                  "lang": "en"
+                },
+                {
+                  "value": "Speichern",
+                  "lang": "de"
+                }
+              ]
+            },
+            "parameter": [
+              {
+                "value": "event_submit",
+                "name": "event"
+              },
+              {
+                "name": "validate"
+              },
+              {
+                "value": "partial",
+                "name": "validationMode"
+              }
+            ],
+            "type": "EVENT",
+            "primary": true,
+            "destructive": false,
+            "id": "button-79bc2",
+            "name": "Save"
+          }
+        ]
+      },
+      "id": "footerBox1"
+    }
+  }
+}

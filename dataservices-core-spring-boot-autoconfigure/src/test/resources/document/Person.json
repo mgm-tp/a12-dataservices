@@ -1,0 +1,34 @@
+{
+	"Person": {
+		"FirstName": "Tomas",
+		"LastName": "Ajus",
+		"Group": "BusinessContacts",
+		"GroupSpecificDetails": {
+			"BusinessContacts": {
+				"Company": "Buss company",
+				"Position": "Buss Position"
+			},
+			"FriendsAndFamily": {
+				"Nickname": "nick",
+				"DateOfBirth": "2010-10-10"
+			}
+		},
+		"ContactInfo": [
+			{
+				"ContactType": "misc",
+				"ContactDetail": "detail",
+				"Description": "desc"
+			},
+			{
+				"ContactType": "twitter",
+				"ContactDetail": "detail1",
+				"Description": "desc1"
+			},
+			{
+				"ContactType": "fax",
+				"ContactDetail": "detail2",
+				"Description": "desc2"
+			}
+		]
+	}
+}

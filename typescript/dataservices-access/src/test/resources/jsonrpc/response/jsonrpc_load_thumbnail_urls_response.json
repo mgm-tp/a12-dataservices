@@ -1,0 +1,12 @@
+{
+	"jsonrpc": "2.0",
+	"id": "LoadThumbnailUrlsInternal",
+	"result": {
+		"BusinessPartner/1": {
+			"c78b0238-7f9a-4998-90e2-f93f73086006": {
+				"smallThumbnailUrl": "http://localhost:8080/cs/download/93ebef0f-b034-4547-afb9-2ab51ab314ba",
+				"bigThumbnailUrl": "http://localhost:8080/cs/download/36df7c80-b8ba-4a01-b0c2-4cad674cd221"
+			}
+		}
+	}
+}

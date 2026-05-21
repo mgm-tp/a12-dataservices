@@ -1,0 +1,127 @@
+{
+  "header": {
+    "id": "RecursiveBusinessPartnerCDM",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      },
+      {
+        "name": "cdm.queryRoot",
+        "value": "BusinessPartnerSuper"
+      }
+    ],
+    "modelReferences": [
+      {
+        "alias": "BusinessPartnerSuper",
+        "modelType": "document",
+        "purpose": "include",
+        "reference": "BusinessPartnerSuper"
+      },
+      {
+        "alias": "Contract",
+        "modelType": "document",
+        "purpose": "include",
+        "reference": "Contract"
+      }
+    ]
+  },
+  "content": {
+    "modelInfo": {
+      "name": "RecursiveBusinessPartnerCDM",
+      "immutable": false
+    },
+    "modelConfig": {
+      "timeZone": "UTC",
+      "decimalSeparator": "."
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "include_1f446",
+          "name": "BusinessPartnerRoot",
+          "Group": {
+            "repeatability": 1,
+            "modelAlias": "BusinessPartnerSuper"
+          }
+        },
+        {
+          "type": "Group",
+          "id": "include_4af42",
+          "name": "ContractBusinessPartner",
+          "annotations": [
+            {
+              "name": "cdm.relationship",
+              "value": "ContractBusinessPartner"
+            },
+            {
+              "name": "cdm.sourceRole",
+              "value": "Partner"
+            },
+            {
+              "name": "cdm.targetRole",
+              "value": "Contract"
+            },
+            {
+              "name": "cdm.targetDocumentModel",
+              "value": "Contract"
+            }
+          ],
+          "Group": {
+            "repeatability": 100,
+            "elements": [
+              {
+                "type": "Group",
+                "name": "ContractRoot",
+                "id": "include_c08c7",
+                "Group": {
+                  "repeatability": 1,
+                  "modelAlias": "Contract"
+                }
+              },
+              {
+                "type": "Group",
+                "name": "ContractAmendment",
+                "id": "group_4bc79",
+                "annotations": [
+                  {
+                    "name": "cdm.relationship",
+                    "value": "ContractAmendment"
+                  },
+                  {
+                    "name": "cdm.sourceRole",
+                    "value": "Contract"
+                  },
+                  {
+                    "name": "cdm.targetRole",
+                    "value": "Amendment"
+                  },
+                  {
+                    "name": "cdm.targetDocumentModel",
+                    "value": "Contract"
+                  }
+                ],
+                "Group": {
+                  "repeatability": 100,
+                  "modelAlias": "Contract"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

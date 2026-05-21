@@ -1,0 +1,23 @@
+roles:
+  - name: admin
+    description: admin role
+    accessRights:
+      - QUERY
+      - DOCUMENT_CREATE
+      - DOCUMENT_UPDATE
+      - DOCUMENT_PARTIAL_UPDATE
+      - DOCUMENT_DELETE
+      - MODEL_READ
+      - MODEL_MANAGE
+      - MODEL_CREATE
+      - ACCESS_ACTUATOR
+      - ATTACHMENT_UPLOAD
+  - name: systemAdmin
+    description: system admin role
+    accessRights:
+      - MANAGE_CACHES
+  - name: guest
+    description: guest role
+    accessRights:
+      - QUERY
+      - MODEL_READ

@@ -1,0 +1,86 @@
+{
+  "header": {
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "id": "PostAddress",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,systemAdmin"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": ""
+      },
+      {
+        "locale": "de",
+        "text": ""
+      }
+    ]
+  },
+  "content": {
+    "duplicatesAllowed": false,
+    "associationType": "SHARED",
+    "storage": "EXTERNAL",
+    "entityCharacteristics": [
+      {
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": false,
+            "upperLimit": 1
+          }
+        },
+        "candidateConstraints": {},
+        "labels": [
+          {
+            "locale": "en",
+            "text": ""
+          },
+          {
+            "locale": "de",
+            "text": ""
+          }
+        ],
+        "role": "businessPartner",
+        "documentModel": "BusinessPartner-document"
+      },
+      {
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": false,
+            "upperLimit": 1
+          }
+        },
+        "candidateConstraints": {},
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Postal Address"
+          },
+          {
+            "locale": "de",
+            "text": "Postanschrift"
+          }
+        ],
+        "role": "address",
+        "documentModel": "Address-document"
+      }
+    ]
+  }
+}

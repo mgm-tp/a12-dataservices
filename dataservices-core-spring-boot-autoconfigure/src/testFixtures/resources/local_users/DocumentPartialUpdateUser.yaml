@@ -1,0 +1,7 @@
+username: document_partial_update_user
+password: document_partial_update_user
+firstname: document_partial_update
+lastname: document_partial_update
+email: document_partial_update@min.com
+authorities:
+  - "DocumentPartialUpdate"

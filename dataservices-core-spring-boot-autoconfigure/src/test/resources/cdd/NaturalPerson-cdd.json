@@ -1,0 +1,24 @@
+{
+	"businessPartner": {
+		"id": "LE-01",
+		"name": "Legal Entity 01",
+		"logo": {
+			"original_filename": "originalFileName1",
+			"internal_filename": "internalFilename1",
+			"content": "",
+			"attachment_id": "ATT-01",
+			"size": 1000,
+			"mime_type": "image/png"
+		},
+		"notes": [
+			{
+				"day": "2022-05-13",
+				"note": "First note"
+			},
+			{
+				"day": "2022-03-01",
+				"note": "March note"
+			}
+		]
+	}
+}

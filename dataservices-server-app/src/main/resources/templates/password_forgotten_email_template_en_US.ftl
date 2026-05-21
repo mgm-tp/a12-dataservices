@@ -1,0 +1,1 @@
+Please reset your password by clicking on the link : ${tokenLink} or by entering following token into app : ${token}

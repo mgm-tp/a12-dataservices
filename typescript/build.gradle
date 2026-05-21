@@ -1,0 +1,1 @@
+apply plugin: project.libs.plugins.nodePlugin.get().pluginId

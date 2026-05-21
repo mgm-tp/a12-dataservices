@@ -1,0 +1,22 @@
+{
+	"name": "Disable specific endpoint authorization definition",
+	"description": "Authorization definition to disable specific endpoint",
+	"policies": [
+		{
+			"name": "DisableModelsV2ControllerLoadModelMethodPolicy",
+			"description": "Disables access to ModelsV2ControllerImpl.loadModel method",
+			"rules": [
+				"!#resource.equals('ModelsV2ControllerImpl.loadModel')"
+			]
+		}
+	],
+	"permissions": [
+		{
+			"name": "Endpoint",
+			"description": "",
+			"policy-refs": ["DisableModelsV2ControllerLoadModelMethodPolicy"],
+			"call-parent-scope": false,
+			"scopes": ["Endpoint"]
+		}
+	]
+}

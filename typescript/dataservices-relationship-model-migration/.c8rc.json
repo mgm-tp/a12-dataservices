@@ -1,0 +1,11 @@
+{
+	"include": ["lib"],
+	"reporter": ["text", "text-summary"],
+	"report-dir": "target/coverage",
+	"temp-directory": "target/coverage/.c8_output",
+	"check-coverage": true,
+	"branches": 100,
+	"lines": 100,
+	"functions": 100,
+	"statements": 100
+}

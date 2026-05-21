@@ -1,0 +1,77 @@
+{
+	"header": {
+		"id": "RecursiveOverview",
+		"modelType": "overview",
+		"modelVersion": "35.1.0",
+		"locales": [
+			{
+				"code": "en"
+			}
+		],
+		"labels": [],
+		"annotations": [
+			{
+				"name": "roles",
+				"value": "admin"
+			}
+		],
+		"modelReferences": [
+			{
+				"purpose": "document-model-for-overview",
+				"modelType": "document",
+				"alias": "DM",
+				"reference": "ContractCDM"
+			},
+			{
+				"purpose": "testing-recursive-refeence",
+				"modelType": "overview",
+				"alias": "OM",
+				"reference": "RecursiveOverview"
+			}
+		]
+	},
+	"content": {
+		"configuration": {
+			"enableFilter": true,
+			"filterConfiguration": {
+				"showFilterButton": true,
+				"showFilterBar": true,
+				"filterMode": "all_columns"
+			},
+			"showFullTextSearch": true,
+			"pagingSize": 10
+		},
+		"columns": [
+			{
+				"id": "column-53ae7",
+				"width": 1,
+				"styles": {},
+				"elementRef": "field_770f2",
+				"sortable": false
+			},
+			{
+				"id": "column-daa17",
+				"width": 1,
+				"styles": {},
+				"elementRef": "field_770f3",
+				"sortable": false
+			}
+		],
+		"subHeaderBox": {
+			"majorElements": [
+				{
+					"type": "search"
+				},
+				{
+					"type": "filter"
+				}
+			],
+			"minorElements": []
+		},
+		"rowActionGroup": {},
+		"footerBox": {
+			"majorElements": [],
+			"minorElements": []
+		}
+	}
+}

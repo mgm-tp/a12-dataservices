@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+				   logicalFilePath="database/schema/32.0.0/model.xml">
+
+	<changeSet id="A12S-1935" author="pvranik">
+		<preConditions>
+			<and>
+				<foreignKeyConstraintExists foreignKeyName="DOCREF_1_ID_FK" foreignKeyTableName="RELATIONSHIP_LINK"/>
+				<foreignKeyConstraintExists foreignKeyName="DOCREF_2_ID_FK" foreignKeyTableName="RELATIONSHIP_LINK"/>
+			</and>
+		</preConditions>
+		<sql>
+			ALTER TABLE RELATIONSHIP_LINK
+				DROP CONSTRAINT DOCREF_1_ID_FK;
+			ALTER TABLE RELATIONSHIP_LINK
+				DROP CONSTRAINT DOCREF_2_ID_FK;
+		</sql>
+	</changeSet>
+</databaseChangeLog>

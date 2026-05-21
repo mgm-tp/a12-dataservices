@@ -1,0 +1,10 @@
+= Disable Caching
+
+Disable caching completely.
+
+CAUTION: This profile is discouraged in production environment, because it could cause big performance drop.
+Use only if you know what you do.
+
+In case of embedded mode, this profile will apply to both data services and content stores.
+
+See <<cache-configuration, cache properties>> for additional information.

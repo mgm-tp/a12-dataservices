@@ -1,0 +1,8 @@
+{
+	"jsonrpc": "2.0",
+	"id": "loadThumbnailUrl",
+	"result": {
+		"smallThumbnailUrl": "smallImageUrl",
+		"bigThumbnailUrl": "bigImageUrl"
+	}
+}

@@ -1,0 +1,30 @@
+{
+  "BusinessPartnerRoot": {
+    "Name": "First",
+    "Industry": "IT",
+    "StartOfRelationship": "1978-02-16",
+    "EndOfRelationship": "1999-12-12T19:30:00",
+    "TimeOfContractSignature": "",
+    "ApproximateOfferDate": "01-02",
+    "PremiumPartner": true,
+    "CustomerDiscount": "100%",
+    "PersonOrEntity": "Person",
+    "SubtypeGroup": {
+      "Company": ""
+    },
+    "Offer": {
+      "Discount": "50%",
+      "ValidityPeriod": "2020-01-02/2020-02-02"
+    },
+    "Employment": {
+      "signingDateTime": "1999-12-12T13:30:00",
+      "employedSince": "2000-01",
+      "employedTill": "2050-12",
+      "currentlyEmployed": true,
+      "role": "Senior Data Engineer",
+      "income": "3000.50"
+    },
+    "birthday": "1995-00-00",
+    "accountNumber": "00001"
+  }
+}

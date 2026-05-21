@@ -1,0 +1,166 @@
+{
+  "header": {
+    "id": "AnonymizedBusinessPartnerCDM",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Anonymized Business Partner CDM"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest"
+      },
+      {
+        "name": "cdm.queryRoot",
+        "value": "BusinessPartner"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "AnonymizedBusinessPartnerCDM"
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "group_36405",
+          "name": "BusinessPartnerRoot",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "name": "Industry",
+                "id": "field_d6580",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Industry or business sector"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "name": "StartOfRelationship",
+                "id": "field_663d2",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Start of business relationship"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "name": "CustomerDiscount",
+                "id": "field_74a24",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "100%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "no discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "100%"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "90%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "10% discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "90%"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "80%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "20% discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "80%"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "50%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "50% discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "50%"
+                            }
+                          ]
+                        }
+                      ],
+                      "categories": []
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Customer Discount"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

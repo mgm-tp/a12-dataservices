@@ -1,0 +1,8 @@
+@startjson
+
+#highlight "header" / "annotations"
+#highlight "header" / "annotations" / "1" / "name"
+#highlight "header" / "annotations" / "1" / "value"
+
+!include ../models/cdm/AnonymizedBusinessPartnerCDM.json
+@endjson

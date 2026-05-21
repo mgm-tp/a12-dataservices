@@ -1,0 +1,37 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+
+	api project(':dataservices-common:dataservices-common-lib')
+	api project(':content-store:dataservices-content-store-domain')
+	api libs.springDataJpa
+	api libs.springCore
+	api libs.persistenceApi
+	api libs.commonsIo
+	api libs.springWeb
+	api libs.bundles.tika
+	api libs.reflections
+	api libs.json
+	api libs.hibernateCore
+	api libs.jakartaValidationApi
+	implementation libs.postgresql
+
+	compileOnly libs.servletApi
+	implementation libs.h2
+
+	implementation libs.jacksonDatabind,
+			libs.jacksonAnnotations,
+			libs.commonsLang3,
+			libs.commonsCollections4,
+			libs.annotationApi,
+			libs.mgmModelApi,
+			libs.slf4jApi
+
+	testImplementation libs.testng
+	testImplementation libs.springTest
+	testImplementation libs.mockitoCore
+}
+
+description = 'Content Store Core Implementation'

@@ -1,0 +1,29 @@
+{
+  "Fields": {
+    "StringField": "Nike - Air Jordan 490",
+    "sport": "streetball",
+    "color": "green",
+    "LeadingZeroNumber": "05000",
+    "NumberField": 5000,
+    "BooleanField": false,
+    "gender": "men",
+    "PartialDates": {
+      "OptionalYear": "2020-12-20",
+      "OptionalMonth": "2020-12-20",
+      "OptionalDay": "2020-12-20"
+    },
+    "DateFragments": {
+      "YearFragment": "2018",
+      "MonthFragment": "10",
+      "YearMonthFragment": "2015-11",
+      "MonthDayFragment": "11-11"
+    },
+    "DateRanges": {
+      "FullDateRange": "2015-01-01/2020-12-31",
+      "YearDateRange": "2012/2022",
+      "MonthDateRange": "09/12",
+      "YearMonthRange": "2000-01/2005-12",
+      "MonthDayRange": "01-01/12-31"
+    }
+  }
+}

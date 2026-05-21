@@ -1,0 +1,43 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+import org.springframework.boot.gradle.tasks.run.BootRun
+
+import java.time.Duration
+
+plugins {
+	id 'java-test-fixtures'
+	id 'com.mgmtp.a12.dataservices.spring-boot-conventions'
+}
+
+configurations {
+	bootServerJar.canBeResolved = false
+	seeder {}
+}
+
+dependencies {
+	api project(':dataservices-server-spring-boot-autoconfigure')
+	api project(':dataservices-server')
+	api project(':dataservices-core-spring-boot-autoconfigure')
+	api libs.uaaAuthentication
+	api libs.jaxbApi
+	api libs.jacksonDatatypeJsr310, libs.jacksonDatatypeJdk8
+	api libs.springBootStarterDataJpa
+	api libs.springBootStarterActuator
+	api libs.hibernateJcache
+	api(libs.springBootStarterWeb) {
+		exclude group: 'org.glassfish', module: 'jakarta.el'
+	}
+	testImplementation(testFixtures(project(':dataservices-core-spring-boot-autoconfigure')))
+	seeder project(':dataservices-data-seed')
+}
+
+springBoot {
+	mainClass.set 'com.mgmtp.a12.dataservices.server.app.ServerApplication'
+}
+
+artifacts {
+	bootServerJar(tasks.bootJar)
+}
+
+description = 'Data Services REST server executable application'
+

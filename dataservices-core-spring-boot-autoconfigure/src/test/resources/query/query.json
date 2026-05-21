@@ -1,0 +1,28 @@
+{
+	"backReference": "/",
+	"targetDocumentModel": "Contract",
+	"links": [
+		{
+			"backReference": "/RootGroup/ContractBusinessPartner[1]",
+			"relationshipModel": "ContractBusinessPartner",
+			"targetRole": "Partner",
+			"links": [
+				{
+					"backReference": "/RootGroup/ContractBusinessPartner/PartnerAddresses[1]",
+					"relationshipModel": "PartnerAddresses",
+					"targetRole": "Address"
+				},
+				{
+					"backReference": "/RootGroup/ContractBusinessPartner/PartnerPostalAddress[1]",
+					"relationshipModel": "PartnerPostalAddress",
+					"targetRole": "Address"
+				}
+			]
+		},
+		{
+			"backReference": "/RootGroup/ContractCoInsuredPartner[1]",
+			"relationshipModel": "ContractCoInsuredPartner",
+			"targetRole": "Partner"
+		}
+	]
+}

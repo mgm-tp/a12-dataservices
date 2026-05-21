@@ -1,0 +1,16 @@
+{
+  "header": {
+	"id": "Model1",
+	"modelType": "model1",
+	"annotations": [
+	  {
+		"name": "roles",
+		"value": "admin,guest,systemAdmin"
+	  }
+	]
+  },
+  "content": {
+	"a": 1,
+	"b": "test1"
+  }
+}

@@ -1,0 +1,92 @@
+@startuml
+
+!procedure group(x)
+class x << (G,#DDAAFF) >>
+!endprocedure
+
+!procedure cdmGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure field(x)
+class x << (F,#DDFFAA) >> #White
+!endprocedure
+
+!procedure embeddedField(name, type, fieldType)
+name <<type>>: fieldType
+!endprocedure
+
+!procedure rule(x)
+class x << (R,#DDBBAA) >> #FFDDEE
+!endprocedure
+
+!procedure embeddedRule(name, type)
+<back:FFDDEE>name() <<type>></back>
+!endprocedure
+
+!procedure embeddedRule(name, type, $errorCondition)
+.. <back:FFDDEE> name <<type>> </back> ..
+<back:FFDDEE>errorCondition:</back> $errorCondition
+!endprocedure
+
+!procedure computation(x)
+class x << (C,#DDBBAA) >> #FFEEDD
+!endprocedure
+
+!procedure computationAlternative($operation, $precondition)
+.. alternative ..
+operation: $operation
+precondition: $precondition
+!endprocedure
+
+!procedure embeddedComputation(name, type, $operation, $precondition)
+.. <back:FFEEDD> name <<type>> </back> ..
+<back:FFEEDD>operation:</back> $operation
+<back:FFEEDD>precondition:</back> $precondition
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure embeddedComputation(name, type )
+<back:FFEEDD>name() <<type>></back>
+!endprocedure
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure linkGroup(x)
+group(x) #PeachPuff
+!endprocedure
+
+!procedure relLink($name,$rmId,$link1,$link2,$ld="")
+circle $name as $rmId #PeachPuff
+$rmId $link1
+$rmId $link2
+!if $ld!=""
+$rmId -[#IndianRed]right $ld: <<linkDocument>>
+linkDocument($ld)
+!endif
+!endprocedure
+
+skinparam linetype polyline
+left to right direction
+
+title Compose Document Model AnonymizedBusinessPartnerCDM<BusinessPartner}>
+
+package "AnonymizedBusinessPartnerCDM<BusinessPartner>" as AnonymizedBusinessPartnerCDM <<Frame>> {
+	() "documentRoot" as AnonymizedBusinessPartnerCDMDocumentRoot
+	group('"BusinessPartnerRoot" as group_36405')
+	field('"Industry" as field_d6580 <<StringType>>')
+	group_36405 -- field_d6580
+	field('"StartOfRelationship" as field_663d2 <<DateType>>')
+	group_36405 -- field_663d2
+	field('"CustomerDiscount" as field_74a24 <<EnumerationType>>')
+	group_36405 -- field_74a24
+
+	AnonymizedBusinessPartnerCDMDocumentRoot ||--o| "0..1" group_36405
+
+}
+@enduml

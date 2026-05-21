@@ -1,0 +1,224 @@
+{
+  "header": {
+    "id": "DomainBankverbindung",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,user"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "DomainBankverbindung",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G3",
+          "name": "Bankverbindung",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F4",
+                "name": "IBAN",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "minLength": 16,
+                      "maxLength": 28
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "IBAN"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F6",
+                "name": "BIC",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "minLength": 8,
+                      "maxLength": 11
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "BIC"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F7",
+                "name": "Geldinstitut",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Geldinstitut"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F8",
+                "name": "KontoinhaberVorname",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Vorname"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F14",
+                "name": "KontoinhaberNachname",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Nachname"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F13",
+                "name": "AnschriftWieOben",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Anschrift wie oben"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F9",
+                "name": "Strasse",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Straße"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F10",
+                "name": "Hausnummer",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Hausnummer"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F11",
+                "name": "Postleitzahl",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "errorMessage": [
+                        {
+                          "locale": "de",
+                          "text": "Bitte geben Sie genau 5 Ziffern an."
+                        }
+                      ],
+                      "pattern": "[0-9]{5}"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Postleitzahl"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F12",
+                "name": "Ort",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Ort"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

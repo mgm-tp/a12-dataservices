@@ -1,0 +1,3 @@
+= Cluster
+
+Configure server to bypass initialization steps. Includes disabling of initialization of database schema, data import and index manipulation. It is intended to be used in clustered setup with multiple replicas where you don't want initializations steps to be executed by each replica.  See <<cluster-safe-configuration, cluster-safe configuration>> for additional information.

@@ -1,0 +1,907 @@
+{
+  "header": {
+    "id": "ContractCompactCDM",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Contract Compact CDM"
+      },
+      {
+        "locale": "en_US",
+        "text": "Contract Compact CDM"
+      },
+      {
+        "locale": "de",
+        "text": "Vertrag Kompakt CDM"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest"
+      },
+      {
+        "name": "cdm.queryRoot",
+        "value": "Contract"
+      }
+    ],
+    "modelReferences": [
+      {
+        "alias": "Contract",
+        "modelType": "document",
+        "purpose": "include",
+        "reference": "Contract"
+      },
+      {
+        "alias": "BusinessPartnerSuper",
+        "modelType": "document",
+        "purpose": "include",
+        "reference": "BusinessPartnerSuper"
+      },
+      {
+        "alias": "CoInsuredAdditionalFields",
+        "modelType": "document",
+        "purpose": "include",
+        "reference": "CoInsuredAdditionalFields"
+      },
+      {
+        "alias": "Address",
+        "modelType": "document",
+        "purpose": "include",
+        "reference": "Address"
+      }
+    ]
+  },
+  "content": {
+    "modelInfo": {
+      "name": "ContractCDM"
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "include_71fc7",
+          "name": "ContractRoot",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_770f2",
+                "name": "ContractName",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Contract Name"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Vertragsname"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_29708",
+                "name": "ContractValue",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Contract Value"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Vertragswert"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_a09a6",
+                "name": "Valid",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Valid"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Gültig"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_48s48",
+                "name": "Type",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Insurance type"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Versicherungsart"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G2",
+                "name": "ContractDates",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "G2F1",
+                      "name": "ContractStartDate",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateTimeType",
+                          "DateTimeType": {
+                            "format": "yyyy-MM-dd'T'HH:mm:ss"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "G2F2",
+                      "name": "ContractEndDate",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateType",
+                          "DateType": {
+                            "format": "yyyy-MM-dd"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "G2F3",
+                      "name": "ContractEndTime",
+                      "Field": {
+                        "fieldType": {
+                          "type": "TimeType",
+                          "TimeType": {
+                            "format": "HH:mm:ss"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "G2F4",
+                      "name": "ContractReviewDate",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateFragmentType",
+                          "DateFragmentType": {
+                            "formatOfFragment": "yyyy"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "G2F5",
+                      "name": "LastPremiumPaidDate",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateType",
+                          "DateType": {
+                            "format": "yyyy-MM-dd",
+                            "datePrecision": "YEAR_OPTIONAL"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "G2F6",
+                      "name": "CoveragePeriod",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateRangeType",
+                          "DateRangeType": {
+                            "format": "yyyy-MM-dd",
+                            "rangeSeparator": "/"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_7a5d0",
+                "name": "ChangeLog",
+                "Group": {
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Change Log"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Change Log"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Änderungsprotokoll"
+                    }
+                  ],
+                  "repeatability": 10000,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "field_f9502",
+                      "name": "Number",
+                      "Field": {
+                        "fieldType": {
+                          "type": "NumberType",
+                          "NumberType": {
+                            "zeroNotAllowed": true,
+                            "trait": "amount"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Number"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Number"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Nummer"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_5b05b",
+                      "name": "ChangeTimestamp",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateType",
+                          "DateType": {
+                            "format": "yyyy-MM-dd"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Change Timestamp"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Change Timestamp"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Zeitstempel ändern"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_e1113",
+                      "name": "Description",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Description"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Description"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Beschreibung"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_ccb79",
+                      "name": "User",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "User"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "User"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Benutzer"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_980c8",
+                      "name": "Status",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Status"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Status"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Status"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_18ea0",
+                      "name": "Priority",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Priority"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Priority"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Priorität"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_61e6a",
+                      "name": "Changes",
+                      "Group": {
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Changes"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Changes"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Änderungen"
+                          }
+                        ],
+                        "repeatability": 99,
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "field_bf1d6",
+                            "name": "Title",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Title"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Title"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Titel"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_7de61",
+                            "name": "Details",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Details"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Details"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Details"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_69efa",
+                            "name": "Priority",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Priority"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Priority"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Priorität"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_1ecc4",
+                            "name": "Status",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Status"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Status"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Status"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "name": "ContractBusinessPartner",
+          "id": "group_f3eb0",
+          "annotations": [
+            {
+              "name": "cdm.relationship",
+              "value": "ContractBusinessPartner"
+            },
+            {
+              "name": "cdm.sourceRole",
+              "value": "Contract"
+            },
+            {
+              "name": "cdm.targetRole",
+              "value": "Partner"
+            },
+            {
+              "name": "cdm.targetDocumentModel",
+              "value": "BusinessPartnerSuper"
+            }
+          ],
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Group",
+                "id": "group_36785",
+                "name": "BusinessPartnerRoot",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "field_4d864",
+                      "name": "Name",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Name"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Name"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "name": "Industry",
+                      "id": "field_d6581",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Industry"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Industrie"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "name": "PartnerAddresses",
+                "id": "group_513ee",
+                "annotations": [
+                  {
+                    "name": "cdm.relationship",
+                    "value": "PartnerAddresses"
+                  },
+                  {
+                    "name": "cdm.sourceRole",
+                    "value": "Partner"
+                  },
+                  {
+                    "name": "cdm.targetRole",
+                    "value": "Address"
+                  },
+                  {
+                    "name": "cdm.targetDocumentModel",
+                    "value": "Address"
+                  }
+                ],
+                "Group": {
+                  "repeatability": 100,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "id": "include_4be24",
+                      "name": "AddressRoot",
+                      "Group": {
+                        "repeatability": 1,
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "field_804c7",
+                            "name": "Country",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Country"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Land"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_a48cs",
+                            "name": "AddressType",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Address type"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Adresstyp"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "name": "PartnerPostalAddress",
+                "id": "group_368d1",
+                "annotations": [
+                  {
+                    "name": "cdm.relationship",
+                    "value": "PartnerPostalAddress"
+                  },
+                  {
+                    "name": "cdm.sourceRole",
+                    "value": "Partner"
+                  },
+                  {
+                    "name": "cdm.targetRole",
+                    "value": "Address"
+                  },
+                  {
+                    "name": "cdm.targetDocumentModel",
+                    "value": "Address"
+                  }
+                ],
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "id": "include_19e70",
+                      "name": "AddressRoot",
+                      "Group": {
+                        "repeatability": 1,
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "field_854c7",
+                            "name": "Country",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Country"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Land"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_b48cs",
+                            "name": "AddressType",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Address type"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Adresstyp"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "name": "ContractCoInsuredPartner",
+          "id": "group_4bc78",
+          "annotations": [
+            {
+              "name": "cdm.relationship",
+              "value": "ContractCoInsuredPartner"
+            },
+            {
+              "name": "cdm.sourceRole",
+              "value": "Contract"
+            },
+            {
+              "name": "cdm.targetRole",
+              "value": "Partner"
+            },
+            {
+              "name": "cdm.targetDocumentModel",
+              "value": "BusinessPartnerSuper"
+            }
+          ],
+          "Group": {
+            "repeatability": 100,
+            "elements": [
+              {
+                "type": "Group",
+                "id": "group_36405",
+                "name": "BusinessPartnerRoot",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "field_fe6b2",
+                      "name": "Name",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Name"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "name": "Industry",
+                      "id": "field_d6580",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Industry"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "name": "relationship",
+                "id": "group_4da5e",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "name": "CoInsuredRoot",
+                      "id": "include_50c1e",
+                      "Group": {
+                        "repeatability": 1,
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "field_aa07e",
+                            "name": "Name",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Name of Policy Holder"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Name of Policy Holder"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Name des Versicherungsnehmers"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

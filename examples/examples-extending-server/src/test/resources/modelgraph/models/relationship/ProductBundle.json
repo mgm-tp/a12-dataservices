@@ -1,0 +1,118 @@
+{
+  "header": {
+    "id": "ProductBundle",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ProductBundle_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ProductBundle"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "ProductRole",
+        "reference": "DomainProduct"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "BundleRole",
+        "reference": "DomainBundle"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "guest,admin,systemAdmin"
+      }
+    ]
+  },
+  "content": {
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ProductBundle_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ProductBundle"
+      }
+    ],
+    "associationType": "SHARED",
+    "linkDocumentModel": null,
+    "duplicatesAllowed": false,
+    "entityCharacteristics": [
+      {
+        "role": "ProductRole",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "ProductRole_DE"
+          },
+          {
+            "locale": "en",
+            "text": "ProductRole"
+          }
+        ],
+        "documentModel": "DomainProduct",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": 1
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": []
+        }
+      },
+      {
+        "role": "BundleRole",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "BundleRole_DE"
+          },
+          {
+            "locale": "en",
+            "text": "BundleRole"
+          }
+        ],
+        "documentModel": "DomainBundle",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": []
+        }
+      }
+    ],
+    "storage": "EXTERNAL",
+    "embeddedGroupPath": ""
+  }
+}

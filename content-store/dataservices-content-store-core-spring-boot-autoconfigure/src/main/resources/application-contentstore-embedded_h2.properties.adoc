@@ -1,0 +1,19 @@
+= H2 database
+
+Set up the application to use embedded H2 in-memory database.
+
+To specify different datasource use these additional properties:
+
+[source,properties]
+----
+spring.datasources.contentstore.url=jdbc:h2:LOCATION:DB;
+spring.datasources.contentstore.username=USERNAME
+spring.datasources.contentstore.password=PASSWORD
+----
+
+Additionally, you can change timeout by:
+
+[source,properties]
+----
+spring.datasources.contentstore.hikari.connectionTimeout=
+----

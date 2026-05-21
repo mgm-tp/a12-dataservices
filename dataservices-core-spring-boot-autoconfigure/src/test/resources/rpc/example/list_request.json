@@ -1,0 +1,27 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "ExampleList",
+    "method": "EXAMPLE_LIST",
+    "params": {
+      "filteredModel": "Product",
+      "createdFromFilter": "Product.name:Shiny Shoe",
+      "outputPropertyPath": "/Product/name",
+      "page": {
+        "offset": 0,
+        "limit": 20
+      },
+      "filter": {
+        "fulltext": "",
+        "filters": [
+          ""
+        ],
+        "lang": "en"
+      },
+      "sort": {
+        "order": "",
+        "lang": null
+      }
+    }
+  }
+]

@@ -1,0 +1,32 @@
+plugins {
+	id 'groovy-gradle-plugin'
+}
+
+dependencies {
+	implementation gradleApi()
+	implementation localGroovy()
+	implementation libs.pluginNode
+	implementation libs.pluginSpringBoot
+	implementation libs.pluginLombok
+}
+
+gradlePlugin {
+	plugins {
+		dependencyManagementPlugin {
+			id = "com.mgmtp.a12.dataservices.dependency-management"
+			implementationClass = "com.mgmtp.a12.dataservices.gradle.dependency.DependencyManagementPlugin"
+		}
+		javaConventionsPlugin {
+			id = 'com.mgmtp.a12.dataservices.java-conventions'
+			implementationClass = 'com.mgmtp.a12.dataservices.gradle.java.JavaConventionsPlugin'
+		}
+		typescriptConventionsPlugin {
+			id = 'com.mgmtp.a12.dataservices.typescript-conventions'
+			implementationClass = 'com.mgmtp.a12.dataservices.gradle.typescript.TypescriptConventionsPlugin'
+		}
+		springBootConventionsPlugin {
+			id = 'com.mgmtp.a12.dataservices.spring-boot-conventions'
+			implementationClass = 'com.mgmtp.a12.dataservices.gradle.SpringBootConventionsPlugin'
+		}
+	}
+}

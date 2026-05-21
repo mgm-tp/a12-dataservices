@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+                   logicalFilePath="database/schema/31.1.0/model.xml">
+
+	<changeSet id="A12S-1724" author="walves">
+		<sql dbms="postgresql">
+			ALTER TABLE RELATIONSHIP_LINK ALTER COLUMN order_1 SET DATA TYPE varchar(2000) COLLATE "C";
+			ALTER TABLE RELATIONSHIP_LINK ALTER COLUMN order_2 SET DATA TYPE varchar(2000) COLLATE "C"
+		</sql>
+	</changeSet>
+</databaseChangeLog>

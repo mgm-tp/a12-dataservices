@@ -1,0 +1,547 @@
+{
+  "header": {
+    "id": "DateTestSubType1",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "de"
+      },
+      {
+        "code": "nl"
+      },
+      {
+        "code": "fr"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      },
+      {
+        "name": "subTypes",
+        "value": "DateTestSubType3"
+      },
+      {
+        "name": "superTypes",
+        "value": "DateTestModel"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "DateTestSubType1",
+      "immutable": false,
+      "comment": "sample comment"
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "typeDefinitions": [
+      {
+        "id": "typedef_780315b4-f4d6-4971-9952-db40860a71e3",
+        "name": "SampleType",
+        "fieldType": {
+          "type": "BooleanType"
+        }
+      }
+    ],
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "Group1",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F5",
+                "name": "Field11",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "leadingZerosAllowed": true,
+                      "maxFractionalDigits": 4
+                    }
+                  },
+                  "requirednessConfig": {
+                    "mode": "absoluteOrRelativeToNextRepAncestor"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F6",
+                "name": "NumberField",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "leadingZerosAllowed": true,
+                      "maxFractionalDigits": 4,
+                      "minValue": 0.25,
+                      "maxValue": 1234.5678
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F7",
+                "name": "TypedField",
+                "Field": {
+                  "fieldType": {
+                    "type": "TypeDefType",
+                    "TypeDefType": {
+                      "typeDefinitionId": "typedef_780315b4-f4d6-4971-9952-db40860a71e3"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F8",
+                "name": "BooleanField",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Boolean Field"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Boolean Feld"
+                    },
+                    {
+                      "locale": "nl",
+                      "text": "dutch friet"
+                    },
+                    {
+                      "locale": "fr",
+                      "text": "french fries"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F9",
+                "name": "StringField",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "lineBreaksPermitted": true,
+                      "minLength": 5,
+                      "maxLength": 100
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F10",
+                "name": "SampleDate",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F11",
+                "name": "SampleTypeRef",
+                "Field": {
+                  "fieldType": {
+                    "type": "TypeDefType",
+                    "TypeDefType": {
+                      "typeDefinitionId": "typedef_780315b4-f4d6-4971-9952-db40860a71e3"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F12",
+                "name": "SamplePatternString",
+                "externalDescription": [
+                  {
+                    "locale": "en",
+                    "text": "external desc"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "externe Beschreibung"
+                  },
+                  {
+                    "locale": "nl",
+                    "text": "dutch friet"
+                  },
+                  {
+                    "locale": "fr",
+                    "text": "french fries"
+                  }
+                ],
+                "internalDescription": [
+                  {
+                    "locale": "en",
+                    "text": "external desc"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "externe Beschreibung"
+                  },
+                  {
+                    "locale": "nl",
+                    "text": "dutch friet"
+                  },
+                  {
+                    "locale": "fr",
+                    "text": "french fries"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "errorMessage": [
+                        {
+                          "locale": "en",
+                          "text": "Pattern violation!"
+                        },
+                        {
+                          "locale": "de",
+                          "text": "Muster nicht eingehalten!"
+                        },
+                        {
+                          "locale": "nl",
+                          "text": "dutch friet"
+                        },
+                        {
+                          "locale": "fr",
+                          "text": "french fries"
+                        }
+                      ],
+                      "pattern": "[a-zA-Z]+"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F13",
+                "name": "SampleEnum",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "one",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "One"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Eins"
+                            },
+                            {
+                              "locale": "nl",
+                              "text": "Één"
+                            },
+                            {
+                              "locale": "fr",
+                              "text": "Une"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "two",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Two"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Zwei"
+                            },
+                            {
+                              "locale": "nl",
+                              "text": "Twee"
+                            },
+                            {
+                              "locale": "fr",
+                              "text": "Deux"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F14",
+                "name": "SampleDateTime",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F15",
+                "name": "SampleTime",
+                "Field": {
+                  "fieldType": {
+                    "type": "TimeType",
+                    "TimeType": {
+                      "format": "HH:mm:ss"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F16",
+                "name": "SampleConfirm",
+                "Field": {
+                  "fieldType": {
+                    "type": "ConfirmType"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F66",
+                "name": "DateTestSubType1Boolean",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  }
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R14",
+                "name": "SampleRule",
+                "Rule": {
+                  "errorEntityRelPath": "../SampleEnum",
+                  "errorCode": "SampleErrorCode",
+                  "errorCondition": "FieldNotFilled(SampleEnum)",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "SampleEnum is required."
+                    },
+                    {
+                      "locale": "de",
+                      "text": "SampleEnum ist ein Pflichtfeld."
+                    },
+                    {
+                      "locale": "nl",
+                      "text": "dutch friet"
+                    },
+                    {
+                      "locale": "fr",
+                      "text": "french fries"
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  },
+                  "variantFilter": {
+                    "filterType": "ONLY",
+                    "variants": [
+                      "web"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R15",
+                "name": "AnotherSampleRule",
+                "Rule": {
+                  "errorEntityRelPath": "../StringField",
+                  "errorCode": "SampleErrorCode",
+                  "errorCondition": "FieldNotFilled(StringField)",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "StringField is required."
+                    },
+                    {
+                      "locale": "de",
+                      "text": "StringField ist ein Pflichtfeld."
+                    },
+                    {
+                      "locale": "nl",
+                      "text": "dutch friet"
+                    },
+                    {
+                      "locale": "fr",
+                      "text": "french fries"
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  },
+                  "variantFilter": {
+                    "filterType": "ALL_EXCEPT",
+                    "variants": [
+                      "web"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "Computation",
+                "id": "R16",
+                "name": "SampleComputation",
+                "annotations": [
+                  {
+                    "name": "severity",
+                    "value": "ERROR"
+                  }
+                ],
+                "Computation": {
+                  "computedFieldRelPath": "../NumberField",
+                  "computationAlternatives": [
+                    {
+                      "operation": "[Field11]"
+                    }
+                  ],
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "The computation resulted in an invalid value."
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Die Berechnung hat einen invaliden Wert erzeugt."
+                    },
+                    {
+                      "locale": "nl",
+                      "text": "dutch friet"
+                    },
+                    {
+                      "locale": "fr",
+                      "text": "french fries"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "id": "G18",
+          "name": "Group3",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Group",
+                "id": "G19",
+                "name": "RepGroup4",
+                "Group": {
+                  "repeatability": 10,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F20",
+                      "name": "RepNumber",
+                      "Field": {
+                        "fieldType": {
+                          "type": "NumberType",
+                          "NumberType": {
+                            "leadingZerosAllowed": true,
+                            "maxFractionalDigits": 4
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F21",
+                      "name": "RepBoolean",
+                      "Field": {
+                        "fieldType": {
+                          "type": "BooleanType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "R22",
+                      "name": "RepNumberInRange",
+                      "Rule": {
+                        "errorEntityRelPath": "../RepNumber",
+                        "errorCode": "F20_OOR",
+                        "errorCondition": "GroupFilled(RuleGroup) and FieldFilled(RepNumber) and ([RepNumber] < 1 or [RepNumber] > 100)",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "The value is out of range [1 .. 100]."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Der Wert befindet sich nicht im Wertebereich [1 .. 100]."
+                          },
+                          {
+                            "locale": "nl",
+                            "text": "dutch friet"
+                          },
+                          {
+                            "locale": "fr",
+                            "text": "french fries"
+                          }
+                        ],
+                        "guiPatterns": {
+                          "dynamicEnumerationRule": "false"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

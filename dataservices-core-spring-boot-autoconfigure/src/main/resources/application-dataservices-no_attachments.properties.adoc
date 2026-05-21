@@ -1,0 +1,5 @@
+= Disable Attachments
+
+Disables Data Services attachments including Content Store.
+
+See <<attachment-properties, attachments properties>> for advanced configuration.

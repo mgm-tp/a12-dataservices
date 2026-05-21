@@ -1,0 +1,33 @@
+{
+    "Product":{
+        "number":"%s",
+        "externalNumber":{
+            "number":123,
+            "system":"System Z"
+        },
+        "name":"%s",
+        "description":"A pair of tiny and shiny shoes.",
+        "metaDescription":"tbd",
+        "logistics":{
+            "weight":{
+                "weightValue":2,
+                "weightUnit":"kg"
+            }
+        },
+        "searchKeywords" : {
+            "searchKeyword" : "shoe"
+        },
+        "mediaFiles":{
+            "mediaFile":{
+                "mimeType":"image/png",
+                "type":"image",
+                "url":"/media/images/shinyshoe.png"
+            }
+        },
+        "packaging":{
+            "packagingAmount":1.0,
+            "packagingUnit":"Stück",
+            "packagingMultiplicator":1
+        }
+    }
+}

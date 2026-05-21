@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+				   logicalFilePath="contentstore_db/schema/37.0.0/model.xml">
+
+	<changeSet id="A12S-3715" author="A12S-3715-author">
+		<createTable tableName="CONTENT_HEADER">
+			<column name="ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="CONTENT_HEADER_PK" nullable="false"/>
+			</column>
+			<column name="PERSISTENT_TYPE" type="VARCHAR(100 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CONTENT_TYPE" type="VARCHAR(100 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<sql>
+			-- copy data to content header table.
+			INSERT INTO content_header (id, persistent_type, content_type)
+			SELECT id, persistent_type, content_type
+			FROM content;
+
+		</sql>
+
+		<addForeignKeyConstraint constraintName="CONTENT_HEADER_FK" baseColumnNames="ID" baseTableName="CONTENT"  referencedTableName="CONTENT_HEADER" referencedColumnNames="ID" onDelete="CASCADE"/>
+
+		<!-- drop column of table content -->
+		<dropColumn tableName="CONTENT" columnName="PERSISTENT_TYPE" />
+		<dropColumn tableName="CONTENT" columnName="CONTENT_TYPE" />
+
+	</changeSet>
+</databaseChangeLog>

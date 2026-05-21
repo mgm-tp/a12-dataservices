@@ -1,0 +1,9 @@
+{
+  "modelInfo": {
+    "name": "Just a json",
+    "comment": "this is not json-rpc"
+  },
+  "modelConfig": {
+    "decimalSeparator": "testing not json-rpc"
+  }
+}

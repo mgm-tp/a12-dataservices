@@ -1,0 +1,9 @@
+{
+  "documentModelName": "%s",
+  "filter": {},
+  "sort": [],
+  "page": {
+    "offset": "0",
+    "limit": "100"
+  }
+}

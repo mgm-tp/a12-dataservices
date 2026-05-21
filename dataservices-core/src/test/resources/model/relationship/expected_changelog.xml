@@ -1,0 +1,67 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+	<changeSet author="RelationshipDocRefValidationMigrationStep"
+			   id="migrate relationship model ContractCoInsuredPartner" objectQuotingStrategy="LEGACY" runAlways="true">
+		<update tableName="RELATIONSHIP_ROLE">
+			<column name="ROLE_DOCREF" value="_REPLACE_ME:0Contract:REPLACE_ME_"/>
+			<where>ROLE_DOCREF='0Contract'</where>
+		</update>
+		<update tableName="RELATIONSHIP_ROLE">
+			<column name="ROLE_DOCREF" value="_REPLACE_ME:Business&amp;PartnerSuper:REPLACE_ME_"/>
+			<where>ROLE_DOCREF='Business&amp;PartnerSuper'</where>
+		</update>
+		<update tableName="RELATIONSHIP_LINK">
+			<column name="LINK_DOCUMENT_DOCREF" value="_REPLACE_ME:Link Document with spaces:REPLACE_ME_"/>
+			<where>LINK_DOCUMENT_DOCREF='Link Document with spaces'</where>
+		</update>
+		<update tableName="MODEL_REFERENCES">
+			<column name="reference_id" value="_REPLACE_ME:+Contract:REPLACE_ME_"/>
+			<where>reference_id='+Contract'</where>
+		</update>
+		<update tableName="MODEL_REFERENCES">
+			<column name="reference_id" value="_REPLACE_ME:Link Document with spaces:REPLACE_ME_"/>
+			<where>reference_id='Link Document with spaces'</where>
+		</update>
+		<update tableName="MODEL">
+			<column name="content"
+					value="{&quot;header&quot;:{&quot;id&quot;:&quot;ContractCoInsuredPartner&quot;,&quot;modelType&quot;:&quot;relationship&quot;,&quot;modelVersion&quot;:&quot;3.0.0&quot;,&quot;locales&quot;:[{&quot;code&quot;:&quot;en&quot;},{&quot;code&quot;:&quot;de&quot;}],&quot;labels&quot;:[{&quot;locale&quot;:&quot;en&quot;,&quot;text&quot;:&quot;ContractCoInsuredPartner&quot;},{&quot;locale&quot;:&quot;de&quot;,&quot;text&quot;:&quot;MitversichertGeschäftspartner&quot;}],&quot;annotations&quot;:[{&quot;name&quot;:&quot;roles&quot;,&quot;value&quot;:&quot;customTest,user&quot;}],&quot;modelReferences&quot;:[{&quot;alias&quot;:&quot;_REPLACE_ME:Contract:REPLACE_ME_&quot;,&quot;modelType&quot;:&quot;document&quot;,&quot;purpose&quot;:&quot;Document model&quot;,&quot;reference&quot;:&quot;_REPLACE_ME:+Contract:REPLACE_ME_&quot;},{&quot;alias&quot;:&quot;BusinessPartnerSuper&quot;,&quot;modelType&quot;:&quot;document&quot;,&quot;purpose&quot;:&quot;Document model&quot;,&quot;reference&quot;:&quot;BusinessPartnerSuper&quot;},{&quot;alias&quot;:&quot;_REPLACE_ME:Link Model:REPLACE_ME_&quot;,&quot;modelType&quot;:&quot;document&quot;,&quot;purpose&quot;:&quot;Link Document model&quot;,&quot;reference&quot;:&quot;_REPLACE_ME:Link Document with spaces:REPLACE_ME_&quot;}]},&quot;content&quot;:{&quot;labels&quot;:[{&quot;locale&quot;:&quot;en&quot;,&quot;text&quot;:&quot;ContractCoInsuredPartner&quot;},{&quot;locale&quot;:&quot;de&quot;,&quot;text&quot;:&quot;MitversichertGeschäftspartner&quot;}],&quot;associationType&quot;:&quot;SHARED&quot;,&quot;linkDocumentModel&quot;:&quot;_REPLACE_ME:Link Document with spaces:REPLACE_ME_&quot;,&quot;duplicatesAllowed&quot;:false,&quot;entityCharacteristics&quot;:[{&quot;role&quot;:&quot;Contract&quot;,&quot;labels&quot;:[{&quot;locale&quot;:&quot;en&quot;,&quot;text&quot;:&quot;Contract&quot;},{&quot;locale&quot;:&quot;de&quot;,&quot;text&quot;:&quot;Vertrag&quot;}],&quot;documentModel&quot;:&quot;_REPLACE_ME:0Contract:REPLACE_ME_&quot;,&quot;ordered&quot;:false,&quot;navigable&quot;:true,&quot;linkConstraints&quot;:{&quot;multiplicity&quot;:{&quot;lowerLimit&quot;:0,&quot;unbounded&quot;:true,&quot;upperLimit&quot;:null}},&quot;candidateConstraints&quot;:{&quot;population&quot;:null,&quot;populationParameters&quot;:null}},{&quot;role&quot;:&quot;Partner&quot;,&quot;labels&quot;:[{&quot;locale&quot;:&quot;en&quot;,&quot;text&quot;:&quot;Co-insured Business Partners&quot;},{&quot;locale&quot;:&quot;de&quot;,&quot;text&quot;:&quot;Mitversichert Geschäftspartner&quot;}],&quot;documentModel&quot;:&quot;_REPLACE_ME:Business&amp;PartnerSuper:REPLACE_ME_&quot;,&quot;ordered&quot;:false,&quot;navigable&quot;:true,&quot;linkConstraints&quot;:{&quot;multiplicity&quot;:{&quot;lowerLimit&quot;:0,&quot;unbounded&quot;:true,&quot;upperLimit&quot;:null}},&quot;candidateConstraints&quot;:{&quot;population&quot;:null,&quot;populationParameters&quot;:null}}],&quot;storage&quot;:&quot;EXTERNAL&quot;,&quot;embeddedGroupPath&quot;:null}}"/>
+			<where>id='ContractCoInsuredPartner'</where>
+		</update>
+	</changeSet>
+	<changeSet author="RelationshipDocRefValidationMigrationStep" id="migrate relationship model GroupElement"
+			   objectQuotingStrategy="LEGACY" runAlways="true">
+		<update tableName="RELATIONSHIP_ROLE">
+			<column name="ROLE_NAME" value="_REPLACE_ME:chi 24$%!:REPLACE_ME_"/>
+			<where>ROLE_NAME='chi 24$%!'</where>
+		</update>
+		<update tableName="RELATIONSHIP_ROLE">
+			<column name="ROLE_DOCREF" value="_REPLACE_ME:-DomainElement:REPLACE_ME_"/>
+			<where>ROLE_DOCREF='-DomainElement'</where>
+		</update>
+		<update tableName="RELATIONSHIP_ROLE">
+			<column name="ROLE_DOCREF" value="_REPLACE_ME:DomainGroup#:REPLACE_ME_"/>
+			<where>ROLE_DOCREF='DomainGroup#'</where>
+		</update>
+		<update tableName="RELATIONSHIP_LINK">
+			<column name="LINK_DOCUMENT_DOCREF"
+					value="_REPLACE_ME:SuperLongDocumentLinkModel0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789:REPLACE_ME_"/>
+			<where>
+				LINK_DOCUMENT_DOCREF='SuperLongDocumentLinkModel0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789'
+			</where>
+		</update>
+		<update tableName="MODEL_REFERENCES">
+			<column name="reference_id"
+					value="_REPLACE_ME:SuperLongDocumentLinkModel0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789:REPLACE_ME_"/>
+			<where>
+				reference_id='SuperLongDocumentLinkModel0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789'
+			</where>
+		</update>
+		<update tableName="MODEL">
+			<column name="content"
+					value="{&quot;header&quot;:{&quot;id&quot;:&quot;GroupElement&quot;,&quot;modelType&quot;:&quot;relationship&quot;,&quot;modelVersion&quot;:&quot;3.0.0&quot;,&quot;locales&quot;:[{&quot;code&quot;:&quot;en&quot;}],&quot;labels&quot;:[],&quot;annotations&quot;:[{&quot;name&quot;:&quot;roles&quot;,&quot;value&quot;:&quot;guest,admin,systemAdmin&quot;}],&quot;modelReferences&quot;:[{&quot;alias&quot;:&quot;parent&quot;,&quot;modelType&quot;:&quot;document&quot;,&quot;purpose&quot;:&quot;Document model&quot;,&quot;reference&quot;:&quot;DomainGroup&quot;},{&quot;alias&quot;:&quot;child&quot;,&quot;modelType&quot;:&quot;document&quot;,&quot;purpose&quot;:&quot;Document model&quot;,&quot;reference&quot;:&quot;DomainElement&quot;},{&quot;alias&quot;:&quot;_REPLACE_ME:Link Model:REPLACE_ME_&quot;,&quot;modelType&quot;:&quot;document&quot;,&quot;purpose&quot;:&quot;Link Document model&quot;,&quot;reference&quot;:&quot;_REPLACE_ME:SuperLongDocumentLinkModel0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789:REPLACE_ME_&quot;}]},&quot;content&quot;:{&quot;labels&quot;:[],&quot;associationType&quot;:&quot;SHARED&quot;,&quot;linkDocumentModel&quot;:&quot;_REPLACE_ME:SuperLongDocumentLinkModel0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789_0123456789:REPLACE_ME_&quot;,&quot;duplicatesAllowed&quot;:false,&quot;entityCharacteristics&quot;:[{&quot;role&quot;:&quot;parent&quot;,&quot;labels&quot;:[],&quot;documentModel&quot;:&quot;_REPLACE_ME:DomainGroup#:REPLACE_ME_&quot;,&quot;ordered&quot;:false,&quot;navigable&quot;:true,&quot;linkConstraints&quot;:{&quot;multiplicity&quot;:{&quot;lowerLimit&quot;:0,&quot;unbounded&quot;:false,&quot;upperLimit&quot;:3}}},{&quot;role&quot;:&quot;_REPLACE_ME:chi 24$%!:REPLACE_ME_&quot;,&quot;labels&quot;:[],&quot;documentModel&quot;:&quot;_REPLACE_ME:-DomainElement:REPLACE_ME_&quot;,&quot;ordered&quot;:false,&quot;navigable&quot;:true,&quot;linkConstraints&quot;:{&quot;multiplicity&quot;:{&quot;lowerLimit&quot;:0,&quot;unbounded&quot;:true,&quot;upperLimit&quot;:null}}}],&quot;storage&quot;:&quot;EXTERNAL&quot;,&quot;embeddedGroupPath&quot;:null}}"/>
+			<where>id='GroupElement'</where>
+		</update>
+	</changeSet>
+</databaseChangeLog>

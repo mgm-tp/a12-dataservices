@@ -1,0 +1,53 @@
+{
+	"fullSize": 4,
+	"page": {
+		"offset": 0,
+		"limit": 10
+	},
+	"entries": [
+		{
+			"docRef": "%1$s/%2$s",
+			"documentModelName": "AnonymizedBusinessPartnerCDM",
+			"document": {
+				"BusinessPartnerRoot": {
+					"Industry": "Technology",
+					"StartOfRelationship": "2022-01-01",
+					"CustomerDiscount": "10%%"
+				}
+			}
+		},
+		{
+			"docRef": "%1$s/%3$s",
+			"documentModelName": "AnonymizedBusinessPartnerCDM",
+			"document": {
+				"BusinessPartnerRoot": {
+					"Industry": "Government",
+					"StartOfRelationship": "2022-04-01",
+					"CustomerDiscount": "40%%"
+				}
+			}
+		},
+		{
+			"docRef": "%1$s/%4$s",
+			"documentModelName": "AnonymizedBusinessPartnerCDM",
+			"document": {
+				"BusinessPartnerRoot": {
+					"Industry": "Chemistry",
+					"StartOfRelationship": "2022-03-01",
+					"CustomerDiscount": "30%%"
+				}
+			}
+		},
+		{
+			"docRef": "%1$s/%5$s",
+			"documentModelName": "AnonymizedBusinessPartnerCDM",
+			"document": {
+				"BusinessPartnerRoot": {
+					"Industry": "Biology",
+					"StartOfRelationship": "2022-02-01",
+					"CustomerDiscount": "20%%"
+				}
+			}
+		}
+	]
+}

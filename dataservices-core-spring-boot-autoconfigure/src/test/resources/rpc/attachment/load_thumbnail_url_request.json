@@ -1,0 +1,10 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "loadThumbnailUrl",
+    "method": "LOAD_THUMBNAIL_URL",
+    "params": {
+      "attachmentId": "%s"
+    }
+  }
+]

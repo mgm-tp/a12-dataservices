@@ -1,0 +1,642 @@
+{
+  "Antrag": {
+    "Details": {
+      "Antragsart": 1,
+      "Wohngeldnummer": ""
+    },
+    "Erhoehung": {
+      "Erhoehung": ""
+    },
+    "FragenHinweise": {
+      "Ausfuellhinweise": ""
+    },
+    "Antragsteller": {
+      "AngabenPerson": {
+        "Vorname": "Kathrin",
+        "Familienname": "Hauser",
+        "Geburtsname": "",
+        "Geschlecht": 2,
+        "Geburtsdatum": "1978-02-28",
+        "Geburtsort": "Getelo",
+        "Geburtsland": 34,
+        "Strasse": "Forsterstrasse",
+        "Hausnummer": 14,
+        "Postleitzahl": 49843,
+        "Wohnort": "Getelo",
+        "Telefonnummer": 594217000000,
+        "EMail": "kathrin.hauser@mail.com"
+      },
+      "Wohnungsnummer": "",
+      "Verhaeltnisse": {
+        "PersVerhaeltnisse": 2
+      },
+      "Erwerbsleben": {
+        "Erwerbsleben": 2
+      },
+      "Wohnverhaeltnisse": {
+        "Wohnverhaeltnisse": 1,
+        "WG": false,
+        "Zeitraum": true,
+        "NichtLaengerAlsEinJahr": {
+          "Anschrift": ""
+        },
+        "weitererWohnsitz": false,
+        "JaWeitererWohnsitz": {
+          "Anschrift": ""
+        },
+        "Heim": false,
+        "Heimbewohner": {
+          "Wohnflaeche": ""
+        },
+        "Verheiratet": {
+          "Ehepartner": 1
+        }
+      },
+      "Transferleistungen": {
+        "Arbeitslosengeld": false,
+        "Grundsicherung": false,
+        "Lebensunterhalt": false,
+        "ZuschussUnterkunftStudenten": false,
+        "HilfeLebensunterhalt": false,
+        "Uebergangsgeld": false,
+        "Verletztengeld": false,
+        "Asylbewerberleistungsgesetz": false,
+        "LeistungenKinderUndJugendhilfe": false,
+        "AufforderungWohngeldantrag": false,
+        "FallsAufforderungSchreiben": ""
+      }
+    },
+    "Haushalt": {
+      "FragenPartnerschaft": {
+        "Partnerschaft": true,
+        "AngabenVerantwortung": {
+          "Verantwortung": false,
+          "MehrAlsEinJahr": true,
+          "Kinder": false,
+          "KinderPartner": false,
+          "Befugnisse": false
+        }
+      },
+      "Kinderbetreuung": {
+        "Alleinerziehend": false,
+        "Kinderbetreuung": false
+      },
+      "Sonstiges": {
+        "anderePersonen": false,
+        "AuszugAnderePersonen": false,
+        "SterbefallAnderePersonen": false,
+        "EinzugNachSterbefall": false,
+        "JaAnderePersonen": [
+          {
+            "Name": "",
+            "Vorname": "",
+            "Verwandtschaftsverhaeltnis": ""
+          }
+        ],
+        "JaAuszugAnderePersonen": [
+          {
+            "Name": "",
+            "Vorname": "",
+            "Auszugsdatum": null
+          }
+        ],
+        "JaSterbefall": [
+          {
+            "Name": "",
+            "Vorname": "",
+            "Sterbedatum": null,
+            "Verwandtschaftsverhaeltnis": "",
+            "UmzugNachSterbefall": "",
+            "TransferleistungenVerstorbener": ""
+          }
+        ],
+        "JaEinzug": [
+          {
+            "Name": "",
+            "Vorname": "",
+            "Einzugsdatum": null
+          }
+        ]
+      },
+      "SchwerbehinderteMenschenOpferVerfolgung": {
+        "BehinderungOderVerfolgung": false,
+        "NochKeinBescheid": false,
+        "JaBehinderungOderVerfolgung": [
+          {
+            "Name": "",
+            "Vorname": "",
+            "GradBehinderung": ""
+          }
+        ]
+      },
+      "Unterhaltsleistungen": [
+        {
+          "Unterhaltsleistungen": false,
+          "notarielleUnterhaltsvereinbarung": false,
+          "Unterhalt": {
+            "NameUnterhaltszahler": "",
+            "VornameUnterhaltszahler": "",
+            "NameUnterhaltsempfaenger": "",
+            "VornameUnterhaltsempfaenger": "",
+            "GeburtsdatumUnterhaltsempfaenger": null,
+            "Verwandtschaftsverhaeltnis": "",
+            "Betrag": ""
+          }
+        }
+      ],
+      "weiterePersonen": [
+        {
+          "Vorname": "Hauser",
+          "Familienname": "Matthis",
+          "Geburtsdatum": "1975-10-22",
+          "Geburtsort": "Neustadt",
+          "Staatsangehoerigkeit": "Deutsch",
+          "Geschlecht": 2,
+          "Verwandtschaftsverhaeltnis": "Verheiratet",
+          "Transferleistungen": false
+        }
+      ]
+    },
+    "Einkommen": {
+      "EinmaligeEinnahmen": {
+        "EinmaligeEinnahmen": true,
+        "Summe": "",
+        "JaEinmaligeEinnahmen": [
+          {
+            "Vorname": "",
+            "Familienname": "",
+            "DatumAuszahlung": null,
+            "Betrag": "",
+            "ArtEinnahme": ""
+          }
+        ]
+      },
+      "Einnahmen": {
+        "Einnahmen1": {
+          "Einkommensbezieher": {
+            "EinkommensbezieherIn": "",
+            "Name1": {
+              "Name": "Hauser",
+              "Vorname": "Kathrin"
+            },
+            "Name2": {
+              "Name": "",
+              "Vorname": ""
+            },
+            "Name3": {
+              "Name": "",
+              "Vorname": ""
+            }
+          },
+          "Spaltenbezeichnungen": {
+            "Einnahme": "",
+            "BruttobetragZahlweise": {
+              "Bruttobetrag1": "",
+              "Bruttobetrag2": "",
+              "Bruttobetrag3": ""
+            }
+          },
+          "Gehalt": {
+            "Gehalt": "",
+            "Summe1": {
+              "Summe": 2800,
+              "Intervall": 2
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "Kindergeld": {
+            "Kindergeld": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "ArbeitslohnMinijob": {
+            "ArbeitslohnMinijob": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "Weihnachtsgeld": {
+            "WeihnachtsgeldUrlaubsgeld": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "Altersrente": {
+            "Altersrente": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "WitwenrenteWaisenrente": {
+            "WitwenrenteWaisenrente": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "Arbeitslosengeld": {
+            "Arbeitslosengeld": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "Zinsen": {
+            "Zinsen": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "Unterhalt": {
+            "Unterhalt": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "Elterngeld": {
+            "Elterngeld": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "Mutterschaftsgeld": {
+            "Mutterschaftsgeld": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "Gewinn": {
+            "Gewinn": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "Vermietung": {
+            "Vermietung": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "BAfoeGBAB": {
+            "BAfoeGBAB": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "Krankengeld": {
+            "Krankengeld": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "Transferleistungen": {
+            "Transferleistungen": "",
+            "Summe1": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            },
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          "Gesamtsumme": {
+            "Gesamtsumme": "",
+            "Summe1": {
+              "Gehalt": 33600,
+              "Kindergeld": "",
+              "ArbeitslohnMinijob": "",
+              "Arbeitslosengeld": "",
+              "Summe": 33600
+            },
+            "Summe2": {
+              "Gehalt": "",
+              "Kindergeld": "",
+              "ArbeitslohnMinijob": "",
+              "Arbeitslosengeld": "",
+              "Summe": ""
+            },
+            "Summe3": {
+              "Gehalt": "",
+              "Kindergeld": "",
+              "ArbeitslohnMinijob": "",
+              "Arbeitslosengeld": "",
+              "Summe": ""
+            }
+          }
+        },
+        "Steuern": {
+          "SteuernEinkommen": {
+            "Steuern": "",
+            "Bestaetigung": {
+              "Bestaetigung1": 1,
+              "Bestaetigung2": "",
+              "Bestaetigung3": ""
+            }
+          },
+          "BetraegeKrankenPflegeversicherung": {
+            "BeitraegeKrankenPflegeversicherung": "",
+            "Bestaetigung": {
+              "Bestaetigung1": 1,
+              "Bestaetigung2": "",
+              "Bestaetigung3": ""
+            }
+          },
+          "BetraegeRentenversicherungAltersvorsorge": {
+            "BeitraegeRentenvesicherungAltersvorsorge": "",
+            "Bestaetigung": {
+              "Bestaetigung1": 1,
+              "Bestaetigung2": "",
+              "Bestaetigung3": ""
+            }
+          }
+        },
+        "Kinderbetreuungskosten": {
+          "Betreuungskosten": false,
+          "Kostenuebernahme": {
+            "Jugendamt": false,
+            "KeinBescheid": false,
+            "Arbeitgeber": false
+          },
+          "JaBetreuungskosten": [
+            {
+              "betreutesKind": "",
+              "selbstgezahlterBetrag": "",
+              "Zahler": ""
+            }
+          ]
+        },
+        "BeantragteLeistungen": {
+          "LeistungenKeinBescheid": false,
+          "JaLeistungen": {
+            "Altersrente": false,
+            "Arbeitslosengeld": false,
+            "Elterngeld": false,
+            "BAfoeGBAB": false,
+            "Unterhaltsvorschuss": false,
+            "andereLeistung": "",
+            "AntragstellerDerLeistung": "",
+            "Bescheid": {
+              "VorlageBescheid": ""
+            }
+          }
+        },
+        "AenderungEinkuenfte": {
+          "Aenderung": false,
+          "JaAenderung": [
+            {
+              "EinkommensbezieherIn": "",
+              "Einkommensart": "",
+              "voraussichtlicherZeitpunkt": null,
+              "GrundAenderung": "",
+              "ggfHoehe": ""
+            }
+          ]
+        },
+        "SonstigeEinkuenfte": [
+          {
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          {
+            "Summe2": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          {
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          },
+          {
+            "Summe3": {
+              "Summe": "",
+              "Intervall": ""
+            }
+          }
+        ],
+        "Werbungskosten": [
+          {
+            "Einkommensbezieher": {
+              "Name": "Kathrin",
+              "Vorname": "Hauser"
+            }
+          },
+          {
+            "FahrtkostenArbeit": {
+              "Entfernung": 7,
+              "ArbeitstageJahr": "",
+              "FahrtBahnBus": ""
+            }
+          },
+          {
+            "FahrtkostenArbeit": {
+              "Entfernung": "",
+              "ArbeitstageJahr": 264,
+              "FahrtBahnBus": ""
+            }
+          },
+          {
+            "FahrtkostenArbeit": {
+              "Entfernung": "",
+              "ArbeitstageJahr": "",
+              "FahrtBahnBus": 840
+            }
+          },
+          {
+            "weitereWerbungskosten": {
+              "Art": "",
+              "Summe": ""
+            }
+          },
+          {
+            "weitereWerbungskosten": {
+              "Art": "",
+              "Summe": ""
+            }
+          }
+        ]
+      }
+    },
+    "AngabenVermoegen": {
+      "HoeheVermoegen": false,
+      "JaVermoegen": {
+        "Nachweis": ""
+      }
+    },
+    "AuszahlungWohngeld": {
+      "AuszahlungWohngeld": 1,
+      "Ueberweisung": {
+        "Person": 1,
+        "Bankverbindung": {
+          "IBAN": 4242420000000000,
+          "BIC": "BYLADEM1001",
+          "Geldinstitut": "DEUTSCHE KREDITBANK BERLIN",
+          "KontoinhaberVorname": "",
+          "KontoinhaberNachname": "",
+          "AnschriftWieOben": false,
+          "Strasse": "",
+          "Hausnummer": "",
+          "Postleitzahl": "",
+          "Ort": ""
+        },
+        "KontoinhaberNichtAntragsteller": false
+      },
+      "Barauszahlung": {
+        "Barauszahlung": "Das Wohngeld soll vorubergehend in bar ausgezahlt werden (z. B. als Zahlungsanweisung zur Verrechnung)"
+      }
+    },
+    "Erklaerung": {
+      "Einverstaendnis": "",
+      "Unterschrift": {
+        "Datum": null,
+        "Ort": "",
+        "Unterschrift": "",
+        "Minderjaehrige": ""
+      }
+    },
+    "WeitereAngaben": {
+      "Kommentar": ""
+    }
+  }
+}

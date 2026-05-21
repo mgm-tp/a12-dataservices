@@ -1,0 +1,23 @@
+{
+  "BusinessPartnerRoot": {
+    "Attachment": [
+      {
+        "original_filename": "originalFileName1",
+        "internal_filename": "internalFilename1",
+        "content": "",
+        "attachment_id": "{attachment_1}",
+        "size": "00005",
+        "mime_type": "image/png"
+      }
+    ]
+  ,
+    "Name": "Microoogle",
+    "Industry": "Legal",
+    "StartOfRelationship": "2022-08-01",
+    "CustomerDiscount": "100",
+    "PersonOrEntity": null,
+    "SubtypeGroup": {
+      "Company": "mgm technology-partners GmbH"
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "ContractRoot": {
+    "MaxDiscount": "Nora has a 50% discount",
+    "ContractValue": 450000,
+    "Liability": 90,
+    "Valid": true,
+    "LengthOfContract": 2,
+    "CostPerCoInsured": 120000,
+    "NoOfCoInsuredCustomers": 2,
+    "CostToCustomer": 360000,
+    "ContractName": "*",
+    "ChangeLog": [
+      {
+        "Description": "Description10",
+        "User": "Developer10",
+        "Number": 5,
+        "ChangeTimestamp": "2024-12-31",
+        "Changes": [
+          {
+            "Status": "draft",
+            "Details": "Dummy Detail",
+            "Title": "Dummy Title"
+          },
+          {
+            "Status": "reverted",
+            "Details": "Modify health conditions",
+            "Title": "Modify health conditions"
+          },
+          {
+            "Status": "draft",
+            "Details": "Dummy Detail",
+            "Title": "Dummy Title"
+          }
+        ]
+      }
+    ]
+  },
+  "__meta": {
+    "createdAt": "2025-04-09T09:55:00",
+    "creator": "admin",
+    "docRef": "Contract/5b7f156d-a7b9-48a7-92d6-023c787b3e79",
+    "modelReference": "Contract",
+    "modelVersion": null,
+    "modifiedAt": "2025-04-09T09:55:00",
+    "modifier": "admin"
+  }
+}

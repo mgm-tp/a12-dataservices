@@ -1,0 +1,14 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+
+	implementation libs.lombok,
+			libs.springContext,
+			libs.jacksonDatabind
+
+	testImplementation libs.testng
+}
+
+description = 'Data Services Common API - shared code reused across Data Services and Content Store'

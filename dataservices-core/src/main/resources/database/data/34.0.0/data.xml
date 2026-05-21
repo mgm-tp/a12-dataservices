@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+				   logicalFilePath="database/data/34.0.0/data.xml">
+
+	<changeSet id="A12S-1728-data" author="A12S-1728-author">
+		<sql>
+			insert into RELATIONSHIP_LINK (ID, RELATIONSHIP_MODEL, CREATED_AT)
+			select ID, RELATIONSHIP_MODEL, CREATED_AT
+			from RELATIONSHIP_LINK_OLD;
+
+			insert into RELATIONSHIP_ROLE (RELATIONSHIP_ID, ROLE_NAME, ROLE_DOCREF)
+			select l.ID, l.ENTITY_ROLE_1, d.MODEL_NAME || '/' || l.ENTITY_DOCREF_1
+			from RELATIONSHIP_LINK_OLD l, DOCUMENT d
+			where l.ENTITY_DOCREF_1 = d.ID;
+
+			insert into RELATIONSHIP_ROLE (RELATIONSHIP_ID, ROLE_NAME, ROLE_DOCREF)
+			select l.ID, l.ENTITY_ROLE_2, d.MODEL_NAME || '/' || l.ENTITY_DOCREF_2
+			from RELATIONSHIP_LINK_OLD l, DOCUMENT d
+			where l.ENTITY_DOCREF_2 = d.ID;
+
+			insert into RELATIONSHIP_ORDER (ID, ROLE_ORDER)
+			select e.ID, l.ORDER_1
+			from RELATIONSHIP_LINK_OLD l,
+				 RELATIONSHIP_ROLE e
+			where l.ID = e.RELATIONSHIP_ID
+			  and l.ENTITY_ROLE_1 = e.ROLE_NAME
+			  and l.ENTITY_DOCREF_1 = e.ROLE_DOCREF;
+
+			insert into RELATIONSHIP_ORDER (ID, ROLE_ORDER)
+			select e.ID, l.ORDER_2
+			from RELATIONSHIP_LINK_OLD l,
+				 RELATIONSHIP_ROLE e
+			where l.ID = e.RELATIONSHIP_ID
+			  and l.ENTITY_ROLE_2 = e.ROLE_NAME
+			  and l.ENTITY_DOCREF_2 = e.ROLE_DOCREF;
+		</sql>
+
+		<createIndex tableName="RELATIONSHIP_LINK" indexName="RELATIONSHIP_LINK_RELATIONSHIP_MODEL_IDX">
+			<column name="RELATIONSHIP_MODEL"/>
+		</createIndex>
+		<createIndex tableName="RELATIONSHIP_LINK" indexName="RELATIONSHIP_LINK_CREATED_AT_IDX">
+			<column name="CREATED_AT"/>
+		</createIndex>
+		<createIndex tableName="RELATIONSHIP_ROLE" indexName="RELATIONSHIP_ROLE_ROLE_NAME_IDX">
+			<column name="ROLE_NAME"/>
+		</createIndex>
+		<createIndex tableName="RELATIONSHIP_ROLE" indexName="RELATIONSHIP_ROLE_ROLE_DOCREF_IDX">
+			<column name="ROLE_DOCREF"/>
+		</createIndex>
+	</changeSet>
+
+</databaseChangeLog>

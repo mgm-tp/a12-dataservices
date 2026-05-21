@@ -1,0 +1,59 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "AddDocument1",
+    "method": "ADD_DOCUMENT",
+    "params": {
+    "document": {
+	  "BusinessPartnerRoot": {
+	    "Name": "Microoogle",
+	    "Industry": "Legal",
+	    "StartOfRelationship": "2022-08-01",
+	    "CustomerDiscount": "100",
+	    "PersonOrEntity": null,
+	    "SubtypeGroup": {
+	      "Company": "mgm technology-partners GmbH"
+	    }
+	  }
+   },
+    "documentModelName": "BusinessPartner"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "AddDocument2",
+    "method": "ADD_DOCUMENT",
+    "params": {
+    "document": {
+	  "BusinessPartnerRoot": {
+	    "Name": "MacGoogle",
+	    "Industry": "Legal",
+	    "StartOfRelationship": "2022-08-01",
+	    "CustomerDiscount": "100",
+	    "PersonOrEntity": null,
+	    "SubtypeGroup": {
+	      "Company": "google.com"
+	    }
+	  }
+   },
+    "documentModelName": "BusinessPartner"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "DeleteDocument1",
+    "method": "DELETE_DOCUMENT",
+    "params": {
+      "docRef": "%s",
+      "locale": null
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "Fail",
+    "method": "FAIL",
+    "params": {
+      "how": "miserably"
+    }
+  }
+]

@@ -1,0 +1,24 @@
+{
+	"jsonrpc": "2.0",
+	"id": "ValidateDocument",
+	"result": {
+		"validationErrors": [
+			{
+				"errorText": "Field name cannot be empty",
+				"errorCode": "Error rule_f06c8",
+				"messageType": "OMISSION_ERROR",
+				"rulePath": "/ContractRoot/ContractName",
+				"referencedFields": ["/ContractRoot[1]/ContractName[1]"],
+				"severityType": "ERROR"
+			},
+			{
+				"errorText": "Field price cannot be empty",
+				"errorCode": "Error rule_9fa93",
+				"messageType": "OMISSION_ERROR",
+				"rulePath": "/ContractRoot/ContractValue",
+				"referencedFields": ["/ContractRoot[1]/ContractValue[1]"],
+				"severityType": "ERROR"
+			}
+		]
+	}
+}

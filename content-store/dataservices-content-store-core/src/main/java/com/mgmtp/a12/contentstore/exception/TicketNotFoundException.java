@@ -1,0 +1,69 @@
+/*
+ * SPDX-License-Identifier: EUPL-1.2 OR LicenseRef-commercial
+ *
+ * Copyright (c) 2012-2026 mgm technology partners GmbH
+ *
+ * Dual License
+ * ------------
+ * This source file is part of the mgm A12 Platform and available under
+ * a choice of two different licenses:
+ *
+ * 1. Open-Source License – EUPL v1.2
+ *    You may redistribute and/or modify this file under the terms of the
+ *    European Union Public License, version 1.2 - see https://eupl.eu/.
+ *
+ * 2. Commercial License
+ *    Alternatively, you may obtain a commercial license from
+ *    mgm technology partners GmbH, that permits use of this software
+ *    under different terms (including support and maintenance services).
+ *
+ *    Please contact a12-license@mgm-tp.com for more information.
+ *
+ * You must select and comply with exactly one of the above license options.
+ *
+ * Warranty Disclaimer (applies to either option)
+ * ----------------------------------------------
+ * THIS SOFTWARE IS PROVIDED “AS IS” AND WITHOUT WARRANTY OF ANY KIND,
+ * WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
+ * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
+ */
+package com.mgmtp.a12.contentstore.exception;
+
+import com.mgmtp.a12.dataservices.common.exception.BaseException;
+
+/**
+ * Represents an error when a download ticket cannot be found in the content store.
+ */
+public class TicketNotFoundException extends BaseException  {
+
+	/**
+	 * Creates an exception with a non-localized message.
+	 *
+	 * @param message English message describing the missing ticket condition; may be null.
+	 */
+	public TicketNotFoundException(String message) {
+		super(message);
+	}
+
+	/**
+	 * Creates an exception with a localization key and default English message.
+	 *
+	 * @param key localization key used for resolving a user-facing message; must not be null.
+	 * @param message default English message used when localization is unavailable; may be null.
+	 */
+	public TicketNotFoundException(String key, String message) {
+		super(key, message);
+	}
+
+	/**
+	 * Creates an exception with a message and a cause.
+	 *
+	 * @param message English message describing the missing ticket condition; may be null.
+	 * @param ex originating cause; may be null.
+	 */
+	public TicketNotFoundException(String message, Exception ex) {
+		super(message, ex);
+	}
+}

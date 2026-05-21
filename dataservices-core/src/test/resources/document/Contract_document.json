@@ -1,0 +1,1025 @@
+{
+	"ContractRoot": {
+		"ContractName": "FPPYSB",
+		"ContractDescription": "EUVKQN",
+		"LengthOfContract": "8336",
+		"ContractValue": "9875",
+		"Liability": "3823",
+		"CostToCustomer": "7389",
+		"NoOfCoInsuredCustomers": "3772",
+		"MaxDiscount": "TGSVHZSNTY",
+		"CostPerCoInsured": "9173",
+		"Valid": true,
+		"Type": "Liability",
+		"ContractDates": {
+			"ContractStartDate": "1997-06-16T05:23:05",
+			"ContractEndDate": "1979-09-08",
+			"ContractEndTime": "12:43:25",
+			"ContractReviewDate": "2052",
+			"LastPremiumPaidDate": "2062-07-27",
+			"CoveragePeriod": "2009-03-15/2038-01-16"
+		},
+		"ChangeLog": [
+			{
+				"Number": "3105",
+				"ChangeTimestamp": "2032-07-27",
+				"Description": "QDBGM",
+				"User": "ramon.weissnat",
+				"Status": "approved",
+				"Priority": "critical",
+				"Changes": [
+					{
+						"Title": "NYPZPLX",
+						"Details": "QNQWADSZO",
+						"Priority": "low",
+						"Status": "reviewed",
+						"SubChanges": [
+							{
+								"TItle": "JNLH",
+								"Details": "ZHAJDWIE",
+								"Priority": "high",
+								"Status": "draft"
+							},
+							{
+								"TItle": "IVMAUBBS",
+								"Details": "XUQWZLRODU",
+								"Priority": "critical",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "XHRSLE",
+								"Details": "FFDMQUSXFT",
+								"Priority": "high",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "UYYP",
+								"Details": "HOJ",
+								"Priority": "low",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "UHXCP",
+								"Details": "ORSICFNIMW",
+								"Priority": "medium",
+								"Status": "draft"
+							}
+						]
+					},
+					{
+						"Title": "RBPFIHA",
+						"Details": "ZMPO",
+						"Priority": "medium",
+						"Status": "reviewed",
+						"SubChanges": [
+							{
+								"TItle": "VPPVRICVKF",
+								"Details": "LKUBGXLCV",
+								"Priority": "medium",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "XDIESYO",
+								"Details": "KXLD",
+								"Priority": "critical",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "DEUDEU",
+								"Details": "AOIL",
+								"Priority": "critical",
+								"Status": "approved"
+							},
+							{
+								"TItle": "JYRLDP",
+								"Details": "ZBD",
+								"Priority": "high",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "BZP",
+								"Details": "IXPB",
+								"Priority": "high",
+								"Status": "deployed"
+							}
+						]
+					},
+					{
+						"Title": "RZECR",
+						"Details": "QXPI",
+						"Priority": "high",
+						"Status": "approved",
+						"SubChanges": [
+							{
+								"TItle": "GIUZGJXDVY",
+								"Details": "REI",
+								"Priority": "medium",
+								"Status": "draft"
+							},
+							{
+								"TItle": "ZIHN",
+								"Details": "LPMV",
+								"Priority": "critical",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "PKJZ",
+								"Details": "DOHXNQFW",
+								"Priority": "medium",
+								"Status": "approved"
+							},
+							{
+								"TItle": "GLWMQ",
+								"Details": "VHJYI",
+								"Priority": "high",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "KACLPZ",
+								"Details": "PLXLULZBGQ",
+								"Priority": "low",
+								"Status": "draft"
+							}
+						]
+					},
+					{
+						"Title": "MQVUVA",
+						"Details": "YJWR",
+						"Priority": "critical",
+						"Status": "draft",
+						"SubChanges": [
+							{
+								"TItle": "SHVRXN",
+								"Details": "NDVF",
+								"Priority": "high",
+								"Status": "approved"
+							},
+							{
+								"TItle": "TXXX",
+								"Details": "MGUIPV",
+								"Priority": "medium",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "XHCGAMXZTJ",
+								"Details": "DFTPDOH",
+								"Priority": "critical",
+								"Status": "approved"
+							},
+							{
+								"TItle": "FBE",
+								"Details": "FLLHXZZG",
+								"Priority": "critical",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "QMFULX",
+								"Details": "WHIEXUW",
+								"Priority": "low",
+								"Status": "deployed"
+							}
+						]
+					},
+					{
+						"Title": "BKKBGBMALI",
+						"Details": "IBIHCMT",
+						"Priority": "high",
+						"Status": "deployed",
+						"SubChanges": [
+							{
+								"TItle": "MXSNHBEQZG",
+								"Details": "WYQYQUNTU",
+								"Priority": "medium",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "OYQXGJL",
+								"Details": "HOTS",
+								"Priority": "low",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "VBBHSBU",
+								"Details": "SGDDF",
+								"Priority": "medium",
+								"Status": "draft"
+							},
+							{
+								"TItle": "IZWHPLEFA",
+								"Details": "OQEWBDGTH",
+								"Priority": "medium",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "ZUDZDUS",
+								"Details": "STWFYZV",
+								"Priority": "high",
+								"Status": "reviewed"
+							}
+						]
+					}
+				]
+			},
+			{
+				"Number": "97",
+				"ChangeTimestamp": "1977-06-19",
+				"Description": "HRZIQMWXW",
+				"User": "marcelo.hartmann",
+				"Status": "approved",
+				"Priority": "critical",
+				"Changes": [
+					{
+						"Title": "KMAUYPQBQC",
+						"Details": "KXA",
+						"Priority": "medium",
+						"Status": "deployed",
+						"SubChanges": [
+							{
+								"TItle": "XIA",
+								"Details": "ZKDIKKTT",
+								"Priority": "medium",
+								"Status": "draft"
+							},
+							{
+								"TItle": "EXXNAMI",
+								"Details": "ZBIZWLDQMO",
+								"Priority": "medium",
+								"Status": "approved"
+							},
+							{
+								"TItle": "BQQGMA",
+								"Details": "BYN",
+								"Priority": "low",
+								"Status": "draft"
+							},
+							{
+								"TItle": "UEYHYZ",
+								"Details": "SWEJGGR",
+								"Priority": "medium",
+								"Status": "draft"
+							},
+							{
+								"TItle": "XAIWKGP",
+								"Details": "TCDFPSWQO",
+								"Priority": "high",
+								"Status": "approved"
+							}
+						]
+					},
+					{
+						"Title": "WOX",
+						"Details": "EUZL",
+						"Priority": "critical",
+						"Status": "reverted",
+						"SubChanges": [
+							{
+								"TItle": "QFLTPEM",
+								"Details": "CGNCDKAE",
+								"Priority": "high",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "HMLR",
+								"Details": "XPHY",
+								"Priority": "critical",
+								"Status": "approved"
+							},
+							{
+								"TItle": "PVP",
+								"Details": "TTSJBOPJ",
+								"Priority": "low",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "RNRFILAWHP",
+								"Details": "QFIQC",
+								"Priority": "medium",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "PSAIRODI",
+								"Details": "GQKQT",
+								"Priority": "critical",
+								"Status": "draft"
+							}
+						]
+					},
+					{
+						"Title": "WSKSSSBZ",
+						"Details": "UUUJBR",
+						"Priority": "low",
+						"Status": "deployed",
+						"SubChanges": [
+							{
+								"TItle": "BNXS",
+								"Details": "EMLEYT",
+								"Priority": "high",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "CZFGVOT",
+								"Details": "FQPM",
+								"Priority": "low",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "YHBZ",
+								"Details": "XTVQPF",
+								"Priority": "high",
+								"Status": "draft"
+							},
+							{
+								"TItle": "TLG",
+								"Details": "DDYK",
+								"Priority": "critical",
+								"Status": "draft"
+							},
+							{
+								"TItle": "GRJIW",
+								"Details": "VXX",
+								"Priority": "medium",
+								"Status": "reverted"
+							}
+						]
+					},
+					{
+						"Title": "VCJBTAFWB",
+						"Details": "EEADLXE",
+						"Priority": "medium",
+						"Status": "deployed",
+						"SubChanges": [
+							{
+								"TItle": "WIP",
+								"Details": "IRTDW",
+								"Priority": "low",
+								"Status": "draft"
+							},
+							{
+								"TItle": "VVNJCMKETI",
+								"Details": "DKICQ",
+								"Priority": "medium",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "AMODKNF",
+								"Details": "HGVUCVBIJI",
+								"Priority": "high",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "HYSJPCFF",
+								"Details": "YTYMHQS",
+								"Priority": "low",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "BGXFNEZ",
+								"Details": "LWTRWDIGQ",
+								"Priority": "low",
+								"Status": "reviewed"
+							}
+						]
+					},
+					{
+						"Title": "WHLLYLK",
+						"Details": "CACDXGGIS",
+						"Priority": "low",
+						"Status": "approved",
+						"SubChanges": [
+							{
+								"TItle": "KUSYHVY",
+								"Details": "YXLUEWI",
+								"Priority": "low",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "NMIWJPAJJF",
+								"Details": "SDBDOD",
+								"Priority": "medium",
+								"Status": "draft"
+							},
+							{
+								"TItle": "RPHNQG",
+								"Details": "ZNAVQGQWH",
+								"Priority": "critical",
+								"Status": "approved"
+							},
+							{
+								"TItle": "BHSYP",
+								"Details": "PCP",
+								"Priority": "high",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "MAMDAVSK",
+								"Details": "MTPHLAPA",
+								"Priority": "low",
+								"Status": "approved"
+							}
+						]
+					}
+				]
+			},
+			{
+				"Number": "1500",
+				"ChangeTimestamp": "2042-08-24",
+				"Description": "HRW",
+				"User": "freddie.dickinson",
+				"Status": "reverted",
+				"Priority": "high",
+				"Changes": [
+					{
+						"Title": "EAG",
+						"Details": "MIFNBKCMCI",
+						"Priority": "high",
+						"Status": "approved",
+						"SubChanges": [
+							{
+								"TItle": "RSYOW",
+								"Details": "FLTG",
+								"Priority": "critical",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "PQJEIB",
+								"Details": "CUANT",
+								"Priority": "medium",
+								"Status": "draft"
+							},
+							{
+								"TItle": "HVIEM",
+								"Details": "YZQCZAKP",
+								"Priority": "critical",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "MCAU",
+								"Details": "VFJYH",
+								"Priority": "high",
+								"Status": "approved"
+							},
+							{
+								"TItle": "WVMNAST",
+								"Details": "XLUZDDY",
+								"Priority": "medium",
+								"Status": "reverted"
+							}
+						]
+					},
+					{
+						"Title": "HGYZGRNJ",
+						"Details": "ERFTK",
+						"Priority": "high",
+						"Status": "deployed",
+						"SubChanges": [
+							{
+								"TItle": "OBLIANZNN",
+								"Details": "FVB",
+								"Priority": "critical",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "UOC",
+								"Details": "AKSDO",
+								"Priority": "low",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "UQC",
+								"Details": "AOJTMJRWCY",
+								"Priority": "high",
+								"Status": "draft"
+							},
+							{
+								"TItle": "KJVTBV",
+								"Details": "CFH",
+								"Priority": "critical",
+								"Status": "approved"
+							},
+							{
+								"TItle": "UYIJAYPMRW",
+								"Details": "DKE",
+								"Priority": "critical",
+								"Status": "deployed"
+							}
+						]
+					},
+					{
+						"Title": "KIRQ",
+						"Details": "QCDCKM",
+						"Priority": "critical",
+						"Status": "reviewed",
+						"SubChanges": [
+							{
+								"TItle": "ZWCIVVLPU",
+								"Details": "IFOTBLQC",
+								"Priority": "medium",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "TMAVFB",
+								"Details": "VUSL",
+								"Priority": "high",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "KDTS",
+								"Details": "XPJJ",
+								"Priority": "medium",
+								"Status": "approved"
+							},
+							{
+								"TItle": "CJXDHFPM",
+								"Details": "VTDO",
+								"Priority": "low",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "CDZPW",
+								"Details": "AJJ",
+								"Priority": "high",
+								"Status": "reviewed"
+							}
+						]
+					},
+					{
+						"Title": "FCKZFX",
+						"Details": "FNFRL",
+						"Priority": "critical",
+						"Status": "approved",
+						"SubChanges": [
+							{
+								"TItle": "GXHP",
+								"Details": "XVLJFASEY",
+								"Priority": "high",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "EWUJ",
+								"Details": "RCIMO",
+								"Priority": "medium",
+								"Status": "approved"
+							},
+							{
+								"TItle": "EFVMKIZ",
+								"Details": "GSFZPOGC",
+								"Priority": "critical",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "CDXT",
+								"Details": "ASMOMAY",
+								"Priority": "high",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "XYRJFVGF",
+								"Details": "DVXXQPFH",
+								"Priority": "medium",
+								"Status": "reverted"
+							}
+						]
+					},
+					{
+						"Title": "JCHHARFGX",
+						"Details": "TOJN",
+						"Priority": "medium",
+						"Status": "draft",
+						"SubChanges": [
+							{
+								"TItle": "HLXDEB",
+								"Details": "SWVEXVFAGJ",
+								"Priority": "critical",
+								"Status": "approved"
+							},
+							{
+								"TItle": "RCZVSWHQGA",
+								"Details": "JNSPMNGRCP",
+								"Priority": "medium",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "EBSZBISH",
+								"Details": "VDZVWXEJLA",
+								"Priority": "low",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "KYIZ",
+								"Details": "YSKXXC",
+								"Priority": "high",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "KMB",
+								"Details": "LAZX",
+								"Priority": "medium",
+								"Status": "approved"
+							}
+						]
+					}
+				]
+			},
+			{
+				"Number": "8543",
+				"ChangeTimestamp": "2061-12-16",
+				"Description": "COBICFZLVO",
+				"User": "elenore.leannon",
+				"Status": "reviewed",
+				"Priority": "medium",
+				"Changes": [
+					{
+						"Title": "AVEX",
+						"Details": "IPA",
+						"Priority": "low",
+						"Status": "reviewed",
+						"SubChanges": [
+							{
+								"TItle": "ZXQYWWWF",
+								"Details": "EAM",
+								"Priority": "low",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "YZR",
+								"Details": "FLCB",
+								"Priority": "critical",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "IEKOECBRW",
+								"Details": "VHRJANJOZG",
+								"Priority": "medium",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "PIX",
+								"Details": "SUKCIKWTNF",
+								"Priority": "medium",
+								"Status": "draft"
+							},
+							{
+								"TItle": "OCCT",
+								"Details": "BCMBYGEZV",
+								"Priority": "high",
+								"Status": "draft"
+							}
+						]
+					},
+					{
+						"Title": "SGAHH",
+						"Details": "MFYXM",
+						"Priority": "medium",
+						"Status": "approved",
+						"SubChanges": [
+							{
+								"TItle": "QFTF",
+								"Details": "PJAEACDIL",
+								"Priority": "high",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "RLRNMW",
+								"Details": "TFGMSA",
+								"Priority": "low",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "CGPIWCW",
+								"Details": "PHNF",
+								"Priority": "high",
+								"Status": "approved"
+							},
+							{
+								"TItle": "HVJB",
+								"Details": "TRDAQQN",
+								"Priority": "critical",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "ZKR",
+								"Details": "ZHUU",
+								"Priority": "medium",
+								"Status": "reverted"
+							}
+						]
+					},
+					{
+						"Title": "QCFY",
+						"Details": "VVKSU",
+						"Priority": "medium",
+						"Status": "reviewed",
+						"SubChanges": [
+							{
+								"TItle": "LVLEOFSHWE",
+								"Details": "HCZ",
+								"Priority": "low",
+								"Status": "draft"
+							},
+							{
+								"TItle": "BJZKNN",
+								"Details": "DINSTL",
+								"Priority": "high",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "BHRA",
+								"Details": "PWIABCDU",
+								"Priority": "medium",
+								"Status": "draft"
+							},
+							{
+								"TItle": "SLMUSPBXK",
+								"Details": "SUULQIPOW",
+								"Priority": "low",
+								"Status": "approved"
+							},
+							{
+								"TItle": "DUJBTTKG",
+								"Details": "QGFXPEHFG",
+								"Priority": "medium",
+								"Status": "approved"
+							}
+						]
+					},
+					{
+						"Title": "QOHIUL",
+						"Details": "BJZCCB",
+						"Priority": "medium",
+						"Status": "draft",
+						"SubChanges": [
+							{
+								"TItle": "ELEBYQJ",
+								"Details": "GGYH",
+								"Priority": "low",
+								"Status": "approved"
+							},
+							{
+								"TItle": "QPICFN",
+								"Details": "GPXRRWA",
+								"Priority": "medium",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "KGXSZBFTO",
+								"Details": "CAK",
+								"Priority": "high",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "METTQ",
+								"Details": "EMPJFC",
+								"Priority": "critical",
+								"Status": "draft"
+							},
+							{
+								"TItle": "JZKK",
+								"Details": "ZAVSYSF",
+								"Priority": "low",
+								"Status": "deployed"
+							}
+						]
+					},
+					{
+						"Title": "IMVDI",
+						"Details": "SPDJBQ",
+						"Priority": "medium",
+						"Status": "approved",
+						"SubChanges": [
+							{
+								"TItle": "YEUIGGPFVI",
+								"Details": "ABDDR",
+								"Priority": "low",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "LOPJZPIAVU",
+								"Details": "NVTOPKIIED",
+								"Priority": "critical",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "BUG",
+								"Details": "RFNOHVQY",
+								"Priority": "critical",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "FUI",
+								"Details": "SAOGARBPN",
+								"Priority": "critical",
+								"Status": "approved"
+							},
+							{
+								"TItle": "XYHUCV",
+								"Details": "CBFMUAGVWY",
+								"Priority": "medium",
+								"Status": "deployed"
+							}
+						]
+					}
+				]
+			},
+			{
+				"Number": "7654",
+				"ChangeTimestamp": "1987-05-02",
+				"Description": "BBJGJA",
+				"User": "seymour.stoltenberg",
+				"Status": "deployed",
+				"Priority": "low",
+				"Changes": [
+					{
+						"Title": "DDWBQNBWZ",
+						"Details": "TEO",
+						"Priority": "low",
+						"Status": "reviewed",
+						"SubChanges": [
+							{
+								"TItle": "KDBAV",
+								"Details": "RZLM",
+								"Priority": "high",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "MQIQ",
+								"Details": "WCCPGHQAG",
+								"Priority": "critical",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "KIITD",
+								"Details": "JCA",
+								"Priority": "low",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "BVGKXQVI",
+								"Details": "KJCJGR",
+								"Priority": "high",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "BKNYMZMH",
+								"Details": "EORXNSHWVT",
+								"Priority": "high",
+								"Status": "deployed"
+							}
+						]
+					},
+					{
+						"Title": "WAVG",
+						"Details": "GNITXMMYCC",
+						"Priority": "low",
+						"Status": "reviewed",
+						"SubChanges": [
+							{
+								"TItle": "FUAAFVUO",
+								"Details": "XRE",
+								"Priority": "medium",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "EPCNTT",
+								"Details": "ZNFNEBWL",
+								"Priority": "medium",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "KFS",
+								"Details": "SVFSQDH",
+								"Priority": "critical",
+								"Status": "draft"
+							},
+							{
+								"TItle": "JVN",
+								"Details": "ZDDRWP",
+								"Priority": "critical",
+								"Status": "draft"
+							},
+							{
+								"TItle": "MCY",
+								"Details": "OPO",
+								"Priority": "low",
+								"Status": "reverted"
+							}
+						]
+					},
+					{
+						"Title": "EOGEVMUFX",
+						"Details": "MFXM",
+						"Priority": "low",
+						"Status": "reviewed",
+						"SubChanges": [
+							{
+								"TItle": "INIRS",
+								"Details": "XVPLLG",
+								"Priority": "critical",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "QHTASRH",
+								"Details": "NDVPXIUD",
+								"Priority": "low",
+								"Status": "reviewed"
+							},
+							{
+								"TItle": "JPZO",
+								"Details": "UCMSDJPEI",
+								"Priority": "critical",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "FPGKFCULF",
+								"Details": "ZGIQMOK",
+								"Priority": "high",
+								"Status": "draft"
+							},
+							{
+								"TItle": "COKWOYNK",
+								"Details": "KQFWGSMQ",
+								"Priority": "low",
+								"Status": "draft"
+							}
+						]
+					},
+					{
+						"Title": "HGTTY",
+						"Details": "URUWVGXU",
+						"Priority": "low",
+						"Status": "deployed",
+						"SubChanges": [
+							{
+								"TItle": "HUI",
+								"Details": "XIQ",
+								"Priority": "low",
+								"Status": "approved"
+							},
+							{
+								"TItle": "JUIIAOB",
+								"Details": "OLUB",
+								"Priority": "critical",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "BWS",
+								"Details": "KXHXRCPOVH",
+								"Priority": "medium",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "HCNID",
+								"Details": "FRDIPXDS",
+								"Priority": "low",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "YUEMVL",
+								"Details": "YHZN",
+								"Priority": "medium",
+								"Status": "deployed"
+							}
+						]
+					},
+					{
+						"Title": "PPQTXEVNAU",
+						"Details": "EKOXXOBV",
+						"Priority": "critical",
+						"Status": "approved",
+						"SubChanges": [
+							{
+								"TItle": "ZEQVWCZMTM",
+								"Details": "VCJA",
+								"Priority": "low",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "RQPXLES",
+								"Details": "OIST",
+								"Priority": "low",
+								"Status": "reverted"
+							},
+							{
+								"TItle": "SDCC",
+								"Details": "KIC",
+								"Priority": "medium",
+								"Status": "draft"
+							},
+							{
+								"TItle": "DMNQIJUNF",
+								"Details": "HZBCHKZGG",
+								"Priority": "medium",
+								"Status": "deployed"
+							},
+							{
+								"TItle": "WAOFDGXQ",
+								"Details": "HAFL",
+								"Priority": "critical",
+								"Status": "approved"
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}

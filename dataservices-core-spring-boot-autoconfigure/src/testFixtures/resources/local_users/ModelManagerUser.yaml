@@ -1,0 +1,7 @@
+username: "model_manager_user"
+password: "model_manager_user"
+authorities:
+  - "modelManager"
+email: superModelUser@min.com
+firstname: modelManager
+lastname: model_manager_user last

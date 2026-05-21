@@ -1,0 +1,8 @@
+username: "test"
+password: "admin"
+authorities:
+  - "admin"
+  - "systemAdmin"
+email: test@min.com
+firstname: test first
+lastname: test last

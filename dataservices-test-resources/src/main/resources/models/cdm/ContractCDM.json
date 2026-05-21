@@ -1,0 +1,389 @@
+{
+  "header": {
+    "id": "ContractCDM",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Contract CDM"
+      },
+      {
+        "locale": "de",
+        "text": "Vertrag CDM"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest"
+      },
+      {
+        "name": "cdm.queryRoot",
+        "value": "Contract"
+      }
+    ],
+    "modelReferences": [
+      {
+        "alias": "Contract",
+        "modelType": "document",
+        "purpose": "include",
+        "reference": "Contract"
+      },
+      {
+        "alias": "BusinessPartnerSuper",
+        "modelType": "document",
+        "purpose": "include",
+        "reference": "BusinessPartnerSuper"
+      },
+      {
+        "alias": "CoInsuredAdditionalFields",
+        "modelType": "document",
+        "purpose": "include",
+        "reference": "CoInsuredAdditionalFields"
+      },
+      {
+        "alias": "Address",
+        "modelType": "document",
+        "purpose": "include",
+        "reference": "Address"
+      }
+    ]
+  },
+  "content": {
+    "modelInfo": {
+      "name": "ContractCDM"
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "include_71fc7",
+          "name": "ContractRoot",
+          "Group": {
+            "repeatability": 1,
+            "modelAlias": "Contract"
+          }
+        },
+        {
+          "type": "Group",
+          "name": "ContractBusinessPartner",
+          "id": "group_f3eb0",
+          "annotations": [
+            {
+              "name": "cdm.relationship",
+              "value": "ContractBusinessPartner"
+            },
+            {
+              "name": "cdm.sourceRole",
+              "value": "Contract"
+            },
+            {
+              "name": "cdm.targetRole",
+              "value": "Partner"
+            },
+            {
+              "name": "cdm.targetDocumentModel",
+              "value": "BusinessPartnerSuper"
+            }
+          ],
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Group",
+                "name": "BusinessPartnerRoot",
+                "id": "include_c08c7",
+                "Group": {
+                  "repeatability": 1,
+                  "modelAlias": "BusinessPartnerSuper"
+                }
+              },
+              {
+                "type": "Field",
+                "name": "t_docRef",
+                "id": "field_53829",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  }
+                }
+              },
+              {
+                "type": "Group",
+                "name": "PartnerAddresses",
+                "id": "group_513ee",
+                "annotations": [
+                  {
+                    "name": "cdm.relationship",
+                    "value": "PartnerAddresses"
+                  },
+                  {
+                    "name": "cdm.sourceRole",
+                    "value": "Partner"
+                  },
+                  {
+                    "name": "cdm.targetRole",
+                    "value": "Address"
+                  },
+                  {
+                    "name": "cdm.targetDocumentModel",
+                    "value": "Address"
+                  }
+                ],
+                "Group": {
+                  "repeatability": 100,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "id": "include_4be24",
+                      "name": "AddressRoot",
+                      "Group": {
+                        "repeatability": 1,
+                        "modelAlias": "Address"
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_52577",
+                      "name": "t_docRef",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "name": "PartnerPostalAddress",
+                "id": "group_368d1",
+                "annotations": [
+                  {
+                    "name": "cdm.relationship",
+                    "value": "PartnerPostalAddress"
+                  },
+                  {
+                    "name": "cdm.sourceRole",
+                    "value": "Partner"
+                  },
+                  {
+                    "name": "cdm.targetRole",
+                    "value": "Address"
+                  },
+                  {
+                    "name": "cdm.targetDocumentModel",
+                    "value": "Address"
+                  }
+                ],
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "id": "include_19e70",
+                      "name": "AddressRoot",
+                      "Group": {
+                        "repeatability": 1,
+                        "modelAlias": "Address"
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_ee835",
+                      "name": "HasPostalAddress",
+                      "Field": {
+                        "fieldType": {
+                          "type": "BooleanType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Computation",
+                      "name": "HasPostalAddressComp",
+                      "id": "computation_d062f",
+                      "Computation": {
+                        "computedFieldRelPath": "../HasPostalAddress",
+                        "computationAlternatives": [
+                          {
+                            "operation": "True",
+                            "precondition": "GroupFilled(RuleGroup) and AtLeastOneFieldFilled(..ContractBusinessPartner/PartnerPostalAddress/__meta/docRef)"
+                          },
+                          {
+                            "operation": "False",
+                            "precondition": "GroupFilled(RuleGroup) and NoFieldFilled(..ContractBusinessPartner/PartnerPostalAddress/__meta/docRef)"
+                          }
+                        ],
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "error text for computation of HasPostalAddressComp"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Fehlertext für die Berechnung von HasPostalAddressComp"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_920ea",
+                      "name": "HasBusinessPartner",
+                      "Field": {
+                        "fieldType": {
+                          "type": "BooleanType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Computation",
+                      "id": "computation_a0677",
+                      "name": "HasbusinessPartnerComp",
+                      "Computation": {
+                        "computedFieldRelPath": "../HasBusinessPartner",
+                        "computationAlternatives": [
+                          {
+                            "operation": "True",
+                            "precondition": "GroupFilled(RuleGroup) and  FieldFilled(..ContractBusinessPartner/t_docRef)"
+                          },
+                          {
+                            "operation": "False",
+                            "precondition": "GroupFilled(RuleGroup) and  FieldNotFilled(..ContractBusinessPartner/t_docRef)"
+                          }
+                        ],
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "error text for computation of HasbusinessPartnerComp"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Fehlertext zur Berechnung von HasbusinessPartnerComp"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "name": "ContractCoInsuredPartner",
+          "id": "group_4bc78",
+          "annotations": [
+            {
+              "name": "cdm.relationship",
+              "value": "ContractCoInsuredPartner"
+            },
+            {
+              "name": "cdm.sourceRole",
+              "value": "Contract"
+            },
+            {
+              "name": "cdm.targetRole",
+              "value": "Partner"
+            },
+            {
+              "name": "cdm.targetDocumentModel",
+              "value": "BusinessPartnerSuper"
+            }
+          ],
+          "Group": {
+            "repeatability": 100,
+            "elements": [
+              {
+                "type": "Group",
+                "name": "BusinessPartnerRoot",
+                "id": "include_46ee3",
+                "Group": {
+                  "repeatability": 1,
+                  "modelAlias": "BusinessPartnerSuper"
+                }
+              },
+              {
+                "type": "Group",
+                "name": "relationship",
+                "id": "group_4da5e",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "name": "CoInsuredRoot",
+                      "id": "include_50c1e",
+                      "Group": {
+                        "repeatability": 1,
+                        "modelAlias": "CoInsuredAdditionalFields"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "id": "group_f66bc",
+          "name": "CalculatedFields",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_65c8f",
+                "name": "CostToCustomerCDM",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "minFractionalDigits": 2,
+                      "maxFractionalDigits": 2,
+                      "trait": "amount"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Cost to Customer"
+                    }
+                  ],
+                  "helperText": [
+                    {
+                      "locale": "en",
+                      "text": "Field on CDM"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

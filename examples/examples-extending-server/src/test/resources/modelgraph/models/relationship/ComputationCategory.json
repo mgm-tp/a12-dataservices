@@ -1,0 +1,118 @@
+{
+  "header": {
+    "id": "ComputationCategory",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ComputationCategory_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ComputationCategory"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "ComputationRole",
+        "reference": "ComputationModel"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "CategoryRole",
+        "reference": "DomainCategory"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "guest,admin,systemAdmin"
+      }
+    ]
+  },
+  "content": {
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ComputationCategory_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ComputationCategory"
+      }
+    ],
+    "associationType": "SHARED",
+    "linkDocumentModel": null,
+    "duplicatesAllowed": true,
+    "entityCharacteristics": [
+      {
+        "role": "ComputationRole",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "ComputationRole_DE"
+          },
+          {
+            "locale": "en",
+            "text": "ComputationRole"
+          }
+        ],
+        "documentModel": "ComputationModel",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": 1
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": []
+        }
+      },
+      {
+        "role": "CategoryRole",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "CategoryRole_DE"
+          },
+          {
+            "locale": "en",
+            "text": "CategoryRole"
+          }
+        ],
+        "documentModel": "DomainCategory",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": []
+        }
+      }
+    ],
+    "storage": "EXTERNAL",
+    "embeddedGroupPath": ""
+  }
+}

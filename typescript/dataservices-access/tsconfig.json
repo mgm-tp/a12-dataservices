@@ -1,0 +1,19 @@
+{
+	"extends": "@com.mgmtp.a12.devtools/tsconfig",
+	"exclude": ["./node_modules/**"],
+	"include": ["src"],
+	"compilerOptions": {
+		"types": ["mocha", "node"],
+		"outDir": "./lib"
+	},
+	"compileOnSave": true,
+	"buildOnSave": true,
+	"typedocOptions": {
+		"name": "Data Services Access API Documentation",
+		"readme": "README.md",
+		"out": "./build/docs/typedoc",
+		"excludeExternals": true,
+		"excludePrivate": true,
+		"excludeProtected": false
+	}
+}

@@ -1,0 +1,811 @@
+{
+  "header": {
+    "id": "DomainPolicy",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      },
+      {
+        "code": "fr"
+      },
+      {
+        "code": "nl"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,DEFAULT,MODELLER"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "DomainPolicy",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "Policy",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Group",
+                "id": "G36",
+                "name": "PolicyData",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F3",
+                      "name": "PolicyNr",
+                      "internalDescription": [
+                        {
+                          "locale": "en",
+                          "text": "The unique business identifier of the product."
+                        },
+                        {
+                          "locale": "fr",
+                          "text": "The unique business identifier of the product."
+                        },
+                        {
+                          "locale": "nl",
+                          "text": "The unique business identifier of the product."
+                        },
+                        {
+                          "locale": "de",
+                          "text": "The unique business identifier of the product."
+                        }
+                      ],
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Policy Nr"
+                          },
+                          {
+                            "locale": "fr",
+                            "text": "Policy Nr"
+                          },
+                          {
+                            "locale": "nl",
+                            "text": "Policy Nr"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Policen Nr"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F52",
+                      "name": "ProductId",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "nl",
+                            "text": "Product ID"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Produkt ID"
+                          },
+                          {
+                            "locale": "en",
+                            "text": "Product ID"
+                          },
+                          {
+                            "locale": "fr",
+                            "text": "Product ID"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F51",
+                      "name": "ProductName",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "de",
+                            "text": "Produkt"
+                          },
+                          {
+                            "locale": "en",
+                            "text": "Product"
+                          },
+                          {
+                            "locale": "fr",
+                            "text": "Product"
+                          },
+                          {
+                            "locale": "nl",
+                            "text": "Product"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F37",
+                      "name": "PolicyInceptionDate",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateType",
+                          "DateType": {
+                            "format": "yyyy-MM-dd"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Policy Inception Date"
+                          },
+                          {
+                            "locale": "nl",
+                            "text": "Policy Inception Date"
+                          },
+                          {
+                            "locale": "fr",
+                            "text": "Policy Inception Date"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Policenbeginn"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F38",
+                      "name": "NextMainDueDate",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateType",
+                          "DateType": {
+                            "format": "yyyy-MM-dd"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "nl",
+                            "text": "Next Main Due Date"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Nächste Hauptfälligkeit"
+                          },
+                          {
+                            "locale": "en",
+                            "text": "Next Main Due Date"
+                          },
+                          {
+                            "locale": "fr",
+                            "text": "Next Main Due Date"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F50",
+                      "name": "ExternalPolicyNr",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "External Policy Nr."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Externe Policennummer"
+                          },
+                          {
+                            "locale": "nl",
+                            "text": "External Policy Nr."
+                          },
+                          {
+                            "locale": "fr",
+                            "text": "External Policy Nr."
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "I32_G2",
+                "name": "Partner",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "I32_F14",
+                      "name": "PartnerId",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "I32_F3",
+                      "name": "Name",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Name"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Name"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "I32_F4",
+                      "name": "LegalForm",
+                      "Field": {
+                        "fieldType": {
+                          "type": "EnumerationType",
+                          "EnumerationType": {
+                            "values": [
+                              {
+                                "value": "0",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "andere"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "other"
+                                  },
+                                  {
+                                    "locale": "fr",
+                                    "text": "0"
+                                  },
+                                  {
+                                    "locale": "nl",
+                                    "text": "0"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "1",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "GmbH"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "LTD"
+                                  },
+                                  {
+                                    "locale": "fr",
+                                    "text": "1"
+                                  },
+                                  {
+                                    "locale": "nl",
+                                    "text": "1"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "2",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "KG"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "limited partnership"
+                                  },
+                                  {
+                                    "locale": "fr",
+                                    "text": "2"
+                                  },
+                                  {
+                                    "locale": "nl",
+                                    "text": "2"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "3",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "KGaA"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "partnership limited by shares"
+                                  },
+                                  {
+                                    "locale": "fr",
+                                    "text": "3"
+                                  },
+                                  {
+                                    "locale": "nl",
+                                    "text": "3"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "7",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "AG"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "AG"
+                                  },
+                                  {
+                                    "locale": "fr",
+                                    "text": "7"
+                                  },
+                                  {
+                                    "locale": "nl",
+                                    "text": "7"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "8",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "OHG"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "partnership"
+                                  },
+                                  {
+                                    "locale": "fr",
+                                    "text": "8"
+                                  },
+                                  {
+                                    "locale": "nl",
+                                    "text": "8"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "9",
+                                "label": [
+                                  {
+                                    "locale": "de",
+                                    "text": "gemeinnützige Gesellschaft"
+                                  },
+                                  {
+                                    "locale": "en",
+                                    "text": "NPO"
+                                  },
+                                  {
+                                    "locale": "fr",
+                                    "text": "9"
+                                  },
+                                  {
+                                    "locale": "nl",
+                                    "text": "9"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "de",
+                            "text": "Rechtsform"
+                          },
+                          {
+                            "locale": "en",
+                            "text": "Rechtsform"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "I32_G16",
+                      "name": "Address",
+                      "Group": {
+                        "repeatability": 1,
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "I32_F5",
+                            "name": "Street",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "de",
+                                  "text": "Strasse, Hausnr."
+                                },
+                                {
+                                  "locale": "en",
+                                  "text": "Street, Housenr."
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "I32_F7",
+                            "name": "ZipCode",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "PLZ"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "PLZ"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "I32_F8",
+                            "name": "City",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "de",
+                                  "text": "Stadt"
+                                },
+                                {
+                                  "locale": "en",
+                                  "text": "Stadt"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "I32_F18",
+                            "name": "Country",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "I49_G1",
+                "name": "Documents",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "id": "I49_G2",
+                      "name": "Document",
+                      "annotations": [],
+                      "externalDescription": [
+                        {
+                          "locale": "de",
+                          "text": "Document"
+                        },
+                        {
+                          "locale": "nl",
+                          "text": "Document"
+                        },
+                        {
+                          "locale": "fr",
+                          "text": "Document"
+                        },
+                        {
+                          "locale": "en",
+                          "text": "Document"
+                        }
+                      ],
+                      "Group": {
+                        "repeatability": 40,
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "I49_F1",
+                            "name": "DocumentName",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Name"
+                                },
+                                {
+                                  "locale": "fr",
+                                  "text": "Name"
+                                },
+                                {
+                                  "locale": "nl",
+                                  "text": "Name"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Name"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "I49_F2",
+                            "name": "DocumentURL",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "fr",
+                                  "text": "URL"
+                                },
+                                {
+                                  "locale": "nl",
+                                  "text": "URL"
+                                },
+                                {
+                                  "locale": "en",
+                                  "text": "URL"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "URL"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "I49_F3",
+                            "name": "DocumentType",
+                            "Field": {
+                              "fieldType": {
+                                "type": "EnumerationType",
+                                "EnumerationType": {
+                                  "values": [
+                                    {
+                                      "value": "DOCUMENT_TYPE-UPLOAD",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Upload"
+                                        },
+                                        {
+                                          "locale": "nl",
+                                          "text": "Upload"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Upload"
+                                        },
+                                        {
+                                          "locale": "fr",
+                                          "text": "Upload"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "DOCUMENT_TYPE-QUOTATION",
+                                      "label": [
+                                        {
+                                          "locale": "fr",
+                                          "text": "Quotation"
+                                        },
+                                        {
+                                          "locale": "en",
+                                          "text": "Quotation"
+                                        },
+                                        {
+                                          "locale": "nl",
+                                          "text": "Quotation"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Quotation"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "DOCUMENT_TYPE-QUESTIONAIRE",
+                                      "label": [
+                                        {
+                                          "locale": "de",
+                                          "text": "Questionnaire"
+                                        },
+                                        {
+                                          "locale": "nl",
+                                          "text": "Questionnaire"
+                                        },
+                                        {
+                                          "locale": "fr",
+                                          "text": "Questionnaire"
+                                        },
+                                        {
+                                          "locale": "en",
+                                          "text": "Questionnaire"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "DOCUMENT_TYPE-INVOICE",
+                                      "label": [
+                                        {
+                                          "locale": "fr",
+                                          "text": "Invoice"
+                                        },
+                                        {
+                                          "locale": "en",
+                                          "text": "Invoice"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Invoice"
+                                        },
+                                        {
+                                          "locale": "nl",
+                                          "text": "Invoice"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "DOCUMENT_TYPE-POLICY",
+                                      "label": [
+                                        {
+                                          "locale": "nl",
+                                          "text": "Policy"
+                                        },
+                                        {
+                                          "locale": "fr",
+                                          "text": "Policy"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Policy"
+                                        },
+                                        {
+                                          "locale": "en",
+                                          "text": "Policy"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "de",
+                                  "text": "Document Type"
+                                },
+                                {
+                                  "locale": "en",
+                                  "text": "Document Type"
+                                },
+                                {
+                                  "locale": "nl",
+                                  "text": "Document Type"
+                                },
+                                {
+                                  "locale": "fr",
+                                  "text": "Document Type"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "I8_G2",
+                "name": "SubmissionData",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "I8_F3",
+                      "name": "Name",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Name"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Name"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

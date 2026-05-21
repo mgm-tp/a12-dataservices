@@ -1,0 +1,3 @@
+Product.number,Product.name,Product.description,Product.searchKeywords[searchKeyword],Product.logistics.weight[weightValue|weightUnit]
+10,name,desc,[0]||name desc,[0]||10|kg
+11,name2,desc2,[0]||name2 desc2,[0]||11|m

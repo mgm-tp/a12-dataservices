@@ -1,0 +1,47 @@
+[
+	{
+		"idRef": "CampaignsOfProductRole",
+		"result": {
+			"fullSize": 1,
+			"page": {
+				"offset": 0,
+				"limit": 1
+			},
+			"entries": [
+				{
+					"linkRef": {
+						"linkDescriptor": {
+							"relationshipModel": "ProductCampaign",
+							"entities": [
+								{
+									"role": "ProductRole",
+									"docRef": "16"
+								},
+								{
+									"role": "CampaignRole",
+									"docRef": "20"
+								}
+							]
+						},
+						"id": "2"
+					},
+					"document": {
+						"target": {
+							"Properties": {
+								"name": "Break a sweat",
+								"startDate": "2018-09-01",
+								"endDate": "2018-09-30"
+							}
+						},
+						"relationship": {
+							"root": {
+								"aNumber": "1235",
+								"aString": "2020-09-10"
+							}
+						}
+					}
+				}
+			]
+		}
+	}
+]

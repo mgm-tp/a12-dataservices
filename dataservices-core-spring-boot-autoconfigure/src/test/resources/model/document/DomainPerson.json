@@ -1,0 +1,393 @@
+{
+  "header": {
+    "id": "Person",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "Person",
+      "immutable": false,
+      "comment": "A model for personal contacts. For use in the example addressbook form application."
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "Person",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F3",
+                "name": "FirstName",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "First name"
+                    }
+                  ],
+                  "requirednessConfig": {
+                    "mode": "absoluteOrRelativeToNextRepAncestor"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F12",
+                "name": "LastName",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Last name"
+                    }
+                  ],
+                  "requirednessConfig": {
+                    "mode": "absoluteOrRelativeToNextRepAncestor"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F13",
+                "name": "Group",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "BusinessContacts",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Business Contacts"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "FriendsFamily",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Friends and Family"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Group"
+                    }
+                  ],
+                  "transient": false,
+                  "requirednessConfig": {
+                    "mode": "absoluteOrRelativeToNextRepAncestor"
+                  }
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G14",
+                "name": "GroupSpecificDetails",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "id": "G15",
+                      "name": "BusinessContacts",
+                      "Group": {
+                        "repeatability": 1,
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "F4",
+                            "name": "Company",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Company"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "F5",
+                            "name": "Position",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Position"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "G16",
+                      "name": "FriendsAndFamily",
+                      "Group": {
+                        "repeatability": 1,
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "F17",
+                            "name": "Nickname",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Nickname"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "F11",
+                            "name": "DateOfBirth",
+                            "externalDescription": [
+                              {
+                                "locale": "en",
+                                "text": "Please specify the Date in the format yyy-MM-dd. For example 2016-01-29 for January 29 in 2016."
+                              }
+                            ],
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateType",
+                                "DateType": {
+                                  "format": "yyyy-MM-dd"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Date Of Birth"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Rule",
+                            "id": "R20",
+                            "name": "DateOfBirthIsNotInFuture",
+                            "Rule": {
+                              "errorEntityRelPath": "../DateOfBirth",
+                              "errorCode": "Error R20",
+                              "errorCondition": "FieldFilled(DateOfBirth) and DifferenceInDays(Today, DateOfBirth) >= 0",
+                              "severity": "ERROR",
+                              "errorMessage": [
+                                {
+                                  "locale": "en",
+                                  "text": "According to this date, the person hasn't been born yet! You need to provide a past date."
+                                }
+                              ],
+                              "guiPatterns": {
+                                "dynamicEnumerationRule": "false"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G7",
+                "name": "ContactInfo",
+                "Group": {
+                  "repeatability": 99,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F8",
+                      "name": "ContactType",
+                      "Field": {
+                        "fieldType": {
+                          "type": "EnumerationType",
+                          "EnumerationType": {
+                            "values": [
+                              {
+                                "value": "telephone",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Telephone Number"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "email",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Email Address"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "fax",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Fax Number"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "twitter",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Twitter Account"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "linkedin",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "LinkedIn Account"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "misc",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Miscellaneous"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Contact Type"
+                          }
+                        ],
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F10",
+                      "name": "ContactDetail",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Number / Address / Account"
+                          }
+                        ],
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F9",
+                      "name": "Description",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Notes"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "R19",
+                      "name": "ValidPhoneNumber",
+                      "Rule": {
+                        "errorEntityRelPath": "../ContactDetail",
+                        "errorCode": "Error R19",
+                        "errorCondition": "([ContactType] == \"telephone\") and ([ContactDetail] PatternViolated \"[0-9\\+\\(\\)\\-\\s]+\" )",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "This is not a valid phone number. You may only use numbers, whitespace and the special characters '+', '-', '(' and ')'"
+                          }
+                        ],
+                        "guiPatterns": {
+                          "dynamicEnumerationRule": "false"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

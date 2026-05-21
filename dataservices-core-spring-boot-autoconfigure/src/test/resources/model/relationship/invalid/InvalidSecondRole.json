@@ -1,0 +1,134 @@
+{
+  "header": {
+    "id": "InvalidSecondRole",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "de",
+        "text": "InvalidSecondRole_DE"
+      },
+      {
+        "locale": "en",
+        "text": "InvalidSecondRole"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "ProductRole",
+        "reference": "Product"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Bundle",
+        "reference": "ThisModelDoesNotExist"
+      },
+      {
+        "purpose": "Link Document model",
+        "modelType": "document",
+        "alias": "Link Model",
+        "reference": "ProductBundle_AdditionalFieldsModel"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "guest,admin,systemAdmin"
+      }
+    ]
+  },
+  "content": {
+    "labels": [
+      {
+        "locale": "de",
+        "text": "InvalidSecondRole_DE"
+      },
+      {
+        "locale": "en",
+        "text": "InvalidSecondRole"
+      }
+    ],
+    "associationType": "SHARED",
+    "linkDocumentModel": "ProductBundle_AdditionalFieldsModel",
+    "duplicatesAllowed": false,
+    "entityCharacteristics": [
+      {
+        "role": "ProductRole",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "ist partz of"
+          },
+          {
+            "locale": "en",
+            "text": "is part of"
+          }
+        ],
+        "documentModel": "Product",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": [
+            {
+              "name": "requiredField",
+              "value": "requiredField"
+            }
+          ]
+        }
+      },
+      {
+        "role": "Bundle",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "konzistz of"
+          },
+          {
+            "locale": "en",
+            "text": "consists of"
+          }
+        ],
+        "documentModel": "ThisModelDoesNotExist",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 1,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": [
+            {
+              "name": "requiredField",
+              "value": "requiredField"
+            }
+          ]
+        }
+      }
+    ],
+    "storage": "EXTERNAL",
+    "embeddedGroupPath": ""
+  }
+}

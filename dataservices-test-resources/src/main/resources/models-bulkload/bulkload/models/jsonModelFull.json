@@ -1,0 +1,35 @@
+{
+	"header": {
+		"id": "DemoModelWithAllFields",
+		"modelType": "DocumentModel",
+		"modelVersion": "2",
+		"locales": [
+			"en",
+			"de"
+		],
+		"labels": [
+			{
+				"locale": "en",
+				"text": "English label"
+			},
+			{
+				"locale": "de",
+				"text": "German label"
+			}
+		],
+		"annotations": [
+			{
+				"name": "roles",
+				"value": "admin,guest,editor"
+			}
+		],
+		"modelReferences": [
+			{
+				"modelType": "DocumentModel",
+				"purpose": "purpose of model",
+				"alias": "my model link",
+				"reference": "DomainProduct"
+			}
+		]
+	}
+}

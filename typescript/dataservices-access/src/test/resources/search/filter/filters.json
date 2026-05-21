@@ -1,0 +1,41 @@
+{
+	"type": "or",
+	"filters": [
+		{
+			"type": "match",
+			"field": "field2",
+			"value": "value 2"
+		},
+		{
+			"type": "and",
+			"filters": [
+				{
+					"type": "not",
+					"filter": {
+						"type": "match",
+						"field": "field3",
+						"value": "value 3"
+					}
+				},
+				{
+					"type": "match",
+					"field": "field4",
+					"value": "value 4"
+				},
+				{
+					"type": "range",
+					"field": "field5",
+					"from": "5",
+					"to": "20"
+				},
+				{
+					"type": "not",
+					"filter": {
+						"type": "null",
+						"field": "field6"
+					}
+				}
+			]
+		}
+	]
+}

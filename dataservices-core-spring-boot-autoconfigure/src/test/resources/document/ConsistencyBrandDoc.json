@@ -1,0 +1,19 @@
+{
+    "Brand": {
+      "name": "Nyke",
+      "marketingText": [
+        {
+          "locale": "en_US",
+          "value": "The famous sports wear brand Nyke."
+        },
+        {
+          "locale": "de_DE",
+          "value": "Der bekannte Sportbekleidungshersteller Nyke."
+        }
+      ],
+      "image": {
+        "mimeType": "image/png",
+        "url": "/media/images/nyke.png"
+      }
+    }
+  }

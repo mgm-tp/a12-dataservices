@@ -1,0 +1,88 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "add_link_1",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "%s",
+        "entities": [
+          {
+            "role": "Partner",
+            "docRef": "%s"
+          },
+          {
+            "role": "Address",
+            "docRef": "%s"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "add_link_2",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "%s",
+        "entities": [
+          {
+            "role": "Partner",
+            "docRef": "%s"
+          },
+          {
+            "role": "Address",
+            "docRef": "%s"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "delete_link_1",
+    "method": "DELETE_LINK",
+    "params": {
+      "linkRef": {
+        "linkDescriptor": {
+          "relationshipModel": "%s",
+          "entities": [
+            {
+              "role": "Partner",
+              "docRef": "%s"
+            },
+            {
+              "role": "Address",
+              "docRef": "%s"
+            }
+          ]
+        },
+        "id": "%s"
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "delete_link_2",
+    "method": "DELETE_LINK",
+    "params": {
+      "linkRef": {
+        "linkDescriptor": {
+          "relationshipModel": "%s",
+          "entities": [
+            {
+              "role": "Partner",
+              "docRef": "%s"
+            },
+            {
+              "role": "Address",
+              "docRef": "%s"
+            }
+          ]
+        },
+        "id": "%s"
+      }
+    }
+  }
+]

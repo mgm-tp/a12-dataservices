@@ -1,0 +1,37 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.spring-boot-conventions'
+}
+
+dependencies {
+	api project(':content-store:dataservices-content-store-server-spring-boot-autoconfigure')
+	api libs.jaxbApi
+	api libs.jacksonDatatypeJsr310, libs.jacksonDatatypeJdk8
+	api libs.springBootStarterDataJpa
+	api(libs.springBootStarterWeb) {
+		exclude group: 'org.glassfish', module: 'jakarta.el'
+	}
+	compileOnly libs.servletApi
+	implementation libs.springBootStarterActuator
+}
+
+configurations {
+	bootServerJar.canBeResolved = false
+}
+
+springBoot {
+	mainClass.set 'com.mgmtp.a12.contentstore.server.app.ContentStoreServerApplication'
+}
+
+bootRun {
+	systemProperties 'workDir': "${project.rootDir}/", 'spring.profiles.active': 'contentstore-uaa,contentstore-external_postgres,contentstore-actuators'
+	systemProperties 'mgmtp.a12.uaa.authentication.jwt.secret': 'YXNkZmdoamtscXdlcnR6dWlvcHl4Y3Zibm0xMjM0NTY='
+	systemProperties 'mgmtp.a12.uaa.authentication.jwt.privateKeyLocation': 'classpath:/uaa_private_key.pem'
+	systemProperties 'mgmtp.a12.uaa.authentication.jwt.publicKeyLocation': 'classpath:/uaa_public_key.pem'
+	systemProperties 'mgmtp.a12.uaa.authentication.types': 'UAA_ACCESS_TOKEN'
+}
+
+artifacts {
+	bootServerJar(tasks.bootJar)
+}
+
+description = 'Content Store REST server executable application'

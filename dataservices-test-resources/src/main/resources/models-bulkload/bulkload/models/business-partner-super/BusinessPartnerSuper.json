@@ -1,0 +1,763 @@
+{
+  "header": {
+    "id": "BusinessPartnerSuper",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Business Partner Super"
+      },
+      {
+        "locale": "de",
+        "text": "Geschäftspartner Super"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,systemAdmin"
+      },
+      {
+        "name": "abstract",
+        "value": "true"
+      },
+      {
+        "name": "subTypes",
+        "value": "BusinessPartner,BusinessPartnerLTD"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "include",
+        "modelType": "document",
+        "alias": "BusinessPartnerSuperInclude1",
+        "reference": "BusinessPartnerSuperInclude1"
+      },
+      {
+        "purpose": "include",
+        "modelType": "document",
+        "alias": "BusinessPartnerSuperInclude2",
+        "reference": "BusinessPartnerSuperInclude2"
+      }
+    ]
+  },
+  "content": {
+    "modelInfo": {
+      "name": "BusinessPartnerSuper",
+      "immutable": false,
+      "joinedModelsInfo": "Address-SelectionModel_V1+Sel"
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "group_36405",
+          "name": "BusinessPartnerRoot",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Group",
+                "id": "I1",
+                "name": "BusinessPartnerSuperInclude1",
+                "Group": {
+                  "repeatability": 1,
+                  "modelAlias": "BusinessPartnerSuperInclude1"
+                }
+              },
+              {
+                "type": "Group",
+                "id": "I2",
+                "name": "BusinessPartnerSuperInclude2",
+                "Group": {
+                  "repeatability": 1,
+                  "modelAlias": "BusinessPartnerSuperInclude2"
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G77",
+                "name": "Attachment",
+                "Group": {
+                  "repeatability": 99,
+                  "usageType": "attachment",
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F21",
+                      "name": "original_filename",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F22",
+                      "name": "internal_filename",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F23",
+                      "name": "content",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType",
+                          "StringType": {
+                            "lineBreaksPermitted": true,
+                            "noValueValidation": true
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F24",
+                      "name": "attachment_id",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F25",
+                      "name": "size",
+                      "Field": {
+                        "fieldType": {
+                          "type": "NumberType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F26",
+                      "name": "mime_type",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F27",
+                      "name": "category",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F28",
+                      "name": "description",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "R29",
+                      "name": "AttachmentInternalFilenameRequired",
+                      "Rule": {
+                        "errorEntityRelPath": "../internal_filename",
+                        "errorCode": "ErrorR29",
+                        "errorCondition": "GroupFilled(RuleGroup) and FieldNotFilled(internal_filename)",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "Internal Error: Field $internal_filename$ of customType attachment is not filled."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Internal Error: Field $internal_filename$ of customType attachment is not filled."
+                          }
+                        ],
+                        "guiPatterns": {
+                          "dynamicEnumerationRule": "false"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "R30",
+                      "name": "AttachmentMimeTypeRequired",
+                      "Rule": {
+                        "errorEntityRelPath": "../mime_type",
+                        "errorCode": "ErrorR30",
+                        "errorCondition": "GroupFilled(RuleGroup) and FieldNotFilled(mime_type)",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "Internal Error: Field $mime_type$ of customType attachment is not filled."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Internal Error: Field $mime_type$ of customType attachment is not filled."
+                          }
+                        ],
+                        "guiPatterns": {
+                          "dynamicEnumerationRule": "false"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "R31",
+                      "name": "AttachmentIdOrContentFilled",
+                      "Rule": {
+                        "errorEntityRelPath": "../content",
+                        "errorCode": "ErrorR31",
+                        "errorCondition": "GroupFilled(RuleGroup) and NotExactlyOneFieldFilled(attachment_id, content)",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "Internal Error: Either attachment_id or content must be filled in a customType attachment, but not both."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Internal Error: Either attachment_id or content must be filled in a customType attachment, but not both."
+                          }
+                        ],
+                        "guiPatterns": {
+                          "dynamicEnumerationRule": "false"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "R32",
+                      "name": "SizeOfContentFilled",
+                      "Rule": {
+                        "errorEntityRelPath": "../content",
+                        "errorCode": "ErrorR32",
+                        "errorCondition": "FieldFilled(content) and FieldNotFilled(size)",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "Internal Error: If the content is filled, the size must be also filled."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Internal Error: If the content is filled, the size must be also filled."
+                          }
+                        ],
+                        "guiPatterns": {
+                          "dynamicEnumerationRule": "false"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_fe6b2",
+                "name": "Name",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Name"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_d6580",
+                "name": "Industry",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "IT",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Information Technology"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "IT"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Informationstechnologie"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Banking",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Banking"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Banking"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Bankwesen"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Accountancy",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Accountancy"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Accountancy"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Buchhaltung"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Healthcare",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Healthcare"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Healthcare"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Gesundheitswesen"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Risk",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Risk"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Risk"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Versicherung"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Legal",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Legal"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Legal"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Gesetzlich"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Commerce",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Commerce"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Commerce"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Handel"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Industry or business sector"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_663d2",
+                "name": "StartOfRelationship",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Start of business relationship"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_74a24",
+                "name": "CustomerDiscount",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "100%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "0%_Discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "100%"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "0%_Rabbat"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "90%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "10%_Discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "90%"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "10%_Rabbat"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "80%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "20%_Discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "80%"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "20%_Rabbat"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "70%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "30%_Discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "70%"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "30%_Rabbat"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "60%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "40%_Discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "60%"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "40%_Rabbat"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "50%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "50%_Discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "50%"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "50%_Rabbat"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "40%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "60%_Discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "40%"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "60%_Rabbat"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "30%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "70%_Discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "30%"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "70%_Rabbat"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "20%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "80%_Discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "20%"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "80%_Rabbat"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "10%",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "90%_Discount"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "10%"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "90%_Rabbat"
+                            }
+                          ]
+                        }
+                      ],
+                      "categories": []
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Customer Discount"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Kundenrabatt"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G2",
+                "name": "Employment",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "field_3920",
+                      "name": "income",
+                      "Field": {
+                        "fieldType": {
+                          "type": "NumberType",
+                          "NumberType": {
+                            "minFractionalDigits": 0,
+                            "maxFractionalDigits": 2
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Income"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Einkommen"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_1c326",
+                      "name": "tax",
+                      "Field": {
+                        "fieldType": {
+                          "type": "NumberType",
+                          "NumberType": {
+                            "minFractionalDigits": 0,
+                            "maxFractionalDigits": 2
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "tax"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Steuer"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Computation",
+                      "id": "computation_8a180",
+                      "name": "TaxComputation",
+                      "Computation": {
+                        "computedFieldRelPath": "../tax",
+                        "computationAlternatives": [
+                          {
+                            "precondition": "FieldFilled(income)",
+                            "operation": "RoundAccounting([income]*0.20,2)"
+                          }
+                        ],
+                        "errorCodesToSuppress": [
+                          "MVK_INVALID_COMPARE_DEC_PLACES"
+                        ],
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "Computation error for TaxComputation"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Berechnungsfehler für TaxComputation"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_114de",
+                "name": "PersonOrEntity",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Natural Person or Legal Entity"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

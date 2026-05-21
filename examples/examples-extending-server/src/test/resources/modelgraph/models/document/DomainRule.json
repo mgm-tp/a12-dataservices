@@ -1,0 +1,53 @@
+{
+  "header": {
+    "id": "DomainRule",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": [
+      {
+        "alias": "DomainElement",
+        "modelType": "document",
+        "purpose": "include",
+        "reference": "DomainElement"
+      }
+    ]
+  },
+  "content": {
+    "modelInfo": {
+      "name": "DomainRule",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "include_5425a",
+          "name": "GeneralInformation",
+          "Group": {
+            "repeatability": 1,
+            "modelAlias": "DomainElement"
+          }
+        }
+      ]
+    }
+  }
+}

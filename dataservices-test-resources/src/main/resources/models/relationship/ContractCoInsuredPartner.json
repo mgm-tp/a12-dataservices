@@ -1,0 +1,120 @@
+{
+  "header": {
+    "id": "ContractCoInsuredPartner",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Contract and CoInsured Partner"
+      },
+      {
+        "locale": "de",
+        "text": "Vertrag und Mitversicherter"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest,ModelRead"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Contract",
+        "reference": "Contract"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "BusinessPartnerSuper",
+        "reference": "BusinessPartnerSuper"
+      },
+      {
+        "purpose": "Link Document model",
+        "modelType": "document",
+        "alias": "Link Model",
+        "reference": "CoInsuredAdditionalFields"
+      }
+    ]
+  },
+  "content": {
+    "duplicatesAllowed": false,
+    "associationType": "SHARED",
+    "storage": "EXTERNAL",
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Contract and CoInsured Partner"
+      },
+      {
+        "locale": "de",
+        "text": "Vertrag und Mitversicherter"
+      }
+    ],
+    "linkDocumentModel": "CoInsuredAdditionalFields",
+    "entityCharacteristics": [
+      {
+        "ordered": true,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {},
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Contract"
+          },
+          {
+            "locale": "de",
+            "text": "Vertrag"
+          }
+        ],
+        "role": "Contract",
+        "documentModel": "Contract"
+      },
+      {
+        "ordered": true,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 1,
+            "unbounded": false,
+            "upperLimit": 8
+          }
+        },
+        "candidateConstraints": {},
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Co-insured Business Partners"
+          },
+          {
+            "locale": "de",
+            "text": "Mitversicherte Geschäftspartner"
+          }
+        ],
+        "role": "Partner",
+        "documentModel": "BusinessPartnerSuper"
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+@startuml
+
+skinparam linetype ortho
+
+!include _common.puml
+!include generated/_documents.puml
+!include generated/_cdm.puml
+left to right direction
+
+title CDM relations
+
+@enduml

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DomainUser>
+    <SystemProperties>
+        <login>myadmin</login>
+        <firstname>ad</firstname>
+        <lastname>min</lastname>
+        <email>test.myadmin@a12.dev.mgm-tp.com</email>
+        <password/>
+        <passwordRepeat/>
+        <roles>
+            <roleIdent>systemAdmin</roleIdent>
+        </roles>
+        <roles>
+            <roleIdent>admin</roleIdent>
+        </roles>
+        <salt/>
+        <lastLoginAt>2018-09-17T14:14:25.045+02:00</lastLoginAt>
+        <failedLoginAt/>
+        <failedLoginAttempts>0</failedLoginAttempts>
+        <passwordChangedAt>2222-01-01T00:00Z</passwordChangedAt>
+        <restorePasswordToken/>
+        <passwordTokenCreatedAt/>
+        <createdAt>2018-09-17T14:11:27.337+02:00</createdAt>
+        <active>true</active>
+        <existing>true</existing>
+        <documentId/>
+        <enforcePasswordChange>false</enforcePasswordChange>
+    </SystemProperties>
+</DomainUser>

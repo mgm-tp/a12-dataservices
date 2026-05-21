@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+	logicalFilePath="db/example_liquibase.xml">
+
+<!--	This file is resolved in classpath-->
+	<include file="database/project_model.xml" relativeToChangelogFile="false" />
+
+	<changeSet id="test-extra-entity" author="A12S-3878-author">
+		<createTable tableName="EXTRA_ENTITY">
+			<column name="ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="EXTRA_ENTITY_PK" nullable="false" />
+			</column>
+			<column name="TEXT" type="VARCHAR(100 ${varcharUnit})" />
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>

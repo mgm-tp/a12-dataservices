@@ -1,0 +1,16 @@
+{
+  "jsonrpc": "2.0",
+  "id": "CreateDocument",
+  "method": "ADD_DOCUMENT",
+  "params": {
+	"document": {
+	  "Items": {
+		"name": "",
+		"price": "",
+		"description": "This document should not pass, because not every validated fields are present"
+	  }
+	},
+	"documentModelName": "ValidationModel",
+	"locale": "en"
+  }
+}

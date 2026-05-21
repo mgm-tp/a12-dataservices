@@ -1,0 +1,112 @@
+{
+  "header": {
+    "id": "BaseModel",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "modelReferences": [
+      {
+        "purpose": "include",
+        "modelType": "document",
+        "alias": "NonExistingInclude",
+        "reference": "NonExistingInclude"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ]
+  },
+  "content": {
+    "modelInfo": {
+      "name": "BaseModel",
+      "branch": null,
+      "baseYear": null,
+      "revision": null,
+      "immutable": false,
+      "comment": ""
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "typeDefinitions": [],
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "base",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F3",
+                "name": "aField",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "a"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G4",
+                "name": "aGroup",
+                "Group": {
+                  "repeatability": 5,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F5",
+                      "name": "anotherField",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType",
+                          "StringType": {}
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "another"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "I6",
+                "name": "",
+                "Group": {
+                  "repeatability": 1,
+                  "modelAlias": "NonExistingInclude"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

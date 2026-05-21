@@ -1,0 +1,134 @@
+{
+  "header": {
+    "id": "ContractCoInsuredPartner",
+    "modelType": "relationship",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [
+      {
+        "text": "ContractCoInsuredPartner_DE",
+        "locale": "de"
+      },
+      {
+        "text": "ContractCoInsuredPartner",
+        "locale": "en"
+      }
+    ],
+    "modelVersion": "4.0.0",
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "guest,admin,systemAdmin"
+      }
+    ],
+    "modelReferences": [
+      {
+        "reference": "Contract",
+        "purpose": "Document model",
+        "alias": "ContractRole",
+        "modelType": "document"
+      },
+      {
+        "reference": "BusinessPartnerSuper",
+        "purpose": "Document model",
+        "alias": "PartnerRole",
+        "modelType": "document"
+      },
+      {
+        "reference": "CoInsuredAdditionalFields",
+        "purpose": "Link Document model",
+        "alias": "Link Model",
+        "modelType": "document"
+      }
+    ]
+  },
+  "content": {
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ContractCoInsuredPartner_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ContractCoInsuredPartner"
+      }
+    ],
+    "duplicatesAllowed": false,
+    "entityCharacteristics": [
+      {
+        "labels": [
+          {
+            "locale": "de",
+            "text": "ContractRole_DE"
+          },
+          {
+            "locale": "en",
+            "text": "ContractRole"
+          }
+        ],
+        "ordered": false,
+        "role": "ContractRole",
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "upperLimit": 1,
+            "lowerLimit": 1,
+            "unbounded": true
+          }
+        },
+        "documentModel": "Contract",
+        "candidateConstraints": {
+          "populationParameters": [
+            {
+              "name": "requiredField",
+              "value": "requiredField"
+            }
+          ],
+          "population": ""
+        }
+      },
+      {
+        "labels": [
+          {
+            "locale": "de",
+            "text": "PartnerRole_DE"
+          },
+          {
+            "locale": "en",
+            "text": "PartnerRole"
+          }
+        ],
+        "ordered": false,
+        "role": "PartnerRole",
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "upperLimit": null,
+            "lowerLimit": 0,
+            "unbounded": true
+          }
+        },
+        "documentModel": "BusinessPartnerSuper",
+        "candidateConstraints": {
+          "populationParameters": [
+            {
+              "name": "requiredField",
+              "value": "requiredField"
+            }
+          ],
+          "population": ""
+        }
+      }
+    ],
+    "embeddedGroupPath": "",
+    "associationType": "SHARED",
+    "storage": "EXTERNAL",
+    "linkDocumentModel": "CoInsuredAdditionalFields"
+  }
+}

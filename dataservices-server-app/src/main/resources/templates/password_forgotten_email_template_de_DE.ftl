@@ -1,0 +1,1 @@
+Bitte setzen Sie Ihr Passwort zurück, indem Sie auf den Link klicken : ${tokenLink} oder indem Sie folgendes Token in die App eingeben : ${token}

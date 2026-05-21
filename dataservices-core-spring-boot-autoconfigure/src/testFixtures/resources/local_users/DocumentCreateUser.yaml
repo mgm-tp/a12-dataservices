@@ -1,0 +1,7 @@
+username: document_create_user
+password: document_create_user
+firstname: document_create
+lastname: document_create
+email: document_create@min.com
+authorities:
+  - "DocumentCreate"

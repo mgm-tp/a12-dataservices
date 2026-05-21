@@ -1,0 +1,65 @@
+{
+  "ContractRoot": {
+    "ContractName": "Intelligent Marble Shirt",
+    "ContractDescription": "This is a really important contract",
+    "LengthOfContract": 5,
+    "ContractValue": 42,
+    "Liability": 12.34,
+    "CostToCustomer": 45.67,
+    "NoOfCoInsuredCustomers": 4,
+    "MaxDiscount": "Nothing",
+    "CostPerCoInsured": 1,
+    "Valid": true,
+    "Type": "Travel",
+    "ContractDates": {
+      "ContractStartDate": "2025-02-12T14:15:16",
+      "ContractEndDate": "2028-02-12",
+      "ContractEndTime": "17:18:19",
+      "ContractReviewDate": "2026",
+      "LastPremiumPaidDate": "2024-07-00",
+      "CoveragePeriod": "2024-01-01/2028-07-05"
+    },
+    "ChangeLog": [
+      {
+        "Number": 1,
+        "ChangeTimestamp": "2025-01-01",
+        "Description": "First description",
+        "User": "Zaphod",
+        "Status": "approved",
+        "Changes": [
+          {
+            "Priority": "",
+            "Title": "Change one",
+            "Details": "Details one"
+          }
+        ]
+      },
+      {
+        "Number": 2,
+        "ChangeTimestamp": "2025-01-02",
+        "Description": "Second description",
+        "User": "Tricia",
+        "Status": "approved",
+        "Changes": [
+          {
+            "Title": "Change two",
+            "Details": "Details two"
+          }
+        ]
+      },
+      {
+        "Number": 3,
+        "ChangeTimestamp": "2025-01-03",
+        "Description": "Third description",
+        "User": "Tricia",
+        "Status": "draft",
+        "Changes": [
+          {
+            "Title": "Change three",
+            "Details": "Details three"
+          }
+        ]
+      }
+    ]
+  }
+}

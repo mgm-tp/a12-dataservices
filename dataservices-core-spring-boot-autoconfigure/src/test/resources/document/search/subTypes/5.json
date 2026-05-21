@@ -1,0 +1,14 @@
+{
+  "Group1": {
+    "Field11": 0.1,
+    "TypedField": true,
+    "BooleanField": false,
+    "StringField": "Wro",
+    "SampleDate": "3017-02-16",
+    "SamplePatternString": "abczABCZ",
+    "SampleEnum": "one",
+    "SampleDateTime": "",
+    "SampleTime": "23:59:59",
+    "SampleConfirm": ""
+  }
+}

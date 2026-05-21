@@ -1,0 +1,15 @@
+{
+	"jsonrpc": "2.0",
+	"id": "ValidateDocument",
+	"method": "VALIDATE_DOCUMENT",
+	"params": {
+		"document": {
+			"ContractRoot": {
+				"ContractName": "Dummy Contract"
+			}
+		},
+		"documentModelName": "Contract",
+		"locale": "en",
+		"partial": true
+	}
+}

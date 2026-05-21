@@ -1,0 +1,10 @@
+{
+	"docRef": "DomainProduct/11",
+	"documentModelName": "DomainProduct",
+	"document": {
+		"Properties": {
+			"name": "Sweat Shirt",
+			"price": 12
+		}
+	}
+}

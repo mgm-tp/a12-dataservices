@@ -1,0 +1,13 @@
+{
+	"Root": {
+		"ContractName": "Hello"
+	},
+	"Root2": [
+		{
+			"ContractDescription": "H1"
+		},
+		{
+			"ContractDescription": "H2"
+		}
+	]
+}

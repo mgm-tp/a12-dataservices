@@ -1,0 +1,11 @@
+{
+	"header": {
+		"id": "Model",
+		"modelType": "model",
+		"annotations": []
+	},
+	"content": {
+		"a": 1,
+		"b": "test1"
+	}
+}

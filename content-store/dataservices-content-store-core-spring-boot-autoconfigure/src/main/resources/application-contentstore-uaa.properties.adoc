@@ -1,0 +1,3 @@
+= UAA
+
+Setup default UAA configuration.

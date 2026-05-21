@@ -1,0 +1,84 @@
+{
+	"name": "@com.mgmtp.a12.dataservices/dataservices-access",
+	"version": "38.4.2-SNAPSHOT",
+	"description": "A12 Data Services access descriptor & utilities",
+	"license": "(EUPL-1.2 OR LicenseRef-commercial)",
+	"author": "mgm technology partners",
+	"main": "./lib/index.js",
+	"types": "lib/index.d.ts",
+	"type": "module",
+	"sideEffects": false,
+	"files": [
+		"src",
+		"!src/test",
+		"lib",
+		"cyclonedx.json",
+		"LICENSE",
+		"NOTICE",
+		"THIRD_PARTY_NOTICES",
+		"licenses",
+		"README.md",
+		"tsconfig.json"
+	],
+	"scripts": {
+		"clean": "rimraf ./lib ./package-lock.json ./target",
+		"compile": "tsc",
+		"initialize": "node --run format",
+		"format": "prettier \"./src/**/*.{ts,tsx}\" --check",
+		"test": "node --run test:unit",
+		"test:unit": "node --run internal:mocha:class -- --reporter xunit --reporter spec --reporter-options output=./tests/TEST-dataservices-access.xml",
+		"dev": "npm-watch",
+		"assemble": "node --run typedoc",
+		"typedoc": "npx typedoc ./src --plugin typedoc-plugin-missing-exports",
+		"internal:mocha:class": "mocha --timeout 60000 --ui tdd --sort --recursive ./lib/test",
+		"lint:fix": "eslint --fix",
+		"format:fix": "prettier \"./src/**/*.{ts,tsx}\" --write",
+		"setVersion": "npm version"
+	},
+	"dependencies": {
+		"typescript-fsa": "^3.0.0"
+	},
+	"devDependencies": {
+		"@com.mgmtp.a12.base/base-model-api": "29.3.0",
+		"@com.mgmtp.a12.devtools/tsconfig": "^1.1.0",
+		"@com.mgmtp.a12.devtools/eslint-config": "^3.1.0",
+		"@com.mgmtp.a12.devtools/prettier-config": "^1.1.0",
+		"@com.mgmtp.a12.utils/utils-connector": "8.2.1",
+		"@com.mgmtp.a12.utils/utils-localization": "7.2.0",
+		"@types/mocha": "^10.0.10",
+		"@types/node": "^22.13.14",
+		"eslint": "^9.23.0",
+		"eslint-plugin-import": "2.31.0",
+		"eslint-plugin-notice": "^1.0.0",
+		"eslint-plugin-prettier": "^5.2.5",
+		"eslint-plugin-unused-imports": "^4.1.4",
+		"expect-type": "^1.2.1",
+		"mocha": "^11.7.1",
+		"npm-watch": "^0.13.0",
+		"prettier": "^3.5.3",
+		"redux": "^4.2.1",
+		"rimraf": "^6.0.1",
+		"ts-node": "^10.9.2",
+		"typedoc": "^0.28.1",
+		"typedoc-plugin-missing-exports": "^4.0.0",
+		"typescript": "5.8.2"
+	},
+	"peerDependencies": {
+		"@com.mgmtp.a12.base/base-model-api": "^29.3.0",
+		"@com.mgmtp.a12.utils/utils-connector": "^8.2.1",
+		"@com.mgmtp.a12.utils/utils-localization": "^7.2.0",
+		"redux": "^4.0.5"
+	},
+	"modelType": "relationship",
+	"modelVersion": "3.*.*",
+	"watch": {
+		"test": {
+			"patterns": [
+				"test",
+				"src"
+			],
+			"extensions": "js,jsx,ts,tsx",
+			"quiet": false
+		}
+	}
+}

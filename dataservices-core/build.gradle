@@ -1,0 +1,111 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+	id 'java-test-fixtures'
+}
+
+dependencies {
+	api project(':dataservices-domain')
+	api project(':dataservices-security-user-api')
+	api project(':dataservices-common:dataservices-common-lib')
+	api project(':dataservices-core-metadata')
+	api project(':content-store:dataservices-content-store-client')
+	api project(':content-store:dataservices-content-store-core')
+	api libs.uaaAuthorization
+	api libs.uaaAuthenticationBackend
+	api libs.freemarker
+	api libs.springDataJpa
+	api libs.springCore
+	api libs.springContextSupport
+	api libs.hibernateValidator
+	api libs.springSecurityCore
+	api libs.json
+	api libs.springAop
+	api libs.reflections
+	api libs.mapstruct
+	annotationProcessor libs.mapsturctAnnotationProcessor
+	api libs.mgmModelApi
+	api libs.modelMarshalling
+	api libs.baseModelConsistency
+	api libs.kernelDocumentService,
+			libs.kernelMdFacade,
+			libs.kernelMdModel,
+			libs.kernelMdJoin
+	api libs.jaxb2BasicsRuntime
+	api libs.jacksonAnnotations
+	api libs.jacksonDatabind
+	api libs.jacksonDataformatSmile
+	api libs.jacksonDataformatXml
+	api libs.jacksonDatatypeJdk8
+	api libs.jacksonDatatypeJsr310
+	api libs.jacksonJaxrsJsonProvider
+	api libs.julToSlf4j
+	api libs.transactionApi
+	api libs.liquibaseCore
+	api libs.semver4j
+	api libs.thumbnailator, libs.webpImageio
+	api libs.annotationApi
+	api libs.jdom2
+	api libs.quartz
+	api libs.jsonrpc4j
+	api libs.jaxbApi
+	runtimeOnly libs.jwsApi
+	api libs.hibernateCore
+	api libs.hypersistenceUtils
+	api libs.persistenceApi
+	api libs.commonsIo
+	api libs.resilience4jRetry
+	api libs.baseModelMigrationApi
+	implementation libs.jacksonDataformatCsv
+	implementation libs.hazelcast, libs.hazelcastSpring
+	implementation libs.httpclient
+	implementation libs.httpmime
+	implementation libs.postgresql
+	implementation libs.indriya
+	implementation libs.jsonpath
+	implementation libs.bundles.imageIOExtension
+	compileOnly libs.servletApi
+
+	testFixturesImplementation libs.jmh
+	testFixturesImplementation libs.mockitoTestNG
+	testFixturesImplementation libs.springTest
+	testFixturesAnnotationProcessor libs.jmhAnnprocessor
+
+	testImplementation libs.mockitoTestNG
+	testImplementation files("${projectDir}/src/test/resources/utils/resourceSorting/models.jar")
+	testImplementation project(':dataservices-test-resources')
+	testImplementation libs.testng
+	testImplementation libs.springTest
+	testImplementation libs.festAssertCore
+	testImplementation libs.mockitoCore
+	testImplementation libs.hamcrest
+	testImplementation libs.assertjCore
+	testImplementation libs.annotations
+	testImplementation libs.jsonUnitJsonPath
+	testImplementation libs.jsonUnitAssertj
+	testImplementation libs.jsonassert
+	testImplementation libs.xmlunitCore
+	testImplementation libs.xmlunitMatchers
+	testImplementation libs.xmlunitAssertj
+}
+
+
+tasks.register('versionProperties', WriteProperties) {
+	description = 'Write project version properties to the file.'
+	destinationFile.value project.layout.buildDirectory.file('services-version.properties')
+	encoding = 'UTF-8'
+	comment = ' Version and name of the project'
+	property('project.version', project.version)
+	property('project.groupId', project.group)
+	property('project.artifactId', project.name)
+	property('groupId', project.group)
+	property('artifactId', project.name)
+	property('a12DataservicesVersion', project.version)
+	property('a12ClassicVersion', project.version)
+}
+
+processResources {
+	from(tasks.versionProperties)
+	duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+description = 'Core business logic and domain services for Data Services'

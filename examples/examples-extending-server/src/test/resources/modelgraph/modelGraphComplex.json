@@ -1,0 +1,311 @@
+{
+	"documentModels": [
+		{
+			"modelId": "DomainBrand",
+			"relations": ["ProductBrand"],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DomainBundle",
+			"relations": ["ProductBundle"],
+			"subTypes": [],
+			"abstractModel": true
+		},
+		{
+			"modelId": "DomainProduct",
+			"relations": ["ProductBundle", "ProductBrand"],
+			"subTypes": ["Bundle"],
+			"abstractModel": false
+		},
+		{
+			"modelId": "ProductBrand_AdditionalFieldsModel",
+			"relations": [],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "ProductBundle_AdditionalFieldsModel",
+			"relations": [],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "RelationshipMetaModel",
+			"relations": [],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "ProductBrand_BrandRole____generated",
+			"relations": null,
+			"subTypes": null,
+			"abstractModel": false
+		},
+		{
+			"modelId": "ProductBundle_ProductRole____generated",
+			"relations": null,
+			"subTypes": null,
+			"abstractModel": false
+		},
+		{
+			"modelId": "ProductBrand_ProductRole____generated",
+			"relations": null,
+			"subTypes": null,
+			"abstractModel": false
+		},
+		{
+			"modelId": "ProductBundle_BundleRole____generated",
+			"relations": null,
+			"subTypes": null,
+			"abstractModel": false
+		}
+	],
+	"relationshipModels": [
+		{
+			"header": {
+				"id": "ProductBundle",
+				"modelType": "relationship",
+				"modelVersion": "3.0.0",
+				"locales": [
+					{
+						"code": "de"
+					},
+					{
+						"code": "en"
+					}
+				],
+				"labels": [
+					{
+						"locale": "de",
+						"text": "ProductBundle_DE"
+					},
+					{
+						"locale": "en",
+						"text": "ProductBundle"
+					}
+				],
+				"modelReferences": [
+					{
+						"purpose": "Document model",
+						"modelType": "document",
+						"alias": "ProductRole",
+						"reference": "DomainProduct"
+					},
+					{
+						"purpose": "Document model",
+						"modelType": "document",
+						"alias": "BundleRole",
+						"reference": "DomainBundle"
+					}
+				],
+				"annotations": [
+					{
+						"name": "roles",
+						"value": "guest,admin,systemAdmin"
+					}
+				]
+			},
+			"content": {
+				"labels": [
+					{
+						"locale": "de",
+						"text": "ProductBundle_DE"
+					},
+					{
+						"locale": "en",
+						"text": "ProductBundle"
+					}
+				],
+				"associationType": "SHARED",
+				"linkDocumentModel": null,
+				"duplicatesAllowed": false,
+				"entityCharacteristics": [
+					{
+						"role": "ProductRole",
+						"labels": [
+							{
+								"locale": "de",
+								"text": "ProductRole_DE"
+							},
+							{
+								"locale": "en",
+								"text": "ProductRole"
+							}
+						],
+						"documentModel": "DomainProduct",
+						"ordered": false,
+						"navigable": true,
+						"linkConstraints": {
+							"multiplicity": {
+								"lowerLimit": 0,
+								"unbounded": true,
+								"upperLimit": 1
+							}
+						},
+						"candidateConstraints": {
+							"population": "",
+							"populationParameters": []
+						}
+					},
+					{
+						"role": "BundleRole",
+						"labels": [
+							{
+								"locale": "de",
+								"text": "BundleRole_DE"
+							},
+							{
+								"locale": "en",
+								"text": "BundleRole"
+							}
+						],
+						"documentModel": "DomainBundle",
+						"ordered": false,
+						"navigable": true,
+						"linkConstraints": {
+							"multiplicity": {
+								"lowerLimit": 0,
+								"unbounded": true,
+								"upperLimit": null
+							}
+						},
+						"candidateConstraints": {
+							"population": "",
+							"populationParameters": []
+						}
+					}
+				],
+				"storage": "EXTERNAL",
+				"embeddedGroupPath": ""
+			}
+		},
+		{
+			"header": {
+				"id": "ProductBrand",
+				"modelType": "relationship",
+				"modelVersion": "3.0.0",
+				"locales": [
+					{
+						"code": "de"
+					},
+					{
+						"code": "en"
+					}
+				],
+				"labels": [
+					{
+						"locale": "de",
+						"text": "ProductBrand_DE"
+					},
+					{
+						"locale": "en",
+						"text": "ProductBrand"
+					}
+				],
+				"modelReferences": [
+					{
+						"purpose": "Document model",
+						"modelType": "document",
+						"alias": "ProductRole",
+						"reference": "DomainProduct"
+					},
+					{
+						"purpose": "Document model",
+						"modelType": "document",
+						"alias": "BrandRole",
+						"reference": "DomainBrand"
+					}
+				],
+				"annotations": [
+					{
+						"name": "roles",
+						"value": "guest,admin,systemAdmin"
+					}
+				]
+			},
+			"content": {
+				"labels": [
+					{
+						"locale": "de",
+						"text": "ProductBrand_DE"
+					},
+					{
+						"locale": "en",
+						"text": "ProductBrand"
+					}
+				],
+				"associationType": "SHARED",
+				"duplicatesAllowed": false,
+				"entityCharacteristics": [
+					{
+						"role": "ProductRole",
+						"labels": [
+							{
+								"locale": "de",
+								"text": "ProductRole_DE"
+							},
+							{
+								"locale": "en",
+								"text": "ProductRole"
+							}
+						],
+						"documentModel": "DomainProduct",
+						"ordered": false,
+						"navigable": true,
+						"linkConstraints": {
+							"multiplicity": {
+								"lowerLimit": 1,
+								"unbounded": true,
+								"upperLimit": 1
+							}
+						},
+						"candidateConstraints": {
+							"population": "",
+							"populationParameters": [
+								{
+									"name": "requiredField",
+									"value": "requiredField"
+								}
+							]
+						}
+					},
+					{
+						"role": "BrandRole",
+						"labels": [
+							{
+								"locale": "de",
+								"text": "BrandRole_DE"
+							},
+							{
+								"locale": "en",
+								"text": "BrandRole"
+							}
+						],
+						"documentModel": "DomainBrand",
+						"ordered": false,
+						"navigable": true,
+						"linkConstraints": {
+							"multiplicity": {
+								"lowerLimit": 0,
+								"unbounded": true,
+								"upperLimit": null
+							}
+						},
+						"candidateConstraints": {
+							"population": "",
+							"populationParameters": [
+								{
+									"name": "requiredField",
+									"value": "requiredField"
+								}
+							]
+						}
+					}
+				],
+				"storage": "EXTERNAL",
+				"embeddedGroupPath": ""
+			}
+		}
+	]
+}

@@ -1,0 +1,309 @@
+{
+  "header": {
+    "id": "DomainTeamParent",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "guest,admin"
+      },
+      {
+        "name": "subTypes",
+        "value": "DomainTeam"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "DomainTeamParent",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "group_4d78f",
+          "name": "TeamDetails",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_c9ad3",
+                "name": "TeamName",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Name"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Name"
+                    }
+                  ],
+                  "requirednessConfig": {
+                    "mode": "absoluteOrRelativeToNextRepAncestor"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_c2497",
+                "name": "Location",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "Munich",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Munich"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Munich"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Hamburg",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Hamburg"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Hamburg"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Leipzig",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Leipzig"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Leipzig"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Nuremberg",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Nuremberg"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Nuremberg"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Aachen",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Aachen"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Aachen"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Berlin",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Berlin"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Berlin"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Regensburg",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Regensburg"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Regensburg"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Bamberg",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Bamberg"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Bamberg"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Dresden",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Dresden"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Dresden"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Da Nang",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Da Nang"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Da Nang"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Grenoble",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Grenoble"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Grenoble"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Cologne",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Cologne"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Cologne"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Prague",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Prague"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Prague"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Stuttgart",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Stuttgart"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Stuttgart"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Washington",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Washington"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Washington"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Zug",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Zug"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Zug"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Location"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Location"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

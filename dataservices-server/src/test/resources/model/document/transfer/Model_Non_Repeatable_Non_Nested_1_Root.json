@@ -1,0 +1,101 @@
+{
+  "header": {
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "id": "Model_Non_Repeatable_Non_Nested_1_Root",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "Model_Non_Repeatable_Non_Nested_1_Root",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G3",
+          "name": "root",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F4",
+                "name": "String1",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "errorMessage": [
+                        {
+                          "locale": "de",
+                          "text": "String entspricht nicht den Muster"
+                        },
+                        {
+                          "locale": "en",
+                          "text": "pattern violation"
+                        }
+                      ],
+                      "pattern": "[a-zA-Z]+"
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F5",
+                "name": "String2",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "lineBreaksPermitted": true,
+                      "minLength": 1,
+                      "maxLength": 5
+                    }
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F6",
+                "name": "Date1",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

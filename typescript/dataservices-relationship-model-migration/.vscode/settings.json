@@ -1,0 +1,10 @@
+{
+	"typescript.format.enable": true,
+	"typescript.tsdk": "./node_modules/typescript/lib",
+	"typescript.validate.enable": true,
+	"[javascript][typescript][jsonc]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"editor.codeActionsOnSave": ["source.organizeImports", "source.fixAll.eslint"]
+}

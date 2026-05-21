@@ -1,0 +1,7 @@
+username: "guest"
+password: "guest"
+authorities:
+  - "guest"
+email: guest@min.com
+firstname: Tri
+lastname: guest

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+	logicalFilePath="database/schema/model.xml">
+
+	<changeSet id="initial" author="tkupka">
+		<createTable tableName="FORMDATA">
+			<column name="ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="FORM_DATA_PK" nullable="false" />
+			</column>
+			<column name="XML_DOC" type="clob" />
+			<column name="CREATED_BY" type="VARCHAR(100 ${varcharUnit})" />
+			<column name="MODIFIED_BY" type="VARCHAR(100 ${varcharUnit})" />
+			<column name="CREATED_AT" type="TIMESTAMP" />
+			<column name="MODIFIED_AT" type="TIMESTAMP" />
+		</createTable>
+	</changeSet>
+
+	<changeSet id="A12P-27" author="tkupka">
+		<createTable tableName="DOCUMENT_MODEL">
+			<column name="ID" type="INTEGER" autoIncrement="${autoIncrement}">
+				<constraints primaryKey="true" primaryKeyName="DOCUMET_MODEL_PK" nullable="false" />
+			</column>
+			<column name="NAME" type="VARCHAR(1024 ${varcharUnit})" />
+			<column name="MODEL" type="CLOB" />
+			<column name="GENERATED_MODEL" type="CLOB" />
+			<column name="CREATED_BY" type="VARCHAR(100 ${varcharUnit})" />
+			<column name="MODIFIED_BY" type="VARCHAR(100 ${varcharUnit})" />
+			<column name="CREATED_AT" type="TIMESTAMP" />
+			<column name="MODIFIED_AT" type="TIMESTAMP" />
+		</createTable>
+		<createTable tableName="UI_MODEL">
+			<column name="ID" type="INTEGER"  autoIncrement="${autoIncrement}">
+				<constraints primaryKey="true" primaryKeyName="UI_MODEL_PK" nullable="false" />
+			</column>
+			<column name="NAME" type="VARCHAR(1024 ${varcharUnit})" />
+			<column name="MODEL" type="CLOB" />
+			<column name="MODEL_TYPE" type="VARCHAR(100 ${varcharUnit})"/>
+			<column name="GENERATED_FORM" type="CLOB" />
+			<column name="DOCUMENT_MODEL_ID" type="INTEGER" />
+			<column name="CREATED_BY" type="VARCHAR(100 ${varcharUnit})" />
+			<column name="MODIFIED_BY" type="VARCHAR(100 ${varcharUnit})" />
+			<column name="CREATED_AT" type="TIMESTAMP" />
+			<column name="MODIFIED_AT" type="TIMESTAMP" />
+		</createTable>
+		<addForeignKeyConstraint constraintName="UI_MODEL_DOCUMENT_MODEL_FK"
+			baseColumnNames="DOCUMENT_MODEL_ID" baseTableName="UI_MODEL"
+			referencedTableName="DOCUMENT_MODEL" referencedColumnNames="ID" />
+	</changeSet>
+	<changeSet id="A12P-27-1" author="tkupka" dbms="oracle,h2,postgresql">
+		<createSequence sequenceName="DOCUMENT_MODEL_SEQ" startValue="1" incrementBy="1"/>
+		<createSequence sequenceName="UI_MODEL_SEQ" startValue="1" incrementBy="1"/>
+	</changeSet>
+
+	<changeSet id="A12P-69" author="fschilling">
+		<addColumn tableName="FORMDATA">
+			<column  name="TYPE" type="VARCHAR(100 ${varcharUnit})" />
+			<column  name="DATA_TYPE" type="VARCHAR(100 ${varcharUnit})" />
+		</addColumn>
+	</changeSet>
+	<changeSet id="A12P-135" author="tkupka">
+		<createTable tableName="DOCUMENT_MODEL_RELATION">
+			<column name="ID" type="INTEGER"  autoIncrement="${autoIncrement}">
+				<constraints primaryKey="true" primaryKeyName="DOCUMENT_MODEL_RELATION_PK" nullable="false" />
+			</column>
+
+			<column name="NAME" type="VARCHAR(1024 ${varcharUnit})"/>
+			<column name="SOURCE" type="VARCHAR(1024 ${varcharUnit})"/>
+			<column name="DESTINATION" type="VARCHAR(1024 ${varcharUnit})"/>
+		</createTable>
+		<createIndex tableName="DOCUMENT_MODEL_RELATION" indexName="DOCUMENT_MODEL_REL_NAME_IDX">
+			<column name="NAME"/>
+		</createIndex>
+	</changeSet>
+	<changeSet id="A12P-135-1" author="tkupka" dbms="oracle,h2,postgresql">
+		<createSequence sequenceName="DOCUMENT_MODEL_RELATION_SEQ" startValue="1" incrementBy="1"/>
+	</changeSet>
+
+	<changeSet id="A12P-136" author="tkupka">
+		<createTable tableName="DOCUMENT_RELATION">
+			<column name="ID" type="INTEGER"  autoIncrement="${autoIncrement}">
+				<constraints primaryKey="true" primaryKeyName="DOCUMENT_RELATION_PK" nullable="false" />
+			</column>
+
+			<column name="MODEL_RELATION_ID" type="INTEGER"/>
+			<column name="SOURCE_ID" type="VARCHAR(100 ${varcharUnit})"/>
+			<column name="DESTINATION_ID" type="VARCHAR(100 ${varcharUnit})"/>
+		</createTable>
+		<createIndex tableName="DOCUMENT_RELATION" indexName="DOCUMENT_RELATION_FK_IDX">
+			<column name="MODEL_RELATION_ID"/>
+		</createIndex>
+		<addForeignKeyConstraint constraintName="DOCUMENT_RELATION_MODEL_FK" referencedTableName="DOCUMENT_MODEL_RELATION" baseColumnNames="MODEL_RELATION_ID" baseTableName="DOCUMENT_RELATION" referencedColumnNames="ID"/>
+	</changeSet>
+	<changeSet id="A12P-136-1" author="tkupka"  dbms="oracle,h2,postgresql">
+		<createSequence sequenceName="DOCUMENT_RELATION_SEQ" startValue="1" incrementBy="1"/>
+	</changeSet>
+	<changeSet id="A12P-147" author="tkupka">
+		<addColumn tableName="DOCUMENT_MODEL">
+			<column name="TYPE" type="VARCHAR(100 ${varcharUnit})"/>
+		</addColumn>
+		<update tableName="DOCUMENT_MODEL">
+			<column name="TYPE" value="DOMAIN"/>
+		</update>
+		<addNotNullConstraint tableName="DOCUMENT_MODEL" columnName="TYPE" columnDataType="VARCHAR(100 ${varcharUnit})"/>
+	</changeSet>
+	<changeSet id="A12-3506" author="tkupka">
+		<modifyDataType tableName="DOCUMENT_MODEL_RELATION" columnName="ID" newDataType="BIGINT"/>
+		<modifyDataType tableName="DOCUMENT_RELATION" columnName="ID" newDataType="BIGINT"/>
+		<modifyDataType tableName="DOCUMENT_RELATION" columnName="MODEL_RELATION_ID" newDataType="BIGINT"/>
+		<modifyDataType tableName="UI_MODEL" columnName="ID" newDataType="BIGINT"/>
+		<modifyDataType tableName="UI_MODEL" columnName="DOCUMENT_MODEL_ID" newDataType="BIGINT"/>
+		<modifyDataType tableName="DOCUMENT_MODEL" columnName="ID" newDataType="BIGINT"/>
+	</changeSet>
+	<changeSet id="A12-4926" author="tkupka">
+		<renameColumn tableName="FORMDATA" oldColumnName="DATA_TYPE" newColumnName="MODEL_NAME"/>
+		<dropColumn tableName="FORMDATA" columnName="TYPE"/>
+		<createSequence sequenceName="DOCUMENT_SEQ" startValue="1" incrementBy="1"/>
+		<renameTable newTableName="DOCUMENT" oldTableName="FORMDATA"/>
+		<addColumn tableName="DOCUMENT">
+			<column name="OLD_ID" type="VARCHAR(100 ${varcharUnit})"/>
+		</addColumn>
+		<update tableName="DOCUMENT">
+			<column name="OLD_ID" valueComputed="ID"/>
+		</update>
+		<update tableName="DOCUMENT">
+			<column name="ID" valueSequenceNext="DOCUMENT_SEQ"/>
+		</update>
+	</changeSet>
+	<changeSet id="A12-4926-1" author="tkupka">
+		<createIndex tableName="DOCUMENT_RELATION" indexName="DOCUMENT_RELATIION_SRC_IDX">
+			<column name="SOURCE_ID"/>
+		</createIndex>
+		<createIndex tableName="DOCUMENT_RELATION" indexName="DOCUMENT_RELATIION_DEST_IDX">
+			<column name="DESTINATION_ID"/>
+		</createIndex>
+	</changeSet>
+	<changeSet id="A12-4926-2" author="tkupka">
+		<createIndex tableName="DOCUMENT" indexName="TMP_IDX">
+			<column name="OLD_ID"/>
+		</createIndex>
+		<update tableName="DOCUMENT_RELATION">
+			<column name="SOURCE_ID" valueComputed="(select id from document where old_id = source_id)"/>
+			<column name="DESTINATION_ID" valueComputed="(select id from document where old_id = destination_id)"/>
+		</update>
+		<dropIndex tableName="DOCUMENT" indexName="TMP_IDX"/>
+		<dropColumn tableName="DOCUMENT" columnName="OLD_ID"/>
+	</changeSet>
+	<changeSet id="A12-5235" author="tkupka">
+		<createSequence sequenceName="ROLE_SEQ" startValue="1" incrementBy="1"/>
+		<createTable tableName="ROLE">
+			<column name="ID" type="BIGINT" valueSequenceNext="ROLE_SEQ">
+				<constraints primaryKey="true" primaryKeyName="ROLE_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(100 ${varcharUnit})"/>
+			<column name="DESCRIPTION" type="VARCHAR(1000 ${varcharUnit})"/>
+			<column name="PERMISSION" type="VARCHAR(500 ${varcharUnit})"/>
+			<column name="CREATED_AT" type="TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+			<column name="MODIFIED_AT" type="TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addUniqueConstraint constraintName="ROLE_NAME_UNQ" columnNames="NAME" tableName="ROLE"/>
+
+		<createSequence sequenceName="USER_SEQ" startValue="1" incrementBy="1"/>
+		<createTable tableName="USER">
+			<column name="ID" type="BIGINT" valueSequenceNext="USER_SEQ">
+				<constraints primaryKey="true" primaryKeyName="USER_PK"/>
+			</column>
+			<column name="USER_NAME" type="VARCHAR(300 ${varcharUnit})"/>
+			<column name="EMAIL" type="VARCHAR(500 ${varcharUnit})"/>
+			<column name="FIRST_NAME" type="VARCHAR(300 ${varcharUnit})"/>
+			<column name="LAST_NAME" type="VARCHAR(300 ${varcharUnit})"/>
+			<column name="SALT" type="VARCHAR(500 ${varcharUnit})"/>
+			<column name="PASSWORD" type="VARCHAR(500 ${varcharUnit})"/>
+			<column name="EXPIRE_AT" type="TIMESTAMP" />
+			<column name="CREATED_AT" type="TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+			<column name="MODIFIED_AT" type="TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addUniqueConstraint constraintName="USER_NAME_UNQ" columnNames="USER_NAME" tableName="USER"/>
+		<createIndex indexName="IDX_USER_EMAIL" tableName="USER">
+			<column name="EMAIL"/>
+		</createIndex>
+
+		<createTable tableName="USER_ROLE">
+			<column name="USER_ID" type="BIGINT"/>
+			<column name="ROLE_ID" type="BIGINT"/>
+		</createTable>
+		<addForeignKeyConstraint constraintName="USER_ROLE_USER_FK" baseColumnNames="USER_ID" baseTableName="USER_ROLE"  referencedTableName="USER" referencedColumnNames="ID"/>
+		<addForeignKeyConstraint constraintName="USER_ROLE_ROLE_FK" baseColumnNames="ROLE_ID" baseTableName="USER_ROLE"  referencedTableName="ROLE" referencedColumnNames="ID"/>
+	</changeSet>
+	<changeSet id="tbajus" author="A12-5430">
+		<renameTable newTableName="SERVER_USER" oldTableName="USER"/>
+	</changeSet>
+	<changeSet id="tbajus" author="A12-6137">
+		<addColumn tableName="SERVER_USER">
+			<column name="LAST_LOGIN_AT" type="TIMESTAMP">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+	</changeSet>
+	<changeSet id="tbajus" author="A12-6430">
+		<addColumn tableName="SERVER_USER">
+			<column name="FAILED_LOGIN_ATTEMPTS" type="BIGINT" defaultValueNumeric="0">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+	<changeSet id="A12-6420" author="tbajus">
+		<createSequence sequenceName="USER_PASSWORD_HISTORY_SEQ" startValue="1" incrementBy="1"/>
+		<createTable tableName="USER_PASSWORD_HISTORY">
+			<column name="ID" type="BIGINT" valueSequenceNext="USER_PASSWORD_HISTORY_SEQ">
+				<constraints primaryKey="true" primaryKeyName="USER_PASSWORD_HISTORY_PK" />
+			</column>
+			<column name="USER_ID" type="BIGINT" />
+			<column name="PASSWORD_HASH" type="VARCHAR(500 ${varcharUnit})" />
+			<column name="CREATED_AT" type="TIMESTAMP" />
+		</createTable>
+		<addForeignKeyConstraint constraintName="USER_PASSWORD_HISTORY_FK"
+		                         baseColumnNames="USER_ID"
+		                         baseTableName="USER_PASSWORD_HISTORY"
+		                         referencedTableName="SERVER_USER"
+		                         referencedColumnNames="ID"/>
+		<createIndex tableName="USER_PASSWORD_HISTORY" indexName="USER_PASS_HISTORY_USER_IDX">
+			<column name="USER_ID" />
+		</createIndex>
+	</changeSet>
+</databaseChangeLog>

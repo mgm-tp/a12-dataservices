@@ -1,0 +1,28 @@
+{
+	"jsonrpc": "2.0",
+	"id": "ModifyLink",
+	"method": "MODIFY_LINK",
+	"params": {
+		"linkRef": {
+			"linkDescriptor": {
+				"relationshipModel": "ContractBusinessPartner",
+				"entities": [
+					{
+						"role": "Contract",
+						"docRef": "Contract/1"
+					},
+					{
+						"role": "Partner",
+						"docRef": "BusinessPartner/2"
+					}
+				]
+			},
+			"id": "3"
+		},
+		"linkDocument": {
+			"CoInsuredRoot": {
+				"Name": "Approver"
+			}
+		}
+	}
+}

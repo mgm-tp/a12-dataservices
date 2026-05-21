@@ -1,0 +1,164 @@
+{
+  "header": {
+    "id": "document-meta-data",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Document Meta Data"
+      },
+      {
+        "locale": "de",
+        "text": "Metadaten des Dokuments"
+      }
+    ],
+    "annotations": [],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "document-meta-data"
+    },
+    "modelConfig": {
+      "timeZone": "UTC",
+      "decimalSeparator": ".",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "group_8f4b1",
+          "name": "__meta",
+          "Group": {
+            "label": [
+              {
+                "locale": "en",
+                "text": "Meta"
+              },
+              {
+                "locale": "de",
+                "text": "Meta"
+              }
+            ],
+            "repeatability": 1,
+            "usageType": "metadata",
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_1169c",
+                "name": "docRef",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Document Reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Dokumentreferenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_cfb40",
+                "name": "modelReference",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Document Model Reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Document Model-Referenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_4c9a1",
+                "name": "extensions",
+                "Group": {
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Extensions"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erweiterungen"
+                    }
+                  ],
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "field_19ju1",
+                      "name": "metadataVersion",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Metadata Version"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Metadaten-Version"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_19ju1",
+                      "name": "linkAssignment",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Metadata Version"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "linkAssignmenten-Version"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

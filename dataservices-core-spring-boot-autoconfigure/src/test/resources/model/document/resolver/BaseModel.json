@@ -1,0 +1,105 @@
+{
+  "header": {
+    "id": "BaseModel",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": [
+      {
+        "alias": "IncludedModel",
+        "modelType": "document",
+        "purpose": "include",
+        "reference": "IncludedModel"
+      }
+    ]
+  },
+  "content": {
+    "modelInfo": {
+      "name": "BaseModel",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "base",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F3",
+                "name": "aField",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "a"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G4",
+                "name": "aGroup",
+                "Group": {
+                  "repeatability": 5,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F5",
+                      "name": "anotherField",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "another"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "I6",
+                "name": "base",
+                "Group": {
+                  "repeatability": 1,
+                  "modelAlias": "IncludedModel"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,101 @@
+/*
+ * SPDX-License-Identifier: EUPL-1.2 OR LicenseRef-commercial
+ *
+ * Copyright (c) 2012-2026 mgm technology partners GmbH
+ *
+ * Dual License
+ * ------------
+ * This source file is part of the mgm A12 Platform and available under
+ * a choice of two different licenses:
+ *
+ * 1. Open-Source License – EUPL v1.2
+ *    You may redistribute and/or modify this file under the terms of the
+ *    European Union Public License, version 1.2 - see https://eupl.eu/.
+ *
+ * 2. Commercial License
+ *    Alternatively, you may obtain a commercial license from
+ *    mgm technology partners GmbH, that permits use of this software
+ *    under different terms (including support and maintenance services).
+ *
+ *    Please contact a12-license@mgm-tp.com for more information.
+ *
+ * You must select and comply with exactly one of the above license options.
+ *
+ * Warranty Disclaimer (applies to either option)
+ * ----------------------------------------------
+ * THIS SOFTWARE IS PROVIDED “AS IS” AND WITHOUT WARRANTY OF ANY KIND,
+ * WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
+ * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
+ */
+package com.mgmtp.a12.query.internal.debug;
+
+import org.springframework.context.annotation.Bean;
+
+import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
+import com.mgmtp.a12.dataservices.query.constraint.range.DateRangeOperator;
+import com.mgmtp.a12.dataservices.query.constraint.range.NumericRangeOperator;
+import com.mgmtp.a12.dataservices.query.generator.sql.constraint.internal.logical.AndOrOperatorSqlGenerator;
+import com.mgmtp.a12.dataservices.query.generator.sql.constraint.internal.logical.NotOperatorSqlGenerator;
+import com.mgmtp.a12.dataservices.query.generator.sql.constraint.internal.matching.ExactMatchOperatorSqlGenerator;
+import com.mgmtp.a12.dataservices.query.generator.sql.constraint.internal.matching.HasOperatorSqlGenerator;
+import com.mgmtp.a12.dataservices.query.generator.sql.constraint.internal.matching.SimpleSearchOperatorSqlGenerator;
+import com.mgmtp.a12.dataservices.query.generator.sql.constraint.internal.matching.UndefinedMatchOperatorSqlGenerator;
+import com.mgmtp.a12.dataservices.query.generator.sql.constraint.range.internal.DateFragmentRangeOperatorSqlGenerator;
+import com.mgmtp.a12.dataservices.query.generator.sql.constraint.range.internal.DateTimeRangeOperatorSqlGenerator;
+import com.mgmtp.a12.dataservices.query.generator.sql.constraint.range.internal.NumericRangeOperatorSqlGenerator;
+import com.mgmtp.a12.dataservices.query.generator.sql.fields.aggregation.internal.DefaultAggregationFunctionGenerator;
+import com.mgmtp.a12.dataservices.query.generator.sql.fields.aggregation.internal.NumericAggregationFunctionGenerator;
+import com.mgmtp.a12.dataservices.query.generator.sql.fields.aggregation.internal.UnknownAggregationFunctionGenerator;
+
+public class QueryDebuggerGeneratorsConfiguration {
+
+	@Bean <O extends NumericRangeOperator<T>, T extends Number> NumericRangeOperatorSqlGenerator<O, T> logicOperatorGenerator() {
+		return new NumericRangeOperatorSqlGenerator<>();
+	}
+
+	@Bean NotOperatorSqlGenerator notOperatorSqlGenerator() {
+		return new NotOperatorSqlGenerator();
+	}
+
+	@Bean AndOrOperatorSqlGenerator orOperatorSqlGenerator() {
+		return new AndOrOperatorSqlGenerator();
+	}
+
+	@Bean ExactMatchOperatorSqlGenerator exactMatchOperatorSqlGenerator(DataServicesCoreProperties dataServicesCoreProperties) {
+		return new ExactMatchOperatorSqlGenerator(dataServicesCoreProperties);
+	}
+
+	@Bean UndefinedMatchOperatorSqlGenerator undefinedMatchOperatorSqlGenerator() {
+		return new UndefinedMatchOperatorSqlGenerator();
+	}
+
+	@Bean SimpleSearchOperatorSqlGenerator simpleSearchOperatorSqlGenerator(DataServicesCoreProperties dataServicesCoreProperties) {
+		return new SimpleSearchOperatorSqlGenerator(null, dataServicesCoreProperties);
+	}
+
+	@Bean HasOperatorSqlGenerator hasOperatorSqlGenerator() {
+		return new HasOperatorSqlGenerator();
+	}
+
+	@Bean <O extends DateRangeOperator> DateTimeRangeOperatorSqlGenerator<O> dateTimeRangeOperatorSqlGenerator() {
+		return new DateTimeRangeOperatorSqlGenerator<>();
+	}
+
+	@Bean DefaultAggregationFunctionGenerator defaultAggregationFunctionGenerator() {
+		return new DefaultAggregationFunctionGenerator();
+	}
+
+	@Bean NumericAggregationFunctionGenerator numericAggregationFunctionGenerator() {
+		return new NumericAggregationFunctionGenerator();
+	}
+
+	@Bean UnknownAggregationFunctionGenerator  unknownAggregationFunctionGenerator() {
+		return new UnknownAggregationFunctionGenerator();
+	}
+
+	@Bean DateFragmentRangeOperatorSqlGenerator dateFragmentRangeOperatorSqlGenerator() {
+		return new DateFragmentRangeOperatorSqlGenerator();
+	}
+}

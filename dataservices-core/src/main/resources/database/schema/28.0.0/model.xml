@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+				   logicalFilePath="database/schema/28.0.0/model.xml">
+
+	<changeSet id="A12S-1086" author="pvranik">
+		<preConditions onFail="HALT" onError="HALT">
+			<not>
+				<or>
+					<tableExists tableName="MODEL_HEADERS"/>
+					<tableExists tableName="MODEL_LOCALES"/>
+					<tableExists tableName="MODEL_REFERENCES"/>
+					<tableExists tableName="MODEL_ANNOTATIONS"/>
+					<tableExists tableName="MODEL_LABELS"/>
+					<tableExists tableName="MODEL"/>
+				</or>
+			</not>
+		</preConditions>
+
+		<createTable tableName="MODEL_HEADERS">
+			<column name="ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="MODEL_HEADERS_PK" nullable="false"/>
+			</column>
+			<column name="VERSION" type="VARCHAR(100 ${varcharUnit})"/>
+			<column name="MODEL_TYPE" type="VARCHAR(100 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+			<column name="MODEL_VERSION" type="VARCHAR(100 ${varcharUnit})"/>
+		</createTable>
+		<createIndex tableName="MODEL_HEADERS" indexName="MODEL_HEADERS_ID_TYPE_IDX" unique="true">
+			<column name="ID"/>
+			<column name="MODEL_TYPE"/>
+		</createIndex>
+
+		<createTable tableName="MODEL_LOCALES">
+			<column name="MODEL_ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints foreignKeyName="FK_LOCALES_MODEL_ID" referencedTableName="MODEL_HEADERS" referencedColumnNames="ID" nullable="false"
+							 primaryKey="true" primaryKeyName="MODEL_LOCALES_PK"/>
+			</column>
+			<column name="LOCALE" type="VARCHAR(10 ${varcharUnit})">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="MODEL_LOCALES_PK"/>
+			</column>
+		</createTable>
+		<createIndex tableName="MODEL_LOCALES" indexName="MODEL_LOCALES_MODEL_ID_IDX">
+			<column name="MODEL_ID"/>
+		</createIndex>
+
+		<createTable tableName="MODEL_REFERENCES">
+			<column name="MODEL_ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints foreignKeyName="FK_MODEL_REFERENCES_MODEL_ID" referencedTableName="MODEL_HEADERS" referencedColumnNames="ID" nullable="false"/>
+			</column>
+			<column name="REFERENCE_TYPE" type="VARCHAR(100 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+			<column name="REFERENCE_ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+			<column name="PURPOSE" type="VARCHAR(100 ${varcharUnit})"/>
+			<column name="ALIAS" type="VARCHAR(100 ${varcharUnit})"/>
+		</createTable>
+		<createIndex tableName="MODEL_REFERENCES" indexName="MODEL_REFERENCES_MODEL_ID_IDX">
+			<column name="MODEL_ID"/>
+		</createIndex>
+
+		<createTable tableName="MODEL_ANNOTATIONS">
+			<column name="MODEL_ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints foreignKeyName="FK_MODEL_ANNOTATIONS_MODEL_ID" referencedTableName="MODEL_HEADERS" referencedColumnNames="ID" nullable="false"
+							 primaryKey="true" primaryKeyName="MODEL_ANNOTATIONS_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(100 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="MODEL_ANNOTATIONS_PK"/>
+			</column>
+			<column name="VALUE" type="CLOB"/>
+		</createTable>
+		<createIndex tableName="MODEL_ANNOTATIONS" indexName="MODEL_ANNOTATIONS_MODEL_ID_IDX">
+			<column name="MODEL_ID"/>
+		</createIndex>
+
+		<createTable tableName="MODEL_LABELS">
+			<column name="MODEL_ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints foreignKeyName="FK_MODEL_LABELS_MODEL_ID" referencedTableName="MODEL_HEADERS" referencedColumnNames="ID" nullable="false"
+							 primaryKey="true" primaryKeyName="MODEL_LABELS_PK"/>
+			</column>
+			<column name="LOCALE" type="VARCHAR(10 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="MODEL_LABELS_PK"/>
+			</column>
+			<column name="TEXT" type="VARCHAR(1000 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createIndex tableName="MODEL_LABELS" indexName="MODEL_LABELS_MODEL_ID_IDX">
+			<column name="MODEL_ID"/>
+		</createIndex>
+
+		<createTable tableName="MODEL">
+			<column name="ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="MODEL_PK" nullable="false"/>
+			</column>
+			<column name="CREATED_AT" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CREATED_BY" type="VARCHAR(100 ${varcharUnit})"/>
+			<column name="UPDATED_AT" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+			<column name="UPDATED_BY" type="VARCHAR(100 ${varcharUnit})"/>
+			<column name="CONTENT" type="CLOB">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+</databaseChangeLog>

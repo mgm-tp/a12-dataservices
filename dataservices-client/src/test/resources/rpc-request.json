@@ -1,0 +1,29 @@
+[
+  {
+    "id" : "listDocumentsOperation1",
+    "method" : "QUERY",
+    "params" : {
+      "query" : {
+        "paging" : {
+          "pageNumber" : 10,
+          "pageSize" : 100
+        },
+        "projectionName" : "document",
+        "targetDocumentModel" : "testModel"
+      }
+    },
+    "jsonrpc" : "2.0"
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "addDocOperation1",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "documentModelName": "testModel",
+      "locale": "de",
+      "document": {
+        "id": "145"
+      }
+    }
+  }
+]

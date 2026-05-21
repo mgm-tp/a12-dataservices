@@ -1,0 +1,15 @@
+users:
+- username: "actuator"
+  password: "actuator"
+  authorities:
+  - "ActuatorAccess"
+  email: "Actuator@localhost"
+  firstname: "User"
+  lastname: "Actuator"
+- username: "tester"
+  password: "tester"
+  authorities:
+  - "ModelRead"
+  email: "tester@localhost"
+  firstname: "Tester"
+  lastname: "Tester"

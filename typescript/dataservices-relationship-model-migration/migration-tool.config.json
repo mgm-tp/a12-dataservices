@@ -1,0 +1,7 @@
+{
+	"$schema": "./node_modules/@com.mgmtp.a12.migrationtool/migrationtool-utils/config.schema.json",
+	"stepsDirPath": "./src/internal/steps",
+	"referenceModelPath": "../dataservices-access/src/Relationship/RelationshipModel.ts",
+	"stepModelFileName": "relationship-model.ts",
+	"modelInterfaceName": "RelationshipModel"
+}

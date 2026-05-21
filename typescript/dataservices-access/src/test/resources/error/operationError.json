@@ -1,0 +1,19 @@
+{
+	"level": "ERROR",
+	"title": {
+		"key": "error.key.title",
+		"default": "Title message"
+	},
+	"description": {
+		"key": "error.key.description",
+		"default": "Description message"
+	},
+	"details": {
+		"code": "12345",
+		"subsystem": "GENERIC",
+		"time": "2020-02-20T20:20:20.200+0000"
+	},
+	"source": "",
+	"timestamp": "2020-02-20T20:20:20.200+0000",
+	"logId": "0e76f34b-2d63-4e92-8110-636d405ed223"
+}

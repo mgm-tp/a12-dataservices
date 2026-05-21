@@ -1,0 +1,52 @@
+{
+  "links": [
+    {
+      "linkId": "1",
+      "linkDescriptor": {
+        "relationshipModelName": "FooBar",
+        "entities": [
+          {
+            "role": "FooRole",
+            "modelName": "Dummy",
+            "docRef": "Foo/1"
+          },
+          {
+            "role": "BarRole",
+            "modelName": "Bar",
+            "docRef": "Bar/2"
+          }
+        ]
+      },
+      "linkDocRef": "CustomLinkedDocument/3"
+    }
+  ],
+  "documents": [
+    {
+      "docRef": "Dummy/1",
+      "documentModelName": "Dummy",
+      "document": {
+        "Group": {
+          "Field": "Value"
+        }
+      }
+    },
+    {
+      "docRef": "Dummy/2",
+      "documentModelName": "Dummy",
+      "document": {
+        "Group": {
+          "Field": "Value"
+        }
+      }
+    },
+    {
+      "docRef": "Dummy/3",
+      "documentModelName": "Dummy",
+      "document": {
+        "Group": {
+          "Field": "Value"
+        }
+      }
+    }
+  ]
+}

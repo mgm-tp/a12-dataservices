@@ -1,0 +1,16 @@
+{
+	"Group1": {
+		"Field11": 12.1,
+		"TypedField": true,
+		"BooleanField": false,
+		"StringField": "First",
+		"SampleDate": "1978-02-16",
+		"SampleDateFragment": "01-02",
+		"SampleDateRange": "2020-01-02/2020-02-02",
+		"SamplePatternString": "abczABCZ",
+		"SampleEnum": "two",
+		"SampleDateTime": "1999-12-12T19:30:00",
+		"SampleTime": "",
+		"SampleConfirm": true
+	}
+}

@@ -1,0 +1,83 @@
+{
+  "header": {
+    "id": "CustomConditionModel",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "CustomConditionModel",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "top",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F10",
+                "name": "numberB",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "numberB"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R14",
+                "name": "CustomCondition1",
+                "Rule": {
+                  "errorEntityRelPath": "../numberB",
+                  "errorCode": "SampleErrorCode",
+                  "errorCondition": "FieldNotFilled(numberB) OR CustomCondition NumberBGreaterThanZero",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "numberB should be greater than 0"
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+				   logicalFilePath="contentstore_db/schema/36.1.0/model.xml">
+
+	<changeSet id="A12S-3963" dbms="postgresql" author="A12S-3963-author">
+		<sql>
+			-- remember the old OID values
+			create temp table old_oids
+			as
+			select distinct content::oid as lo_ptr
+			from content;
+
+			-- add temporary column to store large object data
+			ALTER TABLE content add column content_bytea bytea;
+
+			-- convert the large object to bytea
+			UPDATE content
+			SET content_bytea = loread(lo_open(content::oid, 262144), 100000000);
+
+			-- copy large object data from temporary column to regular content column
+			ALTER TABLE content drop column content;
+			ALTER TABLE content rename column content_bytea to content;
+
+			-- remove the old large objects as they are not removed automatically
+			select lo_unlink(lo_ptr)
+			from old_oids;
+
+			drop table old_oids;
+		</sql>
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,21 @@
+= Postgres database
+
+Set up the application to use Postgres database.
+
+List of most used optional configurations you may need:
+
+To specify datasource use these additional properties:
+
+[source,properties]
+----
+spring.datasources.contentstore.url=jdbc:postgresql://HOST:PORT/DB
+spring.datasources.contentstore.username=USERNAME
+spring.datasources.contentstore.password=PASSWORD
+----
+
+Additionally, you can change timeout by:
+
+[source,properties]
+----
+spring.datasources.contentstore.hikari.connectionTimeout=
+----

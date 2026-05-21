@@ -1,0 +1,358 @@
+[
+	{
+		"docRef": "AnonymizedBusinessPartnerCDM/%12$s",
+		"modelName": "AnonymizedBusinessPartnerCDM",
+		"children": [
+			{
+				"name": "RootGroup",
+				"path": "/RootGroup",
+				"children": [
+					{
+						"name": "BusinessPartnerRoot",
+						"path": "/RootGroup/BusinessPartnerRoot",
+						"children": [],
+						"linkDocRef": null
+					},
+					{
+						"name": "__meta",
+						"path": "/RootGroup/__meta",
+						"children": [
+							{
+								"name": "extensions",
+								"path": "/RootGroup/__meta/extensions",
+								"children": [],
+								"linkDocRef": null
+							}
+						],
+						"linkDocRef": null
+					}
+				],
+				"linkDocRef": null
+			}
+		],
+		"targetDocRef": "%12$s",
+		"targetDocumentModel": "BusinessPartner"
+	},
+	{
+		"docRef": "%1$s",
+		"modelName": "ContractCDM",
+		"targetDocRef": "%2$s",
+		"targetDocumentModel": "Contract",
+		"children": [
+			{
+				"name": "RootGroup",
+				"path": "/RootGroup",
+				"children": [
+					{
+						"name": "ContractRoot",
+						"path": "/RootGroup/ContractRoot",
+						"children": [
+							{
+								"name": "ContractDates",
+								"path": "/RootGroup/ContractRoot/ContractDates",
+								"children": [],
+								"linkDocRef": null
+							},
+							{
+								"name": "ChangeLog",
+								"path": "/RootGroup/ContractRoot/ChangeLog",
+								"children": [
+									{
+										"name": "Changes",
+										"path": "/RootGroup/ContractRoot/ChangeLog/Changes",
+										"children": [
+											{
+												"name": "SubChanges",
+												"path": "/RootGroup/ContractRoot/ChangeLog/Changes/SubChanges",
+												"children": [],
+												"linkDocRef": null
+											}
+										],
+										"linkDocRef": null
+									}
+								],
+								"linkDocRef": null
+							}
+						],
+						"linkDocRef": null
+					},
+					{
+						"name": "ContractBusinessPartner",
+						"path": "/RootGroup/ContractBusinessPartner",
+						"relationshipModelName": "ContractBusinessPartner",
+						"sourceRole": "Contract",
+						"sourceDocRef": "%2$s",
+						"targetRole": "Partner",
+						"targetDocRef": "%3$s",
+						"targetDocumentModel": "BusinessPartnerSuper",
+						"children": [
+							{
+								"name": "BusinessPartnerRoot",
+								"path": "/RootGroup/ContractBusinessPartner/BusinessPartnerRoot",
+								"children": [
+									{
+										"name": "Attachment",
+										"path": "/RootGroup/ContractBusinessPartner/BusinessPartnerRoot/Attachment",
+										"children": [],
+										"linkDocRef": null
+									},
+									{
+										"name": "Employment",
+										"path": "/RootGroup/ContractBusinessPartner/BusinessPartnerRoot/Employment",
+										"children": [],
+										"linkDocRef": null
+									}
+								],
+								"linkDocRef": null
+							},
+							{
+								"name": "PartnerAddresses",
+								"path": "/RootGroup/ContractBusinessPartner/PartnerAddresses",
+								"relationshipModelName": "PartnerAddresses",
+								"sourceRole": "Partner",
+								"sourceDocRef": "%3$s",
+								"targetRole": "Address",
+								"targetDocRef": "%6$s",
+								"targetDocumentModel": "Address",
+								"children": [
+									{
+										"name": "AddressRoot",
+										"path": "/RootGroup/ContractBusinessPartner/PartnerAddresses/AddressRoot",
+										"children": [],
+										"linkDocRef": null
+									},
+									{
+										"name": "__meta",
+										"path": "/RootGroup/ContractBusinessPartner/PartnerAddresses/__meta",
+										"children": [
+											{
+												"name": "extensions",
+												"path": "/RootGroup/ContractBusinessPartner/PartnerAddresses/__meta/extensions",
+												"children": [],
+												"linkDocRef": null
+											}
+										],
+										"linkDocRef": null
+									}
+								],
+								"linkDocRef": null
+							},
+							{
+								"name": "PartnerPostalAddress",
+								"path": "/RootGroup/ContractBusinessPartner/PartnerPostalAddress",
+								"relationshipModelName": "PartnerPostalAddress",
+								"sourceRole": "Partner",
+								"sourceDocRef": "%3$s",
+								"targetRole": "Address",
+								"targetDocRef": "%7$s",
+								"targetDocumentModel": "Address",
+								"children": [
+									{
+										"name": "AddressRoot",
+										"path": "/RootGroup/ContractBusinessPartner/PartnerPostalAddress/AddressRoot",
+										"children": [],
+										"linkDocRef": null
+									},
+									{
+										"name": "__meta",
+										"path": "/RootGroup/ContractBusinessPartner/PartnerPostalAddress/__meta",
+										"children": [
+											{
+												"name": "extensions",
+												"path": "/RootGroup/ContractBusinessPartner/PartnerPostalAddress/__meta/extensions",
+												"children": [],
+												"linkDocRef": null
+											}
+										],
+										"linkDocRef": null
+									}
+								],
+								"linkDocRef": null
+							},
+							{
+								"name": "__meta",
+								"path": "/RootGroup/ContractBusinessPartner/__meta",
+								"children": [
+									{
+										"name": "extensions",
+										"path": "/RootGroup/ContractBusinessPartner/__meta/extensions",
+										"children": [],
+										"linkDocRef": null
+									}
+								],
+								"linkDocRef": null
+							}
+						],
+						"linkDocRef": null
+					},
+					{
+						"name": "ContractCoInsuredPartner",
+						"path": "/RootGroup/ContractCoInsuredPartner",
+						"relationshipModelName": "ContractCoInsuredPartner",
+						"sourceRole": "Contract",
+						"sourceDocRef": "%2$s",
+						"targetRole": "Partner",
+						"targetDocRef": "%4$s",
+						"targetDocumentModel": "BusinessPartnerSuper",
+						"children": [
+							{
+								"name": "BusinessPartnerRoot",
+								"path": "/RootGroup/ContractCoInsuredPartner/BusinessPartnerRoot",
+								"children": [
+									{
+										"name": "Attachment",
+										"path": "/RootGroup/ContractCoInsuredPartner/BusinessPartnerRoot/Attachment",
+										"children": [],
+										"linkDocRef": null
+									},
+									{
+										"name": "Employment",
+										"path": "/RootGroup/ContractCoInsuredPartner/BusinessPartnerRoot/Employment",
+										"children": [],
+										"linkDocRef": null
+									}
+								],
+								"linkDocRef": null
+							},
+							{
+								"name": "relationship",
+								"path": "/RootGroup/ContractCoInsuredPartner/relationship",
+								"children": [
+									{
+										"name": "CoInsuredRoot",
+										"path": "/RootGroup/ContractCoInsuredPartner/relationship/CoInsuredRoot",
+										"children": [],
+										"linkDocRef": null
+									},
+									{
+										"name": "__meta",
+										"path": "/RootGroup/ContractCoInsuredPartner/relationship/__meta",
+										"children": [
+											{
+												"name": "extensions",
+												"path": "/RootGroup/ContractCoInsuredPartner/relationship/__meta/extensions",
+												"children": [],
+												"linkDocRef": null
+											}
+										],
+										"linkDocRef": null
+									}
+								],
+								"linkDocRef": null
+							},
+							{
+								"name": "__meta",
+								"path": "/RootGroup/ContractCoInsuredPartner/__meta",
+								"children": [
+									{
+										"name": "extensions",
+										"path": "/RootGroup/ContractCoInsuredPartner/__meta/extensions",
+										"children": [],
+										"linkDocRef": null
+									}
+								],
+								"linkDocRef": null
+							}
+						],
+						"linkDocRef": {
+							"docRef": "%13$s"
+						}
+					},
+					{
+						"name": "ContractCoInsuredPartner",
+						"path": "/RootGroup/ContractCoInsuredPartner",
+						"relationshipModelName": "ContractCoInsuredPartner",
+						"sourceRole": "Contract",
+						"sourceDocRef": "%2$s",
+						"targetRole": "Partner",
+						"targetDocRef": "%5$s",
+						"targetDocumentModel": "BusinessPartnerSuper",
+						"children": [
+							{
+								"name": "BusinessPartnerRoot",
+								"path": "/RootGroup/ContractCoInsuredPartner/BusinessPartnerRoot",
+								"children": [
+									{
+										"name": "Attachment",
+										"path": "/RootGroup/ContractCoInsuredPartner/BusinessPartnerRoot/Attachment",
+										"children": [],
+										"linkDocRef": null
+									},
+									{
+										"name": "Employment",
+										"path": "/RootGroup/ContractCoInsuredPartner/BusinessPartnerRoot/Employment",
+										"children": [],
+										"linkDocRef": null
+									}
+								],
+								"linkDocRef": null
+							},
+							{
+								"name": "relationship",
+								"path": "/RootGroup/ContractCoInsuredPartner/relationship",
+								"children": [
+									{
+										"name": "CoInsuredRoot",
+										"path": "/RootGroup/ContractCoInsuredPartner/relationship/CoInsuredRoot",
+										"children": [],
+										"linkDocRef": null
+									},
+									{
+										"name": "__meta",
+										"path": "/RootGroup/ContractCoInsuredPartner/relationship/__meta",
+										"children": [
+											{
+												"name": "extensions",
+												"path": "/RootGroup/ContractCoInsuredPartner/relationship/__meta/extensions",
+												"children": [],
+												"linkDocRef": null
+											}
+										],
+										"linkDocRef": null
+									}
+								],
+								"linkDocRef": null
+							},
+							{
+								"name": "__meta",
+								"path": "/RootGroup/ContractCoInsuredPartner/__meta",
+								"children": [
+									{
+										"name": "extensions",
+										"path": "/RootGroup/ContractCoInsuredPartner/__meta/extensions",
+										"children": [],
+										"linkDocRef": null
+									}
+								],
+								"linkDocRef": null
+							}
+						],
+						"linkDocRef": {
+							"docRef": "%14$s"
+						}
+					},
+					{
+						"name": "CalculatedFields",
+						"path": "/RootGroup/CalculatedFields",
+						"children": [],
+						"linkDocRef": null
+					},
+					{
+						"name": "__meta",
+						"path": "/RootGroup/__meta",
+						"children": [
+							{
+								"name": "extensions",
+								"path": "/RootGroup/__meta/extensions",
+								"children": [],
+								"linkDocRef": null
+							}
+						],
+						"linkDocRef": null
+					}
+				],
+				"linkDocRef": null
+			}
+		]
+	}
+]

@@ -1,0 +1,366 @@
+{
+  "header": {
+    "id": "ContractAutomotive",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Contract"
+      },
+      {
+        "locale": "de",
+        "text": "Vertrag"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      },
+      {
+        "name": "superTypes",
+        "value": "Contract"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "Contract",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "name": "ContractRoot",
+          "id": "group_a9838",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "name": "ContractName",
+                "id": "field_770f2",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Name of Contract"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Name des Vertrags"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "name": "ContractDescription",
+                "id": "field_770f3",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Contract Description"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Vertragsbeschreibung"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "name": "LengthOfContract",
+                "id": "field_828da",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "zeroNotAllowed": true,
+                      "minValue": 1
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Length of contract"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Vertragsdauer"
+                    }
+                  ],
+                  "helperText": [
+                    {
+                      "locale": "en",
+                      "text": "Please enter the length of the contract in years. Please note that only whole years are allowed."
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "name": "ContractValue",
+                "id": "field_29708",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "minFractionalDigits": 2,
+                      "maxFractionalDigits": 2,
+                      "trait": "amount"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Contract Value"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Vertragswert"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "name": "Liability",
+                "id": "field_edb7e",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "minFractionalDigits": 2,
+                      "maxFractionalDigits": 2,
+                      "trait": "amount"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Amount of liability accepted"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Höhe der übernommenen Haftung"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "name": "CostToCustomer",
+                "id": "field_502f7",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "minFractionalDigits": 2,
+                      "maxFractionalDigits": 2,
+                      "trait": "amount"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Cost to Customer"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Kosten für den Kunden"
+                    }
+                  ],
+                  "helperText": [
+                    {
+                      "locale": "en",
+                      "text": "Field in Contract Document Model"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Feld im Vertragsdokumentmodell"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "name": "NoOfCoInsuredCustomers",
+                "id": "field_f8187",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Number of Co-Insured Customers"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Anzahl der mitversicherten Kunden"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "name": "MaxDiscount",
+                "id": "field_c472d",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Highest Discount amongst Co-Insured Policy Holders"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Höchster Rabatt unter den mitversicherten Versicherungsnehmern"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "name": "CostPerCoInsured",
+                "id": "field_24959",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "minFractionalDigits": 2,
+                      "maxFractionalDigits": 2,
+                      "trait": "amount"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Cost per Co-Insured Policy Holder"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Kosten pro mitversichertem Versicherungsnehmer"
+                    }
+                  ],
+                  "helperText": [
+                    {
+                      "locale": "en",
+                      "text": "Field in Contract Document Model"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Feld im Vertragsdokumentmodell"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_a09a6",
+                "name": "Valid",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Valid"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Gültig"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "name": "Car",
+                "id": "group_a6546",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "name": "Make",
+                      "id": "field_ad236",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Car make"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Auto machen"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "name": "Model",
+                      "id": "field_236ad",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Car model"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Auto Model"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

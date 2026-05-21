@@ -1,0 +1,99 @@
+{
+	"header": {
+		"modelType": "relationship",
+		"modelVersion": "3.0.0",
+		"id": "PolicyHolder",
+		"locales": [
+			{
+				"code": "en"
+			},
+			{
+				"code": "de"
+			}
+		],
+		"annotations": [
+			{
+				"name": "roles",
+				"value": "admin,systemAdmin,policyHolder"
+			}
+		],
+		"labels": [
+			{
+				"locale": "en",
+				"text": ""
+			},
+			{
+				"locale": "de",
+				"text": ""
+			}
+		],
+		"modelReferences": [
+			{
+				"purpose": "Document model",
+				"modelType": "document",
+				"alias": "contract",
+				"reference": "Contract-document"
+			},
+			{
+				"purpose": "Document model",
+				"modelType": "document",
+				"alias": "businessPartner",
+				"reference": "BusinessPartner-document"
+			}
+		]
+	},
+	"content": {
+		"duplicatesAllowed": false,
+		"associationType": "SHARED",
+		"storage": "EXTERNAL",
+		"entityCharacteristics": [
+			{
+				"ordered": false,
+				"navigable": true,
+				"linkConstraints": {
+					"multiplicity": {
+						"lowerLimit": 0,
+						"unbounded": true
+					}
+				},
+				"candidateConstraints": {},
+				"labels": [
+					{
+						"locale": "en",
+						"text": ""
+					},
+					{
+						"locale": "de",
+						"text": ""
+					}
+				],
+				"role": "contract",
+				"documentModel": "Contract-document"
+			},
+			{
+				"ordered": false,
+				"navigable": true,
+				"linkConstraints": {
+					"multiplicity": {
+						"lowerLimit": 0,
+						"unbounded": false,
+						"upperLimit": 1
+					}
+				},
+				"candidateConstraints": {},
+				"labels": [
+					{
+						"locale": "en",
+						"text": "Policy Holder"
+					},
+					{
+						"locale": "de",
+						"text": "Policeninhaber"
+					}
+				],
+				"role": "businessPartner",
+				"documentModel": "BusinessPartner-document"
+			}
+		]
+	}
+}

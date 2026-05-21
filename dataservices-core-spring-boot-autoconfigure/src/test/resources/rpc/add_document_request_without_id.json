@@ -1,0 +1,43 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "AddDocument1",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "Product": {
+          "number": "123",
+          "externalNumber": {
+            "number": 123,
+            "system": "Christoph System Z"
+          },
+          "name": "Shiny Shoe",
+          "description": "A pair of tiny and shiny shoes.",
+          "metaDescription": "tbd",
+          "logistics": {
+            "weight": {
+              "weightValue": 2,
+              "weightUnit": "kg"
+            }
+          },
+          "searchKeywords": {
+            "searchKeyword": "shoe"
+          },
+          "mediaFiles": {
+            "mediaFile": {
+              "mimeType": "image/png",
+              "type": "image",
+              "url": "/media/images/shinyshoe.png"
+            }
+          },
+          "packaging": {
+            "packagingAmount": 1.0,
+            "packagingUnit": "Stück",
+            "packagingMultiplicator": 1
+          }
+        }
+      },
+      "documentModelName": "Product"
+    }
+  }
+]

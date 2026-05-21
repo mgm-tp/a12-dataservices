@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+				   logicalFilePath="contentstore_db/project_model.xml">
+
+	<!-- MySQL DB is supported from liquibase perspective but JPA  layer is not working due to SEQ -->
+	<property name="autoIncrement" value="true" dbms="mysql"/>
+	<property name="autoIncrement" value="false" dbms="oracle"/>
+	<property name="autoIncrement" value="false" dbms="postgresql"/>
+	<property name="autoIncrement" value="false" dbms="h2"/>
+
+	<property name="varcharUnit" value="CHAR" dbms="oracle"/>
+	<property name="varcharUnit" value="" dbms="mysql,postgresql,h2"/>
+
+	<include file="schema/36.0.0/model.xml" relativeToChangelogFile="true" />
+	<include file="schema/36.1.0/model.xml" relativeToChangelogFile="true" />
+	<include file="schema/37.0.0/model.xml" relativeToChangelogFile="true" />
+
+	<!-- include file="org/quartz/impl/jdbcjobstore/liquibase.quartz.init.xml" relativeToChangelogFile="false" / -->
+
+</databaseChangeLog>

@@ -1,0 +1,20 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.spring-boot-conventions'
+}
+
+dependencies {
+	api project(':dataservices-core')
+	api(project(':dataservices-core-spring-boot-autoconfigure')) {
+		exclude group: 'com.mgmtp.a12.uaa', module: 'uaa-authentication-principal-extension'
+		exclude group: 'com.mgmtp.a12.uaa', module: 'uaa-authentication-principal-extension-spring-boot-autoconfigure'
+	}
+	implementation libs.springBootStarterDataJpa
+	implementation libs.uaaAuthorizationSpringBootAutoconfigure
+}
+
+springBoot {
+	mainClass.set 'com.mgmtp.a12.dataservices.init.app.InitAppApplication'
+}
+
+description = 'Data Services server - initialization application'
+

@@ -1,0 +1,102 @@
+[
+	{
+		"jsonrpc": "2.0",
+		"id": "queryDocuments",
+		"method": "QUERY",
+		"params": {
+			"query": {
+				"targetDocumentModel": "Contract",
+				"constraint": {
+					"operator": "and",
+					"operands": [
+						{
+							"operator": "not",
+							"operand": {
+								"operator": "has",
+								"relationshipModel": "ContractBusinessPartner",
+								"targetRole": "partner"
+							}
+						},
+						{
+							"operator": "has",
+							"relationshipModel": "ContractCoInsuredPartner",
+							"targetRole": "contract",
+							"constraint": {
+								"operator": "and",
+								"operands": [
+									{
+										"operator": "exact_match",
+										"field": "/ContractRoot/ContractValue",
+										"value": 100
+									},
+									{
+										"operator": "exact_match",
+										"field": "/ContractRoot/CostToCustomer",
+										"value": 80
+									}
+								]
+							}
+						},
+						{
+							"operator": "datefragment_range",
+							"from": "2024-08",
+							"to": "2024-10",
+							"field": "__meta.createdAt"
+						},
+						{
+							"operator": "date_range",
+							"from": "2024-08-01",
+							"to": "2024-08-31",
+							"field": "__meta.createdAt"
+						},
+						{
+							"operator": "double_range",
+							"from": 10,
+							"to": 20,
+							"field": "LengthOfContract"
+						},
+						{
+							"operator": "or",
+							"operands": [
+								{
+									"operator": "exact_match",
+									"value": "super user",
+									"field": "__meta.createdBy"
+								},
+								{
+									"operator": "undefined_match",
+									"field": "SomeUndefinedField"
+								},
+								{
+									"operator": "simple_search",
+									"value": "John",
+									"fields": ["__meta.modifier", "/ContractRoot/Name"]
+								}
+							]
+						}
+					]
+				},
+				"projectionName": "document",
+				"sort": [
+					{
+						"field": "__meta.docRef",
+						"ignoreCase": true,
+						"direction": "DESC",
+						"nullHandling": "NULLS_LAST"
+					}
+				],
+				"links": [
+					{
+						"relationshipModel": "ContractBusinessPartner",
+						"targetRole": "Partner",
+						"backReference": "/ContractBusinessPartner"
+					}
+				],
+				"paging": {
+					"pageNumber": 0,
+					"pageSize": 10
+				}
+			}
+		}
+	}
+]

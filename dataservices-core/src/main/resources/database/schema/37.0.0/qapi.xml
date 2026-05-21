@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd"
+				   logicalFilePath="database/schema/37.0.0/model.xml">
+
+	<changeSet id="A12S-3706-investigate_qapi_search_possibilities" author="QAPI" dbms="postgresql">
+		<createSequence sequenceName="FIELD_SEQ" startValue="1" incrementBy="1"/>
+
+		<createTable tableName="DOCUMENT_FIELDS">
+			<column name="ID" type="BIGINT" valueSequenceNext="FIELD_SEQ">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="DOCUMENT_ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints referencedTableName="DOCUMENT" referencedColumnNames="ID"
+							 foreignKeyName="FK_DOCUMENT_ID_DOCUMENT_ID"/>
+			</column>
+			<column name="MODEL_NAME" type="VARCHAR(100 ${varcharUnit})"/>
+			<column name="DOC_REF" type="VARCHAR(200 ${varcharUnit})"/>
+			<column name="FIELD_NAME" type="VARCHAR(1024 ${varcharUnit})"/>
+			<column name="REPETITIONS" type="INTEGER[]"/>
+			<column name="FIELD_TYPE_ID" type="BIGINT"/>
+			<column name="VALUE" type="text"/>
+		</createTable>
+
+		<sql dbms="postgresql">CREATE INDEX IDX_DOCUMENT_FIELDS_VALUE ON DOCUMENT_FIELDS USING HASH (VALUE)</sql>
+		<sql dbms="postgresql">CREATE INDEX IDX_DOCUMENT_FIELDS_NAME ON DOCUMENT_FIELDS (FIELD_NAME)</sql>
+
+		<createIndex tableName="DOCUMENT_FIELDS" indexName="IDX_DOCUMENT_FIELDS_DOC_REF">
+			<column name="MODEL_NAME"/>
+			<column name="DOC_REF"/>
+		</createIndex>
+	</changeSet>
+
+	<changeSet id="A12S-5099" author="A12S-5099-author" dbms="postgresql" failOnError="false">
+		<sql dbms="postgresql">CREATE EXTENSION PG_TRGM</sql>
+		<sql dbms="postgresql">SET default_text_search_config = 'pg_catalog.simple'</sql>
+
+		<!--USED BY SUBSTRING MATCH-->
+		<sql dbms="postgresql">CREATE INDEX IDX_SUBSTRING_MATCH_INSENSITIVE ON DOCUMENT_FIELDS USING GIST (LOWER(VALUE) GIST_TRGM_OPS)</sql>
+		<!--USED BY TEXT MATCH-->
+		<sql dbms="postgresql">CREATE INDEX IDX_VALUE_TEXT_MATCH ON DOCUMENT_FIELDS USING GIN (to_tsvector('simple', VALUE))</sql>
+
+		<!--USED BY EXACT MATCH INSENSITIVE-->
+		<sql dbms="postgresql">CREATE INDEX IDX_VALUE_INSENSITIVE ON DOCUMENT_FIELDS USING HASH (LOWER(VALUE))</sql>
+	</changeSet>
+	<changeSet id="A12S-5425" author="A12S-5425-author" dbms="postgresql" failOnError="false">
+		<!-- Retry index creation for change set A12S-5099 if the previous attempt failed. -->
+		<!-- Mark this change set as "MARK_RAN" in case of errors. -->
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<changeSetExecuted id="A12S-5099" author="A12S-5099-author" changeLogFile="database/schema/37.0.0/model.xml"/>
+			</not>
+		</preConditions>
+		<sql dbms="postgresql">SET default_text_search_config = 'pg_catalog.simple'</sql>
+
+		<!--USED BY SUBSTRING MATCH-->
+		<sql dbms="postgresql">CREATE INDEX IDX_SUBSTRING_MATCH_INSENSITIVE ON DOCUMENT_FIELDS USING GIST (LOWER(VALUE) GIST_TRGM_OPS)</sql>
+		<!--USED BY TEXT MATCH-->
+		<sql dbms="postgresql">CREATE INDEX IDX_VALUE_TEXT_MATCH ON DOCUMENT_FIELDS USING GIN (to_tsvector('simple', VALUE))</sql>
+
+		<!--USED BY EXACT MATCH INSENSITIVE-->
+		<sql dbms="postgresql">CREATE INDEX IDX_VALUE_INSENSITIVE ON DOCUMENT_FIELDS USING HASH(LOWER(VALUE))</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5191" author="A12S-5191-author" dbms="postgresql">
+		<createTable tableName="MODEL_FIELDS">
+			<column name="ID" type="BIGINT" valueSequenceNext="FIELD_SEQ">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="MODEL_NAME" type="VARCHAR(100)">
+				<constraints unique="true" uniqueConstraintName="unique_model_field"/>
+			</column>
+			<column name="FIELD_NAME" type="VARCHAR(1024)">
+				<constraints unique="true" uniqueConstraintName="unique_model_field"/>
+			</column>
+			<column name="FIELD_TYPE" type="VARCHAR(255)"/>
+			<column name="DATA" type="JSONB"/>
+		</createTable>
+		<createIndex tableName="MODEL_FIELDS" indexName="IDX_FIELD_TYPE">
+			<column name="FIELD_TYPE"/>
+		</createIndex>
+		<createIndex tableName="MODEL_FIELDS" indexName="IDX_FIELD_TYPE_MODEL_FIELD">
+			<column name="MODEL_NAME"/>
+			<column name="FIELD_NAME"/>
+		</createIndex>
+		<sql dbms="postgresql">CREATE INDEX IDX_FIELD_TYPE_DATA ON MODEL_FIELDS USING GIN (DATA jsonb_path_ops)</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5288" author="A12S-5288-author" dbms="postgresql">
+		<createIndex tableName="document" indexName="idx_document_model">
+			<column name="model_name"/>
+		</createIndex>
+	</changeSet>
+
+	<changeSet id="A12S-5321-drop-document_id" author="A12S-5321-author" dbms="postgresql">
+		<dropColumn tableName="document_fields" columnName="document_id"/>
+	</changeSet>
+
+	<changeSet id="A12S-5321-prepare-indexes" author="A12S-5321-author" dbms="postgresql">
+		<dropIndex tableName="document_fields" indexName="IDX_VALUE_INSENSITIVE"/>
+		<dropIndex tableName="document_fields" indexName="IDX_DOCUMENT_FIELDS_VALUE"/>
+
+		<!--		TODO: Do we need both indexes? We probably can drop second one -->
+		<sql dbms="postgresql">CREATE INDEX IDX_DOCUMENT_FIELDS_VALUE_INSENSITIVE ON DOCUMENT_FIELDS (LOWER(VALUE))</sql>
+		<sql dbms="postgresql">CREATE INDEX IDX_DOCUMENT_FIELDS_VALUE ON DOCUMENT_FIELDS (VALUE)</sql>
+
+		<createTable tableName="index_tmp">
+			<column name="MODEL_NAME" type="VARCHAR(100 ${varcharUnit})"/>
+			<column name="DOC_REF" type="VARCHAR(200 ${varcharUnit})"/>
+			<column name="FIELD_NAME" type="VARCHAR(1024 ${varcharUnit})"/>
+			<column name="REPETITIONS" type="INTEGER[]"/>
+			<column name="FIELD_TYPE_ID" type="BIGINT"/>
+			<column name="VALUE" type="text"/>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="A12S-5321-change-ids-to-identities-from-sequence" author="A12S-5321-author" dbms="postgresql">
+		<dropSequence sequenceName="FIELD_SEQ"/>
+
+		<dropColumn tableName="document_fields" columnName="id"/>
+		<addColumn tableName="document_fields">
+			<column name="id" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">
+				<constraints primaryKey="true"/>
+			</column>
+		</addColumn>
+
+		<dropColumn tableName="MODEL_FIELDS" columnName="id"/>
+		<addColumn tableName="MODEL_FIELDS">
+			<column name="id" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">
+				<constraints primaryKey="true"/>
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="A12S-5330" author="A12S-5321-5330" dbms="postgresql">
+		<sql dbms="postgresql">CREATE INDEX IDX_DOCUMENT_FIELDS_DOC_REF_SINGLE ON DOCUMENT_FIELDS (doc_ref)</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5317" author="A12S-5317-author" dbms="postgresql">
+		<dropIndex tableName="DOCUMENT_FIELDS" indexName="IDX_SUBSTRING_MATCH_INSENSITIVE"/>
+		<dropIndex tableName="DOCUMENT_FIELDS" indexName="IDX_VALUE_TEXT_MATCH"/>
+		<addColumn tableName="DOCUMENT_FIELDS">
+			<column name="FULLTEXT_STRING" type="VARCHAR(100 ${varcharUnit})"/>
+		</addColumn>
+		<sql dbms="postgresql">CREATE INDEX IDX_SUBSTRING_MATCH_INSENSITIVE ON DOCUMENT_FIELDS USING GIN (FULLTEXT_STRING GIN_TRGM_OPS)</sql>
+
+		<comment>Trigger to prepare data for fulltext</comment>
+		<sqlFile path="../sql/fulltextStringTrigger.sql" encoding="UTF-8"
+				 relativeToChangelogFile="true"
+				 splitStatements="false" />
+	</changeSet>
+
+	<changeSet id="A12S-5399" author="A12S-5399-author" dbms="postgresql" runOnChange="true">
+		<modifyDataType columnName="FULLTEXT_STRING"
+						newDataType="text"
+						tableName="DOCUMENT_FIELDS"/>
+	</changeSet>
+
+	<changeSet id="A12S-5387" author="A12S-5387-author" dbms="postgresql">
+		<createTable tableName="LOCALIZED_FIELDS">
+			<column name="ID" type="BIGINT" autoIncrement="true" incrementBy="1" startWith="1">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="MODEL_NAME" type="VARCHAR(100)"/>
+			<column name="FIELD_NAME" type="VARCHAR(1024)"/>
+			<column name="LOCALE" type="VARCHAR(1024)"/>
+			<column name="ORIGINAL_VALUE" type="text"/>
+			<column name="LOCALIZED_VALUE" type="text"/>
+			<column name="LOCALIZED_FULLTEXT_STRING" type="text"/>
+		</createTable>
+
+		<comment>Trigger to prepare data for fulltext search</comment>
+		<sqlFile path="../sql/localizedFulltextStringTrigger.sql" encoding="UTF-8"
+				 relativeToChangelogFile="true"
+				 splitStatements="false" />
+
+		<createIndex tableName="DOCUMENT_FIELDS" indexName="IDX_VALUE_FIELD_NAME">
+			<column name="value"></column>
+			<column name="field_name"></column>
+		</createIndex>
+		<sql dbms="postgresql">CREATE INDEX IDX_SIMPLE_SEARCH_LOCALIZED ON LOCALIZED_FIELDS USING GIN (LOCALIZED_FULLTEXT_STRING GIN_TRGM_OPS)</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5478" author="A12S-5478-author" dbms="postgresql">
+		<addColumn tableName="DOCUMENT_FIELDS">
+			<column name="FIELD_TYPE" type="VARCHAR(255)"/>
+		</addColumn>
+
+		<addColumn tableName="INDEX_TMP">
+			<column name="FIELD_TYPE" type="VARCHAR(255)"/>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="A12S-5131" author="A12S-5131-author" dbms="postgresql">
+		<comment>Update fulltext search trigger to not include metadata fields</comment>
+		<sqlFile path="../sql/createFulltextStringFunction_A12S-5131.sql" encoding="UTF-8"
+				 relativeToChangelogFile="true"
+				 splitStatements="false" />
+	</changeSet>
+
+	<changeSet id="A12S-5543" author="A12S-5543-author" dbms="postgresql">
+		<createTable tableName="JSONB_DOCUMENT_FIELDS">
+			<column name="ID" type="bigint" autoIncrement="true" incrementBy="1" startWith="1">
+				<constraints primaryKey="true"/>
+			</column>
+			<column name="MODEL_NAME" type="VARCHAR(100 ${varcharUnit})"/>
+			<column name="DOC_REF" type="VARCHAR(200 ${varcharUnit})"/>
+			<column name="VALUE" type="jsonb"/>
+			<column name="FULLTEXT_STRING" type="text"/>
+		</createTable>
+
+		<comment>Trigger to prepare data for fulltext search</comment>
+		<sqlFile path="sql/A12S-5543-jsonbFulltextStringTrigger.sql" encoding="UTF-8"
+				 relativeToChangelogFile="true"
+				 splitStatements="false" />
+
+		<sql dbms="postgresql">CREATE INDEX IDX_SIMPLE_SEARCH_JSONB ON JSONB_DOCUMENT_FIELDS USING GIN (FULLTEXT_STRING GIN_TRGM_OPS)</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5438" author="A12S-5438-author" dbms="postgresql">
+		<addColumn tableName="document_fields">
+			<column name="TYPED_VALUE" type="text"/>
+		</addColumn>
+		<addColumn tableName="INDEX_TMP">
+			<column name="TYPED_VALUE" type="text"/>
+		</addColumn>
+
+		<sql dbms="postgresql">CREATE INDEX IDX_DOCUMENT_FIELDS_TYPED_VALUE ON DOCUMENT_FIELDS (TYPED_VALUE)</sql>
+
+		<createIndex tableName="DOCUMENT_FIELDS" indexName="IDX_TYPED_VALUE_FIELD_NAME">
+			<column name="typed_value"/>
+			<column name="field_name"/>
+		</createIndex>
+	</changeSet>
+
+	<changeSet id="A12S-5590" author="A12S-5590-author" dbms="postgresql">
+		<createIndex tableName="jsonb_document_fields" indexName="idx_doc_ref">
+			<column name="doc_ref"/>
+		</createIndex>
+	</changeSet>
+
+	<changeSet id="A12S-5588" author="A12S-5588-author" dbms="postgresql">
+		<addColumn tableName="jsonb_document_fields">
+			<column name="original_value" type="jsonb"/>
+		</addColumn>
+	</changeSet>
+
+</databaseChangeLog>

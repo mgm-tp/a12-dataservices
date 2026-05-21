@@ -1,0 +1,9 @@
+username: "test user with spaces"
+password: "admin"
+authorities:
+  - "admin"
+  - "systemAdmin"
+  - "ROLE WITH SPACE"
+email: testUserWithSpaces@min.com
+firstname: NOTtest first
+lastname: test last

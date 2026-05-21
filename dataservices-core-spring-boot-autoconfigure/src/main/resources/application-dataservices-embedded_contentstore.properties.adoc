@@ -1,0 +1,3 @@
+= Embedded Content Store
+
+Enable/disable embedded Content Store server.

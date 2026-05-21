@@ -1,0 +1,22 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "add_link_1",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "%s",
+        "entities": [
+          {
+            "role": "Partner",
+            "docRef": "%s"
+          },
+          {
+            "role": "Address",
+            "docRef": "%s"
+          }
+        ]
+      }
+    }
+  }
+]

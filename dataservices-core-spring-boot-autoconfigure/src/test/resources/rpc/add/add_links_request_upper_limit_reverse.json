@@ -1,0 +1,166 @@
+{
+  "request": [
+    {
+      "id": "addAirJordanToBreakASweatCampaign",
+      "operation": "ADD_LINK",
+      "parameters": {
+        "link": {
+          "linkDescriptor": {
+            "relationshipModel": "ProductCampaign",
+            "entities": [
+              {
+                "role": "CampaignRole",
+                "docRef": "%s"
+              },
+              {
+                "role": "ProductRole",
+                "docRef": "%s"
+              }
+            ]
+          },
+          "linkDocument": {
+            "root": {
+              "aNumber": "1234",
+              "aString": "2019-09-09"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "addSweatShirtToBreakASweatCampaign",
+      "operation": "ADD_LINK",
+      "parameters": {
+        "link": {
+          "linkDescriptor": {
+            "relationshipModel": "ProductCampaign",
+            "entities": [
+              {
+                "role": "CampaignRole",
+                "docRef": "%s"
+              },
+              {
+                "role": "ProductRole",
+                "docRef": "%s"
+              }
+            ]
+          },
+          "linkDocument": {
+            "root": {
+              "aNumber": "1235",
+              "aString": "2020-09-10"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "addPaperToPrintCampaign",
+      "operation": "ADD_LINK",
+      "parameters": {
+        "link": {
+          "linkDescriptor": {
+            "relationshipModel": "ProductCampaign",
+            "entities": [
+              {
+                "role": "CampaignRole",
+                "docRef": "%s"
+              },
+              {
+                "role": "ProductRole",
+                "docRef": "%s"
+              }
+            ]
+          },
+          "linkDocument": {
+            "root": {
+              "aNumber": "1236",
+              "aString": "2020-09-09"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "addSocksToAutumnSale",
+      "operation": "ADD_LINK",
+      "parameters": {
+        "link": {
+          "linkDescriptor": {
+            "relationshipModel": "ProductCampaign",
+            "entities": [
+              {
+                "role": "CampaignRole",
+                "docRef": "%s"
+              },
+              {
+                "role": "ProductRole",
+                "docRef": "%s"
+              }
+            ]
+          },
+          "linkDocument": {
+            "root": {
+              "aNumber": "1237",
+              "aString": "2020-09-09"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "addTshirtToBreakASweatCampaign",
+      "operation": "ADD_LINK",
+      "parameters": {
+        "link": {
+          "linkDescriptor": {
+            "relationshipModel": "ProductCampaign",
+            "entities": [
+              {
+                "role": "CampaignRole",
+                "docRef": "%s"
+              },
+              {
+                "role": "ProductRole",
+                "docRef": "%s"
+              }
+            ]
+          },
+          "linkDocument": {
+            "root": {
+              "aNumber": "1239",
+              "aString": "2020-09-09"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "addTshirtToAutumnSaleCampaign",
+      "operation": "ADD_LINK",
+      "parameters": {
+        "link": {
+          "linkDescriptor": {
+            "relationshipModel": "ProductCampaign",
+            "entities": [
+              {
+                "role": "CampaignRole",
+                "docRef": "%s"
+              },
+              {
+                "role": "ProductRole",
+                "docRef": "%s"
+              }
+            ]
+          },
+          "linkDocument": {
+            "root": {
+              "aNumber": "1266",
+              "aString": "2020-09-09"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

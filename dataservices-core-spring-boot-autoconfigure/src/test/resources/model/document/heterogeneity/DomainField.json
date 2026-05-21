@@ -1,0 +1,213 @@
+{
+  "header": {
+    "id": "DomainField",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": [
+      {
+        "alias": "DomainElement",
+        "modelType": "document",
+        "purpose": "include",
+        "reference": "DomainElement"
+      }
+    ]
+  },
+  "content": {
+    "modelInfo": {
+      "name": "DomainField",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "group_b62e3",
+          "name": "GeneralInformation",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_91a2c",
+                "name": "Name",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Name"
+                    }
+                  ],
+                  "requirednessConfig": {
+                    "mode": "absoluteOrRelativeToNextRepAncestor"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_60604",
+                "name": "Description",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "lineBreaksPermitted": true
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Description"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "id": "group_477dc",
+          "name": "Field",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_511e8",
+                "name": "Type",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "STRING",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "String"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "NUMBER",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Number"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "BOOLEAN",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Boolean"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "DATE",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Date"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "DATE_TIME",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Date Time"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "TIME",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Time"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "ENUMERATION",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Enumeration"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "CONFIRM",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Confirm"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Type"
+                    }
+                  ],
+                  "requirednessConfig": {
+                    "mode": "absoluteOrRelativeToNextRepAncestor"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_ed670",
+                "name": "Required",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Required"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

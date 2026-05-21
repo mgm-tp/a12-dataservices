@@ -1,0 +1,44 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "AddLink1",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ProductBrand",
+        "entities": [
+          {
+            "role": "%s",
+            "docRef": "%s"
+          },
+          {
+            "role": "%s",
+            "docRef": "%s"
+          }
+        ],
+        "predecessorLinkRef": "%s"
+      }
+    }
+  },
+  {
+  "jsonrpc": "2.0",
+  "id": "AddLink1",
+  "method": "ADD_LINK",
+  "params": {
+    "linkDescriptor": {
+      "relationshipModel": "ProductBrand",
+      "entities": [
+        {
+          "role": "%s",
+          "docRef": "%s"
+        },
+        {
+          "role": "%s",
+          "docRef": "%s"
+        }
+      ],
+      "predecessorLinkRef": "%s"
+    }
+  }
+}
+]

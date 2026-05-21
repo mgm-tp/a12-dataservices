@@ -1,0 +1,113 @@
+{
+  "header": {
+    "id": "ContractBusinessPartner",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Contract and Business Partner"
+      },
+      {
+        "locale": "de",
+        "text": "Vertrag und Geschäftspartner"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Contract",
+        "reference": "Contract"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "BusinessPartnerSuper",
+        "reference": "BusinessPartnerSuper"
+      }
+    ]
+  },
+  "content": {
+    "duplicatesAllowed": false,
+    "associationType": "SHARED",
+    "storage": "EXTERNAL",
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Contract and Business Partner"
+      },
+      {
+        "locale": "de",
+        "text": "Vertrag und Geschäftspartner"
+      }
+    ],
+    "entityCharacteristics": [
+      {
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {},
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Contract"
+          },
+          {
+            "locale": "de",
+            "text": "Vertrag"
+          }
+        ],
+        "role": "Contract",
+        "documentModel": "Contract"
+      },
+      {
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": false,
+            "upperLimit": 1
+          }
+        },
+        "candidateConstraints": {},
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Main Policy Holder"
+          },
+          {
+            "locale": "de",
+            "text": "Hauptversicherungsnehmer"
+          }
+        ],
+        "role": "Partner",
+        "documentModel": "BusinessPartnerSuper"
+      }
+    ]
+  }
+}

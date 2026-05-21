@@ -1,0 +1,44 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.spring-boot-conventions'
+}
+
+dependencies {
+
+	implementation project(':dataservices-server-init-app')
+	implementation project(':dataservices-test-resources')
+//	In your external project, you should also specify Data Services BOM by specifying:
+//		api enforcedPlatform("com.mgmtp.a12.dataservices:dataservices-parent:${DS_VERSION}")
+//	Then you can omit version for DataServices artifacts like:
+//		implementation 'com.mgmtp.a12.dataservices:dataservices-server-init-app'
+
+	implementation libs.springContext
+
+	testImplementation libs.testng
+	testImplementation libs.uaaAuthorizationSpringBootAutoconfigure
+	testImplementation libs.uaaAuthenticationPrincipalExtension
+	testImplementation libs.uaaAuthenticationPrincipalExtensionSpringBootAutoconfigure
+	testImplementation libs.uaaAuthorization
+	testImplementation libs.springTest
+	testImplementation libs.springBootTest
+	testImplementation libs.springBootTestAutoconfigure
+	testImplementation libs.mockitoCore
+	testImplementation libs.springBootStarterSecurity
+	testImplementation libs.springSecurityTest
+	testImplementation(testFixtures(project(':dataservices-core')))
+	testImplementation(testFixtures(project(':dataservices-core-spring-boot-autoconfigure')))
+}
+
+springBoot {
+	mainClass.set 'com.mgmtp.a12.examples.ExampleInitApplication'
+}
+
+test {
+	systemProperty 'spring.datasources.dataservices.embedded-postgres.enabled', true
+	systemProperty 'spring.datasources.contentstore.embedded-postgres.enabled', true
+}
+
+tasks.named('bootJar') {
+	dependsOn ':dataservices-server-init-app:bootJar'
+}
+
+description = 'Data Services Initialization App Example - Demonstrates usage of the Init App and its extension points'

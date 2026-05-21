@@ -1,0 +1,7 @@
+username: document_read_user
+password: document_read_user
+firstname: document_read
+lastname: document_read
+email: document_read@min.com
+authorities:
+  - "DocumentRead"

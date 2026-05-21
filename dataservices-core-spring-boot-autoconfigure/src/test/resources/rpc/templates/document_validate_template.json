@@ -1,0 +1,12 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "validateDocument",
+    "method": "VALIDATE_DOCUMENT",
+    "params": {
+      "documentModelName": "%s",
+      "document": %s,
+      "locale": null
+    }
+  }
+]

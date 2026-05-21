@@ -1,0 +1,4 @@
+Person.FirstName;Person.LastName;Person.Group;Person.GroupSpecificDetails.BusinessContacts.Company;Person.GroupSpecificDetails.BusinessContacts.Position;Person.GroupSpecificDetails.FriendsAndFamily.Nickname;Person.GroupSpecificDetails.FriendsAndFamily.DateOfBirth;Person.ContactInfo[ContactType|ContactDetail|Description]
+First;last;BusinessContacts;Buss company;Buss Position;nick;2010-10-10;[0]||Type|detail|desc#|[1]||type1|detail1|desc1#|[2]||type2|detail2|desc2
+First1;last1;BusinessContacts1;Buss company1;Buss Position1;nick1;2011-10-10;[0]||Type|detail|desc#|[1]||type1|detail1|desc1#|[2]||type2|detail2|desc2
+First2;last2;BusinessContacts2;Buss company2;Buss Position2;nick2;2012-10-10;[0]||Type|detail|desc#|[1]||type1|detail1|desc1#|[2]||type2|detail2|desc2

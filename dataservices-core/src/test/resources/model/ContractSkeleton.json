@@ -1,0 +1,173 @@
+{
+	"docRef": null,
+	"modelName": "ContractCDM",
+	"targetDocRef": null,
+	"targetDocumentModel": "Contract-document",
+	"children": [
+		{
+			"name": "r_policyHolder",
+			"path": "/RootGroup/r_policyHolder",
+			"relationshipModelName": "PolicyHolder",
+			"sourceRole": "contract",
+			"targetRole": "businessPartner",
+			"targetDocumentModel": "BusinessPartner-document",
+			"children": [
+				{
+					"name": "r_location",
+					"path": "/RootGroup/r_policyHolder/r_location",
+					"relationshipModelName": "Location",
+					"sourceRole": "businessPartner",
+					"targetRole": "address",
+					"targetDocumentModel": "Address-document",
+					"children": [
+						{
+							"name": "address",
+							"path": "/RootGroup/r_policyHolder/r_location/address",
+							"children": [],
+							"linkDocRef": null
+						}
+					],
+					"linkDocRef": null
+				},
+				{
+					"name": "r_postAddress",
+					"path": "/RootGroup/r_policyHolder/r_postAddress",
+					"relationshipModelName": "PostAddress",
+					"sourceRole": "businessPartner",
+					"targetRole": "address",
+					"targetDocumentModel": "Address-document",
+					"children": [
+						{
+							"name": "address",
+							"path": "/RootGroup/r_policyHolder/r_postAddress/address",
+							"children": [],
+							"linkDocRef": null
+						}
+					],
+					"linkDocRef": null
+				},
+				{
+					"name": "businessPartner",
+					"path": "/RootGroup/r_policyHolder/businessPartner",
+					"children": [
+						{
+							"name": "logo",
+							"path": "/RootGroup/r_policyHolder/businessPartner/logo",
+							"children": [],
+							"linkDocRef": null
+						},
+						{
+							"name": "notes",
+							"path": "/RootGroup/r_policyHolder/businessPartner/notes",
+							"children": [],
+							"linkDocRef": null
+						}
+					],
+					"linkDocRef": null
+				}
+			],
+			"linkDocRef": null
+		},
+		{
+			"name": "r_coInsurer",
+			"path": "/RootGroup/r_coInsurer",
+			"relationshipModelName": "CoInsurer",
+			"sourceRole": "contract",
+			"targetRole": "businessPartner",
+			"targetDocumentModel": "BusinessPartner-document",
+			"children": [
+				{
+					"name": "additionalFields",
+					"path": "/RootGroup/r_coInsurer/additionalFields",
+					"children": [],
+					"linkDocRef": null
+				},
+				{
+					"name": "r_location",
+					"path": "/RootGroup/r_coInsurer/r_location",
+					"relationshipModelName": "Location",
+					"sourceRole": "businessPartner",
+					"targetRole": "address",
+					"targetDocumentModel": "Address-document",
+					"children": [
+						{
+							"name": "address",
+							"path": "/RootGroup/r_coInsurer/r_location/address",
+							"children": [],
+							"linkDocRef": null
+						}
+					],
+					"linkDocRef": null
+				},
+				{
+					"name": "r_postAddress",
+					"path": "/RootGroup/r_coInsurer/r_postAddress",
+					"relationshipModelName": "PostAddress",
+					"sourceRole": "businessPartner",
+					"targetRole": "address",
+					"targetDocumentModel": "Address-document",
+					"children": [
+						{
+							"name": "address",
+							"path": "/RootGroup/r_coInsurer/r_postAddress/address",
+							"children": [],
+							"linkDocRef": null
+						}
+					],
+					"linkDocRef": null
+				},
+				{
+					"name": "businessPartner",
+					"path": "/RootGroup/r_coInsurer/businessPartner",
+					"children": [
+						{
+							"name": "logo",
+							"path": "/RootGroup/r_coInsurer/businessPartner/logo",
+							"children": [],
+							"linkDocRef": null
+						},
+						{
+							"name": "notes",
+							"path": "/RootGroup/r_coInsurer/businessPartner/notes",
+							"children": [],
+							"linkDocRef": null
+						}
+					],
+					"linkDocRef": null
+				}
+			],
+			"linkDocRef": null
+		},
+		{
+			"name": "cdm",
+			"path": "/RootGroup/cdm",
+			"children": [],
+			"linkDocRef": null
+		},
+		{
+			"name": "contract",
+			"path": "/RootGroup/contract",
+			"children": [],
+			"linkDocRef": null
+		},
+		{
+			"name": "contractAdditionalFields",
+			"path": "/RootGroup/contractAdditionalFields",
+			"children": [],
+			"linkDocRef": null
+		},
+		{
+			"name": "__meta",
+			"path": "/RootGroup/__meta",
+			"children": [
+				{
+					"name": "extensions",
+					"path": "/RootGroup/__meta/extensions",
+					"children": [],
+					"linkDocRef": null
+				}
+			],
+			"linkDocRef": null
+		}
+	]
+}

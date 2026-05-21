@@ -1,0 +1,22 @@
+{
+  "field_types": {
+    "String1": "aAzZ",
+    "String2": "Test",
+    "Date1": "2015-12-12",
+    "Date2": "2016-11-12",
+    "Boolean": false,
+    "Number1": 101,
+    "Number2": 2.0,
+    "Number3": 3,
+    "Enum": "WHITE"
+  },
+  "root": {
+    "start": {
+      "intermediate": {
+        "end": {
+          "SampleField": "SampleFiled"
+        }
+      }
+    }
+  }
+}

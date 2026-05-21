@@ -1,0 +1,114 @@
+{
+  "header": {
+    "id": "PartnerAddresses",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Partner Addresses"
+      },
+      {
+        "locale": "de",
+        "text": "Partneradressen"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Partner",
+        "reference": "BusinessPartner"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Address",
+        "reference": "Address"
+      }
+    ]
+  },
+  "content": {
+    "duplicatesAllowed": false,
+    "associationType": "SHARED",
+    "storage": "EXTERNAL",
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Partner Addresses"
+      },
+      {
+        "locale": "de",
+        "text": "Partneradressen"
+      }
+    ],
+    "linkDocumentModel": null,
+    "entityCharacteristics": [
+      {
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {},
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Business Partner"
+          },
+          {
+            "locale": "de",
+            "text": "Geschäftspartner"
+          }
+        ],
+        "role": "Partner",
+        "documentModel": "BusinessPartner"
+      },
+      {
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": 2
+          }
+        },
+        "candidateConstraints": {},
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Address"
+          },
+          {
+            "locale": "de",
+            "text": "Anschrift"
+          }
+        ],
+        "role": "Address",
+        "documentModel": "Address"
+      }
+    ]
+  }
+}

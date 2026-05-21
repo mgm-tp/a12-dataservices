@@ -1,0 +1,259 @@
+@startuml
+
+!procedure group(x)
+class x << (G,#DDAAFF) >>
+!endprocedure
+
+!procedure cdmGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure field(x)
+class x << (F,#DDFFAA) >> #White
+!endprocedure
+
+!procedure embeddedField(name, type, fieldType)
+name <<type>>: fieldType
+!endprocedure
+
+!procedure rule(x)
+class x << (R,#DDBBAA) >> #FFDDEE
+!endprocedure
+
+!procedure embeddedRule(name, type)
+<back:FFDDEE>name() <<type>></back>
+!endprocedure
+
+!procedure embeddedRule(name, type, $errorCondition)
+.. <back:FFDDEE> name <<type>> </back> ..
+<back:FFDDEE>errorCondition:</back> $errorCondition
+!endprocedure
+
+!procedure computation(x)
+class x << (C,#DDBBAA) >> #FFEEDD
+!endprocedure
+
+!procedure computationAlternative($operation, $precondition)
+.. alternative ..
+operation: $operation
+precondition: $precondition
+!endprocedure
+
+!procedure embeddedComputation(name, type, $operation, $precondition)
+.. <back:FFEEDD> name <<type>> </back> ..
+<back:FFEEDD>operation:</back> $operation
+<back:FFEEDD>precondition:</back> $precondition
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure embeddedComputation(name, type )
+<back:FFEEDD>name() <<type>></back>
+!endprocedure
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure linkGroup(x)
+group(x) #PeachPuff
+!endprocedure
+
+!procedure relLink($name,$rmId,$link1,$link2,$ld="")
+circle $name as $rmId #PeachPuff
+$rmId $link1
+$rmId $link2
+!if $ld!=""
+$rmId -[#IndianRed]right $ld: <<linkDocument>>
+linkDocument($ld)
+!endif
+!endprocedure
+
+left to right direction
+
+title Document Models
+
+document('"Address" as Address') {
+		embeddedField(AddressRoot.AddressType, Field, EnumerationType)
+		embeddedField(AddressRoot.Location, Field, StringType)
+		embeddedField(AddressRoot.Street, Field, StringType)
+		embeddedField(AddressRoot.HouseNumber, Field, StringType)
+		embeddedField(AddressRoot.City, Field, StringType)
+		embeddedField(AddressRoot.PostCode, Field, StringType)
+		embeddedField(AddressRoot.Country, Field, StringType)
+		embeddedField(AddressRoot.PostalAddress, Field, ConfirmType)
+		embeddedRule(AddressRoot.MustContainCountry, Rule)
+}
+document('"BusinessPartner" as BusinessPartner') {
+		embeddedField(__meta.docRef, Field, StringType)
+		embeddedField(__meta.modelReference, Field, StringType)
+		embeddedField(__meta.modelVersion, Field, StringType)
+		embeddedField(__meta.creator, Field, StringType)
+		embeddedField(__meta.createdAt, Field, DateTimeType)
+		embeddedField(__meta.modifier, Field, StringType)
+		embeddedField(__meta.modifiedAt, Field, DateTimeType)
+		embeddedField(BusinessPartnerRoot.Attachment.original_filename, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.internal_filename, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.content, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.attachment_id, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.size, Field, NumberType)
+		embeddedField(BusinessPartnerRoot.Attachment.mime_type, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.category, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.description, Field, StringType)
+		embeddedRule(BusinessPartnerRoot.Attachment.AttachmentInternalFilenameRequired, Rule)
+		embeddedRule(BusinessPartnerRoot.Attachment.AttachmentMimeTypeRequired, Rule)
+		embeddedRule(BusinessPartnerRoot.Attachment.AttachmentIdOrContentFilled, Rule)
+		embeddedRule(BusinessPartnerRoot.Attachment.SizeOfContentFilled, Rule)
+		embeddedField(BusinessPartnerRoot.Employment.signingDateTime, Field, DateTimeType)
+		embeddedField(BusinessPartnerRoot.Employment.employedSince, Field, DateFragmentType)
+		embeddedField(BusinessPartnerRoot.Employment.employedTill, Field, DateFragmentType)
+		embeddedField(BusinessPartnerRoot.Employment.income, Field, NumberType)
+		embeddedField(BusinessPartnerRoot.Employment.tax, Field, NumberType)
+		embeddedComputation(BusinessPartnerRoot.Employment.TaxComputation, Computation)
+		embeddedField(BusinessPartnerRoot.Employment.role, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Employment.currentlyEmployed, Field, BooleanType)
+		embeddedField(BusinessPartnerRoot.Offer.Discount, Field, EnumerationType)
+		embeddedField(BusinessPartnerRoot.Offer.ValidityPeriod, Field, DateRangeType)
+		embeddedField(BusinessPartnerRoot.accountNumber, Field, NumberType)
+		embeddedField(BusinessPartnerRoot.birthday, Field, DateType)
+		embeddedField(BusinessPartnerRoot.Name, Field, StringType)
+		embeddedRule(BusinessPartnerRoot.NameFilled, Rule)
+		embeddedField(BusinessPartnerRoot.Industry, Field, EnumerationType)
+		embeddedRule(BusinessPartnerRoot.IndustryFilled, Rule)
+		embeddedField(BusinessPartnerRoot.role, Field, StringType)
+		embeddedField(BusinessPartnerRoot.income, Field, NumberType)
+		embeddedField(BusinessPartnerRoot.EndOfRelationship, Field, DateTimeType)
+		embeddedField(BusinessPartnerRoot.TimeOfContractSignature, Field, TimeType)
+		embeddedField(BusinessPartnerRoot.ApproximateOfferDate, Field, DateFragmentType)
+		embeddedField(BusinessPartnerRoot.PremiumPartner, Field, ConfirmType)
+		embeddedField(BusinessPartnerRoot.StartOfRelationship, Field, DateType)
+		embeddedField(BusinessPartnerRoot.CustomerDiscount, Field, EnumerationType)
+		embeddedRule(BusinessPartnerRoot.CustomerDiscountFilled, Rule)
+		embeddedField(BusinessPartnerRoot.PersonOrEntity, Field, StringType)
+		embeddedField(BusinessPartnerRoot.SubtypeGroup.Company, Field, StringType)
+		embeddedComputation(BusinessPartnerRoot.SubtypeGroup.PersonComp, Computation)
+		embeddedField(BusinessPartnerRoot.Notes, Field, StringType)
+}
+document('"BusinessPartnerLTD" as BusinessPartnerLTD') {
+		embeddedField(BusinessPartnerRoot.Attachment.original_filename, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.internal_filename, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.content, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.attachment_id, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.size, Field, NumberType)
+		embeddedField(BusinessPartnerRoot.Attachment.mime_type, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.category, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.description, Field, StringType)
+		embeddedRule(BusinessPartnerRoot.Attachment.AttachmentInternalFilenameRequired, Rule)
+		embeddedRule(BusinessPartnerRoot.Attachment.AttachmentMimeTypeRequired, Rule)
+		embeddedRule(BusinessPartnerRoot.Attachment.AttachmentIdOrContentFilled, Rule)
+		embeddedRule(BusinessPartnerRoot.Attachment.SizeOfContentFilled, Rule)
+		embeddedField(BusinessPartnerRoot.Name, Field, StringType)
+		embeddedRule(BusinessPartnerRoot.NameFilled, Rule)
+		embeddedField(BusinessPartnerRoot.Industry, Field, EnumerationType)
+		embeddedRule(BusinessPartnerRoot.IndustryFilled, Rule)
+		embeddedField(BusinessPartnerRoot.StartOfRelationship, Field, DateType)
+		embeddedField(BusinessPartnerRoot.Employment.income, Field, NumberType)
+		embeddedField(BusinessPartnerRoot.Employment.tax, Field, NumberType)
+		embeddedComputation(BusinessPartnerRoot.Employment.TaxComputation, Computation)
+		embeddedField(BusinessPartnerRoot.CustomerDiscount, Field, EnumerationType)
+		embeddedRule(BusinessPartnerRoot.CustomerDiscountFilled, Rule)
+		embeddedField(BusinessPartnerRoot.PersonOrEntity, Field, StringType)
+		embeddedField(BusinessPartnerRoot.SubtypeGroup.Type, Field, EnumerationType)
+		embeddedComputation(BusinessPartnerRoot.SubtypeGroup.EntityComp, Computation)
+}
+document('"BusinessPartnerSuper" as BusinessPartnerSuper') {
+		embeddedField(BusinessPartnerRoot.Attachment.original_filename, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.internal_filename, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.content, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.attachment_id, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.size, Field, NumberType)
+		embeddedField(BusinessPartnerRoot.Attachment.mime_type, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.category, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Attachment.description, Field, StringType)
+		embeddedRule(BusinessPartnerRoot.Attachment.AttachmentInternalFilenameRequired, Rule)
+		embeddedRule(BusinessPartnerRoot.Attachment.AttachmentMimeTypeRequired, Rule)
+		embeddedRule(BusinessPartnerRoot.Attachment.AttachmentIdOrContentFilled, Rule)
+		embeddedRule(BusinessPartnerRoot.Attachment.SizeOfContentFilled, Rule)
+		embeddedField(BusinessPartnerRoot.Name, Field, StringType)
+		embeddedField(BusinessPartnerRoot.Industry, Field, EnumerationType)
+		embeddedField(BusinessPartnerRoot.StartOfRelationship, Field, DateType)
+		embeddedField(BusinessPartnerRoot.CustomerDiscount, Field, EnumerationType)
+		embeddedField(BusinessPartnerRoot.Employment.income, Field, NumberType)
+		embeddedField(BusinessPartnerRoot.Employment.tax, Field, NumberType)
+		embeddedComputation(BusinessPartnerRoot.Employment.TaxComputation, Computation)
+		embeddedField(BusinessPartnerRoot.PersonOrEntity, Field, StringType)
+}
+document('"CoInsuredAdditionalFields" as CoInsuredAdditionalFields') {
+		embeddedField(CoInsuredRoot.Name, Field, StringType)
+		embeddedField(CoInsuredRoot.ID, Field, StringType)
+		embeddedField(CoInsuredRoot.Role, Field, EnumerationType)
+		embeddedField(CoInsuredRoot.Percentage, Field, NumberType)
+		embeddedField(CoInsuredRoot.SigningDate, Field, DateType)
+		embeddedComputation(CoInsuredRoot.AddID, Computation)
+}
+document('"Contract" as Contract') {
+		embeddedField(ContractRoot.ContractName, Field, StringType)
+		embeddedField(ContractRoot.ContractDescription, Field, StringType)
+		embeddedField(ContractRoot.LengthOfContract, Field, NumberType)
+		embeddedField(ContractRoot.ContractValue, Field, NumberType)
+		embeddedField(ContractRoot.Liability, Field, NumberType)
+		embeddedField(ContractRoot.CostToCustomer, Field, NumberType)
+		embeddedField(ContractRoot.NoOfCoInsuredCustomers, Field, NumberType)
+		embeddedField(ContractRoot.MaxDiscount, Field, StringType)
+		embeddedField(ContractRoot.CostPerCoInsured, Field, NumberType)
+		embeddedField(ContractRoot.Valid, Field, BooleanType)
+		embeddedField(ContractRoot.Type, Field, EnumerationType)
+		embeddedField(ContractRoot.ContractDates.ContractStartDate, Field, DateTimeType)
+		embeddedField(ContractRoot.ContractDates.ContractEndDate, Field, DateType)
+		embeddedField(ContractRoot.ContractDates.ContractEndTime, Field, TimeType)
+		embeddedField(ContractRoot.ContractDates.ContractReviewDate, Field, DateFragmentType)
+		embeddedField(ContractRoot.ContractDates.LastPremiumPaidDate, Field, DateType)
+		embeddedField(ContractRoot.ContractDates.CoveragePeriod, Field, DateRangeType)
+		embeddedField(ContractRoot.ChangeLog.ID, Field, StringType)
+		embeddedField(ContractRoot.ChangeLog.Number, Field, NumberType)
+		embeddedField(ContractRoot.ChangeLog.ChangeTimestamp, Field, DateType)
+		embeddedField(ContractRoot.ChangeLog.Description, Field, StringType)
+		embeddedField(ContractRoot.ChangeLog.User, Field, StringType)
+		embeddedField(ContractRoot.ChangeLog.Status, Field, TypeDefType)
+		embeddedField(ContractRoot.ChangeLog.Priority, Field, EnumerationType)
+		embeddedField(ContractRoot.ChangeLog.Changes.ID, Field, StringType)
+		embeddedField(ContractRoot.ChangeLog.Changes.Title, Field, StringType)
+		embeddedField(ContractRoot.ChangeLog.Changes.Details, Field, StringType)
+		embeddedField(ContractRoot.ChangeLog.Changes.Priority, Field, EnumerationType)
+		embeddedField(ContractRoot.ChangeLog.Changes.Status, Field, TypeDefType)
+		embeddedField(ContractRoot.ChangeLog.Changes.LastModified, Field, DateType)
+		embeddedField(ContractRoot.ChangeLog.Changes.SubChanges.ID, Field, StringType)
+		embeddedField(ContractRoot.ChangeLog.Changes.SubChanges.TItle, Field, StringType)
+		embeddedField(ContractRoot.ChangeLog.Changes.SubChanges.Details, Field, StringType)
+		embeddedField(ContractRoot.ChangeLog.Changes.SubChanges.Priority, Field, EnumerationType)
+		embeddedField(ContractRoot.ChangeLog.Changes.SubChanges.Status, Field, TypeDefType)
+		embeddedField(ContractRoot.ChangeLog.Changes.SubChanges.CreatedAt, Field, DateFragmentType)
+}
+document('"ContractAutomotive" as ContractAutomotive') {
+		embeddedField(ContractRoot.ContractName, Field, StringType)
+		embeddedField(ContractRoot.ContractDescription, Field, StringType)
+		embeddedField(ContractRoot.LengthOfContract, Field, NumberType)
+		embeddedField(ContractRoot.ContractValue, Field, NumberType)
+		embeddedField(ContractRoot.Liability, Field, NumberType)
+		embeddedField(ContractRoot.CostToCustomer, Field, NumberType)
+		embeddedField(ContractRoot.NoOfCoInsuredCustomers, Field, NumberType)
+		embeddedField(ContractRoot.MaxDiscount, Field, StringType)
+		embeddedField(ContractRoot.CostPerCoInsured, Field, NumberType)
+		embeddedField(ContractRoot.Valid, Field, BooleanType)
+		embeddedField(ContractRoot.Car.Make, Field, StringType)
+		embeddedField(ContractRoot.Car.Model, Field, StringType)
+}
+
+BusinessPartner -left|> BusinessPartnerSuper: <<subtype>>
+document('"BusinessPartner" as BusinessPartner')
+
+BusinessPartnerLTD -left|> BusinessPartnerSuper: <<subtype>>
+document('"BusinessPartnerLTD" as BusinessPartnerLTD')
+document('"BusinessPartnerSuper" as BusinessPartnerSuper')
+
+ContractAutomotive -left|> Contract: <<subtype>>
+document('"ContractAutomotive" as ContractAutomotive')
+document('"Contract" as Contract')
+@enduml

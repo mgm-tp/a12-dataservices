@@ -1,0 +1,19 @@
+{
+  "RootGroup": {
+    "TestDate": "2018-11-05",
+    "Wohngeldnummer": "87675434232",
+    "Telefonnummer": "594000000000",
+    "SubGroup": {
+      "Field_1": "1",
+      "Field_2": "2"
+    },
+    "DateTime_Field": "2018-11-19T15:30:00",
+    "Time_Field": "15:30:00",
+    "Boolean_Filed": false,
+    "Confirm_Field": true,
+    "Enumeration_Filed": "ENUM1",
+    "TypeDef_Field": false,
+    "Number_Field": 12.345,
+    "NumberUnit_Field": 11.33
+  }
+}

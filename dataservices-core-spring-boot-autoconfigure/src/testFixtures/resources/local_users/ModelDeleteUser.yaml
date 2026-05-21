@@ -1,0 +1,7 @@
+username: model_delete_user
+password: model_delete_user
+firstname: model_delete
+lastname: model_delete
+email: model_delete@min.com
+authorities:
+  - "ModelDelete"

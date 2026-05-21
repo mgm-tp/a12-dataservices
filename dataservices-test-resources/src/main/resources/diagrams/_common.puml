@@ -1,0 +1,34 @@
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure crd(x,y="")
+class x << (D,#AADDBB) >> <<CRD>> #PowderBlue
+!endprocedure
+
+!procedure group(x)
+class x << (G,#DDBBAA) >>
+!endprocedure
+
+!procedure rootGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure cdmDomain(name)
+package name << Frame >>
+!endprocedure
+
+!procedure link(name,link1,link2,ld="")
+circle name #PeachPuff
+name link1
+name link2
+!if ld!=""
+name -[#IndianRed]right- ld: <<linkDocument>>
+linkDocument(ld)
+!endif
+!endprocedure

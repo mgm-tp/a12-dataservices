@@ -1,0 +1,29 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "addLinkContractBusinessPartner",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ContractCoInsuredPartner",
+        "entities": [
+          {
+            "role": "%s",
+            "docRef": "%s"
+          },
+          {
+            "role": "%s",
+            "docRef": "%s"
+          }
+        ],
+        "predecessorLinkRef": "%s",
+        "position": "%s"
+      },
+      "linkDocument": {
+        "CoInsuredRoot": {
+          "Name": "Mister Co Insured"
+        }
+       }
+    }
+  }
+]

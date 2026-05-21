@@ -1,0 +1,10 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "bullshit",
+    "method": "CRAPPY",
+    "params": {
+      "parameter": "xyz"
+    }
+  }
+]

@@ -1,0 +1,7 @@
+username: document_copy_user
+password: document_copy_user
+firstname: document_copy
+lastname: document_copy
+email: document_copy@min.com
+authorities:
+  - "DocumentCopy"

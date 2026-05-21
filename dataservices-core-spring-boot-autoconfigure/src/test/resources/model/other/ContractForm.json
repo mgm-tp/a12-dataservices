@@ -1,0 +1,79 @@
+{
+  "header": {
+    "id": "ContractForm",
+    "modelType": "form",
+    "modelVersion": "35.0.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": [
+      {
+        "alias": "Contract",
+        "purpose": "data binding",
+        "modelType": "document",
+        "reference": "ContractCDM"
+      }
+    ]
+  },
+  "content": {
+    "subHeaderBox": {
+      "id": "subHeaderBox1"
+    },
+    "footerBox": {
+      "id": "footerBox1"
+    },
+    "screens": [
+      {
+        "id": "screen_3d201",
+        "name": "Screen 1",
+        "screenElements": [
+          {
+            "type": "Section",
+            "id": "section_4227c",
+            "name": "Custom",
+            "screenElements": [
+              {
+                "type": "MultiColumnSection",
+                "id": "multicolumnsection_32d82",
+                "name": "Test",
+                "layout": {
+                  "lg": "12"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "fieldConfiguration": {
+      "field": [
+        {
+          "dependentField": {
+            "masterField": "field_a09a6",
+            "case": [
+              {
+                "masterValue": "false",
+                "clear": true
+              },
+              {
+                "masterValue": "true",
+                "clear": true
+              }
+            ]
+          },
+          "elementRef": "field_828da"
+        }
+      ]
+    },
+    "groupConfiguration": {},
+    "defaults": {}
+  }
+}

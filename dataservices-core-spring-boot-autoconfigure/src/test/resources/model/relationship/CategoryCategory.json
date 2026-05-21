@@ -1,0 +1,118 @@
+{
+  "header": {
+    "id": "CategoryCategory",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "de",
+        "text": "CategoryCategory_DE"
+      },
+      {
+        "locale": "en",
+        "text": "CategoryCategory"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Parent",
+        "reference": "DomainCategory"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Child",
+        "reference": "DomainCategory"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "guest,admin,systemAdmin"
+      }
+    ]
+  },
+  "content": {
+    "labels": [
+      {
+        "locale": "de",
+        "text": "CategoryCategory_DE"
+      },
+      {
+        "locale": "en",
+        "text": "CategoryCategory"
+      }
+    ],
+    "associationType": "SHARED",
+    "linkDocumentModel": null,
+    "duplicatesAllowed": true,
+    "entityCharacteristics": [
+      {
+        "role": "Parent",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "CategoryCategory_Parent__DE"
+          },
+          {
+            "locale": "en",
+            "text": "CategoryCategory_Parent"
+          }
+        ],
+        "documentModel": "DomainCategory",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": false,
+            "upperLimit": 1
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": []
+        }
+      },
+      {
+        "role": "Child",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "CategoryCategory_Child_DE"
+          },
+          {
+            "locale": "en",
+            "text": "CategoryCategory_Child"
+          }
+        ],
+        "documentModel": "DomainCategory",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": []
+        }
+      }
+    ],
+    "storage": "EXTERNAL",
+    "embeddedGroupPath": ""
+  }
+}

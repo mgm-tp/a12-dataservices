@@ -1,0 +1,3 @@
+allprojects {
+	group = 'com.mgmtp.a12.dataservices.common'
+}

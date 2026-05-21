@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd"
+				   logicalFilePath="database/schema/34.0.0/model.xml">
+
+	<changeSet id="A12S-1728-model" author="A12S-1728-author">
+		<renameTable oldTableName="RELATIONSHIP_LINK" newTableName="RELATIONSHIP_LINK_OLD"/>
+		<createSequence sequenceName="RELATIONSHIP_ROLE_SEQ" startValue="1" incrementBy="1"/>
+		<createTable tableName="RELATIONSHIP_LINK">
+			<column name="ID" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="RELATIONSHIP_LINK_PK" nullable="false"/>
+			</column>
+			<column name="RELATIONSHIP_MODEL" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CREATED_AT" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+			<column name="LINK_DOCUMENT_DOCREF" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="true"/>
+			</column>
+		</createTable>
+
+		<createTable tableName="RELATIONSHIP_ROLE">
+			<column name="ID" type="BIGINT" defaultValueSequenceNext="RELATIONSHIP_ROLE_SEQ">
+				<constraints primaryKey="true" primaryKeyName="RELATIONSHIP_ROLE_PK" nullable="false"/>
+			</column>
+			<column name="RELATIONSHIP_ID" type="BIGINT">
+				<constraints foreignKeyName="FK_RELATIONSHIP_ID" referencedTableName="RELATIONSHIP_LINK"
+							 referencedColumnNames="ID" nullable="false"/>
+			</column>
+			<column name="ROLE_NAME" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ROLE_DOCREF" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<createTable tableName="RELATIONSHIP_ORDER">
+			<column name="ID" type="BIGINT">
+				<constraints foreignKeyName="FK_RELATIONSHIP_ROLE_ID"
+							 referencedTableName="RELATIONSHIP_ROLE" referencedColumnNames="ID" nullable="false"
+							 primaryKey="true" primaryKeyName="RELATIONSHIP_ORDER_PK"/>
+			</column>
+			<column name="ROLE_ORDER" type="VARCHAR(2000 ${varcharUnit})">
+				<constraints nullable="true"/>
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="A12S-2439-model" author="A12S-2439-author">
+		<createTable tableName="ATTACHMENT_HEADER">
+			<column name="ID" type="VARCHAR(500 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="ATTACHMENT_HEADER_PK" nullable="false"/>
+			</column>
+			<column name="FILE_NAME" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CREATED_AT" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CREATED_BY" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+			<column name="MODIFIED_AT" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP">
+				<constraints nullable="true"/>
+			</column>
+			<column name="MODIFIED_BY" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="true"/>
+			</column>
+			<column name="MIME_TYPE" type="VARCHAR(255 ${varcharUnit})">
+				<constraints nullable="true"/>
+			</column>
+		</createTable>
+
+		<createSequence sequenceName="ATTACHMENT_ANNOTATION_SEQ" startValue="1" incrementBy="1"/>
+		<createTable tableName="ATTACHMENT_ANNOTATION">
+			<column name="ID" type="BIGINT" defaultValueSequenceNext="ATTACHMENT_ANNOTATION_SEQ">
+				<constraints primaryKey="true" primaryKeyName="ATTACHMENT_ANNOTATION_PK" nullable="false"/>
+			</column>
+			<column name="ATTACHMENT_HEADER_ID" type="VARCHAR(500 ${varcharUnit})">
+				<constraints foreignKeyName="FK_ATTACHMENT_HEADER_ANNOTATION" referencedTableName="ATTACHMENT_HEADER"
+							 referencedColumnNames="ID" nullable="true"/>
+			</column>
+			<column name="NAME" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+			<column name="VALUE" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+
+		<createSequence sequenceName="ATTACHMENT_REFERENCE_SEQ" startValue="1" incrementBy="1"/>
+		<createTable tableName="ATTACHMENT_REFERENCE">
+			<column name="ID" type="BIGINT" defaultValueSequenceNext="ATTACHMENT_REFERENCE_SEQ">
+				<constraints primaryKey="true" primaryKeyName="ATTACHMENT_REFERENCE_PK" nullable="false"/>
+			</column>
+			<column name="ATTACHMENT_HEADER_ID" type="VARCHAR(500 ${varcharUnit})">
+				<constraints foreignKeyName="FK_ATTACHMENT_HEADER_REFERENCE" referencedTableName="ATTACHMENT_HEADER"
+							 referencedColumnNames="ID" nullable="true"/>
+			</column>
+			<column name="TYPE" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+			<column name="REFERENCE" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="A12S-2441-model" author="A12S-2441-author">
+		<createTable tableName="DIRTY_ATTACHMENT">
+			<column name="ID" type="VARCHAR(500 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="DIRTY_ATTACHMENT_PK" nullable="false"/>
+			</column>
+			<column name="CREATED_AT" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CREATED_BY" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="A12S-2310-model" author="A12S-2310-author" dbms="postgresql">
+		<sql>alter table relationship_order alter column role_order set data type varchar(2000) collate "POSIX"</sql>
+	</changeSet>
+
+	<changeSet id="A12S-2385-model" author="A12S-2385-author">
+		<sql dbms="h2">
+			alter table model_annotations alter column "VALUE" rename to annotation_value;
+			alter table attachment_annotation alter column "VALUE" rename to annotation_value;
+		</sql>
+		<sql dbms="!h2">
+			alter table model_annotations rename column value to annotation_value;
+			alter table attachment_annotation rename column value to annotation_value;
+		</sql>
+	</changeSet>
+
+	<changeSet id="A12S-2657-model" author="A12S-2657-author">
+		<createTable tableName="ATTACHMENTS">
+			<column name="ID" type="VARCHAR(500 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="ATTACHMENTS_PK" nullable="false"/>
+			</column>
+			<column name="CONTENT" type="BLOB"/>
+		</createTable>
+	</changeSet>
+
+	<changeSet  author="A12S-2821-author"  id="A12S-2821-model" failOnError="false">
+       <preConditions onFail="MARK_RAN">
+       		<and>
+	            <tableExists tableName="qrtz_cron_triggers"/>
+	            <tableExists tableName="qrtz_triggers"/>
+	            <tableExists tableName="qrtz_job_details"/>
+	            <tableExists tableName="qrtz_fired_triggers"/>
+       		</and>
+        </preConditions>
+	    <delete tableName="qrtz_cron_triggers">
+	        <where>sched_name = 'quartzScheduler' and trigger_group = 'attachments' and trigger_name = 'AttachmentCleanup_attachmentsTmp_trigger'</where>
+	    </delete>
+	    <delete tableName="qrtz_triggers">
+	        <where>sched_name = 'quartzScheduler' and trigger_group = 'attachments' and trigger_name = 'AttachmentCleanup_attachmentsTmp_trigger'</where>
+	    </delete>
+	    <delete tableName="qrtz_job_details">
+	        <where>sched_name = 'quartzScheduler' and job_group = 'attachments' and job_name = 'attachmentCleanupJob'</where>
+	    </delete>
+	    <delete tableName="qrtz_fired_triggers">
+	        <where>sched_name = 'quartzScheduler' and trigger_group = 'attachments' and trigger_name = 'AttachmentCleanup_attachmentsTmp_trigger'</where>
+	    </delete>
+	</changeSet>
+
+	<changeSet id="A12S-2861-model" author="A12S-2861-author">
+		<createTable tableName="REQUEST_ID">
+			<column name="ID" type="VARCHAR(500 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="REQUEST_TRANSACTIONS_PK" nullable="false"/>
+			</column>
+			<column name="STATE" type="VARCHAR(50 ${varcharUnit})"/>
+			<column name="TIMESTAMP" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet  author="A12S-3077-author"  id="A12S-3077-model" failOnError="false">
+		<preConditions onFail="MARK_RAN">
+			<and>
+				<tableExists tableName="qrtz_cron_triggers"/>
+				<tableExists tableName="qrtz_triggers"/>
+				<tableExists tableName="qrtz_job_details"/>
+				<tableExists tableName="qrtz_fired_triggers"/>
+			</and>
+		</preConditions>
+		<delete tableName="qrtz_cron_triggers">
+			<where>sched_name = 'quartzScheduler' and trigger_group = 'attachments' and trigger_name like 'AttachmentCleanup_%_trigger'</where>
+		</delete>
+		<delete tableName="qrtz_triggers">
+			<where>sched_name = 'quartzScheduler' and trigger_group = 'attachments' and trigger_name like 'AttachmentCleanup_%_trigger'</where>
+		</delete>
+		<delete tableName="qrtz_job_details">
+			<where>sched_name = 'quartzScheduler' and job_group = 'attachments' and job_name = 'attachmentCleanupJob'</where>
+		</delete>
+		<delete tableName="qrtz_fired_triggers">
+			<where>sched_name = 'quartzScheduler' and trigger_group = 'attachments' and trigger_name like 'AttachmentCleanup_%_trigger'</where>
+		</delete>
+	</changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd"
+				   logicalFilePath="database/schema/37.0.0/model.xml">
+
+	<changeSet id="A12S-3141" author="A12S-3141-author">
+		<preConditions onFail="MARK_RAN">
+			<tableExists tableName="attachment_reference_backup_v34"/>
+			<not>
+				<changeSetExecuted id="A12S-3141" author="A12S-3141-author" changeLogFile="database/schema/36.0.0/model.xml"/>
+			</not>
+		</preConditions>
+		<dropTable tableName="attachment_reference_backup_v34"/>
+	</changeSet>
+
+	<changeSet id="A12S-4643" author="A12S-4643-author">
+		<renameTable oldTableName="document" newTableName="document_backup"/>
+		<createTable tableName="document">
+			<column name="id" type="VARCHAR(100 ${varcharUnit})">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="model_name" type="VARCHAR(100 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+			<column name="content" type="clob">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="A12S-4796" author="A12S-4796-author">
+		<addColumn tableName="attachment_header">
+			<column name="TYPE_OF_THE_CONTENT" type="VARCHAR(100 ${varcharUnit})" defaultValue="ATTACHMENT_SECURED">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+
+		<sql>
+			-- Update TYPE_OF_THE_CONTENT to ATTACHMENT_SECURED for old data.
+			UPDATE attachment_header
+			SET TYPE_OF_THE_CONTENT = 'ATTACHMENT_SECURED'
+			WHERE TYPE_OF_THE_CONTENT IS NULL;
+		</sql>
+	</changeSet>
+
+</databaseChangeLog>

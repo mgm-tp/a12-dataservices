@@ -1,0 +1,19 @@
+= Enable RPC
+
+Enable all available RPC operations and usage of SpEL expressions in them. For information about available operations see <<json-rpc-endpoint, this link>>.
+
+You may want to disable some of RPC operations or enable custom ones. For this case override following property with list of desired operations:
+
+[source,properties]
+----
+mgmtp.a12.dataservices.json-rpc.allowed-operations=
+----
+
+In case you would want just prohibit SpEL expressions from RPC operations use following property:
+
+[source,properties]
+----
+mgmtp.a12.dataservices.json-rpc.spel.enabled=false
+----
+
+See <<RPC-properties>> for additional information.

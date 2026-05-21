@@ -1,0 +1,85 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "%s",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "Product": {
+          "number": "123",
+          "externalNumber": {
+            "number": 123,
+            "system": "Christoph System Z"
+          },
+          "name": "Shiny Shoe",
+          "description": "A pair of tiny and shiny shoes.",
+          "metaDescription": "tbd",
+          "logistics": {
+            "weight": {
+              "weightValue": 2,
+              "weightUnit": "kg"
+            }
+          },
+          "searchKeywords": {
+            "searchKeyword": "shoe"
+          },
+          "mediaFiles": {
+            "mediaFile": {
+              "mimeType": "image/png",
+              "type": "image",
+              "url": "/media/images/shinyshoe.png"
+            }
+          },
+          "packaging": {
+            "packagingAmount": 1.0,
+            "packagingUnit": "Stück",
+            "packagingMultiplicator": 1
+          }
+        }
+      },
+      "documentModelName": "Product"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "%s",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": {
+        "Properties": {
+          "name": "Print some stuff",
+          "startDate": "2017-09-01",
+          "endDate": "2018-09-01"
+        }
+      },
+      "documentModelName": "Campaign"
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "AddLink1",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ProductCampaign",
+        "entities": [
+          {
+            "role": "ProductRole",
+            "docRef": "#{%s}"
+          },
+          {
+            "role": "CampaignRole",
+            "docRef": "#{%s}"
+          }
+        ]
+      },
+      "linkDocument": {
+        "root": {
+          "assignmentId": "1234",
+          "valid_from": "2019-09-09",
+          "valid_till": "2020-09-09"
+        }
+      }
+    }
+  }
+]

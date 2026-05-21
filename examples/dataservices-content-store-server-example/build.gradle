@@ -1,0 +1,25 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.spring-boot-conventions'
+}
+
+dependencies {
+	implementation project(':content-store:dataservices-content-store-server-app')
+	implementation project(':content-store:dataservices-content-store-server-spring-boot-autoconfigure')
+	implementation project(':content-store:dataservices-content-store-server')
+	implementation project(':content-store:dataservices-content-store-core')
+	implementation project(':content-store:dataservices-content-store-core-spring-boot-autoconfigure')
+}
+
+springBoot {
+	mainClass.set 'com.mgmtp.a12.examples.contentstore.ContentStoreServerExampleApplication'
+}
+
+bootRun {
+	systemProperties 'workDir': "${project.rootDir}/"
+}
+
+tasks.named('bootJar') {
+	dependsOn ':content-store:dataservices-content-store-server-app:bootJar'
+}
+
+description = 'Content Store Server Example - Demonstrates usage of the content store server and its extension points'

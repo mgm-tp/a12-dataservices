@@ -1,0 +1,46 @@
+{
+	"name": "@com.mgmtp.a12.dataservices/dataservices-codemod",
+	"version": "38.4.2-SNAPSHOT",
+	"description": "Codemod for Data Services",
+	"author": "mgm technology partners",
+	"license": "(EUPL-1.2 OR LicenseRef-commercial)",
+	"bin": "lib/cli.js",
+	"type": "module",
+	"scripts": {
+		"clean": "rimraf ./lib ./package-lock.json ./target",
+		"compile": "tsc",
+		"initialize": "run-s lint format",
+		"lint": "eslint",
+		"format": "prettier \"./src/**/*.{ts,tsx}\" --check",
+		"test": "vitest --run",
+		"start": "tsc --watch",
+		"lint:fix": "eslint --fix",
+		"format:fix": "prettier \"./src/**/*.{ts,tsx}\" --write",
+		"setVersion": "npm version"
+	},
+	"dependencies": {
+		"@com.mgmtp.a12.devtools/codemod": "^2.0.0"
+	},
+	"devDependencies": {
+		"@com.mgmtp.a12.devtools/tsconfig": "^1.1.0",
+		"@com.mgmtp.a12.devtools/eslint-config": "^3.1.0",
+		"@com.mgmtp.a12.devtools/prettier-config": "^1.1.0",
+		"@types/node": "^24.10.1",
+		"eslint": "^9.23.0",
+		"eslint-plugin-notice": "^1.0.0",
+		"npm-run-all": "^4.1.5",
+		"prettier": "^3.5.3",
+		"rimraf": "^6.1.2",
+		"typescript": "5.8.2",
+		"vitest": "^4.0.16"
+	},
+	"files": [
+		"lib",
+		"LICENSE",
+		"NOTICE",
+		"THIRD_PARTY_NOTICES",
+		"licenses",
+		"src",
+		"!**/__tests__"
+	]
+}

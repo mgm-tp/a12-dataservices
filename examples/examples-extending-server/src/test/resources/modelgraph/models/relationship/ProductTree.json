@@ -1,0 +1,128 @@
+{
+  "header": {
+    "id": "ProductTree",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ProductTree_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ProductTree_EN"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Node",
+        "reference": "TreeProduct"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "ParentRef",
+        "reference": "TreeProduct"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "guest,admin,systemAdmin"
+      }
+    ]
+  },
+  "content": {
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ProductTree_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ProductTree_EN"
+      }
+    ],
+    "associationType": "SHARED",
+    "linkDocumentModel": null,
+    "duplicatesAllowed": false,
+    "entityCharacteristics": [
+      {
+        "role": "Node",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "Node_DE"
+          },
+          {
+            "locale": "en",
+            "text": "Node"
+          }
+        ],
+        "documentModel": "TreeProduct",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 1,
+            "unbounded": true,
+            "upperLimit": 1
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": [
+            {
+              "name": "requiredField",
+              "value": "requiredField"
+            }
+          ]
+        }
+      },
+      {
+        "role": "ParentRef",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "ParentRef_DE"
+          },
+          {
+            "locale": "en",
+            "text": "ParentRef"
+          }
+        ],
+        "documentModel": "TreeProduct",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": 1
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": [
+            {
+              "name": "requiredField",
+              "value": "requiredField"
+            }
+          ]
+        }
+      }
+    ],
+    "storage": "EXTERNAL",
+    "embeddedGroupPath": ""
+  }
+}

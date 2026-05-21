@@ -1,0 +1,16 @@
+{
+  "Group1": {
+    "Field11": 12.1,
+    "TypedField": false,
+    "BooleanField": false,
+    "StringField": "Second",
+    "SampleDate": "2017-02-16",
+    "SamplePatternString": "abczABCZ",
+    "SampleEnum": "two",
+    "SampleDateTime": "2010-12-12T19:30:00",
+    "SampleTime": "10:29:32",
+    "SampleConfirm": true,
+    "DateTestSubType1Boolean": true,
+    "DateTestSubType2Boolean": true
+  }
+}

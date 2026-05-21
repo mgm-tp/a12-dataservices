@@ -1,0 +1,8 @@
+username: "NOTtest"
+password: "admin"
+authorities:
+  - "admin"
+  - "systemAdmin"
+email: test@min.com
+firstname: NOTtest first
+lastname: test last

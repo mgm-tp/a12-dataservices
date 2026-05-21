@@ -1,0 +1,11 @@
+= Disable cache
+
+Disable caching completely.
+
+CAUTION: This profile is discouraged in production environment, because it could cause big performance drop.
+Use only if you know what you do.
+
+This profile will apply to both data services and content stores.
+So use just in case of the standalone mode.
+
+See <<cache-configuration, cache properties>> for additional information.

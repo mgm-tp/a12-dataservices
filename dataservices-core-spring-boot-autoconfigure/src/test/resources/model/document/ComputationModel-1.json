@@ -1,0 +1,716 @@
+{
+  "header": {
+    "id": "ComputationModel-1",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "ComputationModel-1",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "top",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F3",
+                "name": "stringA",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "stringA"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F4",
+                "name": "stringB",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "stringB"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F7",
+                "name": "stringR",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "string Result"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Computation",
+                "id": "C8",
+                "name": "ConcatenatSumString",
+                "annotations": [
+                  {
+                    "name": "severity",
+                    "value": "ERROR"
+                  }
+                ],
+                "Computation": {
+                  "computedFieldRelPath": "../stringR",
+                  "computationAlternatives": [
+                    {
+                      "operation": "[stringA] + [stringB]",
+                      "precondition": "AtLeastOneFieldFilled(stringA, stringB)"
+                    }
+                  ],
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "error text for computation of ConcatenatSumString"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F9",
+                "name": "numberA",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "numberA"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F10",
+                "name": "numberB",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "numberB"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F11",
+                "name": "numberR",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "number Result"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Computation",
+                "id": "C19",
+                "name": "SumNumber",
+                "annotations": [
+                  {
+                    "name": "severity",
+                    "value": "ERROR"
+                  }
+                ],
+                "Computation": {
+                  "computedFieldRelPath": "../numberR",
+                  "computationAlternatives": [
+                    {
+                      "operation": "[numberA] + [numberB]",
+                      "precondition": "AtLeastOneFieldFilled(numberA, numberB) \nAnd [boolean] == True"
+                    }
+                  ],
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "error text for computation of SumNumber"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F20",
+                "name": "boolean",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "bool"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F12",
+                "name": "datefieldA",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "dateA"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F13",
+                "name": "datefieldB",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "dateB"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F14",
+                "name": "datefieldR",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "date result"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Computation",
+                "id": "C33",
+                "name": "ComDate",
+                "annotations": [
+                  {
+                    "name": "severity",
+                    "value": "ERROR"
+                  }
+                ],
+                "Computation": {
+                  "computedFieldRelPath": "../datefieldR",
+                  "computationAlternatives": [
+                    {
+                      "operation": "[datefieldA]",
+                      "precondition": "AtLeastOneFieldFilled(datefieldA, datefieldB)"
+                    }
+                  ],
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "error text for computation of ComDate"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F15",
+                "name": "datetimeA",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "datetimeA"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F16",
+                "name": "datetimeB",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "datetimeB"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F17",
+                "name": "datetimeR",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "datetime Result"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Computation",
+                "id": "C339",
+                "name": "ComDateTime",
+                "annotations": [
+                  {
+                    "name": "severity",
+                    "value": "ERROR"
+                  }
+                ],
+                "Computation": {
+                  "computedFieldRelPath": "../datetimeR",
+                  "computationAlternatives": [
+                    {
+                      "operation": "[datetimeA]",
+                      "precondition": "AtLeastOneFieldFilled(datetimeA, datetimeB)"
+                    }
+                  ],
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "error text for computation of ComDate"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F27",
+                "name": "timeA",
+                "Field": {
+                  "fieldType": {
+                    "type": "TimeType",
+                    "TimeType": {
+                      "format": "HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "timeA"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F28",
+                "name": "timeB",
+                "Field": {
+                  "fieldType": {
+                    "type": "TimeType",
+                    "TimeType": {
+                      "format": "HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "timeB"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F29",
+                "name": "timeR",
+                "Field": {
+                  "fieldType": {
+                    "type": "TimeType",
+                    "TimeType": {
+                      "format": "HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "time Result"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Computation",
+                "id": "C34",
+                "name": "ComTime",
+                "annotations": [
+                  {
+                    "name": "severity",
+                    "value": "ERROR"
+                  }
+                ],
+                "Computation": {
+                  "computedFieldRelPath": "../timeR",
+                  "computationAlternatives": [
+                    {
+                      "operation": "[timeB]",
+                      "precondition": "[enumA] == \"y\""
+                    }
+                  ],
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "error text for computation of ComTime"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F21",
+                "name": "enumA",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "y",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "yes"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "n",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "no"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "m",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "maybe"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "enumA"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F22",
+                "name": "enumB",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "1",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "one"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "2",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "two"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "3",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "three"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "enumB"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F23",
+                "name": "enumR",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "y",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "yes"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "n",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "no"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "m",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "maybe"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "enum result"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "id": "G3",
+          "name": "addresses",
+          "internalDescription": [
+            {
+              "locale": "en",
+              "text": "A list of addresses"
+            }
+          ],
+          "Group": {
+            "repeatability": 100,
+            "elements": [
+              {
+                "type": "Group",
+                "id": "G4",
+                "name": "address",
+                "internalDescription": [
+                  {
+                    "locale": "en",
+                    "text": "One address"
+                  }
+                ],
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F19",
+                      "name": "street",
+                      "internalDescription": [
+                        {
+                          "locale": "en",
+                          "text": "The street name"
+                        }
+                      ],
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F24",
+                      "name": "fullAddressR",
+                      "internalDescription": [
+                        {
+                          "locale": "en",
+                          "text": "The full address result"
+                        }
+                      ],
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Computation",
+                      "id": "C35",
+                      "name": "ComStreet",
+                      "annotations": [
+                        {
+                          "name": "severity",
+                          "value": "ERROR"
+                        }
+                      ],
+                      "Computation": {
+                        "computedFieldRelPath": "../fullAddressR",
+                        "computationAlternatives": [
+                          {
+                            "operation": "[city] + \":\" + [street]",
+                            "precondition": "AllFieldsFilled(city,street)"
+                          }
+                        ],
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "error text for computation of ComStreet"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F25",
+                      "name": "city",
+                      "internalDescription": [
+                        {
+                          "locale": "en",
+                          "text": "the city"
+                        }
+                      ],
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+	"ContractRoot": {
+		"ContractName": "theo",
+		"ContractDescription": "Above",
+		"LengthOfContract": 100,
+		"ContractValue": 2.32,
+		"CostToCustomer": 10,
+		"MaxDiscount": "Öotto"
+	}
+}

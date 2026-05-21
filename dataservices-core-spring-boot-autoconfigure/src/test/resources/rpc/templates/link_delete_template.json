@@ -1,0 +1,27 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "deleteLink",
+    "method": "DELETE_LINK",
+    "params": {
+      "link": {
+        "linkRef": {
+          "linkDescriptor": {
+            "relationshipModel": "%s",
+            "entities": [
+              {
+                "role": "%s",
+                "docRef": "%s"
+              },
+              {
+                "role": "%s",
+                "docRef": "%s"
+              }
+            ]
+          },
+          "id": "%s"
+        }
+      }
+    }
+  }
+]

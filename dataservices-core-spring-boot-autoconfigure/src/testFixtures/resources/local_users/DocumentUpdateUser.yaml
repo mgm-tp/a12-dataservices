@@ -1,0 +1,7 @@
+username: document_update_user
+password: document_update_user
+firstname: document_update
+lastname: document_update
+email: document_update@min.com
+authorities:
+  - "DocumentUpdate"

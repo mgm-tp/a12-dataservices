@@ -1,0 +1,135 @@
+{
+  "Offer": {
+    "CosmosOfferId": "",
+    "ScreenId": "tttttt",
+    "DigPOSOfferStatus": "status-tariff-calculated",
+    "Preconditions": {
+      "Minority_shareholding": true,
+      "Utility": true,
+      "NonExistingCustomer": true
+    },
+    "PolicyCoverage": {
+      "PolicyInceptionDate": "2016-07-01",
+      "CALC_PolicyEndDate": "2018-01-01",
+      "CALC_TariffPremium_Gross": 2380,
+      "PartnerInfo": {
+        "Year": 2015,
+        "TotalAssets": 20000000,
+        "Equity": 7000000,
+        "CALC_EquityRatio": 35
+      },
+      "CoverageExtension": {
+        "NoCoverageExtensions": true
+      },
+      "CoverageVariants": {
+        "Limit2": 10000000,
+        "Limit3": 3000000,
+        "CALC_TariffPremium2": 3200,
+        "CALC_TariffPremium3": 1500,
+        "CALC_TariffPremium2_Gross": 3808,
+        "CALC_TariffPremium3_Gross": 1785
+      }
+    },
+    "ThuegaDnoContract": {
+      "Coverage": {
+        "Premium": {
+          "FlatPremium": {
+            "PremiumValue": ""
+          },
+          "TechnicalPremium": {
+            "CALC_TariffPremium": 2000
+          },
+          "PremiumType": ""
+        },
+        "MainLimit": {
+          "LimitType": "",
+          "TariffLimit": {
+            "TariffLimit": 5000000
+          },
+          "IndividualLimit": {
+            "IndividualLimit": ""
+          }
+        },
+        "Peril": "",
+        "TerritorialScope": "",
+        "TotalAsset": 25000000,
+        "EquityRatioCheck": "&gt;25"
+      },
+      "Trigger": "",
+      "RetroactiveDate": "",
+      "Questionnaire": {
+        "Client": {
+          "Website": ""
+        },
+        "Branch": {
+          "Branch": ""
+        },
+        "FoundingYear": {
+          "Age": true,
+          "FoundingYear": ""
+        },
+        "FinancialFigures": {
+          "AnnualReportAvailable": true,
+          "AnnualDeficit": true
+        },
+        "Members": {
+          "Holding1": "",
+          "Holding2": ""
+        },
+        "Fusion": {
+          "Fusion": "",
+          "Details": ""
+        },
+        "PLC": {
+          "PLC": "",
+          "USA": false,
+          "USADetails": {
+            "Type": "",
+            "ADRDetails": {
+              "Level": "",
+              "Amount": ""
+            },
+            "SEC": "",
+            "Details": ""
+          },
+          "AdditionalShares": "",
+          "Details": ""
+        },
+        "Subsidaries": {
+          "Subsidaries1": "",
+          "Subsidaries2": "",
+          "TotalAssetsUSA": "",
+          "EmployeesUSA": ""
+        },
+        "FormerContracts": {
+          "ExistingContracts": "",
+          "Details1": "",
+          "CancelledContracts": "",
+          "Details2": ""
+        },
+        "WarrentyStatement": {
+          "Warrenty": "",
+          "Details": ""
+        }
+      }
+    },
+    "Partner": {
+      "Name": "Test mgm",
+      "LegalForm": 7,
+      "Street": "BischöflichGeistlicherRatJosefZinnbauerStraße 8",
+      "ZipCode": 84130,
+      "City": "Prämie berechnet"
+    },
+    "ConfirmationOffer": {
+      "Confirmation": true
+    },
+    "ConfirmationPolicy": {
+      "Confirmation": false
+    },
+    "Riskassessment": {
+      "PositiveRiskassessment": true,
+      "DigitalQuestionnaire": false,
+      "ShowQuestions": false
+    }
+  }
+}

@@ -1,0 +1,21 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+	id 'java-test-fixtures'
+}
+
+dependencies {
+	api project(':dataservices-domain')
+	api project(':dataservices-common:dataservices-common-lib')
+	api libs.kernelDocumentService,
+			libs.kernelMdFacade,
+			libs.kernelMdModel,
+			libs.kernelMdDocumentV2,
+			libs.kernelMdModelApi,
+			libs.kernelMdJoin
+
+	testImplementation(testFixtures(project(':dataservices-core')))
+	testImplementation project(':dataservices-test-resources')
+	testImplementation libs.mockitoTestNG
+}
+
+description 'Handles document metadata definition and extension options'

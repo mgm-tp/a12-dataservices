@@ -1,0 +1,2140 @@
+{
+  "header": {
+    "id": "DomainAngabenPerson",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "DomainAngabenPerson",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "typeDefinitions": [
+      {
+        "id": "typedef_28baa07b-6e1b-4b6b-8612-f4983e4a607b",
+        "name": "Staaten",
+        "fieldType": {
+          "type": "EnumerationType",
+          "EnumerationType": {
+            "values": [
+              {
+                "value": "1",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Afghanistan"
+                  }
+                ]
+              },
+              {
+                "value": "2",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Ägypten"
+                  }
+                ]
+              },
+              {
+                "value": "3",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Albanien"
+                  }
+                ]
+              },
+              {
+                "value": "4",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Algerien"
+                  }
+                ]
+              },
+              {
+                "value": "5",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Andorra"
+                  }
+                ]
+              },
+              {
+                "value": "6",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Angola"
+                  }
+                ]
+              },
+              {
+                "value": "7",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Antiguia und Barbuda"
+                  }
+                ]
+              },
+              {
+                "value": "8",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Äquatorialguinea"
+                  }
+                ]
+              },
+              {
+                "value": "9",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Argentinien"
+                  }
+                ]
+              },
+              {
+                "value": "10",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Armenien"
+                  }
+                ]
+              },
+              {
+                "value": "11",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Aserbaidschan"
+                  }
+                ]
+              },
+              {
+                "value": "12",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Äthiopien"
+                  }
+                ]
+              },
+              {
+                "value": "13",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Australien"
+                  }
+                ]
+              },
+              {
+                "value": "14",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Bahamas"
+                  }
+                ]
+              },
+              {
+                "value": "15",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Behrain"
+                  }
+                ]
+              },
+              {
+                "value": "16",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Bangladesch"
+                  }
+                ]
+              },
+              {
+                "value": "17",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Barbados"
+                  }
+                ]
+              },
+              {
+                "value": "18",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Belgien"
+                  }
+                ]
+              },
+              {
+                "value": "19",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Belize"
+                  }
+                ]
+              },
+              {
+                "value": "20",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Benin"
+                  }
+                ]
+              },
+              {
+                "value": "21",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Bhutan"
+                  }
+                ]
+              },
+              {
+                "value": "22",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Bolivien"
+                  }
+                ]
+              },
+              {
+                "value": "23",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Bosnien und Herzogowina"
+                  }
+                ]
+              },
+              {
+                "value": "24",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Botswana"
+                  }
+                ]
+              },
+              {
+                "value": "25",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Brasilien"
+                  }
+                ]
+              },
+              {
+                "value": "26",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Brunei"
+                  }
+                ]
+              },
+              {
+                "value": "27",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Bulgarien"
+                  }
+                ]
+              },
+              {
+                "value": "28",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Burkina Faso"
+                  }
+                ]
+              },
+              {
+                "value": "29",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Burundi"
+                  }
+                ]
+              },
+              {
+                "value": "30",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Chile"
+                  }
+                ]
+              },
+              {
+                "value": "31",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "China Volksrepublik"
+                  }
+                ]
+              },
+              {
+                "value": "32",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Costa Rica"
+                  }
+                ]
+              },
+              {
+                "value": "33",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Dänemark"
+                  }
+                ]
+              },
+              {
+                "value": "34",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Deutschland"
+                  }
+                ]
+              },
+              {
+                "value": "35",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Dominica"
+                  }
+                ]
+              },
+              {
+                "value": "36",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Dominikanische Republik"
+                  }
+                ]
+              },
+              {
+                "value": "37",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Dschibuti"
+                  }
+                ]
+              },
+              {
+                "value": "38",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Ecuador"
+                  }
+                ]
+              },
+              {
+                "value": "39",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "El Salvador"
+                  }
+                ]
+              },
+              {
+                "value": "40",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Elfenbeinküste"
+                  }
+                ]
+              },
+              {
+                "value": "41",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Eritrea"
+                  }
+                ]
+              },
+              {
+                "value": "42",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Estland"
+                  }
+                ]
+              },
+              {
+                "value": "43",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Fidschi"
+                  }
+                ]
+              },
+              {
+                "value": "44",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Finnland"
+                  }
+                ]
+              },
+              {
+                "value": "45",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Frankreich"
+                  }
+                ]
+              },
+              {
+                "value": "46",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Gabun"
+                  }
+                ]
+              },
+              {
+                "value": "47",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Gambia"
+                  }
+                ]
+              },
+              {
+                "value": "48",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Georgien"
+                  }
+                ]
+              },
+              {
+                "value": "49",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Ghana"
+                  }
+                ]
+              },
+              {
+                "value": "50",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Grenada"
+                  }
+                ]
+              },
+              {
+                "value": "51",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Griechenland"
+                  }
+                ]
+              },
+              {
+                "value": "52",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Guatemala"
+                  }
+                ]
+              },
+              {
+                "value": "53",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Guinea"
+                  }
+                ]
+              },
+              {
+                "value": "54",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Guinea-Bissau"
+                  }
+                ]
+              },
+              {
+                "value": "55",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Guyana"
+                  }
+                ]
+              },
+              {
+                "value": "56",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Haiti"
+                  }
+                ]
+              },
+              {
+                "value": "57",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Hondura"
+                  }
+                ]
+              },
+              {
+                "value": "58",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Indien"
+                  }
+                ]
+              },
+              {
+                "value": "59",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Indonesien"
+                  }
+                ]
+              },
+              {
+                "value": "60",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Irak"
+                  }
+                ]
+              },
+              {
+                "value": "61",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Iram"
+                  }
+                ]
+              },
+              {
+                "value": "62",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Irland"
+                  }
+                ]
+              },
+              {
+                "value": "63",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Island"
+                  }
+                ]
+              },
+              {
+                "value": "64",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Israel"
+                  }
+                ]
+              },
+              {
+                "value": "65",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Italien"
+                  }
+                ]
+              },
+              {
+                "value": "66",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Jamaika"
+                  }
+                ]
+              },
+              {
+                "value": "67",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Japan"
+                  }
+                ]
+              },
+              {
+                "value": "68",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Jemen"
+                  }
+                ]
+              },
+              {
+                "value": "69",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Jordanien"
+                  }
+                ]
+              },
+              {
+                "value": "70",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Kambodscha"
+                  }
+                ]
+              },
+              {
+                "value": "71",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Kamerum"
+                  }
+                ]
+              },
+              {
+                "value": "72",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Kanada"
+                  }
+                ]
+              },
+              {
+                "value": "73",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Kap Verde"
+                  }
+                ]
+              },
+              {
+                "value": "74",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Kasachstan"
+                  }
+                ]
+              },
+              {
+                "value": "75",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Katar"
+                  }
+                ]
+              },
+              {
+                "value": "76",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Kenia"
+                  }
+                ]
+              },
+              {
+                "value": "77",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Kirgisistan"
+                  }
+                ]
+              },
+              {
+                "value": "78",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Kiribati"
+                  }
+                ]
+              },
+              {
+                "value": "79",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Kolumbien"
+                  }
+                ]
+              },
+              {
+                "value": "80",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Komoren"
+                  }
+                ]
+              },
+              {
+                "value": "81",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Kongo, Demokratische Republik"
+                  }
+                ]
+              },
+              {
+                "value": "82",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Korea Nord"
+                  }
+                ]
+              },
+              {
+                "value": "83",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Korea Süd"
+                  }
+                ]
+              },
+              {
+                "value": "84",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Kroatien"
+                  }
+                ]
+              },
+              {
+                "value": "85",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Kuba"
+                  }
+                ]
+              },
+              {
+                "value": "86",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Kuwait"
+                  }
+                ]
+              },
+              {
+                "value": "87",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Laos"
+                  }
+                ]
+              },
+              {
+                "value": "88",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Lesotho"
+                  }
+                ]
+              },
+              {
+                "value": "89",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Lettland"
+                  }
+                ]
+              },
+              {
+                "value": "90",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Libanon"
+                  }
+                ]
+              },
+              {
+                "value": "91",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Liberia"
+                  }
+                ]
+              },
+              {
+                "value": "92",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Libyen"
+                  }
+                ]
+              },
+              {
+                "value": "93",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Liechtenstein"
+                  }
+                ]
+              },
+              {
+                "value": "94",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Litauen"
+                  }
+                ]
+              },
+              {
+                "value": "95",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Luxemburg"
+                  }
+                ]
+              },
+              {
+                "value": "96",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Madagaskar"
+                  }
+                ]
+              },
+              {
+                "value": "97",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Malawi"
+                  }
+                ]
+              },
+              {
+                "value": "98",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Malaysia"
+                  }
+                ]
+              },
+              {
+                "value": "99",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Malediven"
+                  }
+                ]
+              },
+              {
+                "value": "100",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Mali"
+                  }
+                ]
+              },
+              {
+                "value": "101",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Malta"
+                  }
+                ]
+              },
+              {
+                "value": "102",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Marokko"
+                  }
+                ]
+              },
+              {
+                "value": "103",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Marshallinseln"
+                  }
+                ]
+              },
+              {
+                "value": "104",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Mauretanien"
+                  }
+                ]
+              },
+              {
+                "value": "105",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Mauritius"
+                  }
+                ]
+              },
+              {
+                "value": "106",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Mazedonien"
+                  }
+                ]
+              },
+              {
+                "value": "107",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Mexiko"
+                  }
+                ]
+              },
+              {
+                "value": "108",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Mikronesien"
+                  }
+                ]
+              },
+              {
+                "value": "109",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Moldau"
+                  }
+                ]
+              },
+              {
+                "value": "110",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Monaco"
+                  }
+                ]
+              },
+              {
+                "value": "111",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Mongolei"
+                  }
+                ]
+              },
+              {
+                "value": "112",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Montenegro"
+                  }
+                ]
+              },
+              {
+                "value": "113",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Mosambik"
+                  }
+                ]
+              },
+              {
+                "value": "114",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Myanmar"
+                  }
+                ]
+              },
+              {
+                "value": "115",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Namibia"
+                  }
+                ]
+              },
+              {
+                "value": "116",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Nauru"
+                  }
+                ]
+              },
+              {
+                "value": "117",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Nepal"
+                  }
+                ]
+              },
+              {
+                "value": "118",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Neuseeland"
+                  }
+                ]
+              },
+              {
+                "value": "119",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Nicaragua"
+                  }
+                ]
+              },
+              {
+                "value": "120",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Niederlande"
+                  }
+                ]
+              },
+              {
+                "value": "121",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Niger"
+                  }
+                ]
+              },
+              {
+                "value": "122",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Nigeria"
+                  }
+                ]
+              },
+              {
+                "value": "123",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Norwegen"
+                  }
+                ]
+              },
+              {
+                "value": "124",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Oman"
+                  }
+                ]
+              },
+              {
+                "value": "125",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Österreich"
+                  }
+                ]
+              },
+              {
+                "value": "126",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Osttimor"
+                  }
+                ]
+              },
+              {
+                "value": "127",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Pakistan"
+                  }
+                ]
+              },
+              {
+                "value": "128",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Palau"
+                  }
+                ]
+              },
+              {
+                "value": "129",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Panama"
+                  }
+                ]
+              },
+              {
+                "value": "130",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Papua-Neuguinea"
+                  }
+                ]
+              },
+              {
+                "value": "131",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Paraguay"
+                  }
+                ]
+              },
+              {
+                "value": "132",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Peru"
+                  }
+                ]
+              },
+              {
+                "value": "133",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Philippinen"
+                  }
+                ]
+              },
+              {
+                "value": "134",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Polen"
+                  }
+                ]
+              },
+              {
+                "value": "135",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Portugal"
+                  }
+                ]
+              },
+              {
+                "value": "136",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Ruanda"
+                  }
+                ]
+              },
+              {
+                "value": "137",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Rumänien"
+                  }
+                ]
+              },
+              {
+                "value": "138",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Russland"
+                  }
+                ]
+              },
+              {
+                "value": "139",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Salomonen"
+                  }
+                ]
+              },
+              {
+                "value": "140",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Sambia"
+                  }
+                ]
+              },
+              {
+                "value": "141",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Samoa"
+                  }
+                ]
+              },
+              {
+                "value": "142",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "San Marino"
+                  }
+                ]
+              },
+              {
+                "value": "143",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Sao Tomé und Príncipe"
+                  }
+                ]
+              },
+              {
+                "value": "144",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Saudi-Arabien"
+                  }
+                ]
+              },
+              {
+                "value": "145",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Schweden"
+                  }
+                ]
+              },
+              {
+                "value": "146",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Schweiz"
+                  }
+                ]
+              },
+              {
+                "value": "147",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Senegal"
+                  }
+                ]
+              },
+              {
+                "value": "148",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Serbien"
+                  }
+                ]
+              },
+              {
+                "value": "149",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Seychellen"
+                  }
+                ]
+              },
+              {
+                "value": "150",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Sierra Leone"
+                  }
+                ]
+              },
+              {
+                "value": "151",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Simbabwe"
+                  }
+                ]
+              },
+              {
+                "value": "152",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Singapur"
+                  }
+                ]
+              },
+              {
+                "value": "153",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Slowakei"
+                  }
+                ]
+              },
+              {
+                "value": "154",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Slowenien"
+                  }
+                ]
+              },
+              {
+                "value": "155",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Somalia"
+                  }
+                ]
+              },
+              {
+                "value": "156",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Spanien"
+                  }
+                ]
+              },
+              {
+                "value": "157",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Sri Lanka"
+                  }
+                ]
+              },
+              {
+                "value": "158",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "St. Kitts und Nevis"
+                  }
+                ]
+              },
+              {
+                "value": "159",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "St. Lucia"
+                  }
+                ]
+              },
+              {
+                "value": "160",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "St. Vincent und die Grenadinen"
+                  }
+                ]
+              },
+              {
+                "value": "161",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Südafrika"
+                  }
+                ]
+              },
+              {
+                "value": "162",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Sudan"
+                  }
+                ]
+              },
+              {
+                "value": "163",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Südsudan"
+                  }
+                ]
+              },
+              {
+                "value": "164",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Suriname"
+                  }
+                ]
+              },
+              {
+                "value": "165",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Swasiland"
+                  }
+                ]
+              },
+              {
+                "value": "166",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Syrien"
+                  }
+                ]
+              },
+              {
+                "value": "167",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Tadschikistan"
+                  }
+                ]
+              },
+              {
+                "value": "168",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Tansania"
+                  }
+                ]
+              },
+              {
+                "value": "169",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Thailand"
+                  }
+                ]
+              },
+              {
+                "value": "170",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Togo"
+                  }
+                ]
+              },
+              {
+                "value": "171",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Trinidad und Tobago"
+                  }
+                ]
+              },
+              {
+                "value": "172",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Tschad"
+                  }
+                ]
+              },
+              {
+                "value": "173",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Tschechien"
+                  }
+                ]
+              },
+              {
+                "value": "174",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Tunesien"
+                  }
+                ]
+              },
+              {
+                "value": "175",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Türkei"
+                  }
+                ]
+              },
+              {
+                "value": "176",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Turkmenistan"
+                  }
+                ]
+              },
+              {
+                "value": "177",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Tuvalu"
+                  }
+                ]
+              },
+              {
+                "value": "178",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Uganda"
+                  }
+                ]
+              },
+              {
+                "value": "179",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Ukraine"
+                  }
+                ]
+              },
+              {
+                "value": "180",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Ungarn"
+                  }
+                ]
+              },
+              {
+                "value": "181",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Uruguay"
+                  }
+                ]
+              },
+              {
+                "value": "182",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Usbekistan"
+                  }
+                ]
+              },
+              {
+                "value": "183",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Vanuatu"
+                  }
+                ]
+              },
+              {
+                "value": "184",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Vatikanstadt"
+                  }
+                ]
+              },
+              {
+                "value": "185",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Venezuela"
+                  }
+                ]
+              },
+              {
+                "value": "186",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Vereinigte Arabische Emirate"
+                  }
+                ]
+              },
+              {
+                "value": "187",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Vereinigte Staaten von Amerika"
+                  }
+                ]
+              },
+              {
+                "value": "188",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Vereinigtes Königreich Großbritannien und Nordirland"
+                  }
+                ]
+              },
+              {
+                "value": "189",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Sozialistische Republik Vietnam"
+                  }
+                ]
+              },
+              {
+                "value": "190",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Republik Belarus"
+                  }
+                ]
+              },
+              {
+                "value": "191",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Zentralafrikanische Republik"
+                  }
+                ]
+              },
+              {
+                "value": "192",
+                "label": [
+                  {
+                    "locale": "de",
+                    "text": "Zypern Republik"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "AngabenPerson",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F6",
+                "name": "Vorname",
+                "annotations": [
+                  {
+                    "name": "faker",
+                    "value": "name.firstName"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Vorname"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F7",
+                "name": "Familienname",
+                "annotations": [
+                  {
+                    "name": "faker",
+                    "value": "name.lastName"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Familienname"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F15",
+                "name": "Geburtsname",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Ggf. Geburtsname"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F4",
+                "name": "Geschlecht",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "1",
+                          "label": [
+                            {
+                              "locale": "de",
+                              "text": "männlich"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "2",
+                          "label": [
+                            {
+                              "locale": "de",
+                              "text": "weiblich"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "3",
+                          "label": [
+                            {
+                              "locale": "de",
+                              "text": "inter"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Geschlecht"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F16",
+                "name": "Geburtsdatum",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Geburtsdatum"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F18",
+                "name": "Geburtsort",
+                "annotations": [
+                  {
+                    "name": "faker",
+                    "value": "address.city"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Geburtsort"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F19",
+                "name": "Geburtsland",
+                "annotations": [
+                  {
+                    "name": "faker",
+                    "value": "18:29;33:21;34:122;45:13;125:27"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "TypeDefType",
+                    "TypeDefType": {
+                      "typeDefinitionId": "typedef_28baa07b-6e1b-4b6b-8612-f4983e4a607b"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Geburtsland/-staat"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F8",
+                "name": "Strasse",
+                "annotations": [
+                  {
+                    "name": "faker",
+                    "value": "address.streetName"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Straße"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R22",
+                "name": "AdresseGefordert",
+                "Rule": {
+                  "errorEntityRelPath": "../Strasse",
+                  "errorCode": "Error R22",
+                  "errorCondition": "FieldsNotCollectivelyFilled(Strasse, Hausnummer, Postleitzahl, Wohnort)",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Bitte geben Sie die Adresse vollständig an."
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F9",
+                "name": "Hausnummer",
+                "annotations": [
+                  {
+                    "name": "faker",
+                    "value": "random.number"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Hausnummer"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F11",
+                "name": "Postleitzahl",
+                "annotations": [
+                  {
+                    "name": "faker",
+                    "value": "address.zipCode"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "errorMessage": [
+                        {
+                          "locale": "de",
+                          "text": "Bitte genau 5 Ziffern angeben."
+                        }
+                      ],
+                      "pattern": "[\\d]{5}"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Postleitzahl"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F10",
+                "name": "Wohnort",
+                "annotations": [
+                  {
+                    "name": "faker",
+                    "value": "address.city"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Wohnort"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F21",
+                "name": "Telefonnummer",
+                "annotations": [
+                  {
+                    "name": "faker",
+                    "value": "faker.phoneNumber"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "errorMessage": [
+                        {
+                          "locale": "de",
+                          "text": "Bitte geben Sie eine gültige Telefonnummer an."
+                        }
+                      ],
+                      "pattern": "[0-9\\+\\(\\)\\-\\s]+"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Telefonnummer"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F13",
+                "name": "EMail",
+                "annotations": [
+                  {
+                    "name": "faker",
+                    "value": "internet.email"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "errorMessage": [
+                        {
+                          "locale": "de",
+                          "text": "Bitte geben Sie eine gültige E-Mail-Adresse an."
+                        }
+                      ],
+                      "pattern": "[\\d\\D]+@+[\\d\\D]+.+[\\d\\D]"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "E-Mail"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

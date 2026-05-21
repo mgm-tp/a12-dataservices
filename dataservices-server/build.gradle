@@ -1,0 +1,71 @@
+import static com.mgmtp.a12.dataservices.gradle.JavaOptsConstants.TEST_ARGUMENTS
+
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+	api project(':dataservices-core')
+	api project(':dataservices-security-user-api')
+	api project(':content-store:dataservices-content-store-core')
+	api libs.uaaAuthenticationSpringBootAutoconfigure
+	api libs.springSecurityWeb
+	api libs.jacksonJaxrsJsonProvider
+	api libs.uaaAuthorizationSpringBootAutoconfigure
+	api libs.uaaAuthorizationWebSpringBootAutoconfigure
+	api libs.jaxbApi
+	implementation libs.uaaAuthenticationPrincipalExtensionSpringBootAutoconfigure
+	implementation libs.julToSlf4j
+	implementation libs.slf4jApi
+	implementation libs.springWebmvc
+	implementation libs.hazelcast, libs.hazelcastSpring
+	implementation libs.commonsLang3
+	implementation libs.commonsFileupload
+	implementation libs.annotationApi
+	implementation libs.jsonrpc4j
+	implementation libs.springBootStarterActuator
+
+	api libs.servletApi
+
+	testImplementation project(':dataservices-core-spring-boot-autoconfigure')
+	testImplementation project(':content-store:dataservices-content-store-server-spring-boot-autoconfigure')
+	testImplementation project(':dataservices-test-resources')
+	testImplementation project(':dataservices-json-schema')
+	testImplementation(testFixtures(project(':dataservices-core')))
+	testImplementation(testFixtures(project(':dataservices-core-spring-boot-autoconfigure')))
+	testImplementation libs.xmlunitCore
+	testImplementation libs.xmlunitMatchers
+	testImplementation libs.testng
+	testImplementation libs.springTest
+	testImplementation libs.assertjCore
+	testImplementation libs.hamcrest
+	testImplementation libs.hamcrestOptional
+	testImplementation libs.springBootStarterSecurity
+	testImplementation libs.springBootTestAutoconfigure
+	testImplementation libs.springSecurityTest
+	testImplementation libs.springBootStarterJdbc
+	testImplementation libs.springBootStarter
+	testImplementation libs.springBoot
+	testImplementation libs.springBootTest
+	testImplementation libs.sqlworkbench
+	testImplementation libs.servletApi
+	testImplementation libs.mockitoCore
+	testImplementation libs.jsonassert
+	testImplementation libs.modelAssert
+}
+
+test {
+	systemProperty "project.version", project.version
+	systemProperty "project.artifactId", project.name
+	systemProperty "project.groupId", project.group
+	systemProperty "mgmtp.a12.dataservices.attachments.rest-endpoint.enabled", true
+	systemProperty "mgmtp.a12.dataservices.attachments.enabled", true
+	systemProperty "mgmtp.a12.dataservices.enumeration.rest-endpoint.enabled", true
+	systemProperty 'spring.datasources.dataservices.embedded-postgres.enabled', true
+	systemProperty 'spring.datasources.contentstore.embedded-postgres.enabled', true
+	jvmArgs += TEST_ARGUMENTS
+	exclude '**/*PerformanceTest*'
+}
+
+description = 'Data Services REST server Implementation'
+

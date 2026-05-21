@@ -1,0 +1,240 @@
+{
+  "header": {
+    "id": "document-meta-data",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Document Meta Data"
+      },
+      {
+        "locale": "de",
+        "text": "Metadaten des Dokuments"
+      }
+    ],
+    "annotations": [],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "document-meta-data"
+    },
+    "modelConfig": {
+      "timeZone": "UTC",
+      "decimalSeparator": ".",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "group_8f4b1",
+          "name": "__meta",
+          "Group": {
+            "label": [
+              {
+                "locale": "en",
+                "text": "meta"
+              }
+            ],
+            "repeatability": 1,
+            "usageType": "metadata",
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_1169c",
+                "name": "docRef",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "document reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Dokumentreferenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_cfb40",
+                "name": "modelReference",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "document model reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Document Model-Referenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_17e3b",
+                "name": "modelVersion",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "model version"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Modelversion"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_cdaf9",
+                "name": "creator",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "creator"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Ersteller"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_65672",
+                "name": "createdAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "created at"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "erstellt am"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_1fa32",
+                "name": "modifier",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "modifier"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Bearbeiter"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_5cd66",
+                "name": "modifiedAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "modified at"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "bearbeitet am"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_1fa33",
+                "name": "numberOfDocumentReads",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Number Of Document Reads"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Anzahl der Dokument-Lesevorgänge"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_4c9a1",
+                "name": "extensions",
+                "Group": {
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "extensions"
+                    }
+                  ],
+                  "repeatability": 1
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

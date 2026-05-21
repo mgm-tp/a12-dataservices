@@ -1,0 +1,22 @@
+{
+	"BusinessPartnerRoot": {
+		"Attachment": [
+			{
+				"original_filename": "originalFileName1",
+				"internal_filename": "internalFilename1",
+				"content": "",
+				"attachment_id": "{attachment_1}",
+				"size": null,
+				"mime_type": "image/png"
+			}
+		],
+		"Name": "Test Corporation",
+		"Industry": "IT",
+		"StartOfRelationship": "2022-08-01",
+		"CustomerDiscount": "90%",
+		"PersonOrEntity": null,
+		"SubtypeGroup": {
+			"Company": "mgm technology-partners GmbH"
+		}
+	}
+}

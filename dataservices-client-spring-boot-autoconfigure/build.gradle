@@ -1,0 +1,36 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+	api project(':dataservices-client')
+	api libs.springBootAutoconfigure
+	api libs.springBootConfigurationProcessor
+	api libs.annotationApi
+	api libs.reflections
+	api libs.restServerConnectorSpringBootAutoconfigure
+	api libs.uaaRestClient
+	api libs.uaaRestClientSpringBootAutoconfigure
+	testImplementation libs.springBootStarterWeb
+	testImplementation libs.springTest
+	testImplementation libs.springBootTest
+	testImplementation libs.testng
+	testImplementation libs.festAssertCore
+	testImplementation libs.assertjCore
+	testImplementation libs.jsonassert
+	testImplementation libs.xercesImpl
+	testImplementation libs.json
+	testImplementation libs.mgmModelApi
+	testImplementation project(':dataservices-test-resources')
+}
+
+processTestResources {
+	from "${project(':dataservices-core-spring-boot-autoconfigure').projectDir}/src/test/resources"
+	duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+test {
+	exclude('**/*IT.class')
+}
+
+description = 'Spring Boot AutoConfiguration for Data Services REST client'

@@ -1,0 +1,23 @@
+{
+	"jsonrpc": "2.0",
+	"id": "DeleteLink",
+	"method": "DELETE_LINK",
+	"params": {
+		"linkRef": {
+			"linkDescriptor": {
+				"relationshipModel": "ContractBusinessPartner",
+				"entities": [
+					{
+						"role": "Contract",
+						"docRef": "Contract/7"
+					},
+					{
+						"role": "Partner",
+						"docRef": "BusinessPartner/8"
+					}
+				]
+			},
+			"id": "9"
+		}
+	}
+}

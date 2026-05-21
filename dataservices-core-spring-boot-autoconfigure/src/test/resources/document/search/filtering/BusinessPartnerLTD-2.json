@@ -1,0 +1,12 @@
+{
+  "BusinessPartnerRoot": {
+    "Name": "Second",
+    "Industry": "Banking",
+    "StartOfRelationship": "2017-02-16",
+    "CustomerDiscount": "100%",
+    "PersonOrEntity": "Legal Entity",
+    "Employment": {
+      "income": "2000"
+    }
+  }
+}

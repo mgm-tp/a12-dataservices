@@ -1,0 +1,74 @@
+{
+  "id": "1",
+  "relationshipModel": {
+    "metaInformation": {
+      "version": "1.0.0"
+    },
+    "name": "ContractCoInsuredPartner",
+    "displayLabel": [
+      {
+        "language": "en",
+        "value": "ContractCoInsuredPartner"
+      },
+      {
+        "language": "de",
+        "value": "MitversichertGeschäftspartner"
+      }
+    ],
+    "associationType": "SHARED",
+    "linkDocumentModel": "CoInsuredAdditionalFields",
+    "duplicatesAllowed": false,
+    "entityCharacteristics": [
+      {
+        "role": "Contract",
+        "displayLabel": [
+          {
+            "language": "en",
+            "value": "Contract"
+          },
+          {
+            "language": "de",
+            "value": "Vertrag"
+          }
+        ],
+        "documentModel": "Contract",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {}
+      },
+      {
+        "role": "Partner",
+        "displayLabel": [
+          {
+            "language": "en",
+            "value": "Co-insured Business Partners"
+          },
+          {
+            "language": "de",
+            "value": "Mitversichert Geschäftspartner"
+          }
+        ],
+        "documentModel": "BusinessPartnerSuper",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": false,
+            "upperLimit": 1
+          }
+        },
+        "candidateConstraints": {}
+      }
+    ],
+    "storage": "EXTERNAL",
+    "embeddedGroupPath": ""
+  }
+}

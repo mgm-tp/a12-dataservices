@@ -1,0 +1,134 @@
+{
+  "header": {
+    "id": "ProductCampaign",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ProductCampaign_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ProductCampaign"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "ProductRole",
+        "reference": "Product"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "CampaignRole",
+        "reference": "Campaign"
+      },
+      {
+        "purpose": "Link Document model",
+        "modelType": "document",
+        "alias": "Link Model",
+        "reference": "AdditionalFieldsModel"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "guest,admin,systemAdmin"
+      }
+    ]
+  },
+  "content": {
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ProductCampaign_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ProductCampaign"
+      }
+    ],
+    "associationType": "SHARED",
+    "linkDocumentModel": "AdditionalFieldsModel",
+    "duplicatesAllowed": false,
+    "entityCharacteristics": [
+      {
+        "role": "ProductRole",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "parten of"
+          },
+          {
+            "locale": "en",
+            "text": "part of"
+          }
+        ],
+        "documentModel": "Product",
+        "ordered": true,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": false,
+            "upperLimit": 5
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": [
+            {
+              "name": "requiredField",
+              "value": "requiredField"
+            }
+          ]
+        }
+      },
+      {
+        "role": "CampaignRole",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "CampaignRole_DE"
+          },
+          {
+            "locale": "en",
+            "text": "CampaignRole"
+          }
+        ],
+        "documentModel": "Campaign",
+        "ordered": true,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": [
+            {
+              "name": "requiredField",
+              "value": "requiredField"
+            }
+          ]
+        }
+      }
+    ],
+    "storage": "EXTERNAL",
+    "embeddedGroupPath": ""
+  }
+}

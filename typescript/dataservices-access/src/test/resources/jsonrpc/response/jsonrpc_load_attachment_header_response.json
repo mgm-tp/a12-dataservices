@@ -1,0 +1,15 @@
+{
+	"jsonrpc": "2.0",
+	"id": "loadAttachmentHeader",
+	"result": {
+		"attachmentId": "3a5ecc46-a6e7-46d7-9be2-07ca5420dcec",
+		"filename": "AttachmentImage.jpg",
+		"references": [],
+		"createdAt": 1677569284.310163,
+		"createdBy": "admin",
+		"modifiedAt": 1677569284.766088,
+		"modifiedBy": null,
+		"mimeType": "image/jpeg",
+		"annotations": []
+	}
+}

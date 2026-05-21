@@ -1,0 +1,34 @@
+[
+	{
+		"jsonrpc": "2.0",
+		"id": "defaultEchoOperation",
+		"method": "ECHO",
+		"params": {
+			"message": "default echo message"
+		}
+	},
+	{
+		"jsonrpc": "2.0",
+		"id": "echoOperationV1",
+		"method": "ECHO:1",
+		"params": {
+			"message": "echo message v1"
+		}
+	},
+	{
+		"jsonrpc": "2.0",
+		"id": "echoOperationV2",
+		"method": "ECHO:2",
+		"params": {
+			"message": "echo message V2"
+		}
+	},
+	{
+		"jsonrpc": "2.0",
+		"id": "echoOperationV3",
+		"method": "ECHO:3",
+		"params": {
+			"message": "echo message V3"
+		}
+	}
+]

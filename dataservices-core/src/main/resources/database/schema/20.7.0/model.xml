@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+	logicalFilePath="database/schema/20.7.0/model.xml">
+
+	<changeSet id="A12-8545-1" author="tbajus">
+		<preConditions onFail="CONTINUE" onError="CONTINUE">
+			<not>
+				<columnExists tableName="SERVER_USER" columnName="RESTORE_PASSWORD_TOKEN" />
+			</not>
+		</preConditions>
+		<addColumn tableName="SERVER_USER">
+			<column name="RESTORE_PASSWORD_TOKEN" type="VARCHAR(100 ${varcharUnit})">
+				<constraints nullable="true"/>
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="A12-8545-2" author="tbajus">
+		<addColumn tableName="SERVER_USER">
+			<column name="PASSWORD_TOKEN_CREATED_AT" type="TIMESTAMP">
+				<constraints nullable="true"/>
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="A12-8545-3" author="tbajus">
+		<preConditions onFail="CONTINUE" onError="CONTINUE">
+			<columnExists tableName="SERVER_USER" columnName="RESTORE_PASSWORD_TOKEN_CREATED_AT" />
+		</preConditions>
+		<sql>update SERVER_USER set PASSWORD_TOKEN_CREATED_AT = RESTORE_PASSWORD_TOKEN_CREATED_AT</sql>
+		<dropColumn tableName="SERVER_USER" columnName="RESTORE_PASSWORD_TOKEN_CREATED_AT"/>
+	</changeSet>
+</databaseChangeLog>

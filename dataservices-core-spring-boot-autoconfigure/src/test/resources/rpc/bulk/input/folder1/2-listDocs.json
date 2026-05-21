@@ -1,0 +1,15 @@
+{
+  "jsonrpc": "2.0",
+  "id": "GetBusinessPartners",
+  "method": "QUERY",
+  "params": {
+    "query": {
+      "projectionName": "document",
+      "targetDocumentModel": "BusinessPartner",
+      "paging": {
+        "pageNumber": 0,
+        "pageSize": 100
+      }
+    }
+  }
+}

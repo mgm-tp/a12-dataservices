@@ -1,0 +1,12 @@
+group = 'com.mgmtp.a12.dataservices'
+
+dependencies {
+	implementation libs.kernelRuntime
+	implementation libs.kernelMdA12internal
+}
+
+bootJar{
+	enabled = false
+}
+
+description = 'Example of how could generated java and javascript files be added into a project and packaged in a jar. Kernel tools needs to be used to generate this validation code based on runtime models from DS (includes resolved + metadata added,..)'

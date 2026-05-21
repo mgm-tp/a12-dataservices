@@ -1,0 +1,29 @@
+{
+  "BusinessPartnerRoot": {
+    "Name": "Second",
+    "Industry": "Legal",
+    "StartOfRelationship": "2017-02-16",
+    "EndOfRelationship": "2010-12-12T19:30:00",
+    "TimeOfContractSignature": "10:29:32",
+    "ApproximateOfferDate": "04-15",
+    "PremiumPartner": true,
+    "CustomerDiscount": "80%",
+    "PersonOrEntity": "Person",
+    "SubtypeGroup": {
+      "Company": "not used"
+    },
+    "Offer": {
+      "Discount": "30%",
+      "ValidityPeriod": "2020-01-02/2020-02-02"
+    },
+    "Employment": {
+      "signingDateTime": "2016-11-11T11:11:11",
+      "employedSince": "2017-01",
+      "employedTill": "2022-12",
+      "role": "Attorney",
+      "income": "6000"
+    },
+    "birthday": "1995-01-00",
+    "accountNumber": "-00002"
+  }
+}

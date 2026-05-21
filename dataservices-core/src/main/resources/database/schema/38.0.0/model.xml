@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd"
+				   logicalFilePath="database/schema/38.0.0/model.xml">
+
+	<changeSet id="A12S-5591" author="A12S-5591-author" dbms="postgresql">
+		<dropPrimaryKey tableName="jsonb_document_fields" constraintName="JSONB_DOCUMENT_FIELDS_pkey"/>
+		<dropColumn tableName="jsonb_document_fields" columnName="id"/>
+		<addPrimaryKey tableName="jsonb_document_fields" columnNames="doc_ref"
+					   constraintName="jsonb_document_fields_pkey"/>
+	</changeSet>
+
+	<changeSet id="A12S-5711" author="A12S-5711-author" dbms="postgresql" runOnChange="true">
+		<sqlFile path="sql/A12S-5711-create-index-management-stored-procedures.sql"
+				 relativeToChangelogFile="true"
+				 splitStatements="false"/>
+	</changeSet>
+
+	<changeSet id="A12S-5713_1" author="A12S-5713-author" dbms="postgresql">
+		<sql>
+			alter table jsonb_document_fields
+				add column if not exists search_data text;
+		</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5713_2" author="A12S-5713-author" dbms="postgresql">
+		<sql>
+			create extension if not exists btree_gin;
+			create index if not exists ix_jsonb_search_data
+				on jsonb_document_fields using gin (model_name, search_data gin_trgm_ops);
+		</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5735" author="A12S-5735-author" dbms="postgresql">
+		<renameTable oldTableName="jsonb_document_fields" newTableName="document_search"/>
+	</changeSet>
+	<changeSet id="A12S-5846" author="A12S-5846-author" dbms="postgresql">
+		<dropForeignKeyConstraint
+				baseTableName="relationship_role"
+				constraintName="fk_relationship_id"/>
+		<dropForeignKeyConstraint
+				baseTableName="relationship_order"
+				constraintName="fk_relationship_role_id"/>
+		<modifyDataType
+				columnName="id"
+				newDataType="VARCHAR(100 ${varcharUnit})"
+				tableName="relationship_link"/>
+		<modifyDataType
+				columnName="id"
+				newDataType="VARCHAR(100 ${varcharUnit})"
+				tableName="relationship_role"/>
+		<modifyDataType
+				columnName="relationship_id"
+				newDataType="VARCHAR(100 ${varcharUnit})"
+				tableName="relationship_role"/>
+		<modifyDataType
+				columnName="id"
+				newDataType="VARCHAR(100 ${varcharUnit})"
+				tableName="relationship_order"/>
+		<addForeignKeyConstraint baseColumnNames="relationship_id"
+								 baseTableName="relationship_role"
+								 constraintName="fk_relationship_id"
+								 referencedColumnNames="id"
+								 referencedTableName="relationship_link"
+								 validate="true"/>
+		<addForeignKeyConstraint baseColumnNames="id"
+								 baseTableName="relationship_order"
+								 constraintName="fk_relationship_role_id"
+								 referencedColumnNames="id"
+								 referencedTableName="relationship_role"
+								 validate="true"/>
+		<dropSequence sequenceName="relationship_link_seq"/>
+		<dropSequence sequenceName="relationship_role_seq"/>
+	</changeSet>
+
+	<changeSet id="A12S-5591-2" author="A12S-5591-author" dbms="postgresql">
+		<!-- This index is no longer needed since we have switched the primary key to docref -->
+		<sql>
+			drop index if exists idx_doc_ref;
+		</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5735-2" author="A12S-5735-author" dbms="postgresql">
+		<!-- synchronize primary key index/constraint name with new table name -->
+		<sql>alter index jsonb_document_fields_pkey rename to document_search_pkey;</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5543-2" author="A12S-5543-author" dbms="postgresql">
+		<!-- cleanup some no longer needed things -->
+		<sql>
+			drop trigger if exists createfulltexttrigger ON document_search;
+			drop index if exists idx_simple_search_jsonb;
+		</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5879" author="A12S-5879-author" dbms="postgresql">
+		<!-- GIN index to support the @> operator used for exact_match conditions -->
+		<sql>
+			CREATE INDEX IF NOT EXISTS idx_document_search_original_value
+				ON document_search USING gin (model_name, original_value);
+		</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5918-1" author="A12S-5918-author" dbms="postgresql">
+		<sql>
+			alter table document_fields
+				add number_value    numeric,
+				add timestamp_value timestamp,
+				add ts_range_value  tsrange;
+
+			create extension if not exists btree_gist;
+
+			create index idx_document_fields_number_value
+				on document_fields (field_name, number_value, doc_ref)
+				where number_value is not null;
+
+			create index idx_document_fields_ts_range_value
+				on document_fields using gist (field_name, ts_range_value, doc_ref)
+				where ts_range_value is not null;
+
+			create index idx_document_fields_ts_value
+				on document_fields (field_name, timestamp_value, doc_ref)
+				where timestamp_value is not null
+		</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5918-2" author="A12S-5918-author" dbms="postgresql">
+		<!-- cleanup no longer needed indexes from the document_fields table -->
+		<sql>
+			drop index if exists idx_document_fields_name;
+			drop index if exists idx_document_fields_doc_ref;
+			drop index if exists idx_document_fields_value_insensitive;
+			drop index if exists idx_document_fields_value;
+			drop index if exists idx_document_fields_doc_ref_single;
+			drop index if exists idx_substring_match_insensitive;
+			drop index if exists idx_value_field_name;
+			drop index if exists idx_document_fields_typed_value;
+			drop index if exists idx_typed_value_field_name;
+			drop trigger if exists createfulltexttrigger on document_fields;
+		</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5727" author="A12S-5727author" dbms="postgresql">
+		<sql>
+			alter table model_headers
+				add column if not exists description text;
+		</sql>
+	</changeSet>
+
+	<changeSet id="A12S-6034" author="A12S-6034author" dbms="postgresql">
+		<sql>
+			drop index if exists idx_document_search_original_value;
+			create index if not exists idx_document_search_original_value_search_data
+				on document_search using gin (model_name, original_value, search_data gin_trgm_ops);
+		</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5953" author="A12S-5953-author" dbms="postgresql">
+		<sql>
+			DROP TABLE IF EXISTS index_tmp;
+		</sql>
+	</changeSet>
+
+	<changeSet id="A12S-6106" author="A12S-6106-author">
+		<createIndex tableName="document_fields" indexName="idx_document_fields_docref">
+			<column name="doc_ref"/>
+		</createIndex>
+		<createIndex tableName="document_search" indexName="idx_document_search_docref">
+			<column name="doc_ref"/>
+		</createIndex>
+	</changeSet>
+
+	<changeSet id="A12S-6073-1" author="A12S-6073-author" dbms="postgresql">
+		<sql>
+			DROP TABLE IF EXISTS relationship_link_old;
+		</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5808" author="A12S-5808-author" dbms="postgresql">
+		<sql>
+			DROP TABLE IF EXISTS attachments;
+		</sql>
+	</changeSet>
+
+	<changeSet id="A12S-5033" author="A12S-5033-author" dbms="postgresql">
+		<dropDefaultValue tableName="attachment_header" columnName="type_of_the_content"/>
+	</changeSet>
+
+</databaseChangeLog>

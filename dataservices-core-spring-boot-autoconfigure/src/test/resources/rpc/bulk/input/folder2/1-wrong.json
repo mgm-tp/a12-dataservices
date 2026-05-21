@@ -1,0 +1,9 @@
+{
+  "jsonrpc": "2.0",
+  "id": "deleteDocument",
+  "method": "INVALID_METHOD",
+  "params": {
+    "docRef": "INVALIDMODEL/123132123",
+    "locale": null
+  }
+}

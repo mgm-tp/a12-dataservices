@@ -1,0 +1,118 @@
+/*
+ * SPDX-License-Identifier: EUPL-1.2 OR LicenseRef-commercial
+ *
+ * Copyright (c) 2012-2026 mgm technology partners GmbH
+ *
+ * Dual License
+ * ------------
+ * This source file is part of the mgm A12 Platform and available under
+ * a choice of two different licenses:
+ *
+ * 1. Open-Source License – EUPL v1.2
+ *    You may redistribute and/or modify this file under the terms of the
+ *    European Union Public License, version 1.2 - see https://eupl.eu/.
+ *
+ * 2. Commercial License
+ *    Alternatively, you may obtain a commercial license from
+ *    mgm technology partners GmbH, that permits use of this software
+ *    under different terms (including support and maintenance services).
+ *
+ *    Please contact a12-license@mgm-tp.com for more information.
+ *
+ * You must select and comply with exactly one of the above license options.
+ *
+ * Warranty Disclaimer (applies to either option)
+ * ----------------------------------------------
+ * THIS SOFTWARE IS PROVIDED “AS IS” AND WITHOUT WARRANTY OF ANY KIND,
+ * WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
+ * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
+ */
+package com.mgmtp.a12.dataservices.constants;
+
+public interface PathConstants {
+
+	String DOCUMENT_MODELS_PATH_PATTERN = "classpath:/models/document/*.json";
+	String RELATIONSHIP_MODELS_PATH_PATTERN = "classpath:/models/relationship/*.json";
+	String CDM_MODELS_PATH_PATTERN = "classpath:/models/cdm/*.json";
+	String OTHER_MODELS_PATH_PATTERN = "classpath:/model/other/*.json";
+	String DOCUMENT_TREE_RESULT_PATH = "/document/";
+	// Models root directory in test-resources module
+	String DOCUMENT_MODEL_ROOT_DIR = "/models/document/";
+	String WITH_METADATA_SUFFIX = "_with_metadata";
+	String MODELS_WITH_METADATA_ROOT_DIR = "/models" + WITH_METADATA_SUFFIX + "/";
+	String JSON_EXT = ".json";
+	// Insurance field model Path
+	String COINSURED_ADDITIONAL_PARTNER_DOCUMENT_MODEL_PATH = DOCUMENT_MODEL_ROOT_DIR + DocumentModelConstants.COINSURED_ADDITIONAL_FIELDS_MODEL + JSON_EXT;
+	String BUSINESS_PARTNER_LTD_MODEL_PATH = DOCUMENT_MODEL_ROOT_DIR + DocumentModelConstants.BUSINESS_PARTNER_LTD_MODEL + JSON_EXT;
+	String CONTRACT_DOCUMENT_MODEL_PATH = DOCUMENT_MODEL_ROOT_DIR + DocumentModelConstants.CONTRACT_DOCUMENT_MODEL + JSON_EXT;
+	String BUSINESS_PARTNER_SUPER_DOCUMENT_MODEL_PATH = DOCUMENT_MODEL_ROOT_DIR + DocumentModelConstants.BUSINESS_PARTNER_SUPER_MODEL + JSON_EXT;
+	String ADDRESS_DOCUMENT_MODEL_PATH = DOCUMENT_MODEL_ROOT_DIR + DocumentModelConstants.ADDRESS_DOCUMENT_MODEL + JSON_EXT;
+	// Insurance document Model Path
+	String BUSINESS_PARTNER_DOCUMENT_MODEL_PATH = DOCUMENT_MODEL_ROOT_DIR + DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL + JSON_EXT;
+	String CDM_MODEL_ROOT_DIR = "models/cdm/";
+	String ANONYMIZED_BUSINESS_PARTNER_CDM_MODEL_PATH = CDM_MODEL_ROOT_DIR + DocumentModelConstants.ANONYMIZED_BUSINESS_PARTNER_CDM_MODEL + JSON_EXT;
+	// Insurance Model Path
+	String CONTRACT_CDM_MODEL_PATH = CDM_MODEL_ROOT_DIR + DocumentModelConstants.CONTRACT_CDM_MODEL + JSON_EXT;
+	String RELATIONSHIP_MODEL_ROOT_DIR = "models/relationship/";
+	String PARTNER_POSTAL_ADDRESS_RELATIONSHIP_MODEL_PATH = RELATIONSHIP_MODEL_ROOT_DIR + RelationshipModelConstants.PARTNER_POSTAL_ADDRESS_MODEL + JSON_EXT;
+	String PARTNER_ADDRESSES_RELATIONSHIP_MODEL_PATH = RELATIONSHIP_MODEL_ROOT_DIR + RelationshipModelConstants.PARTNER_ADDRESSES_MODEL + JSON_EXT;
+	String CONTRACT_COINSURED_BUSINESS_PARTNER_RELATIONSHIP_MODEL_PATH =
+		RELATIONSHIP_MODEL_ROOT_DIR + RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL + JSON_EXT;
+	// Insurance relationship Path
+	String CONTRACT_BUSINESS_PARTNER_RELATIONSHIP_MODEL_PATH =
+		RELATIONSHIP_MODEL_ROOT_DIR + RelationshipModelConstants.CONTRACT_BUSINESS_PARTNER_MODEL + JSON_EXT;
+	// Document Models Dir Paths
+	String DOCUMENT_MODEL_PATH = "/model/document/";
+	String BUSINESS_PARTNER_MULTIPLE_ATTACHMENT_IDS_PATH = DOCUMENT_MODEL_PATH + DocumentModelConstants.BUSINESS_PARTNER_MULTIPLE_ATTACHMENT_IDS + JSON_EXT;
+	String SUPER_TYPE_MODEL_PATH = DOCUMENT_MODEL_PATH + "DateTestModel.json";
+	// Document Models Path
+	String CAMPAIGN_MODEL_PATH = DOCUMENT_MODEL_PATH + "DomainCampaign.json";
+	String DOCUMENT_MODEL_INVALID_PATH = DOCUMENT_MODEL_PATH + "invalid/";
+	String CO_INSURED_ADDITIONAL_FIELDS_INVALID_PATH =
+		DOCUMENT_MODEL_INVALID_PATH + RelationshipModelConstants.CO_INSURED_ADDITIONAL_FIELDS_INVALID_RM + JSON_EXT;
+	String BUSINESS_PARTNER_INVALID_PATH = DOCUMENT_MODEL_INVALID_PATH + DocumentModelConstants.BUSINESS_PARTNER_INVALID_MODEL + JSON_EXT;
+	String BUSINESS_PARTNER_SUPER_INVALID_PATH = DOCUMENT_MODEL_INVALID_PATH + DocumentModelConstants.BUSINESS_PARTNER_SUPER_INVALID_MODEL + JSON_EXT;
+	String DOCUMENT_MODEL_VALIDATION_PATH = DOCUMENT_MODEL_PATH + "validation/";
+	String DOCUMENT_MODEL_SUBTYPES_PATH = DOCUMENT_MODEL_PATH + "subTypes/";
+	String DOCUMENT_MODEL_RESOLVER_PATH = DOCUMENT_MODEL_PATH + "resolver/";
+	String DOCUMENT_MODEL_TREES_PATH = DOCUMENT_MODEL_PATH + "trees/";
+	String DOCUMENT_MODEL_HETEROGENEITY_PATH = DOCUMENT_MODEL_PATH + "heterogeneity/";
+	// Relationship Models Dir Paths
+	String RELATIONSHIP_MODEL_PATH = "/model/relationship/";
+	String PRODUCT_BUNDLE_RM_PATH = RELATIONSHIP_MODEL_PATH + "ProductBundle.json";
+	String PRODUCT_BRAND_RM_PATH = RELATIONSHIP_MODEL_PATH + "ProductBrand.json";
+	String PRODUCT_CAMPAIGN_RM_PATH = RELATIONSHIP_MODEL_PATH + "ProductCampaign.json";
+	String RELATIONSHIP_MODEL_HETEROGENEITY_PATH = RELATIONSHIP_MODEL_PATH + "heterogeneity/";
+	String RELATIONSHIP_MODEL_INVALID_PATH = RELATIONSHIP_MODEL_PATH + "invalid/";
+	String CONTRACT_COINSURED_BUSINESS_PARTNER_INVALID_PATH =
+		RELATIONSHIP_MODEL_INVALID_PATH + RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_INVALID_MODEL + JSON_EXT;
+	String CONTRACT_COINSURED_BUSINESS_PARTNER_RELATIONSHIP_MODEL_INVALID_PATH =
+		RELATIONSHIP_MODEL_INVALID_PATH + RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL + JSON_EXT;
+	String CONTRACT_BUSINESS_PARTNER_RELATIONSHIP_MODEL_INVALID_PATH =
+		RELATIONSHIP_MODEL_INVALID_PATH + RelationshipModelConstants.CONTRACT_BUSINESS_PARTNER_MODEL + JSON_EXT;
+	String LONG_ROLE_NAME_PRODUCT_BRAND_PATH = RELATIONSHIP_MODEL_INVALID_PATH + "LongRoleNameProductBrand.json";
+	// Relationship Model - Path
+	String LEGACY_RM_INVALID_PATH = RELATIONSHIP_MODEL_INVALID_PATH + RelationshipModelConstants.LEGACY_RM_INVALID + JSON_EXT;
+	String RELATIONSHIP_MODEL_TREE_PATH = RELATIONSHIP_MODEL_PATH + "trees/";
+	String DOCUMENTS_PATH = "document/";
+	String DOCUMENTS_KERNEL_PATH = DOCUMENTS_PATH + "kernel/";
+	String DOCUMENTS_KERNEL_VALIDATION_PATH = DOCUMENTS_KERNEL_PATH + "validation/";
+	String DOCUMENTS_SEARCH_FILTERING_PATH = DOCUMENTS_PATH + "search/filtering/";
+	String DOCUMENTS_SEARCH_PATH = DOCUMENTS_PATH + "search/";
+	String ATTACHMENT_PATH = "attachment/";
+	String RPC_DOCUMENTS_PATH = "rpc/document/";
+	String CDD_PATH = "cdd/";
+	String RPC_PATH = "rpc/";
+	String ATTACHMENT_RPC_PATH = RPC_PATH + "attachment/";
+	String ADDITIONAL_FIELDS_MODEL_PATH = "model/link/AdditionalFields.json";
+	String ADDRESS_WITH_METADATA_MODEL_PATH = MODELS_WITH_METADATA_ROOT_DIR + DocumentModelConstants.ADDRESS_DOCUMENT_MODEL + WITH_METADATA_SUFFIX + JSON_EXT;
+	String CONTRACT_AUTOMOTIVE_WITH_METADATA_MODEL_PATH = MODELS_WITH_METADATA_ROOT_DIR + DocumentModelConstants.CONTRACT_AUTOMOTIVE_DOCUMENT_MODEL + WITH_METADATA_SUFFIX + JSON_EXT;
+	String BUSINESS_PARTNER_SUPER_WITH_METADATA_MODEL_PATH = MODELS_WITH_METADATA_ROOT_DIR + DocumentModelConstants.BUSINESS_PARTNER_SUPER_MODEL + WITH_METADATA_SUFFIX + JSON_EXT;
+	String CDM_MODEL_PATH = "model/cdm/";
+	String CDM_TEMPLATE_WRONG_NESTED_MODEL_PATH = CDM_MODEL_PATH + "cdmTemplateWrongNestedModel.json";
+	String CDM_TEMPLATE_WRONG_RM_PATH = CDM_MODEL_PATH + "cdmTemplateWrongRm.json";
+	String CDM_TEMPLATE_WRONG_CRD_PATH = CDM_MODEL_PATH + "cdmTemplateWrongCrd.json";
+	String CDM_TEMPLATE_PATH = CDM_MODEL_PATH +  "cdmTemplate.json";
+}

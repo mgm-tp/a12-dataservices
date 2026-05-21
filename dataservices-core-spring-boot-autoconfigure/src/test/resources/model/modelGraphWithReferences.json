@@ -1,0 +1,172 @@
+{
+	"documentModels": [
+		{
+			"modelId": "DateTestSubType2",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DateTestSubType3",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DateTestModel",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [
+				"DateTestSubType1",
+				"DateTestSubType2"
+			],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DateTestSubType1",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [
+				"DateTestSubType3"
+			],
+			"abstractModel": false
+		}
+	],
+	"composeDocumentModels": [
+		{
+			"modelId": "cdm3",
+			"displayLabels": [
+				{
+					"locale": "en",
+					"text": "NaturalPerson CDM"
+				}
+			],
+			"modelReferences": [
+				{
+					"modelType": "document",
+					"reference": "BusinessPartner",
+					"purpose": "document-model-for-overview",
+					"alias": "DM"
+				},
+				{
+					"modelType": "document",
+					"reference": "ContractCDM",
+					"purpose": "data binding",
+					"alias": "Contract"
+				}
+			],
+			"rootDocumentModelId": "Contract"
+		},
+		{
+			"modelId": "cdm2",
+			"displayLabels": [
+				{
+					"locale": "en",
+					"text": "NaturalPerson CDM"
+				}
+			],
+			"modelReferences": [
+				{
+					"modelType": "document",
+					"reference": "BusinessPartner",
+					"purpose": "document-model-for-overview",
+					"alias": "DM"
+				},
+				{
+					"modelType": "document",
+					"reference": "ContractCDM",
+					"purpose": "data binding",
+					"alias": "Contract"
+				}
+			],
+			"rootDocumentModelId": "Contract"
+		},
+		{
+			"modelId": "cdm1",
+			"displayLabels": [
+				{
+					"locale": "en",
+					"text": "NaturalPerson CDM"
+				}
+			],
+			"modelReferences": [
+				{
+					"modelType": "document",
+					"reference": "BusinessPartner",
+					"purpose": "document-model-for-overview",
+					"alias": "DM"
+				},
+				{
+					"modelType": "document",
+					"reference": "ContractCDM",
+					"purpose": "data binding",
+					"alias": "Contract"
+				}
+			],
+			"rootDocumentModelId": "Contract"
+		}
+	],
+	"genericModels": [
+		{
+			"modelId": "RecursiveOverview",
+			"displayLabels": [],
+			"modelReferences": [
+				{
+					"modelType": "document",
+					"reference": "ContractCDM",
+					"purpose": "document-model-for-overview",
+					"alias": "DM"
+				},
+				{
+					"modelType": "overview",
+					"reference": "RecursiveOverview",
+					"purpose": "testing-recursive-refeence",
+					"alias": "OM"
+				}
+			],
+			"type": "overview"
+		},
+		{
+			"modelId": "BusinessPartnerOverview",
+			"displayLabels": [],
+			"modelReferences": [
+				{
+					"modelType": "document",
+					"reference": "BusinessPartner",
+					"purpose": "document-model-for-overview",
+					"alias": "DM"
+				}
+			],
+			"type": "overview"
+		},
+		{
+			"modelId": "ContractForm",
+			"displayLabels": [],
+			"modelReferences": [
+				{
+					"modelType": "document",
+					"reference": "ContractCDM",
+					"purpose": "data binding",
+					"alias": "Contract"
+				}
+			],
+			"type": "form"
+		},
+		{
+			"modelId": "ContractOverview",
+			"displayLabels": [],
+			"modelReferences": [
+				{
+					"modelType": "document",
+					"reference": "ContractCDM",
+					"purpose": "document-model-for-overview",
+					"alias": "DM"
+				}
+			],
+			"type": "overview"
+		}
+	],
+	"relationshipModels": []
+}

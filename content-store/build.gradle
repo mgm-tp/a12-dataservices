@@ -1,0 +1,23 @@
+plugins {
+	id 'java-platform'
+}
+
+javaPlatform.allowDependencies()
+def deps = libs.config.libraries.keySet().collectEntries { [libs."$it", it] } +
+		libs.config.libraries.keySet().collectEntries { [libs."$it", it] } +
+		libs.config.libraries.keySet().collectEntries { [libs."$it", it] }
+dependencies {
+	deps.each {
+		def dependency = it.key
+		if (it.value ==~ /^(mgmOssParent|.*Bom)$/) {
+			api platform(dependency)
+		} else {
+			constraints {
+				api dependency
+			}
+		}
+	}
+	constraints {
+		api project.subprojects
+	}
+}

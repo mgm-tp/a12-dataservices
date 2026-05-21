@@ -1,0 +1,160 @@
+{
+  "header": {
+    "id": "DomainUnterschrift",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "DomainUnterschrift",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "Unterschrift",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F4",
+                "name": "Datum",
+                "annotations": [
+                  {
+                    "name": "faker",
+                    "value": "date.past"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Datum"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R9",
+                "name": "DatumGefordert",
+                "Rule": {
+                  "errorEntityRelPath": "../Datum",
+                  "errorCode": "Error R9",
+                  "errorCondition": "FieldNotFilled(Datum)",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Bitte geben Sie ein Datum an."
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F7",
+                "name": "Ort",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Ort"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F5",
+                "name": "Unterschrift",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Unterschrift"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F8",
+                "name": "Minderjaehrige",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "bei Minderjährigen Unterschrift des Erziehungsberechtigten"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "R10",
+                "name": "DatumNachHeute",
+                "Rule": {
+                  "errorEntityRelPath": "../Datum",
+                  "errorCode": "Error R10",
+                  "errorCondition": "FieldFilled(Datum) and [Datum] < Today",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "de",
+                      "text": "Bitte geben Sie ein Datum ab heute an."
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

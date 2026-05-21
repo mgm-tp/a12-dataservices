@@ -1,0 +1,21 @@
+= Actuators
+
+Enable Spring Boot Actuators for all endpoints. +
+See the <<actuator-properties>> for additional information.
+
+[NOTE]
+====
+If you don't use LDAP, but you enable all actuators by wildcard, you can get this error:
+[source,json]
+----
+{
+    "ldap": {
+        "status": "DOWN",
+        "details": {
+            "error": "org.springframework.ldap.CommunicationException: localhost:389; nested exception is javax.naming.CommunicationException: localhost:389 [Root exception is java.net.ConnectException: Connection refused: connect]"
+        }
+    }
+}
+----
+You can avoid this error by adding `management.health.ldap.enabled=false` property.
+====

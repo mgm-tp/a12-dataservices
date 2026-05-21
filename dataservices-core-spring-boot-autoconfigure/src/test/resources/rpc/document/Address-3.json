@@ -1,0 +1,10 @@
+{
+	"AddressRoot": {
+		"Location": "Somewhere",
+		"Country": "Germany",
+		"City": "Berlin",
+		"PostCode": "10115",
+		"Street": "Torstraße",
+		"HouseNumber": "164"
+	}
+}

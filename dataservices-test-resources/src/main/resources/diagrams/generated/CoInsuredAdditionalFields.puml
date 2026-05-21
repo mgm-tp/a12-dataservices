@@ -1,0 +1,100 @@
+@startuml
+
+!procedure group(x)
+class x << (G,#DDAAFF) >>
+!endprocedure
+
+!procedure cdmGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure field(x)
+class x << (F,#DDFFAA) >> #White
+!endprocedure
+
+!procedure embeddedField(name, type, fieldType)
+name <<type>>: fieldType
+!endprocedure
+
+!procedure rule(x)
+class x << (R,#DDBBAA) >> #FFDDEE
+!endprocedure
+
+!procedure embeddedRule(name, type)
+<back:FFDDEE>name() <<type>></back>
+!endprocedure
+
+!procedure embeddedRule(name, type, $errorCondition)
+.. <back:FFDDEE> name <<type>> </back> ..
+<back:FFDDEE>errorCondition:</back> $errorCondition
+!endprocedure
+
+!procedure computation(x)
+class x << (C,#DDBBAA) >> #FFEEDD
+!endprocedure
+
+!procedure computationAlternative($operation, $precondition)
+.. alternative ..
+operation: $operation
+precondition: $precondition
+!endprocedure
+
+!procedure embeddedComputation(name, type, $operation, $precondition)
+.. <back:FFEEDD> name <<type>> </back> ..
+<back:FFEEDD>operation:</back> $operation
+<back:FFEEDD>precondition:</back> $precondition
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure embeddedComputation(name, type )
+<back:FFEEDD>name() <<type>></back>
+!endprocedure
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure linkGroup(x)
+group(x) #PeachPuff
+!endprocedure
+
+!procedure relLink($name,$rmId,$link1,$link2,$ld="")
+circle $name as $rmId #PeachPuff
+$rmId $link1
+$rmId $link2
+!if $ld!=""
+$rmId -[#IndianRed]right $ld: <<linkDocument>>
+linkDocument($ld)
+!endif
+!endprocedure
+
+skinparam linetype polyline
+left to right direction
+
+title Document Model CoInsuredAdditionalFields
+
+package "CoInsuredAdditionalFields" as CoInsuredAdditionalFields <<Frame>> {
+	() "documentRoot" as CoInsuredAdditionalFieldsDocumentRoot
+	group('"CoInsuredRoot" as group_3cab4')
+	field('"Name" as field_aa07e <<StringType>>')
+	group_3cab4 -- field_aa07e
+	field('"ID" as field_d5f5f <<StringType>>')
+	group_3cab4 -- field_d5f5f
+	field('"Role" as field_d6580 <<EnumerationType>>')
+	group_3cab4 -- field_d6580
+	field('"Percentage" as field_142e3 <<NumberType>>')
+	group_3cab4 -- field_142e3
+	field('"SigningDate" as field_2e8e0 <<DateType>>')
+	group_3cab4 -- field_2e8e0
+	computation('"AddID" as computation_65146') {
+computes: ../ID
+}
+	group_3cab4 -- computation_65146
+
+	CoInsuredAdditionalFieldsDocumentRoot ||--o| "0..1" group_3cab4
+
+}
+@enduml

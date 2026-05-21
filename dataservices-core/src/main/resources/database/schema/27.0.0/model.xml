@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+	logicalFilePath="database/schema/27.0.0/model.xml">
+
+	<changeSet id="A12S-59-drop" author="pvranik">
+		<preConditions onFail="HALT" onError="HALT">
+			<rowCount tableName="ROLE_ACCESS_RIGHT" expectedRows="0"/>
+			<rowCount tableName="USER_ROLE" expectedRows="0"/>
+			<rowCount tableName="ACCESS_RIGHT" expectedRows="0"/>
+			<rowCount tableName="ROLE" expectedRows="0"/>
+			<rowCount tableName="USER_PASSWORD_HISTORY" expectedRows="0"/>
+			<rowCount tableName="SERVER_USER" expectedRows="0"/>
+		</preConditions>
+
+		<!-- remove obsolete unused tables -->
+		<dropTable tableName="ROLE_ACCESS_RIGHT"/>
+		<dropTable tableName="USER_ROLE"/>
+		<dropTable tableName="ACCESS_RIGHT"/>
+		<dropTable tableName="ROLE"/>
+		<dropTable tableName="USER_PASSWORD_HISTORY"/>
+		<dropTable tableName="SERVER_USER"/>
+
+		<!-- remove unused DOCUMENT_MODEL ID -->
+		<dropColumn tableName="DOCUMENT_MODEL" columnName="ID" />
+		<dropColumn tableName="UI_MODEL" columnName="ID" />
+		<dropColumn tableName="DOCUMENT_MODEL" columnName="TYPE" />
+
+	</changeSet>
+	<changeSet id="A12S-59-sequence" author="pvranik" dbms="oracle,h2,postgresql">
+		<dropSequence sequenceName="DOCUMENT_MODEL_SEQ" />
+		<dropSequence sequenceName="UI_MODEL_SEQ" />
+	</changeSet>
+	<changeSet id="A12S-59-sequence-1" author="pvranik">
+		<dropSequence sequenceName="ACCESS_RIGHT_SEQ"/>
+		<dropSequence sequenceName="ROLE_SEQ"/>
+		<dropSequence sequenceName="USER_PASSWORD_HISTORY_SEQ"/>
+		<dropSequence sequenceName="USER_SEQ"/>
+	</changeSet>
+</databaseChangeLog>

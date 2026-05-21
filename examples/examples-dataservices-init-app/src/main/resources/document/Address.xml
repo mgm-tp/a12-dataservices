@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Address>
+	<AddressRoot>
+		<Location>Anywhere</Location>
+		<Country>Czech Republic</Country>
+		<City>Prague</City>
+		<PostCode>12345</PostCode>
+		<Street>Letenské náměstí</Street>
+	</AddressRoot>
+</Address>

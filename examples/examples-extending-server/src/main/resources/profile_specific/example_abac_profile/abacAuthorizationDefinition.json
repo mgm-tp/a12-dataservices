@@ -1,0 +1,111 @@
+{
+	"name": "Data Services ABAC Example Permission Definition",
+	"description": "",
+	"policies": [
+		{
+			"name": "User Has Global Link Write Right",
+			"description": "Check the current user has a role which has access right to write links.",
+			"rules": [
+				"!principal.authorities.?[!accessRights.?[name == 'LINK_WRITE'].isEmpty()].isEmpty()"
+			]
+		},
+		{
+			"name": "User Has Global Link Read Right",
+			"description": "Check the current user has a role which has access right to read links.",
+			"rules": [
+				"!principal.authorities.?[!accessRights.?[name == 'LINK_READ'].isEmpty()].isEmpty()"
+			]
+		}
+	],
+	"repositoryPolicies": [
+		{
+			"name": "No contracts of type Travel",
+			"description": "Disable the retrieval of contracts that are of type Travel via an ABAC rule",
+			"target": "#resource == 'Contract'",
+			"templates": [
+				{
+					"operator": "not",
+					"operand": {
+						"operator": "exact_match",
+						"field": "/ContractRoot/Type",
+						"value": "Travel"
+					}
+				}
+			]
+		},
+		{
+			"name": "All addresses but those in a certain city",
+			"description": "Disable the retrieval of addresses of a user specific city",
+			"target": "#resource == 'Address'",
+			"templates": [
+				{
+					"operator": "not",
+					"operand": {
+						"operator": "exact_match",
+						"field": "/AddressRoot/City",
+						"value": "principal.additionalProperties['restrictedCity']"
+					}
+				}
+			]
+		},
+		{
+			"name": "Contracts up to maxContractValue",
+			"description": "Disable the retrieval of contracts above a user specific max contract value",
+			"target": "#resource == 'Contract'",
+			"templates": [
+				{
+					"operator": "double_range",
+					"field": "/ContractRoot/ContractValue",
+					"to": "principal.additionalProperties['maxContractValue']"
+				}
+			]
+		},
+		{
+			"name": "BusinessPartners with income above some limit",
+			"description": "Disable the retrieval of business partners with income below user specific limit",
+			"target": "#resource == 'BusinessPartner'",
+			"templates": [
+				{
+					"operator": "double_range",
+					"field": "/BusinessPartnerRoot/Employment/income",
+					"from": "principal.additionalProperties['minIncome']"
+				}
+			]
+		}
+	],
+	"permissions": [
+		{
+			"name": "Link Write Access",
+			"description": "Check the current user has a role which has access right to write links.",
+			"policy-refs": [
+				"User Has Global Link Write Right"
+			],
+			"scopes": [
+				"Link Write"
+			]
+		},
+		{
+			"name": "Link Read Access",
+			"description": "Check the current user has a role which has access right to read links.",
+			"policy-refs": [
+				"User Has Global Link Read Right"
+			],
+			"scopes": [
+				"Link Read"
+			]
+		},
+		{
+			"name": "Check query permission via ABAC",
+			"description": "You can define permission rules for executing queries.",
+			"repository-refs": [
+				"No contracts of type Travel",
+				"All addresses but those in a certain city",
+				"BusinessPartners with income above some limit",
+				"Contracts up to maxContractValue"
+			],
+			"scopes": [
+				"Query"
+			]
+		}
+	]
+}

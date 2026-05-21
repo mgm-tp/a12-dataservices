@@ -1,0 +1,51 @@
+{
+  "RootGroup": {
+    "RootFiled": "QQQ",
+    "ArrayGroup_1": [
+      {
+        "ArrayGroup_1_Filed_1": "1-ABC",
+        "ArrayGroup_2": [
+          {
+            "ArrayGroup_2_Field_1": "2-123",
+            "ArrayGroup_2_Field_2": "2-ABC",
+            "ArrayGroup_3": [
+              {
+                "ArrayGroup_3_Field_1": "3-123",
+                "ArrayGroup_3_Field_2": "3-ABC"
+              },
+              {
+                "ArrayGroup_3_Field_1": "3-1-123",
+                "ArrayGroup_3_Field_2": "3-1-ABC"
+              }
+            ]
+          },
+          {
+            "ArrayGroup_2_Field_1": "2-2-123",
+            "ArrayGroup_2_Field_2": "2-2-ABC",
+            "ArrayGroup_3": [
+              {
+                "ArrayGroup_3_Field_1": "4-123",
+                "ArrayGroup_3_Field_2": "4-ABC"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "ArrayGroup_1_Filed_1": "1-123",
+        "ArrayGroup_2": [
+          {
+            "ArrayGroup_2_Field_1": "2-789",
+            "ArrayGroup_2_Field_2": "2-XYZ",
+            "ArrayGroup_3": [
+              {
+                "ArrayGroup_3_Field_1": "3-789",
+                "ArrayGroup_3_Field_2": "3-XYZ"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

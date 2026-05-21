@@ -1,0 +1,7 @@
+username: model_create_user
+password: model_create_user
+firstname: model_create
+lastname: model_create
+email: model_create@min.com
+authorities:
+  - "ModelCreate"

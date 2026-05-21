@@ -1,0 +1,28 @@
+roles:
+  - name: admin
+    description: Role should allow all operations to be allowed to user
+    accessRights:
+      - QUERY
+      - DOCUMENT_CREATE
+      - DOCUMENT_UPDATE
+      - DOCUMENT_PARTIAL_UPDATE
+      - DOCUMENT_DELETE
+      - DOCUMENT_MULTI_DELETE
+      - MODEL_CREATE
+      - MODEL_UPDATE
+      - MODEL_READ
+      - MODEL_DELETE
+      - ACCESS_ACTUATOR
+      - LINK_WRITE
+      - LINK_READ
+      - ATTACHMENT_UPLOAD
+  - name: systemAdmin
+    description: Role should allow working with caches
+    accessRights:
+      - MANAGE_CACHES
+  - name: guest
+    description: guest role
+    accessRights:
+      - QUERY
+      - MODEL_READ
+      - LINK_READ

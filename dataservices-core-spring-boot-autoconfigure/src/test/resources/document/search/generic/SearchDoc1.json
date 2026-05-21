@@ -1,0 +1,29 @@
+{
+  "Fields": {
+    "StringField": "Nike - Air Jordan 190",
+    "sport": "basketball",
+    "color": "black",
+    "LeadingZeroNumber": "0001200",
+    "NumberField": 1200,
+    "BooleanField": true,
+    "gender": "men",
+    "PartialDates": {
+      "OptionalYear": "2020-02-02",
+      "OptionalMonth": "2020-02-02",
+      "OptionalDay": "2020-02-02"
+    },
+    "DateFragments": {
+      "YearFragment": "2020",
+      "MonthFragment": "06",
+      "YearMonthFragment": "2020-07",
+      "MonthDayFragment": "12-31"
+    },
+    "DateRanges": {
+      "FullDateRange": "2020-01-02/2020-02-02",
+      "YearDateRange": "2000/2005",
+      "MonthDateRange": "03/06",
+      "YearMonthRange": "2010-06/2015-12",
+      "MonthDayRange": "06-09/12-31"
+    }
+  }
+}

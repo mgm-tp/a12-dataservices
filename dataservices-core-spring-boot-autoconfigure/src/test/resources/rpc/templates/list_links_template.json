@@ -1,0 +1,21 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "listLinks",
+    "method": "LIST_LINKS",
+    "params": {
+      "source": {
+        "docRef": "%s",
+        "relationshipModel": "%s",
+        "role": "%s"
+      },
+      "page": {
+        "offset": 0,
+        "limit": 10
+      },
+      "filter": null,
+      "sort": {},
+      "resultDocumentModel": null
+    }
+  }
+]

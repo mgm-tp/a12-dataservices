@@ -1,0 +1,26 @@
+import org.gradle.api.internal.artifacts.verification.exceptions.DependencyVerificationException
+
+allprojects {
+	group = 'com.mgmtp.a12.dataservices.examples'
+
+	if (! fileTree(dir: 'src/main/java').filter { file -> !file.text.contains('.generated') && file.text.contains('.internal.') }.isEmpty()) {
+		throw new DependencyVerificationException("Internal packages must not be used in examples code")
+	}
+}
+
+subprojects {
+	apply plugin: 'java'
+	apply plugin: project.libs.plugins.springBootPlugin.get().pluginId
+
+	it.java {
+		withSourcesJar()
+	}
+
+	tasks.withType(Jar).each {
+		it.configure {
+			from('README.md') {
+				into './'
+			}
+		}
+	}
+}

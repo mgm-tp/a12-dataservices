@@ -1,0 +1,29 @@
+{
+  "Fields": {
+    "StringField": "Nike - Air Jordan 210",
+    "sport": "basketball",
+    "color": "red",
+    "LeadingZeroNumber": 3000,
+    "NumberField": 3000,
+    "BooleanField": false,
+    "gender": "women",
+    "PartialDates": {
+      "OptionalYear": "2011-00-00",
+      "OptionalMonth": "2011-00-00",
+      "OptionalDay": "2020-11-00"
+    },
+    "DateFragments": {
+      "YearFragment": "2016",
+      "MonthFragment": "09",
+      "YearMonthFragment": "2015-10",
+      "MonthDayFragment": "10-20"
+    },
+    "DateRanges": {
+      "FullDateRange": "2020-03-02/2020-09-02",
+      "YearDateRange": "2015/2018",
+      "MonthDateRange": "01/02",
+      "YearMonthRange": "2005-01/2005-12",
+      "MonthDayRange": "01-01/12-31"
+    }
+  }
+}

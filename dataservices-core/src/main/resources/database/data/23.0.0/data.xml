@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+                   logicalFilePath="database/data/22.0.0/data.xml">
+
+    <changeSet id="A12CORE-9269" author="creuter">
+        <delete tableName="user_role">
+            <where>user_id IN(
+                SELECT id FROM server_user WHERE
+                (user_name = 'guest' AND
+                email = 'guest@localhost' AND
+                first_name = 'guest' AND
+                last_name = 'guest' AND
+                salt = 'a641c880e9b55316f3b815b0e89ad01f' AND
+                password = 'f6c9f0330b5cf1aaf0b3a905aeca311cab0cdaac1ad4454b6407953c248afc5f4bb2f07d68f6d2c426396c7f262d483f25b9183ae22a1bcf3d7c0b63784a27fb'
+                ) OR (
+                user_name = 'admin' AND
+                email = 'test.admin@a12.dev.mgm-tp.com' AND
+                first_name = 'ad' AND
+                last_name = 'min' AND
+                salt = 'cf41c880e9b55316c3b8ccb0e8aad01f' AND
+                password = '9d94e2de7c38910b6b6279b02be2af824f30d8132d322e59e458b91fc5b551d66a3605a8d42ee62d7a60f03b8253195e303a7de3a34463394f3e0d1a3876557a'))
+            </where>
+        </delete>
+
+        <delete tableName="server_user">
+            <where>
+                (user_name = 'guest' AND
+                email = 'guest@localhost' AND
+                first_name = 'guest' AND
+                last_name = 'guest' AND
+                salt = 'a641c880e9b55316f3b815b0e89ad01f' AND
+                password = 'f6c9f0330b5cf1aaf0b3a905aeca311cab0cdaac1ad4454b6407953c248afc5f4bb2f07d68f6d2c426396c7f262d483f25b9183ae22a1bcf3d7c0b63784a27fb'
+                ) OR (
+                user_name = 'admin' AND
+                email = 'test.admin@a12.dev.mgm-tp.com' AND
+                first_name = 'ad' AND
+                last_name = 'min' AND
+                salt = 'cf41c880e9b55316c3b8ccb0e8aad01f' AND
+                password = '9d94e2de7c38910b6b6279b02be2af824f30d8132d322e59e458b91fc5b551d66a3605a8d42ee62d7a60f03b8253195e303a7de3a34463394f3e0d1a3876557a'
+               )
+            </where>
+        </delete>
+    </changeSet>
+
+</databaseChangeLog>

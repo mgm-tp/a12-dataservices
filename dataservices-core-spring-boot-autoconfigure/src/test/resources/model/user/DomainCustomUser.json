@@ -1,0 +1,192 @@
+{
+  "header": {
+    "id": "DomainCustomUser",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,systemAdmin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "DomainCustomUser",
+      "immutable": false,
+      "comment": "DomainCustomUser is extension of DomainUser model"
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G7",
+          "name": "CustomProperties",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F25",
+                "name": "clientId",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F26",
+                "name": "clientIdType",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "externalpartnernumber-pob",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Broker P-OB Number"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Broker P-OB Nummer"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "externalpartnernumber-kvk-number",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Subagent KvK Number"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Subagent KvK Nummer"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "externalpartnernumber-underwriter",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "HDI Acceptant"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "HDI Acceptantnten"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Type external ID*"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Typ externe ID*"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F27",
+                "name": "clientIdAmount",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "minFractionalDigits": 2,
+                      "maxFractionalDigits": 2,
+                      "trait": "amount"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Technical premium"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Technical premium"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F28",
+                "name": "clientActive",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "Actif Kunde"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Active Client"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F29",
+                "name": "activeFrom",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "de",
+                      "text": "aktivatiung daate"
+                    },
+                    {
+                      "locale": "en",
+                      "text": "Activation date"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

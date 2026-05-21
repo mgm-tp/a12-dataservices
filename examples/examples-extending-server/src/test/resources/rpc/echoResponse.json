@@ -1,0 +1,22 @@
+[
+	{
+		"jsonrpc": "2.0",
+		"id": "defaultEchoOperation",
+		"result": null
+	},
+	{
+		"jsonrpc": "2.0",
+		"id": "echoOperationV1",
+		"result": null
+	},
+	{
+		"jsonrpc": "2.0",
+		"id": "echoOperationV2",
+		"result": "V2: echo message V2"
+	},
+	{
+		"jsonrpc": "2.0",
+		"id": "echoOperationV3",
+		"result": "V3: echo message V3"
+	}
+]

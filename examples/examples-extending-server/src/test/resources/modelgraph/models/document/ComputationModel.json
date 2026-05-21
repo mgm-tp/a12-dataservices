@@ -1,0 +1,218 @@
+{
+  "header": {
+    "id": "ComputationModel",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "ComputationModel",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "top",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F3",
+                "name": "stringA",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "stringA"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F4",
+                "name": "stringB",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "stringB"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F7",
+                "name": "stringR",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "string Result"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Computation",
+                "id": "C8",
+                "name": "ConcatenatSumString",
+                "annotations": [
+                  {
+                    "name": "severity",
+                    "value": "ERROR"
+                  }
+                ],
+                "Computation": {
+                  "computedFieldRelPath": "../stringR",
+                  "computationAlternatives": [
+                    {
+                      "operation": "[stringA] + [stringB]",
+                      "precondition": "AtLeastOneFieldFilled(stringA, stringB)"
+                    }
+                  ],
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "error text for computation of ConcatenatSumString"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F9",
+                "name": "numberA",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "numberA"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F10",
+                "name": "numberB",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "numberB"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F11",
+                "name": "numberR",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "number Result"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Computation",
+                "id": "C19",
+                "name": "SumNumber",
+                "annotations": [
+                  {
+                    "name": "severity",
+                    "value": "ERROR"
+                  }
+                ],
+                "Computation": {
+                  "computedFieldRelPath": "../numberR",
+                  "computationAlternatives": [
+                    {
+                      "operation": "[numberA] + [numberB]",
+                      "precondition": "AtLeastOneFieldFilled(numberA, numberB) \nAnd [boolean] == True"
+                    }
+                  ],
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "error text for computation of SumNumber"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F20",
+                "name": "boolean",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType",
+                    "BooleanType": {}
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "bool"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "authors_of_books",
+    "type": "term",
+    "field": "book.author",
+    "facets": [
+      {
+        "id": "book_price_sum",
+        "type": "sum",
+        "field": "book.price"
+      },
+      {
+        "id": "author_regions",
+        "type": "term",
+        "field": "book.author.region",
+        "facets": [
+          {
+            "id": "max_book_price",
+            "type": "max",
+            "field": "book.price"
+          }
+        ],
+        "offset": 0,
+        "limit": 10
+      }
+    ],
+    "offset": 0,
+    "limit": 10
+  }
+]

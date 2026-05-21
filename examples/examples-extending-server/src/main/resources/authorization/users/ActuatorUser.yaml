@@ -1,0 +1,7 @@
+username: "actuator"
+password: "actuator"
+authorities:
+  - "ActuatorAccess"
+email: Actuator@localhost
+firstname: User
+lastname: Actuator

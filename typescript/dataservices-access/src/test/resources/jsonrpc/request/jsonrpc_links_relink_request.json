@@ -1,0 +1,21 @@
+{
+	"jsonrpc": "2.0",
+	"id": "RelinkDocument",
+	"method": "RELINK_DOCUMENT",
+	"params": {
+		"linkDescriptor": {
+			"relationshipModel": "ContractBusinessPartner",
+			"entities": [
+				{
+					"role": "Contract",
+					"docRef": "Contract/10"
+				},
+				{
+					"role": "Partner",
+					"docRef": "BusinessPartner/11"
+				}
+			]
+		},
+		"linkRef": "12"
+	}
+}

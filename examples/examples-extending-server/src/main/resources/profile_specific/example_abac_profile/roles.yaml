@@ -1,0 +1,18 @@
+roles:
+  - name: admin
+    description: admin role
+    accessRights:
+      - QUERY
+      - DOCUMENT_CREATE
+      - DOCUMENT_UPDATE
+      - DOCUMENT_PARTIAL_UPDATE
+      - DOCUMENT_READ
+      - DOCUMENT_DELETE
+      - MODEL_CREATE
+      - MODEL_UPDATE
+      - MODEL_READ
+      - MODEL_DELETE
+      - ACCESS_ACTUATOR
+      - LINK_WRITE
+      - LINK_READ
+      - ATTACHMENT_UPLOAD

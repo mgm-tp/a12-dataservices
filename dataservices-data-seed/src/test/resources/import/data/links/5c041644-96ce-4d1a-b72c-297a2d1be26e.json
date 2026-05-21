@@ -1,0 +1,18 @@
+{
+	"relationshipModel": "ContractCoInsuredPartner",
+	"entities": [
+		{
+			"role": "Partner",
+			"modelName": "BusinessPartner",
+			"docRef": "BusinessPartner/e9c11dd1-32c3-42d3-a850-6431b79cfb07",
+			"roleOrder": "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssl"
+		},
+		{
+			"role": "Contract",
+			"modelName": "Contract",
+			"docRef": "Contract/5b7f156d-a7b9-48a7-92d6-023c787b3e79",
+			"roleOrder": "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssst"
+		}
+	],
+	"linkDocumentDocRef": "CoInsuredAdditionalFields/94b3200f-80f7-4f52-99de-03807344534f"
+}

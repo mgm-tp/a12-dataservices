@@ -1,0 +1,73 @@
+{
+  "header": {
+    "id": "BusinessPartnerOverview",
+    "modelType": "overview",
+    "modelVersion": "35.1.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "document-model-for-overview",
+        "modelType": "document",
+        "alias": "DM",
+        "reference": "BusinessPartner"
+      }
+    ]
+  },
+  "content": {
+    "configuration": {
+      "enableFilter": true,
+      "filterConfiguration": {
+        "showFilterButton": true,
+        "showFilterBar": true,
+        "filterMode": "all_columns"
+      },
+      "showFullTextSearch": true,
+      "pagingSize": 10
+    },
+    "columns": [
+      {
+        "id": "column-4c09b",
+        "width": 1,
+        "pinDirection": "LEFT",
+        "styles": {},
+        "elementRef": "field_663d2",
+        "sortable": false
+      },
+      {
+        "id": "column-1d0f9",
+        "width": 1,
+        "pinDirection": "LEFT",
+        "styles": {},
+        "elementRef": "field_31565",
+        "sortable": false
+      }
+    ],
+    "subHeaderBox": {
+      "majorElements": [
+        {
+          "type": "search"
+        },
+        {
+          "type": "filter"
+        }
+      ],
+      "minorElements": []
+    },
+    "rowActionGroup": {},
+    "footerBox": {
+      "majorElements": [],
+      "minorElements": []
+    }
+  }
+}

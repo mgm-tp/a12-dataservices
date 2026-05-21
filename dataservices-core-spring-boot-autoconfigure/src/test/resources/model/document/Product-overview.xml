@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns="http://www.mgm-tp.com/a12/platform/overview/model">
+	<meta>
+		<schemaVersion>21.2.0</schemaVersion>
+		<picusReference>DomainProduct.xml</picusReference>
+		<languages>en de</languages>
+		<annotation name="roles">
+			<roles>admin</roles>
+		</annotation>
+	</meta>
+	<name>Product-overview</name>
+	<title>
+		<text lang="en">List All Products</text>
+		<text lang="de">alle Produkte</text>
+	</title>
+	<pagingSize>10</pagingSize>
+	<initialSorting idref="column-752d8"/>
+	<subHeaderBox>
+		<button>
+			<label>
+				<text lang="en">Add Product</text>
+				<text lang="de">Füge Produkt hinzu</text>
+			</label>
+			<event>add</event>
+			<align>left</align>
+			<icon>add</icon>
+		</button>
+	</subHeaderBox>
+	<footerBox/>
+	<column id="column-752d8" fieldRef="F7" sortable="true" preferredSorting="ASC">
+		<title>
+			<text lang="en">name</text>
+			<text lang="de">Name</text>
+		</title>
+	</column>
+	<column id="column-254dd8" fieldRef="F3" sortable="true" preferredSorting="ASC">
+		<title>
+			<text lang="en">number</text>
+			<text lang="de">Nummer</text>
+		</title>
+	</column>
+	<column id="column-72348" fieldRef="F8" sortable="false" preferredSorting="ASC">
+		<title>
+			<text lang="en">Description</text>
+			<text lang="de">Beschreibung</text>
+		</title>
+	</column>
+	<rowActionGroup>
+		<action>
+			<event>delete</event>
+			<label>
+				<text lang="en">Delete</text>
+				<text lang="de">Löschen</text>
+			</label>
+			<icon>0xe872</icon>
+			<confirmation>
+				<text lang="en">Really delete row?</text>
+				<text lang="de">Wirklich jetzt löschen?</text>
+			</confirmation>
+		</action>
+	</rowActionGroup>
+</configuration>

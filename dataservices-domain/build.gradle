@@ -1,0 +1,32 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+	api project(":content-store:dataservices-content-store-domain")
+	api project(":dataservices-common:dataservices-common-api")
+	api libs.jaxbApi,
+			libs.kernelDocumentApi,
+			libs.kernelMdDocumentV2,
+			libs.kernelMdModelApi,
+			libs.kernelCoreToolApi,
+			platform(libs.jacksonBom),
+			libs.jaxbImpl
+	implementation libs.jacksonDatabind,
+			libs.jacksonAnnotations,
+			libs.commonsLang3,
+			libs.commonsCollections4,
+			libs.annotationApi,
+			libs.mgmModelApi,
+			libs.slf4jApi
+	testImplementation libs.testng,
+			libs.jsonassert,
+			libs.json,
+			libs.jacksonDataformatYaml,
+			libs.commonsIo,
+			libs.jacksonDatatypeJsr310,
+			libs.jacksonDatatypeJdk8,
+			libs.jacksonSchema
+}
+
+description = 'Domain models and common APIs for Data Services modules'

@@ -1,0 +1,114 @@
+{
+  "header": {
+    "id": "PartnerPostalAddress",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Partner Postal Address"
+      },
+      {
+        "locale": "de",
+        "text": "Postanschrift des Partners"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest,ModelRead"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Partner",
+        "reference": "BusinessPartnerSuper"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Address",
+        "reference": "Address"
+      }
+    ]
+  },
+  "content": {
+    "duplicatesAllowed": false,
+    "associationType": "SHARED",
+    "storage": "EXTERNAL",
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Partner Postal Address"
+      },
+      {
+        "locale": "de",
+        "text": "Postanschrift des Partners"
+      }
+    ],
+    "linkDocumentModel": null,
+    "entityCharacteristics": [
+      {
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": false,
+            "upperLimit": 10
+          }
+        },
+        "candidateConstraints": {},
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Business Partner"
+          },
+          {
+            "locale": "de",
+            "text": "Geschäftspartner"
+          }
+        ],
+        "role": "Partner",
+        "documentModel": "BusinessPartnerSuper"
+      },
+      {
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": false,
+            "upperLimit": 1
+          }
+        },
+        "candidateConstraints": {},
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Postal Address"
+          },
+          {
+            "locale": "de",
+            "text": "Anschrift"
+          }
+        ],
+        "role": "Address",
+        "documentModel": "Address"
+      }
+    ]
+  }
+}

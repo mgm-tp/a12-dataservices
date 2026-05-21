@@ -1,0 +1,69 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+configurations {
+	schema {
+		canBeConsumed = false
+		canBeResolved = true
+	}
+}
+
+dependencies {
+	implementation project(':dataservices-core')
+	implementation libs.reflections
+	implementation libs.jacksonDatabind,
+			libs.jacksonAnnotations,
+			libs.jacksonDatatypeJdk8,
+			libs.jacksonDatatypeJsr310,
+			libs.victoolsJacksonJsonSchemaGenerator,
+			libs.springDataCommons,
+			libs.slf4jApi,
+			libs.picocli
+	schema project(':dataservices-core')
+}
+
+test {
+	useTestNG()
+}
+
+def schemaFileName = "query-root-dataservices-vanila-${version}.json"
+
+TaskProvider<JavaExec> generateSchema = tasks.register('generateQueryJsonSchema', JavaExec) {
+	group = 'build'
+	description = 'Generate JSON Schema.'
+	dependsOn tasks.named('classes')
+	classpath = sourceSets.main.runtimeClasspath + configurations.schema
+	mainClass = 'com.mgmtp.a12.dataservices.internal.QuerySchemaGenerator'
+
+
+	def schemaFile = project.layout.buildDirectory.file("schema/$schemaFileName")
+	systemProperty 'schema.output', schemaFile.get().asFile.absolutePath
+
+	args '--base-package', 'com.mgmtp.a12.dataservices',
+			'--schema-output', schemaFile.get().asFile.absolutePath,
+			'--schema-id', "https://mgm-tp.com/a12/dataservices/schema/$schemaFileName"
+
+	tasks.assemble.dependsOn it
+	outputs.file(schemaFile)
+}
+
+TaskProvider<Jar> schemaJarTask = tasks.register('schemaJar', Jar) {
+	group = 'build'
+	description = 'Package the generated JSON Schema into a standalone JAR.'
+	archiveClassifier = 'schema'
+	dependsOn tasks.named('generateQueryJsonSchema')
+	// consume the generated schema via its declared outputs
+	from(generateSchema.map { it.outputs.files })
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	tasks.assemble.dependsOn it
+}
+
+tasks.named('jar') {
+	archiveClassifier = 'generator'
+	manifest {
+		attributes 'Main-Class': 'com.mgmtp.a12.dataservices.internal.QuerySchemaGenerator'
+	}
+}
+
+description = 'JSON Schema generator and runtime module for Data Services Query API'

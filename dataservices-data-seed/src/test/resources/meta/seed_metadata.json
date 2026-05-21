@@ -1,0 +1,35 @@
+{
+	"documents": {
+		"Contract/8ed0be43-bd0c-438c-a0de-c8e8712c83b1": {
+			"fileName": "Ing_contract.json"
+		},
+		"Contract/23s0be43-23wa-438c-2waq-c8e8712c83b1": {
+			"fileName": "Alianz_contract.json"
+		},
+		"BusinessPartner/8ed0b2eds-2csa-2wsa-asf2-c8e8712c83b1": {
+			"fileName": "Tomas_Bajus.json"
+		}
+	},
+	"attachments": {
+		"e4cbec43-6a00-418a-b7d6-d4f5b7f81ff0": {
+			"fileName": "PassportScan_TBajus.jpg"
+		},
+		"e4csdw43-6a00-418a-a7d6-d9f5b7f82df2": {
+			"fileName": "DriverLicenseScan_TBajus.jpg"
+		},
+		"e4cbe2wa-2efd-418a-12ed-d9f5b7fd3wf0": {
+			"fileName": "Alianz_signature_certificat.cert"
+		}
+	},
+	"links": {
+		"123": {
+			"fileName": "Bajus_ING_assignment-PolicyHolder.json"
+		},
+		"124": {
+			"fileName": "Bajus_ING_assignment-Coninsured.json"
+		},
+		"125": {
+			"fileName": "Bajus_Alianz_assignment-Coinsured.json"
+		}
+	}
+}

@@ -1,0 +1,3 @@
+= Activate HTTP/1 Support Only for Server Application
+
+With this profile enabled, server application will support HTTP1 protocol only.

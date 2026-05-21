@@ -1,0 +1,22 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+	api project(':dataservices-security-user-api')
+	api project(':dataservices-server')
+	implementation project(':dataservices-core-spring-boot-autoconfigure')
+	implementation project(':content-store:dataservices-content-store-server-spring-boot-autoconfigure')
+	implementation libs.springBootAutoconfigure
+	implementation libs.springBoot
+	implementation libs.springBootConfigurationProcessor
+	implementation libs.springBootStarter
+	implementation libs.springBootStarterSecurity
+	implementation libs.micrometerRegistryPrometheus
+	implementation libs.uaaAuthenticationPrincipalExtensionSpringBootAutoconfigure
+	implementation libs.springWebmvc
+	testImplementation libs.testng
+	compileOnly libs.servletApi
+}
+
+description = 'Spring Boot auto-configuration for Data Services REST server endpoints'

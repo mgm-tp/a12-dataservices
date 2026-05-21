@@ -1,0 +1,73 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.spring-boot-conventions'
+}
+
+dependencies {
+	api project(':dataservices-client-spring-boot-autoconfigure')
+	implementation libs.springBootStarter
+	implementation libs.xercesImpl
+	implementation libs.commonsCollections4
+	implementation libs.restServerConnectorSpringBootAutoconfigure
+	api libs.uaaRestClient
+	implementation libs.uaaRestClientSpringBootAutoconfigure
+	testImplementation libs.testng
+	testImplementation libs.assertjCore
+	testImplementation libs.springBootTest
+	testImplementation libs.springTest
+	testImplementation libs.springBootStarterWebsocket
+	testImplementation libs.hamcrest
+	testImplementation libs.jsonUnitAssertj
+	testImplementation libs.jsonassert
+	testImplementation libs.json
+	testImplementation project(':dataservices-test-resources')
+}
+
+springBoot {
+	mainClass.set 'com.mgmtp.a12.dataservices.client.cli.internal.Client'
+}
+
+test {
+	exclude('**/*IT.class')
+}
+
+tasks.addRule("prepare model bundles") { String taskName ->
+	def p = ~/prepareZip(.*)Bundle/
+	def m = p.matcher(taskName)
+	if (m.matches()) {
+		def name = m.group(1)
+		task "$taskName"(group: 'build', type: Zip) {
+			archiveFileName = "${name}.zip"
+			destinationDirectory = file("$projectDir/src/test/resources/bulk")
+			from "${project(':dataservices-test-resources').projectDir}/src/main/resources/models-bulkload/bulkload/$name"
+		}
+	}
+
+	p = ~/prepareJar(.*)Bundle/
+	m = p.matcher(taskName)
+	if (m.matches()) {
+		def name = m.group(1)
+		task "$taskName"(group: 'build', type: Zip) {
+			archiveFileName = "${name}.jar"
+			destinationDirectory = file("$projectDir/src/test/resources/bulk")
+			from "${project(':dataservices-test-resources').projectDir}/src/main/resources/models-bulkload/bulkload/$name"
+		}
+	}
+}
+
+tasks.register("prepareModelBundles") {
+	group = "build"
+	dependsOn {
+		[
+				"prepareJarmodelsDuplicateBundle", "prepareZipmodelsDuplicateBundle",
+				"prepareJarmodelsBundle", "prepareZipmodelsBundle"
+		]
+	}
+}
+
+tasks.processTestResources.dependsOn "prepareModelBundles"
+
+clean {
+	delete += fileTree(dir: "$projectDir/src/test/resources/bulk", includes: ["*.jar", "*.zip"]).files
+}
+
+description = 'Data Services REST client - command-line client'

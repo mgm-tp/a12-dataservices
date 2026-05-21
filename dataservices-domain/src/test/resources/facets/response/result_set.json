@@ -1,0 +1,171 @@
+{
+  "fullSize": 1000,
+  "page": null,
+  "entries": [],
+  "facets": {
+	"region": {
+	  "buckets": [
+		{
+		  "facets": {
+			"author": {
+			  "buckets": [
+				{
+				  "facets": {
+					"count": 100
+				  },
+				  "count": 100,
+				  "value": "Higgins"
+				},
+				{
+				  "facets": {
+					"count": 100
+				  },
+				  "count": 100,
+				  "value": "Hemingway"
+				}
+			  ],
+			  "fullSize": 2,
+			  "offset": 0,
+			  "limit": 10
+			},
+			"count": 300
+		  },
+		  "count": 100,
+		  "value": "england"
+		},
+		{
+		  "facets": {
+			"author": {
+			  "buckets": [
+				{
+				  "facets": {
+					"count": 100
+				  },
+				  "count": 100,
+				  "value": "Higgins"
+				},
+				{
+				  "facets": {
+					"count": 100
+				  },
+				  "count": 100,
+				  "value": "Hemingway"
+				}
+			  ],
+			  "fullSize": 2,
+			  "limit": 10,
+			  "offset": 0
+			},
+			"count": 300
+		  },
+		  "count": 100,
+		  "value": "germany"
+		},
+		{
+		  "facets": {
+			"author": {
+			  "buckets": [
+				{
+				  "facets": {
+					"count": 100
+				  },
+				  "count": 100,
+				  "value": "Higgins"
+				},
+				{
+				  "facets": {
+					"count": 100
+				  },
+				  "count": 100,
+				  "value": "Hemingway"
+				}
+			  ],
+			  "fullSize": 2,
+			  "limit": 10,
+			  "offset": 0
+			},
+			"count": 300
+		  },
+		  "count": 100,
+		  "value": "norway"
+		}
+	  ],
+	  "fullSize": 3,
+	  "limit": 10,
+	  "offset": 0
+	},
+	"prices": {
+	  "buckets": [
+		{
+		  "facets": {
+			"total": 1000.46,
+			"avg": 14.6,
+			"min": 0.0,
+			"max": 99.0,
+			"count": 100
+		  },
+		  "count": 100,
+		  "value": "0.0 -> 99.0"
+		},
+		{
+		  "facets": {
+			"total": 1000.46,
+			"avg": 14.6,
+			"min": 100.0,
+			"max": 199.0,
+			"count": 100
+		  },
+		  "count": 100,
+		  "value": "100.0 -> 199.0"
+		},
+		{
+		  "facets": {
+			"total": 1000.46,
+			"avg": 14.6,
+			"min": 200.0,
+			"max": 299.0,
+			"count": 100
+		  },
+		  "count": 100,
+		  "value": "200.0 -> 299.0"
+		},
+		{
+		  "facets": {
+			"total": 1000.46,
+			"avg": 14.6,
+			"min": 300.0,
+			"max": 399.0,
+			"count": 100
+		  },
+		  "count": 100,
+		  "value": "300.0 -> 399.0"
+		},
+		{
+		  "facets": {
+			"total": 1000.46,
+			"avg": 14.6,
+			"min": 400.0,
+			"max": 499.0,
+			"count": 100
+		  },
+		  "count": 100,
+		  "value": "400.0 -> 499.0"
+		},
+		{
+		  "facets": {
+			"total": 1000.46,
+			"avg": 14.6,
+			"min": 500.0,
+			"max": 599.0,
+			"count": 100
+		  },
+		  "count": 100,
+		  "value": "500.0 -> 599.0"
+		}
+	  ],
+	  "limit": 10,
+	  "offset": 0,
+	  "fullSize": 6
+	}
+  }
+}

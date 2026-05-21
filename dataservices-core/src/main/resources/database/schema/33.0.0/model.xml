@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd"
+				   logicalFilePath="database/schema/33.0.0/model.xml">
+
+	<changeSet id="A12S-2059-1" author="A12S-2059-author">
+		<preConditions onFail="MARK_RAN" onError="HALT">
+			<tableExists tableName="UI_MODEL"/>
+			<tableExists tableName="DOCUMENT_MODEL"/>
+			<tableExists tableName="RELATIONSHIP_MODEL"/>
+		</preConditions>
+		<dropTable tableName="UI_MODEL"/>
+		<dropTable tableName="DOCUMENT_MODEL"/>
+		<dropTable tableName="RELATIONSHIP_MODEL"/>
+	</changeSet>
+
+	<changeSet id="A12S-2059-2" author="A12S-2059-author">
+		<preConditions onFail="MARK_RAN" onError="HALT">
+			<tableExists tableName="BACKUP_ACCESS_RIGHT"/>
+			<tableExists tableName="BACKUP_ROLE"/>
+			<tableExists tableName="BACKUP_USER"/>
+			<tableExists tableName="MIGRATED_USER_PASSWORD"/>
+		</preConditions>
+		<dropTable tableName="BACKUP_ACCESS_RIGHT"/>
+		<dropTable tableName="BACKUP_ROLE"/>
+		<dropTable tableName="BACKUP_USER"/>
+		<dropTable tableName="MIGRATED_USER_PASSWORD"/>
+	</changeSet>
+
+</databaseChangeLog>

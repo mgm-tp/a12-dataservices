@@ -1,0 +1,12 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "addDocument",
+    "method": "ADD_DOCUMENT",
+    "params": {
+      "document": "%s",
+      "documentModelName": "%s",
+      "locale": "%s"
+    }
+  }
+]

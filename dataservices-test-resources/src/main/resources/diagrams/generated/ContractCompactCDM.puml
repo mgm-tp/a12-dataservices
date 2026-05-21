@@ -1,0 +1,185 @@
+@startuml
+
+!procedure group(x)
+class x << (G,#DDAAFF) >>
+!endprocedure
+
+!procedure cdmGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure field(x)
+class x << (F,#DDFFAA) >> #White
+!endprocedure
+
+!procedure embeddedField(name, type, fieldType)
+name <<type>>: fieldType
+!endprocedure
+
+!procedure rule(x)
+class x << (R,#DDBBAA) >> #FFDDEE
+!endprocedure
+
+!procedure embeddedRule(name, type)
+<back:FFDDEE>name() <<type>></back>
+!endprocedure
+
+!procedure embeddedRule(name, type, $errorCondition)
+.. <back:FFDDEE> name <<type>> </back> ..
+<back:FFDDEE>errorCondition:</back> $errorCondition
+!endprocedure
+
+!procedure computation(x)
+class x << (C,#DDBBAA) >> #FFEEDD
+!endprocedure
+
+!procedure computationAlternative($operation, $precondition)
+.. alternative ..
+operation: $operation
+precondition: $precondition
+!endprocedure
+
+!procedure embeddedComputation(name, type, $operation, $precondition)
+.. <back:FFEEDD> name <<type>> </back> ..
+<back:FFEEDD>operation:</back> $operation
+<back:FFEEDD>precondition:</back> $precondition
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure embeddedComputation(name, type )
+<back:FFEEDD>name() <<type>></back>
+!endprocedure
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure linkGroup(x)
+group(x) #PeachPuff
+!endprocedure
+
+!procedure relLink($name,$rmId,$link1,$link2,$ld="")
+circle $name as $rmId #PeachPuff
+$rmId $link1
+$rmId $link2
+!if $ld!=""
+$rmId -[#IndianRed]right $ld: <<linkDocument>>
+linkDocument($ld)
+!endif
+!endprocedure
+
+skinparam linetype polyline
+left to right direction
+
+title Compose Document Model ContractCompactCDM<Contract}>
+
+package "ContractCompactCDM<Contract>" as ContractCompactCDM <<Frame>> {
+	() "documentRoot" as ContractCompactCDMDocumentRoot
+	group('"ContractRoot" as include_71fc7')
+	field('"ContractName" as field_770f2 <<StringType>>')
+	include_71fc7 -- field_770f2
+	field('"ContractValue" as field_29708 <<NumberType>>')
+	include_71fc7 -- field_29708
+	field('"Valid" as field_a09a6 <<BooleanType>>')
+	include_71fc7 -- field_a09a6
+	field('"Type" as field_48s48 <<StringType>>')
+	include_71fc7 -- field_48s48
+	group('"ContractDates" as G2')
+	field('"ContractStartDate" as G2F1 <<DateTimeType>>')
+	G2 -- G2F1
+	field('"ContractEndDate" as G2F2 <<DateType>>')
+	G2 -- G2F2
+	field('"ContractEndTime" as G2F3 <<TimeType>>')
+	G2 -- G2F3
+	field('"ContractReviewDate" as G2F4 <<DateFragmentType>>')
+	G2 -- G2F4
+	field('"LastPremiumPaidDate" as G2F5 <<DateType>>')
+	G2 -- G2F5
+	field('"CoveragePeriod" as G2F6 <<DateRangeType>>')
+	G2 -- G2F6
+
+	include_71fc7 ||--o| "0..1" G2
+	group('"ChangeLog" as group_7a5d0')
+	field('"Number" as field_f9502 <<NumberType>>')
+	group_7a5d0 -- field_f9502
+	field('"ChangeTimestamp" as field_5b05b <<DateType>>')
+	group_7a5d0 -- field_5b05b
+	field('"Description" as field_e1113 <<StringType>>')
+	group_7a5d0 -- field_e1113
+	field('"User" as field_ccb79 <<StringType>>')
+	group_7a5d0 -- field_ccb79
+	field('"Status" as field_980c8 <<StringType>>')
+	group_7a5d0 -- field_980c8
+	field('"Priority" as field_18ea0 <<StringType>>')
+	group_7a5d0 -- field_18ea0
+	group('"Changes" as group_61e6a')
+	field('"Title" as field_bf1d6 <<StringType>>')
+	group_61e6a -- field_bf1d6
+	field('"Details" as field_7de61 <<StringType>>')
+	group_61e6a -- field_7de61
+	field('"Priority" as field_69efa <<StringType>>')
+	group_61e6a -- field_69efa
+	field('"Status" as field_1ecc4 <<StringType>>')
+	group_61e6a -- field_1ecc4
+
+	group_7a5d0 ||--o{ "0..99" group_61e6a
+
+	include_71fc7 ||--o{ "0..10000" group_7a5d0
+
+	ContractCompactCDMDocumentRoot ||--o| "0..1" include_71fc7
+
+	cdmGroup('"ContractBusinessPartner" as group_f3eb0')
+	group('"BusinessPartnerRoot" as group_36785')
+	field('"Name" as field_4d864 <<StringType>>')
+	group_36785 -- field_4d864
+	field('"Industry" as field_d6581 <<StringType>>')
+	group_36785 -- field_d6581
+
+	group_f3eb0 ||--o| "0..1" group_36785
+	cdmGroup('"PartnerAddresses" as group_513ee')
+	group('"AddressRoot" as include_4be24')
+	field('"Country" as field_804c7 <<StringType>>')
+	include_4be24 -- field_804c7
+	field('"AddressType" as field_a48cs <<StringType>>')
+	include_4be24 -- field_a48cs
+
+	group_513ee ||--o| "0..1" include_4be24
+
+	group_f3eb0 ||--o{ "0..100" group_513ee
+	cdmGroup('"PartnerPostalAddress" as group_368d1')
+	group('"AddressRoot" as include_19e70')
+	field('"Country" as field_854c7 <<StringType>>')
+	include_19e70 -- field_854c7
+	field('"AddressType" as field_b48cs <<StringType>>')
+	include_19e70 -- field_b48cs
+
+	group_368d1 ||--o| "0..1" include_19e70
+
+	group_f3eb0 ||--o| "0..1" group_368d1
+
+	ContractCompactCDMDocumentRoot ||--o| "0..1" group_f3eb0
+
+	cdmGroup('"ContractCoInsuredPartner" as group_4bc78')
+	group('"BusinessPartnerRoot" as group_36405')
+	field('"Name" as field_fe6b2 <<StringType>>')
+	group_36405 -- field_fe6b2
+	field('"Industry" as field_d6580 <<StringType>>')
+	group_36405 -- field_d6580
+
+	group_4bc78 ||--o| "0..1" group_36405
+	group('"relationship" as group_4da5e')
+	group('"CoInsuredRoot" as include_50c1e')
+	field('"Name" as field_aa07e <<StringType>>')
+	include_50c1e -- field_aa07e
+
+	group_4da5e ||--o| "0..1" include_50c1e
+
+	group_4bc78 ||--o| "0..1" group_4da5e
+
+	ContractCompactCDMDocumentRoot ||--o{ "0..100" group_4bc78
+
+}
+@enduml

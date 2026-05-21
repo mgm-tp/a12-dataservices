@@ -1,0 +1,10 @@
+{
+	"ContractRoot": {
+		"ContractName": "MyContract1",
+		"LengthOfContract": 100,
+		"ContractValue": 1000,
+		"CostToCustomer": 10,
+		"Liability": 0.25,
+		"MaxDiscount": "10%"
+	}
+}

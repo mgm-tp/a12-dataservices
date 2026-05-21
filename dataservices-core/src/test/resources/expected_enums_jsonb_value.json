@@ -1,0 +1,2273 @@
+{
+	"ContractRoot": {
+		"Type": {
+			"en": "Liability Insurance",
+			"en_US": "Liability Coverage",
+			"de": "Haftpflichtversicherung",
+			"original_value": "Liability"
+		},
+		"ChangeLog": [
+			{
+				"Status": {
+					"en": "accepted",
+					"en_US": "approved",
+					"de": "genehmigt",
+					"original_value": "approved"
+				},
+				"Priority": {
+					"en": "demanding",
+					"en_US": "critical",
+					"de": "kritisch",
+					"original_value": "critical"
+				},
+				"Changes": [
+					{
+						"Priority": {
+							"en": "small",
+							"en_US": "low",
+							"de": "niedrig",
+							"original_value": "low"
+						},
+						"Status": {
+							"en": "examined",
+							"en_US": "reviewed",
+							"de": "uberpruft",
+							"original_value": "reviewed"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "intermediate",
+							"en_US": "medium",
+							"de": "medium",
+							"original_value": "medium"
+						},
+						"Status": {
+							"en": "examined",
+							"en_US": "reviewed",
+							"de": "uberpruft",
+							"original_value": "reviewed"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "large",
+							"en_US": "high",
+							"de": "hoch",
+							"original_value": "high"
+						},
+						"Status": {
+							"en": "accepted",
+							"en_US": "approved",
+							"de": "genehmigt",
+							"original_value": "approved"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "demanding",
+							"en_US": "critical",
+							"de": "kritisch",
+							"original_value": "critical"
+						},
+						"Status": {
+							"en": "blueprint",
+							"en_US": "draft",
+							"de": "entwurf",
+							"original_value": "draft"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "large",
+							"en_US": "high",
+							"de": "hoch",
+							"original_value": "high"
+						},
+						"Status": {
+							"en": "utilized",
+							"en_US": "deployed",
+							"de": "bereitgestellt",
+							"original_value": "deployed"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{}
+						]
+					},
+					{}
+				]
+			},
+			{
+				"Status": {
+					"en": "accepted",
+					"en_US": "approved",
+					"de": "genehmigt",
+					"original_value": "approved"
+				},
+				"Priority": {
+					"en": "demanding",
+					"en_US": "critical",
+					"de": "kritisch",
+					"original_value": "critical"
+				},
+				"Changes": [
+					{
+						"Priority": {
+							"en": "intermediate",
+							"en_US": "medium",
+							"de": "medium",
+							"original_value": "medium"
+						},
+						"Status": {
+							"en": "utilized",
+							"en_US": "deployed",
+							"de": "bereitgestellt",
+							"original_value": "deployed"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "demanding",
+							"en_US": "critical",
+							"de": "kritisch",
+							"original_value": "critical"
+						},
+						"Status": {
+							"en": "returned",
+							"en_US": "reverted",
+							"de": "zuruckgesetzt",
+							"original_value": "reverted"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "small",
+							"en_US": "low",
+							"de": "niedrig",
+							"original_value": "low"
+						},
+						"Status": {
+							"en": "utilized",
+							"en_US": "deployed",
+							"de": "bereitgestellt",
+							"original_value": "deployed"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "intermediate",
+							"en_US": "medium",
+							"de": "medium",
+							"original_value": "medium"
+						},
+						"Status": {
+							"en": "utilized",
+							"en_US": "deployed",
+							"de": "bereitgestellt",
+							"original_value": "deployed"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "small",
+							"en_US": "low",
+							"de": "niedrig",
+							"original_value": "low"
+						},
+						"Status": {
+							"en": "accepted",
+							"en_US": "approved",
+							"de": "genehmigt",
+							"original_value": "approved"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{}
+						]
+					},
+					{}
+				]
+			},
+			{
+				"Status": {
+					"en": "returned",
+					"en_US": "reverted",
+					"de": "zuruckgesetzt",
+					"original_value": "reverted"
+				},
+				"Priority": {
+					"en": "large",
+					"en_US": "high",
+					"de": "hoch",
+					"original_value": "high"
+				},
+				"Changes": [
+					{
+						"Priority": {
+							"en": "large",
+							"en_US": "high",
+							"de": "hoch",
+							"original_value": "high"
+						},
+						"Status": {
+							"en": "accepted",
+							"en_US": "approved",
+							"de": "genehmigt",
+							"original_value": "approved"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "large",
+							"en_US": "high",
+							"de": "hoch",
+							"original_value": "high"
+						},
+						"Status": {
+							"en": "utilized",
+							"en_US": "deployed",
+							"de": "bereitgestellt",
+							"original_value": "deployed"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "demanding",
+							"en_US": "critical",
+							"de": "kritisch",
+							"original_value": "critical"
+						},
+						"Status": {
+							"en": "examined",
+							"en_US": "reviewed",
+							"de": "uberpruft",
+							"original_value": "reviewed"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "demanding",
+							"en_US": "critical",
+							"de": "kritisch",
+							"original_value": "critical"
+						},
+						"Status": {
+							"en": "accepted",
+							"en_US": "approved",
+							"de": "genehmigt",
+							"original_value": "approved"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "intermediate",
+							"en_US": "medium",
+							"de": "medium",
+							"original_value": "medium"
+						},
+						"Status": {
+							"en": "blueprint",
+							"en_US": "draft",
+							"de": "entwurf",
+							"original_value": "draft"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{}
+						]
+					},
+					{}
+				]
+			},
+			{
+				"Status": {
+					"en": "examined",
+					"en_US": "reviewed",
+					"de": "uberpruft",
+					"original_value": "reviewed"
+				},
+				"Priority": {
+					"en": "intermediate",
+					"en_US": "medium",
+					"de": "medium",
+					"original_value": "medium"
+				},
+				"Changes": [
+					{
+						"Priority": {
+							"en": "small",
+							"en_US": "low",
+							"de": "niedrig",
+							"original_value": "low"
+						},
+						"Status": {
+							"en": "examined",
+							"en_US": "reviewed",
+							"de": "uberpruft",
+							"original_value": "reviewed"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "intermediate",
+							"en_US": "medium",
+							"de": "medium",
+							"original_value": "medium"
+						},
+						"Status": {
+							"en": "accepted",
+							"en_US": "approved",
+							"de": "genehmigt",
+							"original_value": "approved"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "intermediate",
+							"en_US": "medium",
+							"de": "medium",
+							"original_value": "medium"
+						},
+						"Status": {
+							"en": "examined",
+							"en_US": "reviewed",
+							"de": "uberpruft",
+							"original_value": "reviewed"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "intermediate",
+							"en_US": "medium",
+							"de": "medium",
+							"original_value": "medium"
+						},
+						"Status": {
+							"en": "blueprint",
+							"en_US": "draft",
+							"de": "entwurf",
+							"original_value": "draft"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "intermediate",
+							"en_US": "medium",
+							"de": "medium",
+							"original_value": "medium"
+						},
+						"Status": {
+							"en": "accepted",
+							"en_US": "approved",
+							"de": "genehmigt",
+							"original_value": "approved"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{}
+						]
+					},
+					{}
+				]
+			},
+			{
+				"Status": {
+					"en": "utilized",
+					"en_US": "deployed",
+					"de": "bereitgestellt",
+					"original_value": "deployed"
+				},
+				"Priority": {
+					"en": "small",
+					"en_US": "low",
+					"de": "niedrig",
+					"original_value": "low"
+				},
+				"Changes": [
+					{
+						"Priority": {
+							"en": "small",
+							"en_US": "low",
+							"de": "niedrig",
+							"original_value": "low"
+						},
+						"Status": {
+							"en": "examined",
+							"en_US": "reviewed",
+							"de": "uberpruft",
+							"original_value": "reviewed"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "small",
+							"en_US": "low",
+							"de": "niedrig",
+							"original_value": "low"
+						},
+						"Status": {
+							"en": "examined",
+							"en_US": "reviewed",
+							"de": "uberpruft",
+							"original_value": "reviewed"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "small",
+							"en_US": "low",
+							"de": "niedrig",
+							"original_value": "low"
+						},
+						"Status": {
+							"en": "examined",
+							"en_US": "reviewed",
+							"de": "uberpruft",
+							"original_value": "reviewed"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "examined",
+									"en_US": "reviewed",
+									"de": "uberpruft",
+									"original_value": "reviewed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "large",
+									"en_US": "high",
+									"de": "hoch",
+									"original_value": "high"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "small",
+							"en_US": "low",
+							"de": "niedrig",
+							"original_value": "low"
+						},
+						"Status": {
+							"en": "utilized",
+							"en_US": "deployed",
+							"de": "bereitgestellt",
+							"original_value": "deployed"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{}
+						]
+					},
+					{
+						"Priority": {
+							"en": "demanding",
+							"en_US": "critical",
+							"de": "kritisch",
+							"original_value": "critical"
+						},
+						"Status": {
+							"en": "accepted",
+							"en_US": "approved",
+							"de": "genehmigt",
+							"original_value": "approved"
+						},
+						"SubChanges": [
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "small",
+									"en_US": "low",
+									"de": "niedrig",
+									"original_value": "low"
+								},
+								"Status": {
+									"en": "returned",
+									"en_US": "reverted",
+									"de": "zuruckgesetzt",
+									"original_value": "reverted"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "blueprint",
+									"en_US": "draft",
+									"de": "entwurf",
+									"original_value": "draft"
+								}
+							},
+							{
+								"Priority": {
+									"en": "intermediate",
+									"en_US": "medium",
+									"de": "medium",
+									"original_value": "medium"
+								},
+								"Status": {
+									"en": "utilized",
+									"en_US": "deployed",
+									"de": "bereitgestellt",
+									"original_value": "deployed"
+								}
+							},
+							{
+								"Priority": {
+									"en": "demanding",
+									"en_US": "critical",
+									"de": "kritisch",
+									"original_value": "critical"
+								},
+								"Status": {
+									"en": "accepted",
+									"en_US": "approved",
+									"de": "genehmigt",
+									"original_value": "approved"
+								}
+							},
+							{}
+						]
+					},
+					{}
+				]
+			},
+			{}
+		]
+	}
+}

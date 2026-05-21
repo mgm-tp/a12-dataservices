@@ -1,0 +1,21 @@
+{
+  "linkDescriptor": {
+    "relationshipModel": "ProductCampaign",
+    "entities": [
+      {
+        "role": "ProductRole",
+        "docRef": "%s"
+      },
+      {
+        "role": "CampaignRole",
+        "docRef": "%s"
+      }
+    ]
+  },
+  "linkDocument": {
+    "root": {
+      "aString": "TestString",
+      "aNumber": 123456789
+    }
+  }
+}

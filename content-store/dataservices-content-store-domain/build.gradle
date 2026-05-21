@@ -1,0 +1,5 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+description = 'Domain models and common APIs for Content Store modules'

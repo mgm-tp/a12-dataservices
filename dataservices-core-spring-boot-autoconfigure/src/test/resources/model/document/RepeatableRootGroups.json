@@ -1,0 +1,112 @@
+{
+  "header": {
+    "id": "RepeatableRootGroups",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "RepeatableRootGroups"
+      },
+      {
+        "locale": "de",
+        "text": "Vertrag"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "RepeatableRootGroups",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "name": "Root",
+          "id": "group_a9838",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "name": "ContractName",
+                "id": "field_770f2",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Name of Contract"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Name des Vertrags"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "name": "Root2",
+          "id": "group_a9839",
+          "Group": {
+            "repeatability": 100,
+            "elements": [
+              {
+                "type": "Field",
+                "name": "ContractDescription",
+                "id": "field_770f3",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Description of Contract"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Description des Vertrags"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

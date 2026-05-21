@@ -1,0 +1,6 @@
+= Enable Initialization Scripts
+
+Enable execution of server initialization scripts, like RPC requests and import of models.
+
+See <<models-and-document-upload-on-server-initialization, import initialization properties>> and
+<<Other-initialization-properties, other initialization properties>> for additional information.

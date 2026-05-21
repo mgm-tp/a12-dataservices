@@ -1,0 +1,257 @@
+{
+	"name": "Data Services Permission Definition",
+	"description": "",
+	"policies": [
+		{
+			"name": "User Has MODEL_CREATE Right",
+			"description": "Check that user has access right to create models.",
+			"dataPreload": ["#roles = T(com.mgmtp.a12.dataservices.utils.ModelUtils).getObjectRoles(#resource)"],
+			"rules": ["@dataServicesCoreProperties.getAuthorization().getRoleBased().isEnabled() == false || hasAccessRight('MODEL_MANAGE') || (hasAccessRight('MODEL_CREATE') && containsAnyRole(#roles))"]
+		},
+		{
+			"name": "User Has MODEL_UPDATE Right",
+			"description": "Check that user has access right to update models and matching role with provided model.",
+			"dataPreload": ["#matchedRequiredRoles = T(com.mgmtp.a12.dataservices.utils.ModelUtils).getMatchingRoles(#resource)"],
+			"rules": ["@dataServicesCoreProperties.getAuthorization().getRoleBased().isEnabled() == false || hasAccessRight('MODEL_MANAGE') || hasNestedObjectWithPropertyValue(#matchedRequiredRoles, 'accessRights', 'name', 'MODEL_UPDATE')"]
+		},
+		{
+			"name": "User Has MODEL_READ Right",
+			"description": "Check that user has access right to read models and matching role with provided model.",
+			"dataPreload": ["#matchedRequiredRoles = T(com.mgmtp.a12.dataservices.utils.ModelUtils).getMatchingRoles(#resource)"],
+			"rules": ["@dataServicesCoreProperties.getAuthorization().getRoleBased().isEnabled() == false || hasAccessRight('MODEL_MANAGE') || hasNestedObjectWithPropertyValue(#matchedRequiredRoles, 'accessRights', 'name', 'MODEL_READ')"]
+		},
+		{
+			"name": "User Has MODEL_DELETE Right",
+			"description": "Check that user has access right to delete models and matching role with provided model.",
+			"dataPreload": ["#matchedRequiredRoles = T(com.mgmtp.a12.dataservices.utils.ModelUtils).getMatchingRoles(#resource)"],
+			"rules": ["@dataServicesCoreProperties.getAuthorization().getRoleBased().isEnabled() == false || hasAccessRight('MODEL_MANAGE') || hasNestedObjectWithPropertyValue(#matchedRequiredRoles, 'accessRights', 'name', 'MODEL_DELETE')"]
+		},
+		{
+			"name": "User has DOCUMENT_MULTI_DELETE Right",
+			"description": "Check that user has access right to multi delete documents.",
+			"rules": ["hasAccessRight('DOCUMENT_MULTI_DELETE')"]
+		},
+		{
+			"name": "User Has DOCUMENT_CREATE Right",
+			"description": "Check that current user has access right to create documents.",
+			"rules": [
+				"hasAccessRight('DOCUMENT_CREATE')"
+			]
+		},
+		{
+			"name": "User Has DOCUMENT_UPDATE Right",
+			"description": "Check that current user has access right to update documents.",
+			"rules": [
+				"hasAccessRight('DOCUMENT_UPDATE')"
+			]
+		},
+		{
+			"name": "User Has DOCUMENT_PARTIAL_UPDATE Right",
+			"description": "Check that current user has access right to partially update documents.",
+			"rules": [
+				"hasAccessRight('DOCUMENT_PARTIAL_UPDATE')"
+			]
+		},
+		{
+			"name": "User Has DOCUMENT_DELETE Right",
+			"description": "Check that current user has access right to delete documents.",
+			"rules": [
+				"hasAccessRight('DOCUMENT_DELETE')"
+			]
+		},
+		{
+			"name": "User Has Global Access To Manage Caches",
+			"description": "Check that current user has a role which has access right to manage caches.",
+			"rules": [
+				"hasAccessRight('MANAGE_CACHES')"
+			]
+		},
+		{
+			"name": "User Has Endpoint Access",
+			"description": "Overwrite to restrict access to endpoints",
+			"rules": [
+				"true"
+			]
+		},
+		{
+			"name": "User Has Relative Path Access",
+			"description": "Overwrite to restrict access to different URL paths",
+			"rules": [
+				"true"
+			]
+		},
+		{
+			"name": "User Has Attachment Upload Access",
+			"description": "Check that current user has access right to upload attachment.",
+			"rules": [
+				"hasAccessRight('ATTACHMENT_UPLOAD')"
+			]
+		},
+		{
+			"name": "User Has Export List CDD Access",
+			"description": "Check that current user has access right to export list CDD.",
+			"rules": [
+				"true"
+			]
+		},
+		{
+			"name": "User Has The Permission To Execute Queries",
+			"description": "Check that current user has the permission to execute queries. #resource is the DocumentModel name",
+			"rules": [
+			  "hasAccessRight('QUERY')"
+			]
+		}
+	],
+	"permissions": [
+		{
+			"name": "Model create permission",
+			"description": "Check that the user has access right to create models. com.mgmtp.a12.model.header.Header is referenced as #resource.",
+			"policy-refs": [
+				"User Has MODEL_CREATE Right"
+			],
+			"scopes": [
+				"Model Create"
+			]
+		},
+		{
+			"name": "Model update permission",
+			"description": "Check that the user has access right to update provided model. com.mgmtp.a12.model.header.Header is referenced as #resource.",
+			"policy-refs": [
+			  "User Has MODEL_UPDATE Right"
+			],
+			"scopes": [
+			  "Model Update"
+			]
+		},
+		{
+			"name": "Model read permission",
+			"description": "Check that the user has access right to read provided model. com.mgmtp.a12.model.header.Header is referenced as #resource.",
+			"policy-refs": [
+				"User Has MODEL_READ Right"
+			],
+			"scopes": [
+				"Model Read"
+			]
+		},
+		{
+			"name": "Model delete permission",
+			"description": "Check that the user has access right to delete provided model. com.mgmtp.a12.model.header.Header is referenced as #resource.",
+			"policy-refs": [
+				"User Has MODEL_DELETE Right"
+			],
+			"scopes": [
+				"Model Delete"
+			]
+		},
+		{
+			"name": "Document Create Permission",
+			"description": "Check that the user has access right to create documents. com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2 is referenced as #resource.",
+			"policy-refs": [
+				"User Has DOCUMENT_CREATE Right"
+			],
+			"scopes": [
+				"Document Create"
+			]
+		},
+		{
+			"name": "Document Update Permission",
+			"description": "Check that the user has access right to update documents. com.mgmtp.a12.dataservices.authorization.DocumentUpdateResource is referenced as #resource.",
+			"policy-refs": [
+				"User Has DOCUMENT_UPDATE Right"
+			],
+			"scopes": [
+				"Document Update"
+			]
+		},
+		{
+			"name": "Document Partial Update Permission",
+			"description": "Check that the user has access right to partially update documents. com.mgmtp.a12.dataservices.authorization.DocumentUpdateResource is referenced as #resource.",
+			"policy-refs": [
+				"User Has DOCUMENT_PARTIAL_UPDATE Right"
+			],
+			"scopes": [
+				"Document Partial Update"
+			]
+		},
+		{
+			"name": "Document Delete Permission",
+			"description": "Check that the user has access right to delete documents. com.mgmtp.a12.dataservices.document.DataServicesDocument is referenced as #resource.",
+			"policy-refs": [
+				"User Has DOCUMENT_DELETE Right"
+			],
+			"scopes": [
+				"Document Delete"
+			]
+		},
+		{
+			"name": "Document Multi Delete Permission",
+			"description": "Check that user has access right to multi delete documents.",
+			"policy-refs": [
+				"User has DOCUMENT_MULTI_DELETE Right"
+			],
+			"scopes": [
+				"Document Multi Delete"
+			]
+		},
+		{
+			"name": "Manage Caches",
+			"description": "Check that the user has a role which has access right to manage caches.",
+			"policy-refs": [
+				"User Has Global Access To Manage Caches"
+			],
+			"scopes": [
+				"Manage Caches"
+			]
+		},
+		{
+			"name": "Define access to endpoints",
+			"description": "You can control endpoint security inside this scope. Each endpoint is defined by its class name/method name. Returns always true.",
+			"policy-refs": [
+				"User Has Endpoint Access"
+			],
+			"scopes": [
+				"Endpoint"
+			]
+		},
+		{
+			"name": "Actuator Permission",
+			"description": "You can control actuator security by a relative URL. Default is: Allow all.",
+			"policy-refs": [
+				"User Has Relative Path Access"
+			],
+			"scopes": [
+				"RelativePath"
+			]
+		},
+		{
+			"name": "Check uploaded attachment",
+			"description": "You can define permission rules for uploading a file. com.mgmtp.a12.dataservices.attachment.AttachmentHeader is referenced as #resource.",
+			"policy-refs": [
+				"User Has Attachment Upload Access"
+			],
+			"scopes": [
+				"Attachment Upload"
+			]
+		},
+		{
+			"name": "Check export document",
+			"description": "You can define permission rules for export document.",
+			"policy-refs": [
+				"User Has Export List CDD Access"
+			],
+			"scopes": [
+				"Export List CDD"
+			]
+		},
+	  {
+		"name": "Check query",
+		"description": "You can define permission rules for executing queries.",
+		"policy-refs": [
+		  "User Has The Permission To Execute Queries"
+		],
+		"scopes": [
+		  "Query"
+		]
+		}
+	]
+}

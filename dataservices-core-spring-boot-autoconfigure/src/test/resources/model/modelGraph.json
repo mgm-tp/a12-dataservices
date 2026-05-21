@@ -1,0 +1,70 @@
+{
+	"documentModels": [
+		{
+			"modelId": "DateTestModel",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [
+				"DateTestSubType1",
+				"DateTestSubType2"
+			],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DateTestSubType2",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DateTestSubType1",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [
+				"DateTestSubType3"
+			],
+			"abstractModel": false
+		},
+		{
+			"modelId": "DateTestSubType3",
+			"displayLabels": [],
+			"relations": [],
+			"subTypes": [],
+			"abstractModel": false
+		}
+	],
+	"composeDocumentModels": [
+		{
+			"modelId": "cdm3",
+			"displayLabels": [
+				{
+					"locale": "en",
+					"text": "NaturalPerson CDM"
+				}
+			],
+			"rootDocumentModelId": "Contract"
+		},
+		{
+			"modelId": "cdm1",
+			"displayLabels": [
+				{
+					"locale": "en",
+					"text": "NaturalPerson CDM"
+				}
+			],
+			"rootDocumentModelId": "Contract"
+		},
+		{
+			"modelId": "cdm2",
+			"displayLabels": [
+				{
+					"locale": "en",
+					"text": "NaturalPerson CDM"
+				}
+			],
+			"rootDocumentModelId": "Contract"
+		}
+	],
+	"relationshipModels": []
+}

@@ -1,0 +1,97 @@
+{
+	"fullSize": 2,
+	"page": {
+		"offset": 0,
+		"limit": 10
+	},
+	"entries": [
+		{
+			"docRef": "%1$s/%2$s",
+			"documentModelName": "ContractCDM",
+			"document": {
+				"ContractRoot": {
+					"ContractName": "Insurance"
+				},
+				"ContractBusinessPartner": {
+					"BusinessPartnerRoot": {
+						"Name": "Our testing Policy Holder",
+						"Industry": "Biology",
+						"StartOfRelationship": "2022-02-01",
+						"CustomerDiscount": "20%%",
+						"PersonOrEntity": "Emilio"
+					},
+					"PartnerPostalAddress": {
+						"AddressRoot": {
+							"Street": "Letenské náměstí",
+							"HouseNumber": "2",
+							"City": "Prague",
+							"Country": "Czech Republic"
+						}
+					},
+					"PartnerAddresses": [
+						{
+							"AddressRoot": {
+								"Street": "Prigl",
+								"HouseNumber": "6",
+								"City": "Brno",
+								"Country": "Czech Republic"
+							}
+						},
+						{
+							"AddressRoot": {
+								"Street": "Letenské náměstí",
+								"HouseNumber": "2",
+								"City": "Prague",
+								"Country": "Czech Republic"
+							}
+						}
+					]
+				}
+			}
+		},
+		{
+			"docRef": "%1$s/%3$s",
+			"documentModelName": "ContractCDM",
+			"document": {
+				"ContractRoot": {
+					"ContractName": "Insurance"
+				},
+				"ContractBusinessPartner": {
+					"BusinessPartnerRoot": {
+						"Name": "Our testing Policy Holder",
+						"Industry": "Biology",
+						"StartOfRelationship": "2022-02-01",
+						"CustomerDiscount": "20%%",
+						"PersonOrEntity": "Emilio"
+					},
+					"PartnerPostalAddress": {
+						"AddressRoot": {
+							"Street": "Letenské náměstí",
+							"HouseNumber": "2",
+							"City": "Prague",
+							"Country": "Czech Republic"
+						}
+					},
+					"PartnerAddresses": [
+						{
+							"AddressRoot": {
+								"Street": "Prigl",
+								"HouseNumber": "6",
+								"City": "Brno",
+								"Country": "Czech Republic"
+							}
+						},
+						{
+							"AddressRoot": {
+								"Street": "Letenské náměstí",
+								"HouseNumber": "2",
+								"City": "Prague",
+								"Country": "Czech Republic"
+							}
+						}
+					]
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,170 @@
+@startuml
+
+!procedure group(x)
+class x << (G,#DDAAFF) >>
+!endprocedure
+
+!procedure cdmGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure field(x)
+class x << (F,#DDFFAA) >> #White
+!endprocedure
+
+!procedure embeddedField(name, type, fieldType)
+name <<type>>: fieldType
+!endprocedure
+
+!procedure rule(x)
+class x << (R,#DDBBAA) >> #FFDDEE
+!endprocedure
+
+!procedure embeddedRule(name, type)
+<back:FFDDEE>name() <<type>></back>
+!endprocedure
+
+!procedure embeddedRule(name, type, $errorCondition)
+.. <back:FFDDEE> name <<type>> </back> ..
+<back:FFDDEE>errorCondition:</back> $errorCondition
+!endprocedure
+
+!procedure computation(x)
+class x << (C,#DDBBAA) >> #FFEEDD
+!endprocedure
+
+!procedure computationAlternative($operation, $precondition)
+.. alternative ..
+operation: $operation
+precondition: $precondition
+!endprocedure
+
+!procedure embeddedComputation(name, type, $operation, $precondition)
+.. <back:FFEEDD> name <<type>> </back> ..
+<back:FFEEDD>operation:</back> $operation
+<back:FFEEDD>precondition:</back> $precondition
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure embeddedComputation(name, type )
+<back:FFEEDD>name() <<type>></back>
+!endprocedure
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure linkGroup(x)
+group(x) #PeachPuff
+!endprocedure
+
+!procedure relLink($name,$rmId,$link1,$link2,$ld="")
+circle $name as $rmId #PeachPuff
+$rmId $link1
+$rmId $link2
+!if $ld!=""
+$rmId -[#IndianRed]right $ld: <<linkDocument>>
+linkDocument($ld)
+!endif
+!endprocedure
+
+skinparam linetype polyline
+left to right direction
+
+title Document Model Contract
+
+package "Contract" as Contract <<Frame>> {
+	() "documentRoot" as ContractDocumentRoot
+	group('"ContractRoot" as group_a9838')
+	field('"ContractName" as field_770f2 <<StringType>>')
+	group_a9838 -- field_770f2
+	field('"ContractDescription" as field_770f3 <<StringType>>')
+	group_a9838 -- field_770f3
+	field('"LengthOfContract" as field_828da <<NumberType>>')
+	group_a9838 -- field_828da
+	field('"ContractValue" as field_29708 <<NumberType>>')
+	group_a9838 -- field_29708
+	field('"Liability" as field_edb7e <<NumberType>>')
+	group_a9838 -- field_edb7e
+	field('"CostToCustomer" as field_502f7 <<NumberType>>')
+	group_a9838 -- field_502f7
+	field('"NoOfCoInsuredCustomers" as field_f8187 <<NumberType>>')
+	group_a9838 -- field_f8187
+	field('"MaxDiscount" as field_c472d <<StringType>>')
+	group_a9838 -- field_c472d
+	field('"CostPerCoInsured" as field_24959 <<NumberType>>')
+	group_a9838 -- field_24959
+	field('"Valid" as field_a09a6 <<BooleanType>>')
+	group_a9838 -- field_a09a6
+	field('"Type" as field_48s48 <<EnumerationType>>')
+	group_a9838 -- field_48s48
+	group('"ContractDates" as G2')
+	field('"ContractStartDate" as G2F1 <<DateTimeType>>')
+	G2 -- G2F1
+	field('"ContractEndDate" as G2F2 <<DateType>>')
+	G2 -- G2F2
+	field('"ContractEndTime" as G2F3 <<TimeType>>')
+	G2 -- G2F3
+	field('"ContractReviewDate" as G2F4 <<DateFragmentType>>')
+	G2 -- G2F4
+	field('"LastPremiumPaidDate" as G2F5 <<DateType>>')
+	G2 -- G2F5
+	field('"CoveragePeriod" as G2F6 <<DateRangeType>>')
+	G2 -- G2F6
+
+	group_a9838 ||--o| "0..1" G2
+	group('"ChangeLog" as group_7a5d0')
+	field('"ID" as field_fbee9 <<StringType>>')
+	group_7a5d0 -- field_fbee9
+	field('"Number" as field_f9502 <<NumberType>>')
+	group_7a5d0 -- field_f9502
+	field('"ChangeTimestamp" as field_5b05b <<DateType>>')
+	group_7a5d0 -- field_5b05b
+	field('"Description" as field_e1113 <<StringType>>')
+	group_7a5d0 -- field_e1113
+	field('"User" as field_ccb79 <<StringType>>')
+	group_7a5d0 -- field_ccb79
+	field('"Status" as field_980c8 <<TypeDefType>>')
+	group_7a5d0 -- field_980c8
+	field('"Priority" as field_18ea0 <<EnumerationType>>')
+	group_7a5d0 -- field_18ea0
+	group('"Changes" as group_61e6a')
+	field('"ID" as field_cdba0 <<StringType>>')
+	group_61e6a -- field_cdba0
+	field('"Title" as field_bf1d6 <<StringType>>')
+	group_61e6a -- field_bf1d6
+	field('"Details" as field_7de61 <<StringType>>')
+	group_61e6a -- field_7de61
+	field('"Priority" as field_69efa <<EnumerationType>>')
+	group_61e6a -- field_69efa
+	field('"Status" as field_1ecc4 <<TypeDefType>>')
+	group_61e6a -- field_1ecc4
+	field('"LastModified" as field_3695e <<DateType>>')
+	group_61e6a -- field_3695e
+	group('"SubChanges" as group_c4a35')
+	field('"ID" as field_26340 <<StringType>>')
+	group_c4a35 -- field_26340
+	field('"TItle" as field_3c130 <<StringType>>')
+	group_c4a35 -- field_3c130
+	field('"Details" as field_89b43 <<StringType>>')
+	group_c4a35 -- field_89b43
+	field('"Priority" as field_6df38 <<EnumerationType>>')
+	group_c4a35 -- field_6df38
+	field('"Status" as field_797cc <<TypeDefType>>')
+	group_c4a35 -- field_797cc
+	field('"CreatedAt" as field_eb669 <<DateFragmentType>>')
+	group_c4a35 -- field_eb669
+
+	group_61e6a ||--o{ "0..99" group_c4a35
+
+	group_7a5d0 ||--o{ "0..99" group_61e6a
+
+	group_a9838 ||--o{ "0..10000" group_7a5d0
+
+	ContractDocumentRoot ||--o| "0..1" group_a9838
+
+}
+@enduml

@@ -1,0 +1,30 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "QueryLink",
+    "method": "QUERY",
+    "params": {
+      "query": {
+        "projectionName": "document",
+        "exclude": true,
+        "targetDocumentModel": "&sourceModel",
+        "constraint": {
+          "operator": "exact_match",
+          "field": "/__meta/docRef",
+          "value": "&sourceDocRef"
+        },
+        "links": [
+          {
+            "relationshipModel": "GroupElement",
+            "targetRole": "&sourceRole",
+            "maxDepth": 1
+          }
+        ],
+        "paging": {
+          "pageNumber": 0,
+          "pageSize": 10
+        }
+      }
+    }
+  }
+]

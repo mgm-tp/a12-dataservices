@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+				   logicalFilePath="database/data/33.0.0/data.xml">
+
+	<changeSet id="A12S-2252" author="walves">
+		<delete tableName="MODEL_LOCALES">
+			<where>MODEL_ID = 'RelationshipMetaModel'</where>
+		</delete>
+		<delete tableName="MODEL_LABELS">
+			<where>MODEL_ID = 'RelationshipMetaModel'</where>
+		</delete>
+		<delete tableName="MODEL_ANNOTATIONS">
+			<where>MODEL_ID = 'RelationshipMetaModel'</where>
+		</delete>
+		<delete tableName="MODEL_HEADERS">
+			<where>id = 'RelationshipMetaModel'</where>
+		</delete>
+		<delete tableName="MODEL">
+			<where>id = 'RelationshipMetaModel'</where>
+		</delete>
+	</changeSet>
+
+</databaseChangeLog>

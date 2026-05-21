@@ -1,0 +1,24 @@
+{
+	"targetDocumentModel": "Contract",
+	"projectionName": "document",
+	"aggregation": {
+		"aggregations": [
+			{
+				"function": "count",
+				"field": "/ContractRoot/ContractName",
+				"alias": "contract_name"
+			}
+		],
+		"group": [
+			{
+				"field": "/ContractRoot/ContractName",
+				"alias": "contract_name"
+			}
+		]
+	},
+	"constraint": {
+		"operator": "simple_search",
+		"fields": ["/ContractRoot/ContractName"],
+		"value": "Hea"
+	}
+}

@@ -1,0 +1,113 @@
+@startuml
+
+!procedure group(x)
+class x << (G,#DDAAFF) >>
+!endprocedure
+
+!procedure cdmGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure field(x)
+class x << (F,#DDFFAA) >> #White
+!endprocedure
+
+!procedure embeddedField(name, type, fieldType)
+name <<type>>: fieldType
+!endprocedure
+
+!procedure rule(x)
+class x << (R,#DDBBAA) >> #FFDDEE
+!endprocedure
+
+!procedure embeddedRule(name, type)
+<back:FFDDEE>name() <<type>></back>
+!endprocedure
+
+!procedure embeddedRule(name, type, $errorCondition)
+.. <back:FFDDEE> name <<type>> </back> ..
+<back:FFDDEE>errorCondition:</back> $errorCondition
+!endprocedure
+
+!procedure computation(x)
+class x << (C,#DDBBAA) >> #FFEEDD
+!endprocedure
+
+!procedure computationAlternative($operation, $precondition)
+.. alternative ..
+operation: $operation
+precondition: $precondition
+!endprocedure
+
+!procedure embeddedComputation(name, type, $operation, $precondition)
+.. <back:FFEEDD> name <<type>> </back> ..
+<back:FFEEDD>operation:</back> $operation
+<back:FFEEDD>precondition:</back> $precondition
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure embeddedComputation(name, type )
+<back:FFEEDD>name() <<type>></back>
+!endprocedure
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure linkGroup(x)
+group(x) #PeachPuff
+!endprocedure
+
+!procedure relLink($name,$rmId,$link1,$link2,$ld="")
+circle $name as $rmId #PeachPuff
+$rmId $link1
+$rmId $link2
+!if $ld!=""
+$rmId -[#IndianRed]right $ld: <<linkDocument>>
+linkDocument($ld)
+!endif
+!endprocedure
+
+skinparam linetype polyline
+left to right direction
+
+title Document Model ContractAutomotive
+
+package "ContractAutomotive" as ContractAutomotive <<Frame>> {
+	() "documentRoot" as ContractAutomotiveDocumentRoot
+	group('"ContractRoot" as group_a9838')
+	field('"ContractName" as field_770f2 <<StringType>>')
+	group_a9838 -- field_770f2
+	field('"ContractDescription" as field_770f3 <<StringType>>')
+	group_a9838 -- field_770f3
+	field('"LengthOfContract" as field_828da <<NumberType>>')
+	group_a9838 -- field_828da
+	field('"ContractValue" as field_29708 <<NumberType>>')
+	group_a9838 -- field_29708
+	field('"Liability" as field_edb7e <<NumberType>>')
+	group_a9838 -- field_edb7e
+	field('"CostToCustomer" as field_502f7 <<NumberType>>')
+	group_a9838 -- field_502f7
+	field('"NoOfCoInsuredCustomers" as field_f8187 <<NumberType>>')
+	group_a9838 -- field_f8187
+	field('"MaxDiscount" as field_c472d <<StringType>>')
+	group_a9838 -- field_c472d
+	field('"CostPerCoInsured" as field_24959 <<NumberType>>')
+	group_a9838 -- field_24959
+	field('"Valid" as field_a09a6 <<BooleanType>>')
+	group_a9838 -- field_a09a6
+	group('"Car" as group_a6546')
+	field('"Make" as field_ad236 <<StringType>>')
+	group_a6546 -- field_ad236
+	field('"Model" as field_236ad <<StringType>>')
+	group_a6546 -- field_236ad
+
+	group_a9838 ||--o| "0..1" group_a6546
+
+	ContractAutomotiveDocumentRoot ||--o| "0..1" group_a9838
+
+}
+@enduml

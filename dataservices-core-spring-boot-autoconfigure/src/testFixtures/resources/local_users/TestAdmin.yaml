@@ -1,0 +1,7 @@
+username: "TestAdmin"
+password: "TestAdmin"
+authorities:
+  - "admin"
+email: testadmin@email.com
+firstname: Test
+lastname: Admin

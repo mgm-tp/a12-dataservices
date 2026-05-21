@@ -1,0 +1,179 @@
+{
+  "header": {
+    "id": "ArrayModel3",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "ArrayModel3",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "RootGroup",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F3",
+                "name": "RootFiled",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "RootFiled"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G4",
+                "name": "ArrayGroup_1",
+                "Group": {
+                  "repeatability": 5,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "id": "G7",
+                      "name": "ArrayGroup_2",
+                      "Group": {
+                        "repeatability": 1,
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "F6",
+                            "name": "ArrayGroup_2_Field_2",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "F8",
+                            "name": "ArrayGroup_2_Field_1",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Group",
+                            "id": "G9",
+                            "name": "ArrayGroup_3",
+                            "Group": {
+                              "repeatability": 5,
+                              "elements": [
+                                {
+                                  "type": "Field",
+                                  "id": "F10",
+                                  "name": "ArrayGroup_3_Field_2",
+                                  "Field": {
+                                    "fieldType": {
+                                      "type": "StringType"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "Field",
+                                  "id": "F11",
+                                  "name": "ArrayGroup_3_Field_1",
+                                  "Field": {
+                                    "fieldType": {
+                                      "type": "StringType"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "Group",
+                                  "id": "G12",
+                                  "name": "ArrayGroup_4",
+                                  "Group": {
+                                    "repeatability": 1,
+                                    "elements": [
+                                      {
+                                        "type": "Field",
+                                        "id": "F13",
+                                        "name": "ArrayGroup_4_Field_1",
+                                        "Field": {
+                                          "fieldType": {
+                                            "type": "StringType"
+                                          }
+                                        }
+                                      },
+                                      {
+                                        "type": "Field",
+                                        "id": "F14",
+                                        "name": "ArrayGroup_4_Field_2",
+                                        "Field": {
+                                          "fieldType": {
+                                            "type": "StringType"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F5",
+                      "name": "ArrayGroup_1_Filed_1",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Array filed"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

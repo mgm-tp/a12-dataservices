@@ -1,0 +1,19 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+	api project(':content-store:dataservices-content-store-server')
+	api project(':content-store:dataservices-content-store-core-spring-boot-autoconfigure')
+	api libs.uaaAuthenticationSpringBootAutoconfigure
+	implementation libs.springBootAutoconfigure
+	implementation libs.uaaAuthenticationPrincipalExtensionSpringBootAutoconfigure
+	implementation libs.springBoot
+	implementation libs.springBootConfigurationProcessor
+	implementation libs.springBootStarter
+	implementation libs.micrometerRegistryPrometheus
+	implementation libs.springWebmvc
+	compileOnly libs.servletApi
+}
+
+description = 'Spring Boot AutoConfiguration for Content Store REST server'

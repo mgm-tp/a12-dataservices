@@ -1,0 +1,7 @@
+username: "insurance15-3-B"
+password: "insurance"
+authorities:
+  - "admin"
+maxContractValue: 15000
+minIncome: 3000
+restrictedCity: Berlin

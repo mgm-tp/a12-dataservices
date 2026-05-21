@@ -1,0 +1,338 @@
+[
+  {
+	"jsonrpc": "2.0",
+	"id": "AddContractHealth",
+	"method": "ADD_DOCUMENT",
+	"params": {
+	  "document": {
+		"ContractRoot": {
+		  "ContractName": "Health Contract",
+		  "ContractValue": 10000,
+		  "Type": "Health"
+		}
+	  },
+	  "documentModelName": "Contract",
+	  "locale": "en"
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddContractHealthHighValue",
+	"method": "ADD_DOCUMENT",
+	"params": {
+	  "document": {
+		"ContractRoot": {
+		  "ContractName": "Health Contract High Value",
+		  "ContractValue": 50000,
+		  "Type": "Health"
+		}
+	  },
+	  "documentModelName": "Contract",
+	  "locale": "en"
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddContractTravel",
+	"method": "ADD_DOCUMENT",
+	"params": {
+	  "document": {
+		"ContractRoot": {
+		  "ContractName": "Travel Contract",
+		  "ContractValue": 10000,
+		  "Type": "Travel"
+		}
+	  },
+	  "documentModelName": "Contract",
+	  "locale": "en"
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddBusinessPartnerPeter",
+	"method": "ADD_DOCUMENT",
+	"params": {
+	  "document": {
+		"BusinessPartnerRoot": {
+		  "Name": "Peter",
+		  "Employment": {
+			"income": 4000
+		  }
+		}
+	  },
+	  "documentModelName": "BusinessPartner",
+	  "locale": "en"
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddBusinessPartnerOlivia",
+	"method": "ADD_DOCUMENT",
+	"params": {
+	  "document": {
+		"BusinessPartnerRoot": {
+		  "Name": "Olivia",
+		  "Employment": {
+			"income": 8000
+		  }
+		}
+	  },
+	  "documentModelName": "BusinessPartner",
+	  "locale": "en"
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddBusinessPartnerNicole",
+	"method": "ADD_DOCUMENT",
+	"params": {
+	  "document": {
+		"BusinessPartnerRoot": {
+		  "Name": "Nicole",
+		  "Employment": {
+			"income": 12000
+		  }
+		}
+	  },
+	  "documentModelName": "BusinessPartner",
+	  "locale": "en"
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddBusinessPartnerFritz",
+	"method": "ADD_DOCUMENT",
+	"params": {
+	  "document": {
+		"BusinessPartnerRoot": {
+		  "Name": "Fritz",
+		  "Employment": {
+			"income": 1000
+		  }
+		}
+	  },
+	  "documentModelName": "BusinessPartner",
+	  "locale": "en"
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddAddressBerlin",
+	"method": "ADD_DOCUMENT",
+	"params": {
+	  "document": {
+		"AddressRoot": {
+		  "Country": "Germany",
+		  "City": "Berlin"
+		}
+	  },
+	  "documentModelName": "Address",
+	  "locale": "en"
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddAddressHamburg",
+	"method": "ADD_DOCUMENT",
+	"params": {
+	  "document": {
+		"AddressRoot": {
+		  "Country": "Germany",
+		  "City": "Hamburg"
+		}
+	  },
+	  "documentModelName": "Address",
+	  "locale": "en"
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddAddressPrague",
+	"method": "ADD_DOCUMENT",
+	"params": {
+	  "document": {
+		"AddressRoot": {
+		  "Country": "Czech Republic",
+		  "City": "Prague"
+		}
+	  },
+	  "documentModelName": "Address",
+	  "locale": "en"
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddAddressParis",
+	"method": "ADD_DOCUMENT",
+	"params": {
+	  "document": {
+		"AddressRoot": {
+		  "Country": "France",
+		  "City": "Paris"
+		}
+	  },
+	  "documentModelName": "Address",
+	  "locale": "en"
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddBusinessPartnerPeterHealth",
+	"method": "ADD_LINK",
+	"params": {
+	  "linkDescriptor": {
+		"relationshipModel": "ContractBusinessPartner",
+		"entities": [
+		  {
+			"role": "Contract",
+			"docRef": "#{#AddContractHealth.metadata.docRef}"
+		  },
+		  {
+			"role": "Partner",
+			"docRef": "#{#AddBusinessPartnerPeter.metadata.docRef}"
+		  }
+		]
+	  }
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddBusinessPartnerPeterTravel",
+	"method": "ADD_LINK",
+	"params": {
+	  "linkDescriptor": {
+		"relationshipModel": "ContractBusinessPartner",
+		"entities": [
+		  {
+			"role": "Contract",
+			"docRef": "#{#AddContractTravel.metadata.docRef}"
+		  },
+		  {
+			"role": "Partner",
+			"docRef": "#{#AddBusinessPartnerPeter.metadata.docRef}"
+		  }
+		]
+	  }
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddCoInsuredNicoleHealth",
+	"method": "ADD_LINK",
+	"params": {
+	  "linkDescriptor": {
+		"relationshipModel": "ContractCoInsuredPartner",
+		"entities": [
+		  {
+			"role": "Contract",
+			"docRef": "#{#AddContractHealth.metadata.docRef}"
+		  },
+		  {
+			"role": "Partner",
+			"docRef": "#{#AddBusinessPartnerNicole.metadata.docRef}"
+		  }
+		]
+	  }
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddCoInsuredFritzHealth",
+	"method": "ADD_LINK",
+	"params": {
+	  "linkDescriptor": {
+		"relationshipModel": "ContractCoInsuredPartner",
+		"entities": [
+		  {
+			"role": "Contract",
+			"docRef": "#{#AddContractHealth.metadata.docRef}"
+		  },
+		  {
+			"role": "Partner",
+			"docRef": "#{#AddBusinessPartnerFritz.metadata.docRef}"
+		  }
+		]
+	  }
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddAddressBerlinPartnerPeter",
+	"method": "ADD_LINK",
+	"params": {
+	  "linkDescriptor": {
+		"relationshipModel": "PartnerAddresses",
+		"entities": [
+		  {
+			"role": "Address",
+			"docRef": "#{#AddAddressBerlin.metadata.docRef}"
+		  },
+		  {
+			"role": "Partner",
+			"docRef": "#{#AddBusinessPartnerPeter.metadata.docRef}"
+		  }
+		]
+	  }
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddAddressHamburgPartnerPeter",
+	"method": "ADD_LINK",
+	"params": {
+	  "linkDescriptor": {
+		"relationshipModel": "PartnerAddresses",
+		"entities": [
+		  {
+			"role": "Address",
+			"docRef": "#{#AddAddressHamburg.metadata.docRef}"
+		  },
+		  {
+			"role": "Partner",
+			"docRef": "#{#AddBusinessPartnerPeter.metadata.docRef}"
+		  }
+		]
+	  }
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddAddressParisPartnerNicole",
+	"method": "ADD_LINK",
+	"params": {
+	  "linkDescriptor": {
+		"relationshipModel": "PartnerAddresses",
+		"entities": [
+		  {
+			"role": "Address",
+			"docRef": "#{#AddAddressParis.metadata.docRef}"
+		  },
+		  {
+			"role": "Partner",
+			"docRef": "#{#AddBusinessPartnerNicole.metadata.docRef}"
+		  }
+		]
+	  }
+	}
+  },
+  {
+	"jsonrpc": "2.0",
+	"id": "AddAddressPraguePartnerOlivia",
+	"method": "ADD_LINK",
+	"params": {
+	  "linkDescriptor": {
+		"relationshipModel": "PartnerAddresses",
+		"entities": [
+		  {
+			"role": "Address",
+			"docRef": "#{#AddAddressPrague.metadata.docRef}"
+		  },
+		  {
+			"role": "Partner",
+			"docRef": "#{#AddBusinessPartnerOlivia.metadata.docRef}"
+		  }
+		]
+	  }
+	}
+  }
+]

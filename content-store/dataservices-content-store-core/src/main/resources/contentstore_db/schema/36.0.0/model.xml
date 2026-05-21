@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+				   logicalFilePath="contentstore_db/schema/36.0.0/model.xml">
+	<changeSet id="initial" author="A12S-3471">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<changeSetExecuted id="initial" author="A12S-3471" changeLogFile="contentstore_db/schema/model.xml"/>
+			</not>
+		</preConditions>
+		<createTable tableName="CONTENT">
+			<column name="ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="COTNENT_PK" nullable="false"/>
+			</column>
+			<column name="CONTENT" type="blob">
+				<constraints nullable="false"/>
+			</column>
+			<column name="PERSISTENT_TYPE" type="VARCHAR(100 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CONTENT_TYPE" type="VARCHAR(100 ${varcharUnit})">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createTable tableName="TICKET_INFO">
+			<column name="TICKET_ID" type="VARCHAR(100 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="TICKET_INFO_PK" nullable="false"/>
+			</column>
+			<column name="CONTENT_ID" type="VARCHAR(100 ${varcharUnit})"/>
+			<column name="DOWNLOADED" type="boolean" defaultValueBoolean="false"/>
+			<column name="EXPIRED_AT" type="timestamp"/>
+		</createTable>
+	</changeSet>
+	<changeSet id="A12S-3609" author="A12S-3609">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<changeSetExecuted id="A12S-3609" author="A12S-3609" changeLogFile="contentstore_db/schema/model.xml"/>
+			</not>
+		</preConditions>
+		<dropNotNullConstraint
+				tableName="CONTENT"
+				columnName="content"/>
+	</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+	logicalFilePath="database/schema/21.0.0/model.xml">
+
+	<changeSet id="A12-8935" author="tbajus">
+		<dropForeignKeyConstraint baseTableName="UI_MODEL" constraintName="UI_MODEL_DOCUMENT_MODEL_FK" />
+		<dropPrimaryKey constraintName="DOCUMET_MODEL_PK" tableName="DOCUMENT_MODEL"/>
+
+		<addNotNullConstraint columnName="NAME" columnDataType="VARCHAR(1024 ${varcharUnit})" tableName="DOCUMENT_MODEL"/>
+		<dropNotNullConstraint tableName="DOCUMENT_MODEL" columnDataType="INTEGER" columnName="ID" />
+
+		<addPrimaryKey tableName="DOCUMENT_MODEL" columnNames="NAME" />
+	</changeSet>
+	<changeSet id="A12CORE-9279" author="tbajus">
+		<dropPrimaryKey constraintName="UI_MODEL_PK" tableName="UI_MODEL"/>
+		<addNotNullConstraint columnName="NAME" columnDataType="VARCHAR(1024 ${varcharUnit})" tableName="UI_MODEL"/>
+		<dropNotNullConstraint tableName="UI_MODEL" columnDataType="INTEGER" columnName="ID" />
+		<addPrimaryKey tableName="UI_MODEL" columnNames="NAME" constraintName="UI_MODEL_PK"/>
+	</changeSet>
+	<changeSet id="A12CORE-9279_2" author="tbajus">
+		<preConditions onFail="MARK_RAN">
+			<columnExists tableName="UI_MODEL" columnName="document_model_id" />
+		</preConditions>
+		<dropColumn tableName="UI_MODEL" columnName="document_model_id" />
+	</changeSet>
+</databaseChangeLog>

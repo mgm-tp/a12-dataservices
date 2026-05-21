@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+	logicalFilePath="database/schema/26.0.0/model.xml">
+
+	<changeSet id="A12-10648" author="tkupka">
+
+		<createTable tableName="MIGRATED_USER_PASSWORD">
+			<column name="USER_NAME" type="VARCHAR(500 ${varcharUnit})">
+				<constraints primaryKey="true" primaryKeyName="USER_NAME_PK" nullable="false" />
+			</column>
+			<column name="DOCUMENT_ID" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="OLD_PASSWORD" type="VARCHAR(500 ${varcharUnit})">
+				<constraints nullable="false" />
+			</column>
+			<column name="MIGRATED_AT" type="TIMESTAMP" defaultValueDate="CURRENT_TIMESTAMP">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>

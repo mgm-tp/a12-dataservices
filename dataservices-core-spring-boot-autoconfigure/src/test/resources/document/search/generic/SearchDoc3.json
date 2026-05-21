@@ -1,0 +1,29 @@
+{
+  "Fields": {
+    "StringField": "Nike - Air Jordan 360",
+    "sport": "streetball",
+    "color": "black",
+    "LeadingZeroNumber": "00003999",
+    "NumberField": 3999,
+    "BooleanField": false,
+    "gender": "men",
+    "PartialDates": {
+      "OptionalYear": "2010-00-00",
+      "OptionalMonth": "2010-05-00",
+      "OptionalDay": "2010-05-05"
+    },
+    "DateFragments": {
+      "YearFragment": "2015",
+      "MonthFragment": "10",
+      "YearMonthFragment": "2015-11",
+      "MonthDayFragment": "01-31"
+    },
+    "DateRanges": {
+      "FullDateRange": "2020-01-01/2020-12-31",
+      "YearDateRange": "2000/2020",
+      "MonthDateRange": "03/09",
+      "YearMonthRange": "2020-06/2021-09",
+      "MonthDayRange": "03-15/09-15"
+    }
+  }
+}

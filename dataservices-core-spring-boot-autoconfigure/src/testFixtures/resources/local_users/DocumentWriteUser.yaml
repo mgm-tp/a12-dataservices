@@ -1,0 +1,7 @@
+username: document_write_user
+password: document_write_user
+firstname: document_write
+lastname: document_write
+email: document_write@min.com
+authorities:
+  - "DocumentWrite"

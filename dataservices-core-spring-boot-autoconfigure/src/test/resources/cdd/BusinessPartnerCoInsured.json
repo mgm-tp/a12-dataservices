@@ -1,0 +1,9 @@
+{
+	"BusinessPartnerRoot": {
+		"Name": "Our testing CoInsurer",
+		"Industry": "Chemistry",
+		"StartOfRelationship": "2022-03-01",
+		"CustomerDiscount": "30%",
+		"PersonOrEntity": "Julio"
+	}
+}

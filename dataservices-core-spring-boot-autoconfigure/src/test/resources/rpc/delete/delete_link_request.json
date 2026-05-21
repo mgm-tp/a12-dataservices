@@ -1,0 +1,37 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "removeLinkMutation",
+    "method": "DELETE_LINK",
+    "params": {
+      "linkRef": {
+        "linkDescriptor": {
+          "relationshipModel": "ProductCampaign",
+          "entities": [
+            {
+              "role": "ProductRole",
+              "docRef": "%s"
+            },
+            {
+              "role": "CampaignRole",
+              "docRef": "%s"
+            }
+          ]
+        },
+        "id": "%s"
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "CampaignsOfProductRole",
+    "method": "LIST_LINKS",
+    "params": {
+      "source": {
+        "relationshipModel": "ProductCampaign",
+        "role": "ProductRole",
+        "docRef": "%s"
+      }
+    }
+  }
+]

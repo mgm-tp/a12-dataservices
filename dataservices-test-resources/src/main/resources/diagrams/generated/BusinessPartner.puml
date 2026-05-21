@@ -1,0 +1,212 @@
+@startuml
+
+!procedure group(x)
+class x << (G,#DDAAFF) >>
+!endprocedure
+
+!procedure cdmGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure field(x)
+class x << (F,#DDFFAA) >> #White
+!endprocedure
+
+!procedure embeddedField(name, type, fieldType)
+name <<type>>: fieldType
+!endprocedure
+
+!procedure rule(x)
+class x << (R,#DDBBAA) >> #FFDDEE
+!endprocedure
+
+!procedure embeddedRule(name, type)
+<back:FFDDEE>name() <<type>></back>
+!endprocedure
+
+!procedure embeddedRule(name, type, $errorCondition)
+.. <back:FFDDEE> name <<type>> </back> ..
+<back:FFDDEE>errorCondition:</back> $errorCondition
+!endprocedure
+
+!procedure computation(x)
+class x << (C,#DDBBAA) >> #FFEEDD
+!endprocedure
+
+!procedure computationAlternative($operation, $precondition)
+.. alternative ..
+operation: $operation
+precondition: $precondition
+!endprocedure
+
+!procedure embeddedComputation(name, type, $operation, $precondition)
+.. <back:FFEEDD> name <<type>> </back> ..
+<back:FFEEDD>operation:</back> $operation
+<back:FFEEDD>precondition:</back> $precondition
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure embeddedComputation(name, type )
+<back:FFEEDD>name() <<type>></back>
+!endprocedure
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure linkGroup(x)
+group(x) #PeachPuff
+!endprocedure
+
+!procedure relLink($name,$rmId,$link1,$link2,$ld="")
+circle $name as $rmId #PeachPuff
+$rmId $link1
+$rmId $link2
+!if $ld!=""
+$rmId -[#IndianRed]right $ld: <<linkDocument>>
+linkDocument($ld)
+!endif
+!endprocedure
+
+skinparam linetype polyline
+left to right direction
+
+title Document Model BusinessPartner
+
+package "BusinessPartner" as BusinessPartner <<Frame>> {
+	() "documentRoot" as BusinessPartnerDocumentRoot
+	group('"__meta" as group_8f4b1')
+	field('"docRef" as field_1169c <<StringType>>')
+	group_8f4b1 -- field_1169c
+	field('"modelReference" as field_cfb40 <<StringType>>')
+	group_8f4b1 -- field_cfb40
+	field('"modelVersion" as field_17e3b <<StringType>>')
+	group_8f4b1 -- field_17e3b
+	field('"creator" as field_cdaf9 <<StringType>>')
+	group_8f4b1 -- field_cdaf9
+	field('"createdAt" as field_65672 <<DateTimeType>>')
+	group_8f4b1 -- field_65672
+	field('"modifier" as field_1fa32 <<StringType>>')
+	group_8f4b1 -- field_1fa32
+	field('"modifiedAt" as field_5cd66 <<DateTimeType>>')
+	group_8f4b1 -- field_5cd66
+	group('"extensions" as group_4c9a1')
+
+	group_8f4b1 ||--o| "0..1" group_4c9a1
+
+	BusinessPartnerDocumentRoot ||--o| "0..1" group_8f4b1
+
+	group('"BusinessPartnerRoot" as group_36405')
+	group('"Attachment" as G77')
+	field('"original_filename" as F21 <<StringType>>')
+	G77 -- F21
+	field('"internal_filename" as F22 <<StringType>>')
+	G77 -- F22
+	field('"content" as F23 <<StringType>>')
+	G77 -- F23
+	field('"attachment_id" as F24 <<StringType>>')
+	G77 -- F24
+	field('"size" as F25 <<NumberType>>')
+	G77 -- F25
+	field('"mime_type" as F26 <<StringType>>')
+	G77 -- F26
+	field('"category" as F27 <<StringType>>')
+	G77 -- F27
+	field('"description" as F28 <<StringType>>')
+	G77 -- F28
+	rule('"AttachmentInternalFilenameRequired" as R29') {
+}
+	G77 -- R29
+	rule('"AttachmentMimeTypeRequired" as R30') {
+}
+	G77 -- R30
+	rule('"AttachmentIdOrContentFilled" as R31') {
+}
+	G77 -- R31
+	rule('"SizeOfContentFilled" as R32') {
+}
+	G77 -- R32
+
+	group_36405 ||--o{ "0..99" G77
+	group('"Employment" as G2')
+	field('"signingDateTime" as field_3fas7 <<DateTimeType>>')
+	G2 -- field_3fas7
+	field('"employedSince" as field_1dsf3 <<DateFragmentType>>')
+	G2 -- field_1dsf3
+	field('"employedTill" as field_9dne3 <<DateFragmentType>>')
+	G2 -- field_9dne3
+	field('"income" as field_3920 <<NumberType>>')
+	G2 -- field_3920
+	field('"tax" as field_1c326 <<NumberType>>')
+	G2 -- field_1c326
+	computation('"TaxComputation" as computation_8a180') {
+computes: ../tax
+}
+	G2 -- computation_8a180
+	field('"role" as field_d1240 <<StringType>>')
+	G2 -- field_d1240
+	field('"currentlyEmployed" as field_8d31 <<BooleanType>>')
+	G2 -- field_8d31
+
+	group_36405 ||--o| "0..1" G2
+	group('"Offer" as G3')
+	field('"Discount" as field_75g24 <<EnumerationType>>')
+	G3 -- field_75g24
+	field('"ValidityPeriod" as field_3dfe0 <<DateRangeType>>')
+	G3 -- field_3dfe0
+
+	group_36405 ||--o| "0..1" G3
+	field('"accountNumber" as field_5dsk4 <<NumberType>>')
+	group_36405 -- field_5dsk4
+	field('"birthday" as field_8dje9 <<DateType>>')
+	group_36405 -- field_8dje9
+	field('"Name" as field_fe6b2 <<StringType>>')
+	group_36405 -- field_fe6b2
+	rule('"NameFilled" as R33') {
+}
+	group_36405 -- R33
+	field('"Industry" as field_d6580 <<EnumerationType>>')
+	group_36405 -- field_d6580
+	rule('"IndustryFilled" as R34') {
+}
+	group_36405 -- R34
+	field('"role" as field_d9400 <<StringType>>')
+	group_36405 -- field_d9400
+	field('"income" as field_d3100 <<NumberType>>')
+	group_36405 -- field_d3100
+	field('"EndOfRelationship" as field_663d3 <<DateTimeType>>')
+	group_36405 -- field_663d3
+	field('"TimeOfContractSignature" as field_663d5 <<TimeType>>')
+	group_36405 -- field_663d5
+	field('"ApproximateOfferDate" as F17 <<DateFragmentType>>')
+	group_36405 -- F17
+	field('"PremiumPartner" as F16 <<ConfirmType>>')
+	group_36405 -- F16
+	field('"StartOfRelationship" as field_663d2 <<DateType>>')
+	group_36405 -- field_663d2
+	field('"CustomerDiscount" as field_74a24 <<EnumerationType>>')
+	group_36405 -- field_74a24
+	rule('"CustomerDiscountFilled" as R35') {
+}
+	group_36405 -- R35
+	field('"PersonOrEntity" as field_31565 <<StringType>>')
+	group_36405 -- field_31565
+	group('"SubtypeGroup" as group_9f975')
+	field('"Company" as field_02492 <<StringType>>')
+	group_9f975 -- field_02492
+	computation('"PersonComp" as computation_e499e') {
+computes: ../../PersonOrEntity
+}
+	group_9f975 -- computation_e499e
+
+	group_36405 ||--o| "0..1" group_9f975
+	field('"Notes" as field_e07c3 <<StringType>>')
+	group_36405 -- field_e07c3
+
+	BusinessPartnerDocumentRoot ||--o| "0..1" group_36405
+
+}
+@enduml

@@ -1,0 +1,21 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "listCandidates",
+    "method": "LIST_CANDIDATES",
+    "params": {
+      "source": {
+        "docRef": "%s",
+        "relationshipModel": "%s",
+        "role": "%s"
+      },
+      "page": {
+        "offset": 0,
+        "limit": 20
+      },
+      "filter": null,
+      "sort": {},
+      "resultDocumentModel": null
+    }
+  }
+]

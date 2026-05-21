@@ -1,0 +1,9 @@
+{
+	"r_postAddress": {
+		"hasPostalAddress": false
+	},
+	"r_CoInsurer": {
+		"t_docRef": "XYZ",
+		"isCoInsured": false
+	}
+}

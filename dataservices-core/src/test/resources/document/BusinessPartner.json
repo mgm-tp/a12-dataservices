@@ -1,0 +1,16 @@
+{
+  "BusinessPartnerRoot": {
+    "Name": "Malcolm",
+    "Industry": "IT",
+    "StartOfRelationship": "2022-07-05",
+    "CustomerDiscount": "80%",
+    "PersonOrEntity": "Natural Person",
+    "PremiumPartner": true,
+    "TimeOfContractSignature": "12:12:12",
+    "Employment": {
+      "signingDateTime": "2012-12-12T12:12:12",
+      "employedSince": "2000-05"
+    },
+    "SubtypeGroup": {}
+  }
+}

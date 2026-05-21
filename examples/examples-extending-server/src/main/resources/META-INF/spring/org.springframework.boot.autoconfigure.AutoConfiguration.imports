@@ -1,0 +1,4 @@
+com.mgmtp.a12.examples.attachment.virus.scan.VirusScanConfiguration
+com.mgmtp.a12.examples.document.serialization.ExampleSerializationConfiguration
+com.mgmtp.a12.examples.document.staticcode.StaticValidationCodeConfiguration
+

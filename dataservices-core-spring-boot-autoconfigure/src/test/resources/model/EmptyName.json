@@ -1,0 +1,436 @@
+{
+  "header": {
+    "id": "",
+    "modelType": "document",
+    "modelVersion": "28.4.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "Product",
+      "immutable": false,
+      "comment": "This is a sample product model for a commerce PIM."
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "Product",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "F3",
+                "name": "number",
+                "internalDescription": [
+                  {
+                    "locale": "en",
+                    "text": "The unique business identifier of the product."
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "requirednessConfig": {
+                    "mode": "absoluteOrRelativeToNextRepAncestor"
+                  }
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G4",
+                "name": "externalNumber",
+                "internalDescription": [
+                  {
+                    "locale": "en",
+                    "text": "A list of numbers identifying the product uniquely in external systems."
+                  }
+                ],
+                "Group": {
+                  "repeatability": 100,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F5",
+                      "name": "system",
+                      "internalDescription": [
+                        {
+                          "locale": "en",
+                          "text": "A transformation to the external system using this number."
+                        }
+                      ],
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F6",
+                      "name": "number",
+                      "internalDescription": [
+                        {
+                          "locale": "en",
+                          "text": "The number used by this external system."
+                        }
+                      ],
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F7",
+                "name": "name",
+                "internalDescription": [
+                  {
+                    "locale": "en",
+                    "text": "A rather short name of the product, which can be displayed in product lists, invoices, etc."
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "minLength": 3,
+                      "maxLength": 256
+                    }
+                  },
+                  "requirednessConfig": {
+                    "mode": "absoluteOrRelativeToNextRepAncestor"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F8",
+                "name": "description",
+                "internalDescription": [
+                  {
+                    "locale": "en",
+                    "text": "A transformation to the brand of this product."
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType",
+                    "StringType": {
+                      "lineBreaksPermitted": true
+                    }
+                  },
+                  "requirednessConfig": {
+                    "mode": "absoluteOrRelativeToNextRepAncestor"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F9",
+                "name": "metaDescription",
+                "internalDescription": [
+                  {
+                    "locale": "en",
+                    "text": "For the HTML meta tag description."
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  }
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G10",
+                "name": "searchKeywords",
+                "internalDescription": [
+                  {
+                    "locale": "en",
+                    "text": "A list of keywords for site search boosting."
+                  }
+                ],
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F11",
+                      "name": "searchKeyword",
+                      "internalDescription": [
+                        {
+                          "locale": "en",
+                          "text": "A list of keywords for site search boosting. The entry of keywords is supported suing keyword prediction."
+                        }
+                      ],
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G17",
+                "name": "mediaFiles",
+                "internalDescription": [
+                  {
+                    "locale": "en",
+                    "text": "A list of media files, which are imported or uploaded for this particular product."
+                  }
+                ],
+                "Group": {
+                  "repeatability": 100,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "id": "G18",
+                      "name": "mediaFile",
+                      "internalDescription": [
+                        {
+                          "locale": "en",
+                          "text": "One media file with…"
+                        }
+                      ],
+                      "Group": {
+                        "repeatability": 1,
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "F19",
+                            "name": "type",
+                            "internalDescription": [
+                              {
+                                "locale": "en",
+                                "text": "a type, e.g. image, video, document, etc."
+                              }
+                            ],
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "requirednessConfig": {
+                                "mode": "absoluteOrRelativeToNextRepAncestor"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "F21",
+                            "name": "mimeType",
+                            "internalDescription": [
+                              {
+                                "locale": "en",
+                                "text": "a mime type, e.g. image/jpeg, video/mp4, application/pdf, …"
+                              }
+                            ],
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "requirednessConfig": {
+                                "mode": "absoluteOrRelativeToNextRepAncestor"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "F22",
+                            "name": "url",
+                            "internalDescription": [
+                              {
+                                "locale": "en",
+                                "text": "an absolute or relative path and/or file name. The interpretation depends on the digital asset management solution."
+                              }
+                            ],
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "requirednessConfig": {
+                                "mode": "absoluteOrRelativeToNextRepAncestor"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G13",
+                "name": "logistics",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "id": "G14",
+                      "name": "weight",
+                      "Group": {
+                        "repeatability": 1,
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "F15",
+                            "name": "weightValue",
+                            "internalDescription": [
+                              {
+                                "locale": "en",
+                                "text": "The weight of the product."
+                              }
+                            ],
+                            "Field": {
+                              "fieldType": {
+                                "type": "NumberType",
+                                "NumberType": {
+                                  "minFractionalDigits": 4,
+                                  "maxFractionalDigits": 4
+                                }
+                              },
+                              "requirednessConfig": {
+                                "mode": "absoluteOrRelativeToNextRepAncestor"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "F16",
+                            "name": "weightUnit",
+                            "internalDescription": [
+                              {
+                                "locale": "en",
+                                "text": "The unit, in which the weight is measured."
+                              }
+                            ],
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "requirednessConfig": {
+                                "mode": "absoluteOrRelativeToNextRepAncestor"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G23",
+                "name": "packaging",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F24",
+                      "name": "packagingMultiplicator",
+                      "internalDescription": [
+                        {
+                          "locale": "en",
+                          "text": "The number of sub items in the product, e.g. the number of bottles in a box of wine."
+                        }
+                      ],
+                      "Field": {
+                        "fieldType": {
+                          "type": "NumberType"
+                        },
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F25",
+                      "name": "packagingAmount",
+                      "internalDescription": [
+                        {
+                          "locale": "en",
+                          "text": "The amount of content in one sub item of the product, e.g. 0.75 in case of a wine bottle."
+                        }
+                      ],
+                      "Field": {
+                        "fieldType": {
+                          "type": "NumberType",
+                          "NumberType": {
+                            "minFractionalDigits": 1,
+                            "maxFractionalDigits": 3
+                          }
+                        },
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F26",
+                      "name": "packagingUnit",
+                      "internalDescription": [
+                        {
+                          "locale": "en",
+                          "text": "The unit, in which the packagingAmount is measured, e.g. liter."
+                        }
+                      ],
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

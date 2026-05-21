@@ -1,0 +1,7 @@
+username: testUserWithNoAccessRights
+password: admin
+firstname: testUser
+lastname: WithNoAccessRights
+email: testUserWithNoAccessRights@min.com
+authorities:
+  - "noAccessRights"

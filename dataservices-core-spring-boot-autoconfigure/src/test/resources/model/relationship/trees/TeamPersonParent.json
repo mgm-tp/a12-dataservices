@@ -1,0 +1,102 @@
+{
+  "header": {
+    "id": "TeamPersonParent",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "TeamPersonParent"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Team",
+        "reference": "DomainTeamParent"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Person",
+        "reference": "DomainPersonParent"
+      },
+      {
+        "purpose": "Link Document model",
+        "modelType": "document",
+        "alias": "Link Model",
+        "reference": "DomainTeamPerson_AdditionalFieldsModel"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "guest,admin,systemAdmin"
+      }
+    ]
+  },
+  "content": {
+    "labels": [],
+    "associationType": "SHARED",
+    "linkDocumentModel": "DomainTeamPerson_AdditionalFieldsModel",
+    "duplicatesAllowed": false,
+    "entityCharacteristics": [
+      {
+        "role": "Team",
+        "labels": [
+          {
+            "locale": "en",
+            "text": "belongs to teams"
+          },
+          {
+            "locale": "de",
+            "text": "belongs to teams"
+          }
+        ],
+        "documentModel": "DomainTeamParent",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": null
+      },
+      {
+        "role": "Person",
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Team members"
+          },
+          {
+            "locale": "de",
+            "text": "Team members"
+          }
+        ],
+        "documentModel": "DomainPersonParent",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": null
+      }
+    ],
+    "storage": "EXTERNAL",
+    "embeddedGroupPath": null
+  }
+}

@@ -1,0 +1,50 @@
+import static com.mgmtp.a12.dataservices.gradle.JavaOptsConstants.TEST_ARGUMENTS
+
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+	implementation project(':content-store:dataservices-content-store-core')
+	api libs.jacksonJaxrsJsonProvider
+
+	api libs.jaxbApi,
+			libs.jacksonDatatypeJsr310,
+			libs.jacksonDatatypeJdk8
+	implementation libs.julToSlf4j
+	implementation libs.slf4jApi
+	implementation libs.springWebmvc
+	implementation libs.commonsLang3
+	implementation libs.commonsFileupload
+	implementation libs.annotationApi
+	implementation libs.springBootStarterActuator
+
+	compileOnly libs.servletApi
+
+	testImplementation project(':content-store:dataservices-content-store-core-spring-boot-autoconfigure')
+	testImplementation libs.xmlunitCore
+	testImplementation libs.xmlunitMatchers
+	testImplementation libs.testng
+	testImplementation libs.springTest
+	testImplementation libs.assertjCore
+	testImplementation libs.hamcrest
+	testImplementation libs.hamcrestOptional
+	testImplementation libs.springBootStarterJdbc
+	testImplementation libs.springBootStarter
+	testImplementation libs.springBoot
+	testImplementation libs.springBootTest
+	testImplementation libs.servletApi
+	testImplementation libs.mockitoCore
+	testImplementation libs.jsonpath
+}
+
+test {
+	systemProperty "project.version", project.version
+	systemProperty "project.artifactId", project.name
+	systemProperty "project.groupId", project.group
+	systemProperty 'logging.level.com.mgmtp.a12.contentstore', 'DEBUG'
+	jvmArgs += TEST_ARGUMENTS
+//	exclude '**/*PerformanceTest*'
+}
+
+description = 'Data Services Content Store REST server Implementation'

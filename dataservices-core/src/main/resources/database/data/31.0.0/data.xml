@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+				   logicalFilePath="database/data/31.0.0/data.xml">
+
+	<changeSet id="A12S-1668" author="pvranik">
+		<preConditions onFail="HALT" onError="HALT">
+			<or>
+				<dbms type="oracle"/>
+				<dbms type="postgresql"/>
+				<dbms type="h2"/>
+			</or>
+		</preConditions>
+		<sql dbms="h2">
+			MERGE INTO BACKUP_ACCESS_RIGHT
+			KEY (id)
+			select * from DOCUMENT where model_name = 'DomainAccessRight';
+		</sql>
+		<sql dbms="h2">
+			MERGE INTO BACKUP_ROLE
+			KEY (id)
+			select * from DOCUMENT where model_name = 'DomainRole';
+		</sql>
+		<sql dbms="h2">
+			MERGE INTO BACKUP_USER
+			KEY (id)
+			select * from DOCUMENT where model_name = 'DomainUser';
+		</sql>
+		<sql dbms="postgresql">
+			INSERT INTO BACKUP_ACCESS_RIGHT (id, XML_DOC, CREATED_BY, MODIFIED_BY, CREATED_AT, MODIFIED_AT, MODEL_NAME)
+			select id, XML_DOC, CREATED_BY, MODIFIED_BY, CREATED_AT, MODIFIED_AT, MODEL_NAME
+			from DOCUMENT
+			where model_name = 'DomainAccessRight'
+			ON CONFLICT (id) DO UPDATE SET XML_DOC = excluded.XML_DOC,
+			CREATED_BY = excluded.CREATED_BY,
+			MODIFIED_BY = excluded.MODIFIED_BY,
+			CREATED_AT = excluded.CREATED_AT,
+			MODIFIED_AT = excluded.MODIFIED_AT,
+			MODEL_NAME = excluded.MODEL_NAME;
+		</sql>
+		<sql dbms="postgresql">
+			INSERT INTO BACKUP_ROLE (id, XML_DOC, CREATED_BY, MODIFIED_BY, CREATED_AT, MODIFIED_AT, MODEL_NAME)
+			select id, XML_DOC, CREATED_BY, MODIFIED_BY, CREATED_AT, MODIFIED_AT, MODEL_NAME
+			from DOCUMENT as d
+			where model_name = 'DomainRole'
+			ON CONFLICT (id) DO UPDATE SET XML_DOC = excluded.XML_DOC,
+			CREATED_BY = excluded.CREATED_BY,
+			MODIFIED_BY = excluded.MODIFIED_BY,
+			CREATED_AT = excluded.CREATED_AT,
+			MODIFIED_AT = excluded.MODIFIED_AT,
+			MODEL_NAME = excluded.MODEL_NAME;
+		</sql>
+		<sql dbms="postgresql">
+			INSERT INTO BACKUP_USER (id, XML_DOC, CREATED_BY, MODIFIED_BY, CREATED_AT, MODIFIED_AT, MODEL_NAME)
+			select id, XML_DOC, CREATED_BY, MODIFIED_BY, CREATED_AT, MODIFIED_AT, MODEL_NAME
+			from DOCUMENT as d
+			where model_name = 'DomainUser'
+			ON CONFLICT (id) DO UPDATE SET XML_DOC = excluded.XML_DOC,
+			CREATED_BY = excluded.CREATED_BY,
+			MODIFIED_BY = excluded.MODIFIED_BY,
+			CREATED_AT = excluded.CREATED_AT,
+			MODIFIED_AT = excluded.MODIFIED_AT,
+			MODEL_NAME = excluded.MODEL_NAME;
+		</sql>
+		<sql dbms="oracle">
+			MERGE INTO BACKUP_ACCESS_RIGHT u
+			USING DOCUMENT d
+			ON (d.id = u.id and d.model_name = 'DomainAccessRight')
+			WHEN MATCHED THEN
+			UPDATE SET u.XML_DOC = d.XML_DOC, u.CREATED_BY = d.CREATED_BY, u.MODIFIED_BY = d.MODIFIED_BY, u.CREATED_AT = d.CREATED_AT, u.MODIFIED_AT =
+			d.MODIFIED_AT, u.MODEL_NAME = d.MODEL_NAME
+			WHEN NOT MATCHED THEN
+			INSERT (ID, XML_DOC, CREATED_BY, MODIFIED_BY, CREATED_AT, MODIFIED_AT, MODEL_NAME)
+			VALUES (d.ID, d.XML_DOC, d.CREATED_BY, d.MODIFIED_BY, d.CREATED_AT, d.MODIFIED_AT, d.MODEL_NAME);
+		</sql>
+		<sql dbms="oracle">
+			MERGE INTO BACKUP_ROLE u
+			USING DOCUMENT d
+			ON (d.id = u.id and d.model_name = 'DomainRole')
+			WHEN MATCHED THEN
+			UPDATE SET u.XML_DOC = d.XML_DOC, u.CREATED_BY = d.CREATED_BY, u.MODIFIED_BY = d.MODIFIED_BY, u.CREATED_AT = d.CREATED_AT, u.MODIFIED_AT =
+			d.MODIFIED_AT, u.MODEL_NAME = d.MODEL_NAME
+			WHEN NOT MATCHED THEN
+			INSERT (ID, XML_DOC, CREATED_BY, MODIFIED_BY, CREATED_AT, MODIFIED_AT, MODEL_NAME)
+			VALUES (d.ID, d.XML_DOC, d.CREATED_BY, d.MODIFIED_BY, d.CREATED_AT, d.MODIFIED_AT, d.MODEL_NAME);
+		</sql>
+		<sql dbms="oracle">
+			MERGE INTO BACKUP_USER u
+			USING DOCUMENT d
+			ON (d.id = u.id and d.model_name = 'DomainUser')
+			WHEN MATCHED THEN
+			UPDATE SET u.XML_DOC = d.XML_DOC, u.CREATED_BY = d.CREATED_BY, u.MODIFIED_BY = d.MODIFIED_BY, u.CREATED_AT = d.CREATED_AT, u.MODIFIED_AT =
+			d.MODIFIED_AT, u.MODEL_NAME = d.MODEL_NAME
+			WHEN NOT MATCHED THEN
+			INSERT (ID, XML_DOC, CREATED_BY, MODIFIED_BY, CREATED_AT, MODIFIED_AT, MODEL_NAME)
+			VALUES (d.ID, d.XML_DOC, d.CREATED_BY, d.MODIFIED_BY, d.CREATED_AT, d.MODIFIED_AT, d.MODEL_NAME);
+		</sql>
+		<delete tableName="DOCUMENT">
+			<where>model_name in ('DomainAccessRight','DomainRole','DomainUser')</where>
+		</delete>
+	</changeSet>
+
+	<changeSet id="A12S-1729" author="pvranik" dbms="oracle">
+		<update tableName="model_annotations">
+			<column name="value" value="true"/>
+			<where>name = 'abstract' and (value = '' or value is null)</where>
+		</update>
+	</changeSet>
+
+</databaseChangeLog>

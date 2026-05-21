@@ -1,0 +1,9 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+	api project(':dataservices-domain')
+}
+
+description = 'Client API for accessing Data Services domain operations'

@@ -1,0 +1,12 @@
+{
+	  "BusinessPartnerRoot": {
+	    "Name": "NEW NAME",
+	    "Industry": "Legal",
+	    "StartOfRelationship": "2022-08-01",
+	    "CustomerDiscount": "100",
+	    "PersonOrEntity": null,
+	    "SubtypeGroup": {
+	      "Company": "mgm technology-partners GmbH"
+	    }
+	  }
+}

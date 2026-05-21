@@ -1,0 +1,12 @@
+{
+  "BusinessPartnerRoot": {
+    "Name": "Fourth",
+    "Industry": "IT",
+    "StartOfRelationship": "1978-09-21",
+    "CustomerDiscount": "100%",
+    "PersonOrEntity": "Legal Entity",
+    "Employment": {
+      "income": "4500"
+    }
+  }
+}

@@ -1,0 +1,66 @@
+[
+	{
+		"jsonrpc": "2.0",
+		"id": "AddPersonA",
+		"method": "ADD_DOCUMENT",
+		"params": {
+			"document": {
+				"Person": {
+					"FirstName": "Albert",
+					"LastName": "Smith",
+					"TaxIDCustomFieldType": "AT12345678"
+				}
+			},
+			"documentModelName": "PersonWithCustomType",
+			"locale": "en"
+		}
+	},
+	{
+		"jsonrpc": "2.0",
+		"id": "AddPersonB",
+		"method": "ADD_DOCUMENT",
+		"params": {
+			"document": {
+				"Person": {
+					"FirstName": "Beth",
+					"LastName": "Smith",
+					"TaxIDCustomFieldType": "BR12345678"
+				}
+			},
+			"documentModelName": "PersonWithCustomType",
+			"locale": "en"
+		}
+	},
+	{
+		"jsonrpc": "2.0",
+		"id": "AddPersonC",
+		"method": "ADD_DOCUMENT",
+		"params": {
+			"document": {
+				"Person": {
+					"FirstName": "Carl",
+					"LastName": "Smith",
+					"TaxIDCustomFieldType": "CR12345678"
+				}
+			},
+			"documentModelName": "PersonWithCustomType",
+			"locale": "en"
+		}
+	},
+	{
+		"jsonrpc": "2.0",
+		"id": "AddPersonR",
+		"method": "ADD_DOCUMENT",
+		"params": {
+			"document": {
+				"Person": {
+					"FirstName": "Ronaldinho",
+					"LastName": "Gaucho",
+					"TaxIDCustomFieldType": "RR12345678"
+				}
+			},
+			"documentModelName": "PersonWithCustomType",
+			"locale": "en"
+		}
+	}
+]

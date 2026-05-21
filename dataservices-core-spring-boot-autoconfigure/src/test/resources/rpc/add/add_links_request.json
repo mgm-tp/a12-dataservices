@@ -1,0 +1,177 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "id": "AddLink1",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ContractCoInsuredPartner",
+        "entities": [
+          {
+            "role": "Partner",
+            "docRef": "%s"
+          },
+          {
+            "role": "Contract",
+            "docRef": "%s"
+          }
+        ]
+      },
+      "linkDocument": {
+        "CoInsuredRoot": {
+          "Name": "Co Insured"
+        }
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "AddLink2",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ContractCoInsuredPartner",
+        "entities": [
+          {
+            "role": "Partner",
+            "docRef": "%s"
+          },
+          {
+            "role": "Contract",
+            "docRef": "%s"
+          }
+        ]
+      },
+      "linkDocument": {
+        "CoInsuredRoot": {
+          "Name": "Coco Insured"
+        }
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "AddLink3",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ContractCoInsuredPartner",
+        "entities": [
+          {
+            "role": "Partner",
+            "docRef": "%s"
+          },
+          {
+            "role": "Contract",
+            "docRef": "%s"
+          }
+        ]
+      },
+      "linkDocument": {
+        "CoInsuredRoot": {
+          "Name": "Cococo Insured"
+        }
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "AddLink4",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ContractCoInsuredPartner",
+        "entities": [
+          {
+            "role": "Partner",
+            "docRef": "%s"
+          },
+          {
+            "role": "Contract",
+            "docRef": "%s"
+          }
+        ]
+      },
+      "linkDocument": {
+        "CoInsuredRoot": {
+          "Name": "Cocococo Insured"
+        }
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "AddLink5",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ContractCoInsuredPartner",
+        "entities": [
+          {
+            "role": "Partner",
+            "docRef": "%s"
+          },
+          {
+            "role": "Contract",
+            "docRef": "%s"
+          }
+        ]
+      },
+      "linkDocument": {
+        "CoInsuredRoot": {
+          "Name": "Cococococo Insured"
+        }
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "AddLink6",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ContractCoInsuredPartner",
+        "entities": [
+          {
+            "role": "Partner",
+            "docRef": "%s"
+          },
+          {
+            "role": "Contract",
+            "docRef": "%s"
+          }
+        ]
+      },
+      "linkDocument": {
+        "CoInsuredRoot": {
+          "Name": "Cococococococo Insured"
+        }
+      }
+    }
+  },
+  {
+    "jsonrpc": "2.0",
+    "id": "AddLink7",
+    "method": "ADD_LINK",
+    "params": {
+      "linkDescriptor": {
+        "relationshipModel": "ContractCoInsuredPartner",
+        "entities": [
+          {
+            "role": "Partner",
+            "docRef": "%s"
+          },
+          {
+            "role": "Contract",
+            "docRef": "%s"
+          }
+        ]
+      },
+      "linkDocument": {
+        "CoInsuredRoot": {
+          "Name": "Cocococococococo Insured"
+        }
+      }
+    }
+  }
+]

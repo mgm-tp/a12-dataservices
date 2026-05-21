@@ -1,0 +1,166 @@
+{
+	"fullSize": 2,
+	"page": {
+		"offset": 0,
+		"limit": 10
+	},
+	"entries": [
+		{
+			"docRef": "%1$s/%2$s",
+			"documentModelName": "ContractCDM",
+			"document": {
+				"ContractRoot": {
+					"ContractName": "Insurance",
+					"LengthOfContract": 1,
+					"ContractValue": 10,
+					"CostToCustomer": 1,
+					"MaxDiscount": "1%%"
+				},
+				"ContractBusinessPartner": {
+					"BusinessPartnerRoot": {
+						"Name": "Our testing Policy Holder",
+						"Industry": "Biology",
+						"StartOfRelationship": "2022-02-01",
+						"CustomerDiscount": "20%%",
+						"PersonOrEntity": "Emilio"
+					},
+					"PartnerPostalAddress": {
+						"AddressRoot": {
+							"Street": "Letenské náměstí",
+							"HouseNumber": "2",
+							"City": "Prague",
+							"Country": "Czech Republic"
+						}
+					},
+					"PartnerAddresses": [
+						{
+							"AddressRoot": {
+								"Street": "Prigl",
+								"HouseNumber": "6",
+								"City": "Brno",
+								"Country": "Czech Republic"
+							}
+						},
+						{
+							"AddressRoot": {
+								"Street": "Letenské náměstí",
+								"HouseNumber": "2",
+								"City": "Prague",
+								"Country": "Czech Republic"
+							}
+						}
+					]
+				},
+				"ContractCoInsuredPartner": [
+					{
+						"relationship": {
+							"CoInsuredRoot": {
+								"Name": "Beatrice"
+							}
+						},
+						"BusinessPartnerRoot": {
+							"Name": "Our testing CoInsurer",
+							"Industry": "Chemistry",
+							"StartOfRelationship": "2022-03-01",
+							"CustomerDiscount": "30%%",
+							"PersonOrEntity": "Julio"
+						}
+					},
+					{
+						"relationship": {
+							"CoInsuredRoot": {
+								"Name": "Beatrice"
+							}
+						},
+						"BusinessPartnerRoot": {
+							"Name": "Our testing CoInsurer Two",
+							"Industry": "Government",
+							"StartOfRelationship": "2022-04-01",
+							"CustomerDiscount": "40%%",
+							"PersonOrEntity": "Hana"
+						}
+					}
+				]
+			}
+		},
+		{
+			"docRef": "%1$s/%3$s",
+			"documentModelName": "ContractCDM",
+			"document": {
+				"ContractRoot": {
+					"ContractName": "Insurance",
+					"LengthOfContract": 1,
+					"ContractValue": 10,
+					"CostToCustomer": 1,
+					"MaxDiscount": "1%%"
+				},
+				"ContractBusinessPartner": {
+					"BusinessPartnerRoot": {
+						"Name": "Our testing Policy Holder",
+						"Industry": "Biology",
+						"StartOfRelationship": "2022-02-01",
+						"CustomerDiscount": "20%%",
+						"PersonOrEntity": "Emilio"
+					},
+					"PartnerPostalAddress": {
+						"AddressRoot": {
+							"Street": "Letenské náměstí",
+							"HouseNumber": "2",
+							"City": "Prague",
+							"Country": "Czech Republic"
+						}
+					},
+					"PartnerAddresses": [
+						{
+							"AddressRoot": {
+								"Street": "Prigl",
+								"HouseNumber": "6",
+								"City": "Brno",
+								"Country": "Czech Republic"
+							}
+						},
+						{
+							"AddressRoot": {
+								"Street": "Letenské náměstí",
+								"HouseNumber": "2",
+								"City": "Prague",
+								"Country": "Czech Republic"
+							}
+						}
+					]
+				},
+				"ContractCoInsuredPartner": [
+					{
+						"relationship": {
+							"CoInsuredRoot": {
+								"Name": "Beatrice"
+							}
+						},
+						"BusinessPartnerRoot": {
+							"Name": "Our testing CoInsurer",
+							"Industry": "Chemistry",
+							"StartOfRelationship": "2022-03-01",
+							"CustomerDiscount": "30%%",
+							"PersonOrEntity": "Julio"
+						}
+					},
+					{
+						"relationship": {
+							"CoInsuredRoot": {
+								"Name": "Beatrice"
+							}
+						},
+						"BusinessPartnerRoot": {
+							"Name": "Our testing CoInsurer Two",
+							"Industry": "Government",
+							"StartOfRelationship": "2022-04-01",
+							"CustomerDiscount": "40%%",
+							"PersonOrEntity": "Hana"
+						}
+					}
+				]
+			}
+		}
+	],
+	"facets": {}
+}

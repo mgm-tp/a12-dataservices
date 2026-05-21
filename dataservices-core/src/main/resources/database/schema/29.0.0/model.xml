@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+				   logicalFilePath="database/schema/29.0.0/model.xml">
+
+	<changeSet id="A12S-1090-1" author="tbajus">
+		<preConditions onFail="HALT" onError="HALT">
+			<foreignKeyConstraintExists foreignKeyTableName="RELATIONSHIP_LINK"
+										foreignKeyName="RELATIONSHIP_MODEL_ID_FK"/>
+		</preConditions>
+
+		<dropForeignKeyConstraint baseTableName="RELATIONSHIP_LINK" constraintName="RELATIONSHIP_MODEL_ID_FK"/>
+		<addForeignKeyConstraint baseTableName="RELATIONSHIP_LINK" constraintName="RELATIONSHIP_MODEL_ID_FK"
+								 baseColumnNames="RELATIONSHIP_MODEL"
+								 referencedTableName="MODEL_HEADERS" referencedColumnNames="ID"/>
+	</changeSet>
+</databaseChangeLog>

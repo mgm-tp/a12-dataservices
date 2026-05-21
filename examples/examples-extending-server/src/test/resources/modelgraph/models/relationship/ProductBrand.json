@@ -1,0 +1,127 @@
+{
+  "header": {
+    "id": "ProductBrand",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "locales": [
+      {
+        "code": "de"
+      },
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ProductBrand_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ProductBrand"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "ProductRole",
+        "reference": "DomainProduct"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "BrandRole",
+        "reference": "DomainBrand"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "guest,admin,systemAdmin"
+      }
+    ]
+  },
+  "content": {
+    "labels": [
+      {
+        "locale": "de",
+        "text": "ProductBrand_DE"
+      },
+      {
+        "locale": "en",
+        "text": "ProductBrand"
+      }
+    ],
+    "associationType": "SHARED",
+    "duplicatesAllowed": false,
+    "entityCharacteristics": [
+      {
+        "role": "ProductRole",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "ProductRole_DE"
+          },
+          {
+            "locale": "en",
+            "text": "ProductRole"
+          }
+        ],
+        "documentModel": "DomainProduct",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 1,
+            "unbounded": true,
+            "upperLimit": 1
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": [
+            {
+              "name": "requiredField",
+              "value": "requiredField"
+            }
+          ]
+        }
+      },
+      {
+        "role": "BrandRole",
+        "labels": [
+          {
+            "locale": "de",
+            "text": "BrandRole_DE"
+          },
+          {
+            "locale": "en",
+            "text": "BrandRole"
+          }
+        ],
+        "documentModel": "DomainBrand",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "candidateConstraints": {
+          "population": "",
+          "populationParameters": [
+            {
+              "name": "requiredField",
+              "value": "requiredField"
+            }
+          ]
+        }
+      }
+    ],
+    "storage": "EXTERNAL",
+    "embeddedGroupPath": ""
+  }
+}
