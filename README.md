@@ -55,29 +55,8 @@ dependencies {
 
 #### How to Build
 
-Build the project using Gradle:
+Build the project using Gradle - see [GRADLE_TASKS.md](GRADLE_TASKS.md)
 
-```shell
-./gradlew assemble
-```
-
-#### How to Test
-
-Run tests using Gradle:
-
-```shell
-./gradlew build
-```
-
-This will execute all unit tests, integration tests, and code quality checks.
-
-#### How to Run
-
-Start the Data Services server:
-
-```shell
-./gradlew dataservices-server-app:bootRun
-```
 
 #### How to Access It
 

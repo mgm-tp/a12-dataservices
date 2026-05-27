@@ -1,6 +1,6 @@
 {
 	"name": "@com.mgmtp.a12.dataservices/dataservices-codemod",
-	"version": "38.4.2-SNAPSHOT",
+	"version": "38.4.3-SNAPSHOT",
 	"description": "Codemod for Data Services",
 	"author": "mgm technology partners",
 	"license": "(EUPL-1.2 OR LicenseRef-commercial)",

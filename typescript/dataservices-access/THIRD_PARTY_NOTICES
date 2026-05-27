@@ -403,36 +403,6 @@ Copyright (c) 1989, 1991 Free Software Foundation, Inc.
 	Source: https://github.com/xmlunit/xmlunit
 - org.xmlunit/xmlunit-matchers 2.10.0, licensed under Apache-2.0
 	Source: https://github.com/xmlunit/xmlunit
-- project /content-store dataservices-content-store-client, licensed under EUPL v1.2
-	Copyright (C) 2012-2026 mgm technology partners GmbH
-	Source: https://github.com/mgm-tp
-- project /content-store dataservices-content-store-core, licensed under EUPL v1.2
-	Copyright (C) 2012-2026 mgm technology partners GmbH
-	Source: https://github.com/mgm-tp
-- project /content-store dataservices-content-store-core-spring-boot-autoconfigure, licensed under EUPL v1.2
-	Copyright (C) 2012-2026 mgm technology partners GmbH
-	Source: https://github.com/mgm-tp
-- project /content-store dataservices-content-store-domain, licensed under EUPL v1.2
-	Copyright (C) 2012-2026 mgm technology partners GmbH
-	Source: https://github.com/mgm-tp
-- project /content-store dataservices-content-store-server, licensed under EUPL v1.2
-	Copyright (C) 2012-2026 mgm technology partners GmbH
-	Source: https://github.com/mgm-tp
-- project /content-store dataservices-content-store-server-app, licensed under EUPL v1.2
-	Copyright (C) 2012-2026 mgm technology partners GmbH
-	Source: https://github.com/mgm-tp
-- project /content-store dataservices-content-store-server-spring-boot-autoconfigure, licensed under EUPL v1.2
-	Copyright (C) 2012-2026 mgm technology partners GmbH
-	Source: https://github.com/mgm-tp
-- project /dataservices-common dataservices-common-api, licensed under EUPL v1.2
-	Copyright (C) 2012-2026 mgm technology partners GmbH
-	Source: https://github.com/mgm-tp
-- project /dataservices-common dataservices-common-lib, licensed under EUPL v1.2
-	Copyright (C) 2012-2026 mgm technology partners GmbH
-	Source: https://github.com/mgm-tp
-- project /examples examples-static-validation-code, licensed under EUPL v1.2
-	Copyright (C) 2012-2026 mgm technology partners GmbH
-	Source: https://github.com/mgm-tp
 - tech.units/indriya 2.2.3, licensed under BSD-3-Clause
 	Copyright (c) 2005-2025, Jean-Marie Dautelle, Werner Keil, Otavio Santana
 	Source: https://github.com/unitsofmeasurement/indriya

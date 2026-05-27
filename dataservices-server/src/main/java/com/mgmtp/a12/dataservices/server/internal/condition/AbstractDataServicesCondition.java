@@ -41,7 +41,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
-import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.env.Environment;
@@ -50,7 +49,6 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.configuration.validation.internal.ConfigurationMessage;
 import com.mgmtp.a12.dataservices.configuration.validation.internal.WrongConfigurationMessage;
-import com.mgmtp.a12.dataservices.common.exception.UnexpectedException;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -66,8 +64,7 @@ public abstract class AbstractDataServicesCondition extends SpringBootCondition 
 	@NonNull private static Optional<DataServicesCoreProperties> boundProperties = Optional.empty();
 
 	@Override public final ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
-		DataServicesCoreProperties dataServicesCoreProperties = AbstractDataServicesCondition.getBoundProperties(context.getEnvironment())
-			.orElseThrow(() -> new UnexpectedException("Unable to bind Data Services properties."));
+		DataServicesCoreProperties dataServicesCoreProperties = AbstractDataServicesCondition.getBoundProperties(context.getEnvironment());
 		return new ConditionOutcome(evaluateCondition(dataServicesCoreProperties),
 			ConditionMessage.forCondition(ConditionalOnExpression.class, validate(dataServicesCoreProperties))
 				.resultedIn(getStringRepresentation(dataServicesCoreProperties)));
@@ -131,17 +128,16 @@ public abstract class AbstractDataServicesCondition extends SpringBootCondition 
 
 	/**
 	 * Function to get actual values of {@link DataServicesCoreProperties}.
+	 * Falls back to a default instance when no {@code mgmtp.a12.dataservices.*} property is present.
 	 *
 	 * @param environment spring {@link Environment}
-	 * @return {@link Optional} of actual {@link DataServicesCoreProperties} of {@link Optional#empty()} if it can not be bound
+	 * @return actual {@link DataServicesCoreProperties}, never {@code null}
 	 */
-	public static @NonNull Optional<DataServicesCoreProperties> getBoundProperties(Environment environment) {
+	public static @NonNull DataServicesCoreProperties getBoundProperties(Environment environment) {
 		if (boundProperties.isEmpty()) {
-			boundProperties = Optional.of(Binder.get(environment))
-				.map(b -> b.bind(DataServicesCoreProperties.PROPERTIES_PREFIX, DataServicesCoreProperties.class))
-				.filter(BindResult::isBound)
-				.map(BindResult::get);
+			boundProperties = Optional.of(Binder.get(environment)
+				.bindOrCreate(DataServicesCoreProperties.PROPERTIES_PREFIX, DataServicesCoreProperties.class));
 		}
-		return boundProperties;
+		return boundProperties.get();
 	}
 }

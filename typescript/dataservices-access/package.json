@@ -1,6 +1,6 @@
 {
 	"name": "@com.mgmtp.a12.dataservices/dataservices-access",
-	"version": "38.4.2-SNAPSHOT",
+	"version": "38.4.3-SNAPSHOT",
 	"description": "A12 Data Services access descriptor & utilities",
 	"license": "(EUPL-1.2 OR LicenseRef-commercial)",
 	"author": "mgm technology partners",

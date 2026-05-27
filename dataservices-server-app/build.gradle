@@ -35,9 +35,20 @@ springBoot {
 	mainClass.set 'com.mgmtp.a12.dataservices.server.app.ServerApplication'
 }
 
+tasks.withType(BootRun).named(SpringBootPlugin.BOOT_RUN_TASK_NAME).configure {
+	it.systemProperty 'spring.profiles.active', 'dataservices-uaa,dataservices-embedded_contentstore,contentstore-embedded_postgres,dataservices-actuators,dataservices-rpc,dataservices-embedded_postgres'
+	it.systemProperty 'mgmtp.a12.uaa.authentication.types', 'LOCAL'
+	['publicKeyLocation' : 'uaa_public_key',
+	 'privateKeyLocation': 'uaa_private_key']
+			.each { k, v -> it.systemProperty "mgmtp.a12.uaa.authentication.jwt.$k", "file:${project(':dataservices-core').file("src/testFixtures/resources/${v}.pem").absolutePath}" }
+	it.systemProperty 'mgmtp.a12.uaa.authentication.jwt.secret', 'YXNkZmdoamtscXdlcnR6dWlvcHl4Y3Zibm0xMjM0NTY='
+	it.systemProperty 'mgmtp.a12.uaa.authentication.contextPath', '/api'
+	it.systemProperty 'mgmtp.a12.uaa.authentication.principal.localConfig.userResources', project(':dataservices-core-spring-boot-autoconfigure').fileTree('src/testFixtures/resources/local_users').files.collect { "file:$it.absolutePath" }.join(',')
+	it.systemProperty 'mgmtp.a12.uaa.authentication.principal.accessRightsResource', "file:${project(':dataservices-core-spring-boot-autoconfigure').file('src/testFixtures/resources/testUserRoles.yaml').absolutePath}"
+}
+
 artifacts {
 	bootServerJar(tasks.bootJar)
 }
 
 description = 'Data Services REST server executable application'
-

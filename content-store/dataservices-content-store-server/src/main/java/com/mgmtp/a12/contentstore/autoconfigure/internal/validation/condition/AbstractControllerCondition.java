@@ -39,7 +39,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
-import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.env.Environment;
@@ -47,7 +46,6 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 import com.mgmtp.a12.contentstore.configuration.ContentStoreProperties;
 import com.mgmtp.a12.contentstore.configuration.internal.validation.ConfigurationMessage;
-import com.mgmtp.a12.dataservices.common.exception.UnexpectedException;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -58,8 +56,7 @@ public abstract class AbstractControllerCondition extends SpringBootCondition {
 	@NonNull private static Optional<ContentStoreProperties> boundProperties = Optional.empty();
 
 	@Override public final ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
-		ContentStoreProperties contentStoreProperties = AbstractControllerCondition.findBoundProperties(context.getEnvironment())
-			.orElseThrow(() -> new UnexpectedException("Unable to bind Content Store properties."));
+		ContentStoreProperties contentStoreProperties = AbstractControllerCondition.findBoundProperties(context.getEnvironment());
 		return new ConditionOutcome(evaluateCondition(contentStoreProperties),
 			ConditionMessage.forCondition(ConditionalOnExpression.class, validate(contentStoreProperties))
 				.resultedIn(getStringRepresentation(contentStoreProperties)));
@@ -93,18 +90,17 @@ public abstract class AbstractControllerCondition extends SpringBootCondition {
 
 	/**
 	 * Function to get actual values of {@link ContentStoreProperties}.
+	 * Falls back to a default instance when no {@code mgmtp.a12.dataservices.contentstore.*} property is present.
 	 *
 	 * @param environment spring {@link Environment}
-	 * @return {@link Optional} of actual {@link ContentStoreProperties} of {@link Optional#empty()} if it can not be bound
+	 * @return actual {@link ContentStoreProperties}, never {@code null}
 	 */
-	public static @NonNull Optional<ContentStoreProperties> findBoundProperties(Environment environment) {
+	public static @NonNull ContentStoreProperties findBoundProperties(Environment environment) {
 		if (boundProperties.isEmpty()) {
-			boundProperties = Optional.of(Binder.get(environment))
-				.map(b -> b.bind(ContentStoreProperties.PROPERTIES_PREFIX, ContentStoreProperties.class))
-				.filter(BindResult::isBound)
-				.map(BindResult::get);
+			boundProperties = Optional.of(Binder.get(environment)
+				.bindOrCreate(ContentStoreProperties.PROPERTIES_PREFIX, ContentStoreProperties.class));
 		}
-		return boundProperties;
+		return boundProperties.get();
 	}
 
 	protected ConfigurationMessage makeValidMessage(String message, String... relatedProperties) {

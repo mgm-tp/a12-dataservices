@@ -1,6 +1,6 @@
 {
 	"name": "@com.mgmtp.a12.dataservices/dataservices-relationship-model-migration",
-	"version": "38.4.2-SNAPSHOT",
+	"version": "38.4.3-SNAPSHOT",
 	"description": "Relationship Model Migration Tool",
 	"license": "(EUPL-1.2 OR LicenseRef-commercial)",
 	"author": "mgm technology partners",
