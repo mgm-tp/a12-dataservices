@@ -38,6 +38,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.core.annotation.Order;
@@ -118,6 +119,8 @@ import static com.mgmtp.a12.dataservices.query.projection.internal.DocumentGraph
 	public static final String INVALID_MULTI_VALUES_INPUT_FIELDS_EXCEPTION =
 		"`document-graph` projection requires only 1 `field` as path to root graph. Empty or `/` value represent for CDM root document model";
 	public static final String NO_MODEL_AVAILABLE_FOR_CDDS = "No model %s available for CDDs.";
+	public static final String INVALID_TARGET_DOCUMENT_MODEL =
+		"'targetDocumentModel' must not be null in query with document-graph projection";
 
 	private final IModelLoader<ComposeDocumentModel> composeDocumentModelLoader;
 	private final IModelLoader<RelationshipModel> relationshipModelLoader;
@@ -130,10 +133,14 @@ import static com.mgmtp.a12.dataservices.query.projection.internal.DocumentGraph
 			throw new QueryInvalidInputException(QUERY_PREPROCESSING, QUERY_INVALID_INPUT_ERROR_KEY, null)
 				.withAnonymityMessage(INVALID_MULTI_VALUES_INPUT_FIELDS_EXCEPTION);
 		}
+		if (StringUtils.isBlank(originalQuery.getTargetDocumentModel())) {
+			throw new QueryInvalidInputException(QUERY_PREPROCESSING, QUERY_INVALID_INPUT_ERROR_KEY, null)
+				.withAnonymityMessage(INVALID_TARGET_DOCUMENT_MODEL);
+		}
 		IDocumentModel cdm = composeDocumentModelLoader.loadModel(originalQuery.getTargetDocumentModel());
 		if (!ComposeDocumentModelUtils.isComposeDocumentModel(cdm.getHeader())) {
 			throw new QueryNotFoundException(QUERY_PREPROCESSING, QUERY_INVALID_INPUT_ERROR_KEY, null)
-				.withAnonymityMessage(String.format(NO_MODEL_AVAILABLE_FOR_CDDS, originalQuery.getTargetDocumentModel()));
+				.withAnonymityMessage(NO_MODEL_AVAILABLE_FOR_CDDS.formatted(originalQuery.getTargetDocumentModel()));
 		}
 		String path = getPathFromFields(originalQuery);
 		originalQuery.setFields(null);

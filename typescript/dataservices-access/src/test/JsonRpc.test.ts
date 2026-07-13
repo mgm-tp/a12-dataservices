@@ -32,6 +32,7 @@
 import { strictEqual } from "node:assert/strict";
 
 import { JsonRpc2Request, JsonRpc2Response } from "../json-rpc/index.js";
+import type { JsonRpc2UniqueConstraintErrorResponse } from "../json-rpc/index.js";
 
 import { addDocumentRequest } from "./resources/jsonrpc/request/document_operation_requests.js";
 
@@ -77,7 +78,7 @@ suite("JsonRpc2Test", () => {
 		});
 
 		test("JSON-RPC Request - JsonRpc Field", () => {
-			const { jsonrpc, ...requestBody } = { ...addDocumentRequest };
+			const { jsonrpc, ...requestBody } = addDocumentRequest;
 			strictEqual(JsonRpc2Request.isInstance(requestBody), false, "Check omitted field");
 
 			strictEqual(
@@ -88,7 +89,7 @@ suite("JsonRpc2Test", () => {
 		});
 
 		test("JSON-RPC Request - Method Field", () => {
-			const { method, ...requestBody } = { ...addDocumentRequest };
+			const { method, ...requestBody } = addDocumentRequest;
 			strictEqual(JsonRpc2Request.isInstance(requestBody), false, "Check omitted field");
 
 			strictEqual(
@@ -98,10 +99,9 @@ suite("JsonRpc2Test", () => {
 			);
 		});
 
-		// TODO A12S-6532: Make 'params' field mandatory in method
 		test("JSON-RPC Request - Id Field", () => {
-			const { id, ...requestBody } = { ...addDocumentRequest };
-			strictEqual(JsonRpc2Request.isInstance(requestBody), true, "Check omitted field");
+			const { id, ...requestBody } = addDocumentRequest;
+			strictEqual(JsonRpc2Request.isInstance(requestBody), false, "Check omitted field");
 
 			strictEqual(
 				JsonRpc2Request.isInstance({ ...addDocumentRequest, id: null }),
@@ -110,10 +110,9 @@ suite("JsonRpc2Test", () => {
 			);
 		});
 
-		// TODO A12S-6532: Make 'params' field mandatory in method
 		test("JSON-RPC Request - Params Field", () => {
-			const { params, ...requestBody } = { ...addDocumentRequest };
-			strictEqual(JsonRpc2Request.isInstance(requestBody), true, "Check omitted field");
+			const { params, ...requestBody } = addDocumentRequest;
+			strictEqual(JsonRpc2Request.isInstance(requestBody), false, "Check omitted field");
 
 			strictEqual(
 				JsonRpc2Request.isInstance({ ...addDocumentRequest, params: null }),
@@ -192,7 +191,7 @@ suite("JsonRpc2Test", () => {
 
 				test("Check Error Type - WithOmittedData", () => {
 					const { data: _, ...testCaseError } = { ...negativeResponse.error };
-					strictEqual(JsonRpc2Response.JsonRpc2Error.isInstance(testCaseError), true);
+					strictEqual(JsonRpc2Response.JsonRpc2Error.isInstance(testCaseError), false);
 				});
 
 				test("Check Error Type - WithUndefinedData", () => {
@@ -222,11 +221,10 @@ suite("JsonRpc2Test", () => {
 					);
 				});
 
-				// TODO A12S-6532: Both ok and error types are detected if both are present
 				test("Check Result And Error Case", () => {
 					const responseWithBoth = { ...negativeResponse, result: { success: false } };
-					strictEqual(JsonRpc2Response.error.isInstance(responseWithBoth), true);
-					strictEqual(JsonRpc2Response.ok.isInstance(responseWithBoth), true);
+					strictEqual(JsonRpc2Response.error.isInstance(responseWithBoth), false);
+					strictEqual(JsonRpc2Response.ok.isInstance(responseWithBoth), false);
 					strictEqual(JsonRpc2Response.hasError(responseWithBoth as JsonRpc2Response), true);
 				});
 			});
@@ -262,24 +260,21 @@ suite("JsonRpc2Test", () => {
 					);
 				});
 
-				// TODO A12S-6532: Fix this test so that it checks for 'details' being mandatory in 'Exception' type
 				test("Check Exception Type - Undefined Details", () => {
 					const { details, ...separatedErrorData } = errorData;
-					strictEqual(JsonRpc2Response.Exception.isInstance(separatedErrorData), true);
+					strictEqual(JsonRpc2Response.Exception.isInstance(separatedErrorData), false);
 				});
 
-				// TODO A12S-6532: Fix this test so that it checks for 'details' being mandatory in 'Exception' type
 				test("Check Exception Type - String Details", () => {
 					strictEqual(
 						JsonRpc2Response.Exception.isInstance({ ...errorData, details: "Hello world" }),
-						true
+						false
 					);
 				});
 
 				suite("Localizable Message", () => {
 					const localizedMessage = errorData.title;
 
-					// TODO A12S-6532: Fix this test so that it checks for 'priority' being part of 'LocalizedMessage' type
 					test("Check Localizable Message", () => {
 						strictEqual(JsonRpc2Response.LocalizableMessage.isInstance(localizedMessage), true);
 					});
@@ -313,23 +308,6 @@ suite("JsonRpc2Test", () => {
 							false
 						);
 					});
-
-					// TODO A12S-6532: Fix this test so that it checks for 'priority' being part of 'LocalizedMessage' type
-					test("Check Localizable Message - Omitted Priority", () => {
-						const { priority: _, ...separatedErrorData } = { ...localizedMessage };
-						strictEqual(JsonRpc2Response.LocalizableMessage.isInstance(separatedErrorData), true);
-					});
-
-					// TODO A12S-6532: Fix this test so that it checks for 'priority' being part of 'LocalizedMessage' type
-					test("Check Localizable Message - Undefined Priority", () => {
-						strictEqual(
-							JsonRpc2Response.LocalizableMessage.isInstance({
-								...localizedMessage,
-								priority: undefined
-							}),
-							true
-						);
-					});
 				});
 			});
 		});
@@ -358,14 +336,13 @@ suite("JsonRpc2Test", () => {
 				strictEqual(JsonRpc2Response.hasError(positiveRes as JsonRpc2Response), false);
 			});
 
-			// TODO A12S-6532: Both ok and error types are detected if both are present and result is undefined
 			test("Check OK response - Error Attribute", () => {
 				const responseWithError = {
 					...positiveResponse,
 					result: undefined,
 					error: negativeResponse.error
 				};
-				strictEqual(JsonRpc2Response.ok.isInstance(responseWithError), true);
+				strictEqual(JsonRpc2Response.ok.isInstance(responseWithError), false);
 				strictEqual(JsonRpc2Response.hasError(responseWithError as JsonRpc2Response), true);
 			});
 		});
@@ -390,6 +367,79 @@ suite("JsonRpc2Test", () => {
 					JsonRpc2Response.hasErrors([negativeResponse, negativeResponse] as JsonRpc2Response[]),
 					true
 				);
+			});
+		});
+
+		suite("Unique Constraint Error Type Guards", () => {
+			const exceptionData = {
+				level: "ERROR",
+				title: { key: "error.unique.title", default: "Unique constraint violated." },
+				description: { key: "error.unique.description", default: "A value already exists." },
+				details: { code: "-32060", subsystem: "DATASERVICES", time: "2024-01-01T00:00:00.000Z" }
+			};
+
+			const uniqueConstraintViolationResponse = {
+				jsonrpc: "2.0",
+				id: "AddDocument",
+				error: {
+					code: -32060,
+					message: "Unique constraint 'myConstraint' violated for model 'MyModel'",
+					data: exceptionData
+				}
+			};
+
+			suite("uniqueConstraintViolationError (code -32060)", () => {
+				test("Recognizes unique constraint violation error", () => {
+					strictEqual(
+						JsonRpc2Response.uniqueConstraintViolationError.isInstance(
+							uniqueConstraintViolationResponse
+						),
+						true
+					);
+				});
+
+				test("Narrowed type exposes Exception data fields", () => {
+					if (
+						JsonRpc2Response.uniqueConstraintViolationError.isInstance(
+							uniqueConstraintViolationResponse
+						)
+					) {
+						const narrowed: JsonRpc2UniqueConstraintErrorResponse =
+							uniqueConstraintViolationResponse;
+						strictEqual(narrowed.error.data.description.default, "A value already exists.");
+						strictEqual(narrowed.error.data.title.default, "Unique constraint violated.");
+					}
+				});
+
+				test("Rejects non-error response", () => {
+					strictEqual(
+						JsonRpc2Response.uniqueConstraintViolationError.isInstance(positiveResponse),
+						false
+					);
+				});
+
+				test("Rejects error with different code", () => {
+					const otherErrorResponse = {
+						jsonrpc: "2.0",
+						id: "AddDocument",
+						error: { code: -32603, message: "Internal error", data: exceptionData }
+					};
+					strictEqual(
+						JsonRpc2Response.uniqueConstraintViolationError.isInstance(otherErrorResponse),
+						false
+					);
+				});
+
+				test("Rejects error with invalid data (not an Exception)", () => {
+					const responseWithInvalidData = {
+						...uniqueConstraintViolationResponse,
+						error: { ...uniqueConstraintViolationResponse.error, data: "not an exception" }
+					};
+					strictEqual(
+						JsonRpc2Response.uniqueConstraintViolationError.isInstance(responseWithInvalidData),
+						false
+					);
+				});
 			});
 		});
 	});

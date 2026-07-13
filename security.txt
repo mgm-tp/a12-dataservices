@@ -1,0 +1,5 @@
+Contact: mailto:hello.a12@mgm-tp.com
+Expires: 2027-12-31T00:00:00.000Z
+Preferred-Languages: de, en
+Canonical: https://geta12.com/.well-known/security.txt
+Policy: https://gitlab.opencode.de/mgm-tp/a12/a12overview/-/blob/main/SECURITY.md

@@ -5,25 +5,25 @@
 		{
 			"name": "User Has MODEL_CREATE Right",
 			"description": "Check that user has access right to create models.",
-			"dataPreload": ["#roles = T(com.mgmtp.a12.dataservices.utils.ModelUtils).getObjectRoles(#resource)"],
+			"dataPreload": ["#roles = T(com.mgmtp.a12.dataservices.utils.internal.ModelAuthorizationUtils).getObjectRoles(#resource)"],
 			"rules": ["@dataServicesCoreProperties.getAuthorization().getRoleBased().isEnabled() == false || hasAccessRight('MODEL_MANAGE') || (hasAccessRight('MODEL_CREATE') && containsAnyRole(#roles))"]
 		},
 		{
 			"name": "User Has MODEL_UPDATE Right",
 			"description": "Check that user has access right to update models and matching role with provided model.",
-			"dataPreload": ["#matchedRequiredRoles = T(com.mgmtp.a12.dataservices.utils.ModelUtils).getMatchingRoles(#resource)"],
+			"dataPreload": ["#matchedRequiredRoles = T(com.mgmtp.a12.dataservices.utils.internal.ModelAuthorizationUtils).getMatchingRoles(#resource)"],
 			"rules": ["@dataServicesCoreProperties.getAuthorization().getRoleBased().isEnabled() == false || hasAccessRight('MODEL_MANAGE') || hasNestedObjectWithPropertyValue(#matchedRequiredRoles, 'accessRights', 'name', 'MODEL_UPDATE')"]
 		},
 		{
 			"name": "User Has MODEL_READ Right",
 			"description": "Check that user has access right to read models and matching role with provided model.",
-			"dataPreload": ["#matchedRequiredRoles = T(com.mgmtp.a12.dataservices.utils.ModelUtils).getMatchingRoles(#resource)"],
+			"dataPreload": ["#matchedRequiredRoles = T(com.mgmtp.a12.dataservices.utils.internal.ModelAuthorizationUtils).getMatchingRoles(#resource)"],
 			"rules": ["@dataServicesCoreProperties.getAuthorization().getRoleBased().isEnabled() == false || hasAccessRight('MODEL_MANAGE') || hasNestedObjectWithPropertyValue(#matchedRequiredRoles, 'accessRights', 'name', 'MODEL_READ')"]
 		},
 		{
 			"name": "User Has MODEL_DELETE Right",
 			"description": "Check that user has access right to delete models and matching role with provided model.",
-			"dataPreload": ["#matchedRequiredRoles = T(com.mgmtp.a12.dataservices.utils.ModelUtils).getMatchingRoles(#resource)"],
+			"dataPreload": ["#matchedRequiredRoles = T(com.mgmtp.a12.dataservices.utils.internal.ModelAuthorizationUtils).getMatchingRoles(#resource)"],
 			"rules": ["@dataServicesCoreProperties.getAuthorization().getRoleBased().isEnabled() == false || hasAccessRight('MODEL_MANAGE') || hasNestedObjectWithPropertyValue(#matchedRequiredRoles, 'accessRights', 'name', 'MODEL_DELETE')"]
 		},
 		{
@@ -78,6 +78,13 @@
 			"description": "Overwrite to restrict access to different URL paths",
 			"rules": [
 				"true"
+			]
+		},
+		{
+			"name": "User Has ACCESS_ACTUATOR Right",
+			"description": "Check that user has access right to access actuator endpoints.",
+			"rules": [
+				"hasAccessRight('ACCESS_ACTUATOR')"
 			]
 		},
 		{
@@ -215,9 +222,9 @@
 		},
 		{
 			"name": "Actuator Permission",
-			"description": "You can control actuator security by a relative URL. Default is: Allow all.",
+			"description": "Controls access to actuator endpoints. Requires the ACCESS_ACTUATOR access right.",
 			"policy-refs": [
-				"User Has Relative Path Access"
+				"User Has ACCESS_ACTUATOR Right"
 			],
 			"scopes": [
 				"RelativePath"

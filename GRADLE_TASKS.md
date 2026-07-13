@@ -15,5 +15,11 @@
 ### Start the Data Services server:
 
 ```shell
-./gradlew dataservices-server-app:bootRun
+./gradlew :dataservices-server-app:bootRun
+```
+
+### Start the Content Store server:
+
+```shell
+./gradlew :content-store:dataservices-content-store-server-app:bootRun
 ```

@@ -42,13 +42,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.client.cli.internal.IApplicationOutput;
 import com.mgmtp.a12.dataservices.client.cli.internal.resources.DelegatingResourceLoader;
 import com.mgmtp.a12.dataservices.client.rpc.RpcOperationsClient;
@@ -56,8 +52,10 @@ import com.mgmtp.a12.dataservices.rpc.JsonRpc2Request;
 import com.mgmtp.a12.dataservices.rpc.JsonRpc2Response;
 import com.mgmtp.a12.dataservices.rpc.JsonRpc2ResponseError;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
 
 @Slf4j
 @Component public class JsonRpcCommand extends AbstractRPCCommand<ApplicationArguments> {
@@ -66,24 +64,27 @@ import lombok.extern.slf4j.Slf4j;
 	public static final String PATH_OPTION_NAME = "input_path";
 	public static final String OPTION_OUTPUT_DIR = "output_dir";
 
-	@Autowired private ObjectMapper objectMapper;
-	@Autowired private RpcOperationsClient rpcOperationsClient;
-	@Autowired private DelegatingResourceLoader resourceLoader;
+	private final RpcOperationsClient rpcOperationsClient;
+	private final DelegatingResourceLoader resourceLoader;
+	private final ObjectMapper objectMapper;
 
-	public JsonRpcCommand(@NonNull IApplicationOutput applicationOutput) {
+	public JsonRpcCommand(IApplicationOutput applicationOutput, RpcOperationsClient rpcOperationsClient, DelegatingResourceLoader resourceLoader,
+		ObjectMapper objectMapper) {
 		super(applicationOutput);
+		this.rpcOperationsClient = rpcOperationsClient;
+		this.resourceLoader = resourceLoader;
+		this.objectMapper = objectMapper.rebuild().enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY).build();
 	}
 
 	@Override protected CommandResponse<ApplicationArguments> executeRemoteCommand(ApplicationArguments args) {
-		this.objectMapper = objectMapper.copy().enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
 		try {
 			if (!args.containsOption(PATH_OPTION_NAME)
 				|| !args.containsOption(OPTION_OUTPUT_DIR)) {
 				return new CommandResponse<>(EXIT_INVALID_ARGS, this);
 			}
 
-			String pathArg = args.getOptionValues(PATH_OPTION_NAME).get(0);
-			String outputDir = args.getOptionValues(OPTION_OUTPUT_DIR).get(0);
+			String pathArg = args.getOptionValues(PATH_OPTION_NAME).getFirst();
+			String outputDir = args.getOptionValues(OPTION_OUTPUT_DIR).getFirst();
 
 			getAllFiles(new File(resourceLoader.getResource(pathArg).getURI()))
 				.sorted(Comparator.comparing(File::getPath))
@@ -141,9 +142,9 @@ import lombok.extern.slf4j.Slf4j;
 
 			@Override public List<String> getExamples() {
 				return List.of(
-					String.format("%s %s --%s=my_request.json --%s=my_output_dir", HelpCommand.JAVA_COMMAND, JSON_RPC_COMMAND, PATH_OPTION_NAME,
+					"%s %s --%s=my_request.json --%s=my_output_dir".formatted(HelpCommand.JAVA_COMMAND, JSON_RPC_COMMAND, PATH_OPTION_NAME,
 						OPTION_OUTPUT_DIR),
-					String.format("%s %s --%s=my_folder --%s=my_output_dir", HelpCommand.JAVA_COMMAND, JSON_RPC_COMMAND, PATH_OPTION_NAME, OPTION_OUTPUT_DIR)
+					"%s %s --%s=my_folder --%s=my_output_dir".formatted(HelpCommand.JAVA_COMMAND, JSON_RPC_COMMAND, PATH_OPTION_NAME, OPTION_OUTPUT_DIR)
 				);
 			}
 		};
@@ -152,7 +153,7 @@ import lombok.extern.slf4j.Slf4j;
 	private void writeResponse(String outputPath, List<JsonRpc2Response> responses) {
 		File newFile = new File(outputPath);
 		try (PrintStream out = new PrintStream(new FileOutputStream(newFile))) {
-			out.print(objectMapper.writeValueAsString(responses.size() == 1 ? responses.get(0) : responses));
+			out.print(objectMapper.writeValueAsString(responses.size() == 1 ? responses.getFirst() : responses));
 		} catch (IOException e) {
 			log.error("Error while writing response to file '{}'", outputPath, e);
 			throw JsonRpcCommandException.of(e.getMessage(), outputPath);
@@ -168,7 +169,7 @@ import lombok.extern.slf4j.Slf4j;
 		}
 
 		outputDir.mkdirs();
-		return String.format("%s/output-%s", outputDir.getCanonicalPath(), file.getName());
+		return "%s/output-%s".formatted(outputDir.getCanonicalPath(), file.getName());
 	}
 
 	private Stream<File> getAllFiles(File file) {

@@ -42,11 +42,11 @@ public class WrongConfigurationMessage extends ConfigurationMessage {
 
 	public static final Set<ConfigurationMessage> EXISTING_WARNINGS = new HashSet<>();
 
-	protected String getTitle() {
+	@Override protected String getTitle() {
 		return "Configuration issue";
 	}
 
-	protected String getSubtitle() {
+	@Override protected String getSubtitle() {
 		return "Whats wrong:";
 	}
 

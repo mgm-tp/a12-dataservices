@@ -56,7 +56,7 @@ public class MigrationRunnerDuplicatesIT extends AbstractMigrationIT {
 		migrationRunner.migrate();
 		List<MigrationStepEntity> executedSteps = migrationStepRepository.findAll();
 
-		MatcherAssert.assertThat("Task Name", executedSteps, Matchers.hasSize(7));
+		MatcherAssert.assertThat("Task Name", executedSteps, Matchers.hasSize(8));
 	}
 
 }

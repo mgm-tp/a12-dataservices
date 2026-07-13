@@ -32,24 +32,26 @@
 package com.mgmtp.a12.dataservices.query.validation.internal;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Component;
 
-import com.mgmtp.a12.dataservices.authorization.AuthConstants;
 import com.mgmtp.a12.dataservices.authorization.ModelPermissionEvaluator;
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
+import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.model.persistence.IModelLoader;
 import com.mgmtp.a12.dataservices.query.ConstraintAware;
+import com.mgmtp.a12.dataservices.query.DirectFieldOrder;
 import com.mgmtp.a12.dataservices.query.LinkAware;
 import com.mgmtp.a12.dataservices.query.Order;
+import com.mgmtp.a12.dataservices.query.RelationshipOrder;
 import com.mgmtp.a12.dataservices.query.QueryContext;
 import com.mgmtp.a12.dataservices.query.TargetDocumentModelAware;
 import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
+import com.mgmtp.a12.dataservices.query.constraint.internal.UnknownOperator;
 import com.mgmtp.a12.dataservices.query.internal.QueryVisitor;
 import com.mgmtp.a12.dataservices.query.internal.QueryWalker;
 import com.mgmtp.a12.dataservices.query.projection.internal.ExportCddCsvProjectionImplementation;
@@ -76,6 +78,7 @@ import lombok.extern.slf4j.Slf4j;
 	private final LinkAwareValidator linkAwareValidator;
 	private final IModelLoader<RelationshipModel> relationshipModelLoader;
 	private final FieldsValidator fieldsValidator;
+	private final OrderValidator orderValidator;
 
 	/**
 	 * Validates the query structure, paging, sorting and members (topology ones as well as operators).
@@ -90,7 +93,7 @@ import lombok.extern.slf4j.Slf4j;
 		ValidationResult result = new ValidationResult();
 		validateStructure(queryRoot, context, result, validationEnabled);
 		validatePaging(queryRoot, result, validationEnabled);
-		validateSorting(queryRoot, result, validationEnabled);
+		validateSorting(queryRoot, context, result, validationEnabled);
 		validateMembers(queryRoot, context, result, validationEnabled);
 		log.debug("Query validation took {}.", stopWatch.formatTime());
 		return result;
@@ -157,6 +160,7 @@ import lombok.extern.slf4j.Slf4j;
 	 * Existence of models in TargetDocumentModelAware members must be tested and also
 	 * accessibility by the current user. QueryRootValidator and QueryLinkValidator are responsible for
 	 * this.
+	 * If access to the `targetDocumentModel` is denied, the validation process is interrupted, and an `AccessDeniedException` is thrown.
 	 */
 	private void validateTargetDocumentAware(TargetDocumentModelAware targetDocumentModelAware, @NonNull String[] path, ValidationResult result,
 		boolean validationEnabled) {
@@ -169,12 +173,15 @@ import lombok.extern.slf4j.Slf4j;
 					result.addResult(ValidationItem.valid(ArrayUtils.add(path, TARGET_DOCUMENT_MODEL_FIELD_NAME), "TargetDocumentModel is not required"));
 				}
 			} else {
-				if (!documentModelPermissionEvaluator.hasModelReadPermission(dm)) {
-					result.addResult(ValidationItem.invalid(ArrayUtils.add(path, TARGET_DOCUMENT_MODEL_FIELD_NAME), AuthConstants.ACCESS_DENIED));
-				} else {
-					result.addResult(ValidationItem.valid(ArrayUtils.add(path, TARGET_DOCUMENT_MODEL_FIELD_NAME),
-						"TargetDocumentModelAware with model %s is valid".formatted(dm)));
+				try {
+					// A possible `AccessDeniedException` is thrown, and by this, the validation process is interrupted to reveal no further information to the client.
+					documentModelPermissionEvaluator.checkModelReadPermission(dm);
+				} catch (NotFoundException nfe) {
+					result.addResult(
+						ValidationItem.invalid(ArrayUtils.add(path, TARGET_DOCUMENT_MODEL_FIELD_NAME), "Target document model [%s] not found.".formatted(dm)));
 				}
+				result.addResult(ValidationItem.valid(ArrayUtils.add(path, TARGET_DOCUMENT_MODEL_FIELD_NAME),
+					"TargetDocumentModelAware with model %s is valid".formatted(dm)));
 			}
 		}
 	}
@@ -200,17 +207,32 @@ import lombok.extern.slf4j.Slf4j;
 
 	/**
 	 * If sorting is present, we have to check for mandatory properties.
+	 * This includes basic validation (e.g., ignoreCase presence) and delegates to
+	 * `OrderValidator` for comprehensive sorting validation including relationship orders.
 	 */
-	private static void validateSorting(QueryRoot queryRoot, ValidationResult result, boolean validationEnabled) {
-		if (validationEnabled && CollectionUtils.isNotEmpty(queryRoot.getSort()) && ignoreCaseIsMissing(queryRoot.getSort())) {
-			result.addResult(ValidationItem.invalid(new String[] { "sorting" }, "The property ignoreCase must not be null in a sort specification"));
+	private void validateSorting(QueryRoot queryRoot, QueryContext context, ValidationResult result, boolean validationEnabled) {
+		if (validationEnabled && CollectionUtils.isNotEmpty(queryRoot.getSort())) {
+			List<Order> sort = queryRoot.getSort();
+			for (int i = 0; i < sort.size(); i++) {
+				validateIgnoreCase(sort.get(i), new String[] { "sort", String.valueOf(i) }, result);
+			}
+
+			// Delegate to OrderValidator for comprehensive validation including relationship orders
+			orderValidator.validateSorting(queryRoot, queryRoot.getTargetDocumentModel(), context, result);
 		}
 	}
 
-	private static boolean ignoreCaseIsMissing(List<Order> sort) {
-		return sort.stream()
-			.map(Order::ignoreCase)
-			.anyMatch(Objects::isNull);
+	private static void validateIgnoreCase(Order order, String[] path, ValidationResult result) {
+		if (order instanceof DirectFieldOrder dfo) {
+			String[] ignoreCasePath = ArrayUtils.add(path, "ignoreCase");
+			if (dfo.ignoreCase() == null) {
+				result.addResult(ValidationItem.invalid(ignoreCasePath, "The property ignoreCase must not be null in a sort specification"));
+			} else {
+				result.addResult(ValidationItem.valid(ignoreCasePath, "The property ignoreCase is properly set"));
+			}
+		} else if (order instanceof RelationshipOrder ro && ro.sortBy() != null) {
+			validateIgnoreCase(ro.sortBy(), ArrayUtils.add(path, "sortBy"), result);
+		}
 	}
 
 	/**
@@ -235,6 +257,11 @@ import lombok.extern.slf4j.Slf4j;
 	 */
 	void validateOperators(@NonNull ILogicOperator operator, String parentDocumentModel, @NonNull String[] path, @NonNull QueryContext context,
 		@NonNull ValidationResult result, boolean validationEnabled) {
+
+		if (operator instanceof UnknownOperator) {
+			result.addResult(ValidationItem.invalid(path, "Unknown query operator type."));
+			return;
+		}
 
 		if (validationEnabled) {
 			if (dataServicesCoreProperties.getQuery().getDisabledOperators().contains(context.getOperatorName(operator))) {

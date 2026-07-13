@@ -47,8 +47,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.client.cli.internal.AbstractCliIT;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -100,8 +100,8 @@ public class ModelGraphCommandIT extends AbstractCliIT {
 
 	@Test
 	public void modelGraphCommandToFile() throws IOException {
-		String filePath = String.format("%s/%s", customOutputDirPath, "ExampleModelGraph.json");
-		client.run(new DefaultApplicationArguments("model", "graph", String.format("--output=%s", filePath)));
+		String filePath = "%s/%s".formatted(customOutputDirPath, "ExampleModelGraph.json");
+		client.run(new DefaultApplicationArguments("model", "graph", "--output=%s".formatted(filePath)));
 		File createFile = new File(filePath);
 		Assert.assertTrue(customOutputFolder.exists());
 		Assert.assertTrue(createFile.exists());

@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
@@ -43,6 +44,7 @@ import org.hibernate.Session;
 import org.hibernate.query.NativeQuery;
 import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.mgmtp.a12.dataservices.AbstractDataServicesCoreTest;
@@ -52,7 +54,6 @@ import com.mgmtp.a12.dataservices.document.persistence.internal.AggregatedDocume
 import com.mgmtp.a12.dataservices.query.indexing.internal.DocumentSearchIndexBehaviour;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.DocumentModelFieldsIndexer;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.entity.jsonb.DocumentSearchEntity;
-import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.repository.LocalizedFieldsJpaRepository;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.repository.ModelFieldsJpaRepository;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.repository.jsonb.DocumentSearchJpaRepository;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.repository.searchtable.DocumentFieldsJpaRepository;
@@ -86,21 +87,23 @@ import static org.testng.Assert.assertListContainsObject;
 
 	private final DocumentModelUtils documentModelUtils = mock(DocumentModelUtils.class);
 	private final ModelFieldsJpaRepository modelFieldsJpaRepository = mock(ModelFieldsJpaRepository.class);
-	private final LocalizedFieldsJpaRepository localizedFieldsJpaRepository = mock(LocalizedFieldsJpaRepository.class);
 	private final EntityManager entityManager = mock(EntityManager.class);
-	private final SearchCustomizerRegistry searchCustomizerRegistry = mock(SearchCustomizerRegistry.class);
 
 	DocumentModelFieldsIndexer documentModelFieldsIndexer = spy(
-		new DocumentModelFieldsIndexer(documentModelUtils, iDocumentModelService, modelFieldsJpaRepository, localizedFieldsJpaRepository,
-			searchCustomizerRegistry, jsonMapper));
+		new DocumentModelFieldsIndexer(documentModelUtils, iDocumentModelService, modelFieldsJpaRepository, jsonMapper));
+	private final SearchCustomizerRegistry searchCustomizerRegistry = mock(SearchCustomizerRegistry.class);
 	DocumentSearchIndexBehaviour indexBehavior = spy(new DocumentSearchIndexBehaviour(aggregatedDocumentRepository, documentFieldsJpaRepository,
 		documentModelServiceFactory, dataSource, documentModelFieldsIndexer, documentServiceFactory, documentSearchJpaRepository, entityManager,
 		documentV2Serializer, searchCustomizerRegistry));
 
 	private final DocumentDeserializationConfig documentDeserializationConfig = DocumentDeserializationConfig.builder()
 		.format(DocumentSerializationConfig.Format.JSON)
-		.addTransientFields(dataServicesCoreProperties.getDocuments().getPersistTransientFields().isEnabled())
 		.build();
+
+	@BeforeMethod
+	public void resetMocks() {
+		Mockito.reset(documentFieldsJpaRepository, entityManager, documentSearchJpaRepository);
+	}
 
 	@Test
 	public void testJsonB() throws IOException {
@@ -108,17 +111,18 @@ import static org.testng.Assert.assertListContainsObject;
 		IDocumentModelSearchService documentModelSearchService = documentModelServiceFactory.createDocumentModelSearchService(
 			documentModelResolver.getDocumentModelById(ENUMS_IN_REPEATABLE_GROUPS_MODEL_NAME));
 
-		DocumentV2 doc = documentV2Serializer.deserializeV2(
-			new InputStreamReader(new ClassPathResource("/document/Contract_document.json").getInputStream()),
-			"Contract",
-			documentDeserializationConfig, n -> log.warn("{} [{}] - {}: {}", Instant.now(), n.getSeverity(), n.getSource(), n.getMessage()));
+		DocumentV2 doc =
+			documentV2Serializer.deserializeV2(
+				new InputStreamReader(new ClassPathResource("/document/Contract_document.json").getInputStream()),
+				"Contract",
+				documentDeserializationConfig, n -> log.warn("{} [{}] - {}: {}", Instant.now(), n.getSeverity(), n.getSource(), n.getMessage()));
 
 		doc = metadataUtils.createDocumentMetadata(doc, documentUtils.generateDocRef(doc),
 			UserConstants.ADMIN_USER, Instant.now(), null);
 
 		Session mockedSession = mock(Session.class);
 		when(entityManager.unwrap(Session.class)).thenReturn(mockedSession);
-		NativeQuery nativeQuery = mock(NativeQuery.class);
+		NativeQuery nativeQuery =  mock(NativeQuery.class);
 		when(nativeQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(nativeQuery);
 		when(nativeQuery.addSynchronizedEntityClass(DocumentSearchEntity.class)).thenReturn(nativeQuery);
 
@@ -130,6 +134,7 @@ import static org.testng.Assert.assertListContainsObject;
 			documentModelSearchService,
 			(a, b) -> 10001L
 		);
+
 
 		verify(documentFieldsJpaRepository, times(1)).saveAll(assertArg(fieldEntities -> {
 			AtomicInteger i = new AtomicInteger();
@@ -144,5 +149,110 @@ import static org.testng.Assert.assertListContainsObject;
 
 			assertEquals(i.get(), 24);
 		}));
+	}
+
+	/**
+	 * Verifies that the native SQL upsert operation for index updates is executed within the current Hibernate session.
+	 *
+	 * This test validates a critical transaction behavior: index updates must participate in the same transaction
+	 * as document updates. When a transaction rolls back, the index changes must also be rolled back together
+	 * with the document changes.
+	 *
+	 * The key verification points are:
+	 *
+	 * - The `EntityManager` is unwrapped to get the Hibernate `Session`
+	 * - Native SQL is executed via `session.createNativeQuery()`
+	 * - No separate transaction is started for index operations
+	 */
+	@Test(description = "Should execute upsert within current Hibernate session transaction")
+	public void shouldExecuteUpsertWithinTransaction() throws IOException {
+		// Given
+		IDocumentModelSearchService documentModelSearchService = documentModelServiceFactory.createDocumentModelSearchService(
+			documentModelResolver.getDocumentModelById(ENUMS_IN_REPEATABLE_GROUPS_MODEL_NAME));
+
+		DocumentV2 doc = documentV2Serializer.deserializeV2(
+			new InputStreamReader(new ClassPathResource("/document/Contract_document.json").getInputStream()),
+			"Contract",
+			documentDeserializationConfig, n -> log.warn("{} [{}] - {}: {}", Instant.now(), n.getSeverity(), n.getSource(), n.getMessage()));
+
+		doc = metadataUtils.createDocumentMetadata(doc, documentUtils.generateDocRef(doc),
+			UserConstants.ADMIN_USER, Instant.now(), null);
+
+		// Track whether session operations were called correctly
+		AtomicBoolean sessionUnwrapped = new AtomicBoolean(false);
+		AtomicBoolean nativeQueryCreated = new AtomicBoolean(false);
+
+		Session mockedSession = mock(Session.class);
+		when(entityManager.unwrap(Session.class)).thenAnswer(invocation -> {
+			sessionUnwrapped.set(true);
+			return mockedSession;
+		});
+
+		NativeQuery nativeQuery = mock(NativeQuery.class);
+		when(nativeQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(nativeQuery);
+		when(nativeQuery.addSynchronizedEntityClass(DocumentSearchEntity.class)).thenReturn(nativeQuery);
+
+		when(mockedSession.createNativeQuery(Mockito.anyString(), eq(Integer.class))).thenAnswer(invocation -> {
+			nativeQueryCreated.set(true);
+			return nativeQuery;
+		});
+
+		DataServicesDocument dataServicesDocument = dataServicesDocumentFactory.newDataServicesDocument(doc);
+
+		// When
+		indexBehavior.saveDocumentFields(dataServicesDocument,
+			documentModelSearchService,
+			(a, b) -> 10001L
+		);
+
+		// Then - verify the critical transaction participation behavior
+		// 1. EntityManager must be unwrapped to get Hibernate Session
+		verify(entityManager, times(1)).unwrap(Session.class);
+		assertEquals(sessionUnwrapped.get(), true, "EntityManager should have been unwrapped to get Session");
+
+		// 2. Native query must be created via the session (not a separate connection)
+		verify(mockedSession, times(1)).createNativeQuery(Mockito.anyString(), eq(Integer.class));
+		assertEquals(nativeQueryCreated.get(), true, "Native query should have been created via Session");
+
+		// 3. The native query uses executeUpdate(), which executes within the current transaction
+		verify(nativeQuery, times(1)).executeUpdate();
+
+		log.info("Verified that index update executes within current Hibernate session transaction");
+	}
+
+	/**
+	 * After removal of the localized_fields write path, the indexer must not
+	 * interact with `LocalizedFieldsJpaRepository` during model index operations.
+	 *
+	 * The absence of localized-fields writes is enforced by compilation: `LocalizedFieldsJpaRepository`
+	 * no longer exists. This test verifies the indexer completes successfully
+	 * without any localized-fields repository dependency.
+	 */
+	@Test(description = "indexer runs without localized fields repository dependency")
+	public void shouldCompleteIndexingSuccessfullyWhenLocalizedFieldsRepositoryIsRemoved() throws IOException {
+		// Given
+		IDocumentModelSearchService documentModelSearchService = documentModelServiceFactory.createDocumentModelSearchService(
+			documentModelResolver.getDocumentModelById(ENUMS_IN_REPEATABLE_GROUPS_MODEL_NAME));
+
+		DocumentV2 doc = documentV2Serializer.deserializeV2(
+			new InputStreamReader(new ClassPathResource("/document/Contract_document.json").getInputStream()),
+			"Contract",
+			documentDeserializationConfig,
+			n -> log.warn("{} [{}] - {}: {}", Instant.now(), n.getSeverity(), n.getSource(), n.getMessage()));
+
+		doc = metadataUtils.createDocumentMetadata(doc, documentUtils.generateDocRef(doc),
+			UserConstants.ADMIN_USER, Instant.now(), null);
+
+		Session mockedSession = mock(Session.class);
+		when(entityManager.unwrap(Session.class)).thenReturn(mockedSession);
+		NativeQuery nativeQuery = mock(NativeQuery.class);
+		when(nativeQuery.setParameter(Mockito.anyString(), Mockito.any())).thenReturn(nativeQuery);
+		when(nativeQuery.addSynchronizedEntityClass(DocumentSearchEntity.class)).thenReturn(nativeQuery);
+		when(mockedSession.createNativeQuery(Mockito.anyString(), eq(Integer.class))).thenReturn(nativeQuery);
+
+		DataServicesDocument dataServicesDocument = dataServicesDocumentFactory.newDataServicesDocument(doc);
+
+		// When: indexer runs to completion without error — localized fields write path has been removed
+		indexBehavior.saveDocumentFields(dataServicesDocument, documentModelSearchService, (a, b) -> 10001L);
 	}
 }

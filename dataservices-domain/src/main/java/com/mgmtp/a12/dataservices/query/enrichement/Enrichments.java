@@ -43,9 +43,11 @@ import java.util.function.Function;
 import com.mgmtp.a12.dataservices.query.LinkAware;
 import com.mgmtp.a12.dataservices.query.TargetDocumentModelAware;
 import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
+import com.mgmtp.a12.dataservices.query.enrichement.internal.FieldPathValidator;
 import com.mgmtp.a12.dataservices.query.internal.aggregation.RepeatableAggField;
 
 import lombok.Getter;
+
 
 /**
  * A class that holds query enrichment information.
@@ -67,6 +69,7 @@ public class Enrichments {
 	private final Map<String, String> modelLocales = new HashMap<>();
 	private final Map<LinkAware, String> sourceRoles = new IdentityHashMap<>();
 	private final Map<Object, String> targetDocumentModels = new IdentityHashMap<>();
+	private final Map<Object, String> relationshipOrderSourceRoles = new IdentityHashMap<>();
 	private final Map<String, Deque<RepeatableAggField>> repeatableAggFields = new HashMap<>();
 	@Getter private final Map<String, String> repeatableAggGroupAliases = new HashMap<>();
 
@@ -102,6 +105,7 @@ public class Enrichments {
 	 */
 	public void setFieldDescriptor(String fieldPath, FieldDescriptor fd) {
 		Objects.requireNonNull(fd, "field descriptor must not be null");
+		FieldPathValidator.validateFieldPath(fieldPath);
 		fieldEnrichments.put(fieldPath, fd);
 	}
 
@@ -112,6 +116,7 @@ public class Enrichments {
 	 * @return the descriptor for this field, never null.
 	 */
 	public FieldDescriptor getFieldDescriptor(String fieldPath) {
+		FieldPathValidator.validateFieldPath(fieldPath);
 		return fieldEnrichments.computeIfAbsent(fieldPath, k -> new FieldDescriptor());
 	}
 
@@ -157,6 +162,26 @@ public class Enrichments {
 	 */
 	public void setSourceRole(LinkAware input, String role) {
 		sourceRoles.put(input, role);
+	}
+
+	/**
+	 * Returns the source role associated with the given relationship order.
+	 *
+	 * @param order the relationship order; may be null.
+	 * @return the source role name; may be null if none is associated.
+	 */
+	public String getSourceRoleForRelationshipOrder(Object order) {
+		return relationshipOrderSourceRoles.get(order);
+	}
+
+	/**
+	 * Associates a source role with the given relationship order.
+	 *
+	 * @param order the relationship order; must not be null.
+	 * @param role the source role name; may be null to clear association.
+	 */
+	public void setSourceRoleForRelationshipOrder(Object order, String role) {
+		relationshipOrderSourceRoles.put(order, role);
 	}
 
 	/**

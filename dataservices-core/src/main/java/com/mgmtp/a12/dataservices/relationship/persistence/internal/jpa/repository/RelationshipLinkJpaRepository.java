@@ -37,6 +37,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -68,8 +69,7 @@ public interface RelationshipLinkJpaRepository extends JpaRepository<Relationshi
 		Pageable pageable
 	);
 
-	@Query(value =
-		"      SELECT link.id, "
+	@NativeQuery("      SELECT link.id, "
 			+ "       link.created_at, "
 			+ "       link.link_document_docref, "
 			+ "       link.relationship_model,"
@@ -91,8 +91,7 @@ public interface RelationshipLinkJpaRepository extends JpaRepository<Relationshi
 			+ "                    on o2.id = r2.id "
 			+ "WHERE link.relationship_model = :relationshipModel"
 			+ "     and r1.role_docref = :docRef"
-			+ "     and r1.role_name = :roleName",
-		nativeQuery = true)
+			+ "     and r1.role_name = :roleName")
 	Page<RelationshipLinkEntity> findByRelationshipModelAndRoleNameAndRoleDocRef(
 		@Param(value = "relationshipModel") String relationshipModel,
 		@Param(value = "roleName") String roleName,
@@ -100,8 +99,7 @@ public interface RelationshipLinkJpaRepository extends JpaRepository<Relationshi
 		Pageable pageable
 	);
 
-	@Query(value =
-		"      SELECT link.id, "
+	@NativeQuery("      SELECT link.id, "
 			+ "       link.created_at, "
 			+ "       link.link_document_docref, "
 			+ "       link.relationship_model,"
@@ -124,8 +122,7 @@ public interface RelationshipLinkJpaRepository extends JpaRepository<Relationshi
 			+ "WHERE link.relationship_model = :relationshipModel"
 			+ "     and r2.role_docref = :targetRoleDocRef"
 			+ "     and r1.role_docref = :sourceRoleDocRef"
-			+ "     and r1.role_name = :sourceRoleName",
-		nativeQuery = true)
+			+ "     and r1.role_name = :sourceRoleName")
 	Optional<RelationshipLinkEntity> findByRelationshipModelNameAndSourceRoleAndSourceRoleDocRefAndTargetRoleDocRef(
 		@Param("relationshipModel") String relationshipModelName,
 		@Param("sourceRoleName") String sourceRole,

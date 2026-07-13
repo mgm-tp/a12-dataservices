@@ -32,40 +32,27 @@
 package com.mgmtp.a12.dataservices;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.cache.CacheManager;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import workbench.WbManager;
-import workbench.db.CommitType;
-import workbench.db.ConnectionProfile;
-import workbench.db.TableDeleter;
-import workbench.db.TableIdentifier;
-import workbench.db.WbConnection;
-import workbench.db.importer.TableDependencySorter;
 
 @Slf4j
 public class TestEnvironmentCleaner {
 
-	private static final List<String> IGNORED_TABLES =
-		Arrays.asList("databasechangelog", "databasechangeloglock", "cs_databasechangelog", "cs_databasechangeloglock");
-	private static final AtomicLong INIT_COUNT = new AtomicLong();
-	private static final AtomicLong CLEAN_COUNT = new AtomicLong();
-	private static List<TableIdentifier> tablesToDelete = null;
-	private static List<TableIdentifier> contentStoreTablesToDelete = null;
-	private static CharSequence deleterScript = null;
-	private static CharSequence contentStoreDeleterScript = null;
+	private static final Set<String> IGNORED_TABLES =
+		Set.of("databasechangelog", "databasechangeloglock", "cs_databasechangelog", "cs_databasechangeloglock");
 
 	public void cleanUpTestEnvironment(final DataSource dataSource, final CacheManager cacheManager, final Optional<DataSource> contentStoreDataSource) {
 		StopWatch timer = StopWatch.createStarted();
@@ -84,14 +71,15 @@ public class TestEnvironmentCleaner {
 
 	public void cleanUpDatabase(final DataSource dataSource) {
 		StopWatch timer = StopWatch.createStarted();
-		WbManager.prepareForEmbedded();
 		try (Connection connection = dataSource.getConnection()) {
-			log.debug("Cleaning tables:\n{}", deleterScript);
-			final WbConnection wbCon = prepareConnection(connection);
-			final TableDeleter deleter = new TableDeleter(wbCon);
-			final List<TableIdentifier> tablesToDelete = getTablesToDelete(wbCon, deleter);
-
-			deleter.deleteTableData(tablesToDelete, false, false, false);
+			List<String> tables = collectTables(connection);
+			if (!tables.isEmpty()) {
+				String sql = "TRUNCATE TABLE " + String.join(", ", tables) + " CASCADE";
+				log.debug("Cleaning tables: {}", sql);
+				try (Statement stmt = connection.createStatement()) {
+					stmt.execute(sql);
+				}
+			}
 			log.info("cleanupDB: database cleaned in {}", timer);
 		} catch (final Exception e) {
 			log.error("Unable to clean-up database", e);
@@ -103,15 +91,15 @@ public class TestEnvironmentCleaner {
 			return;
 		DataSource contentStoreDataSource = contentStoreDataSourceOpt.get();
 		StopWatch timer = StopWatch.createStarted();
-		WbManager.prepareForEmbedded();
 		try (Connection connection = contentStoreDataSource.getConnection()) {
-			log.debug("Cleaning content store tables:\n{}", contentStoreDeleterScript);
-			final WbConnection wbCon = prepareConnection(connection);
-			final TableDeleter deleter = new TableDeleter(wbCon);
-			if (contentStoreTablesToDelete == null) {
-				prepareContentStoreData(wbCon, deleter);
+			List<String> tables = collectTables(connection);
+			if (!tables.isEmpty()) {
+				String sql = "TRUNCATE TABLE " + String.join(", ", tables) + " CASCADE";
+				log.debug("Cleaning content store tables: {}", sql);
+				try (Statement stmt = connection.createStatement()) {
+					stmt.execute(sql);
+				}
 			}
-			deleter.deleteTableData(contentStoreTablesToDelete, false, false, false);
 			log.info("cleanup content store DB: database cleaned in {}", timer);
 		} catch (final Exception e) {
 			log.error("Unable to clean-up content store database", e);
@@ -120,57 +108,33 @@ public class TestEnvironmentCleaner {
 
 	public void cleanUpCache(final CacheManager cacheManager) {
 		StopWatch timer = StopWatch.createStarted();
-		cacheManager.getCacheNames().stream()
-			.map(cacheManager::getCache)
-			.filter(Objects::nonNull)
-			.forEach(cache -> {
-				try {
-					// In case of different cache configuration don't fail.
-					cache.clear();
-				} catch (Exception ignored) {}
-			});
-		log.info("cleanupDB: caches cleaned in {}", timer);
-	}
-
-	/**
-	 * Prepare sorted table list for deletion.
-	 * Sorting of tables is eager operation, that's why we assure that tables are calculated and ordered only once per
-	 * application run.
-	 * Next time this method is called, return already prepared list.
-	 */
-	@NonNull private static List<TableIdentifier> getTablesToDelete(WbConnection wbCon, TableDeleter deleter) throws SQLException {
-		if (tablesToDelete == null) {
-			INIT_COUNT.addAndGet(1);
-			tablesToDelete = prepareTables(wbCon);
-			deleterScript = deleter.generateScript(tablesToDelete, CommitType.never, false, false);
+		try {
+			cacheManager.getCacheNames().stream()
+				.map(cacheManager::getCache)
+				.filter(Objects::nonNull)
+				.forEach(cache -> {
+					try {
+						// In case of different cache configuration don't fail.
+						cache.clear();
+					} catch (Exception ignored) {}
+				});
+			log.info("cleanupCache: caches cleaned in {}", timer);
+		} catch (Exception e) {
+			// Handle cases where the cache manager is not available (e.g., Hazelcast instance not active)
+			log.debug("Unable to clean up cache: {}", e.getMessage());
 		}
-		log.debug("Table cleaner initialized {} times, called {} times", INIT_COUNT.get(), CLEAN_COUNT.get());
-		return tablesToDelete;
 	}
 
-	/**
-	 * Prepare sorted table list for content store.
-	 * Sorting of tables is eager operation, that's why we assure that tables are calculated and ordered only once per
-	 * application run.
-	 * Next time this method is called, return already prepared list.
-	 */
-	@NonNull private static void prepareContentStoreData(WbConnection wbCon, TableDeleter deleter) throws SQLException {
-		contentStoreTablesToDelete = prepareTables(wbCon);
-		contentStoreDeleterScript = deleter.generateScript(contentStoreTablesToDelete, CommitType.never, false, false);
-	}
-
-	private static List<TableIdentifier> prepareTables(WbConnection wbCon) throws SQLException {
-		final TableDependencySorter sorter = new TableDependencySorter(wbCon);
-		sorter.setValidateTables(false);
-		return sorter.sortForDelete(
-			wbCon.getMetadata().getTableList().stream()
-				.filter(table -> !IGNORED_TABLES.contains(table.getObjectName().toLowerCase()))
-				.collect(Collectors.toList()), true);
-	}
-
-	@NonNull private static WbConnection prepareConnection(Connection connection) throws SQLException {
-		ConnectionProfile connectionProfile = new ConnectionProfile();
-		connectionProfile.setUrl(connection.getMetaData().getURL());
-		return new WbConnection("scripter", connection, connectionProfile);
+	private static List<String> collectTables(Connection connection) throws SQLException {
+		List<String> tables = new ArrayList<>();
+		try (ResultSet rs = connection.getMetaData().getTables(null, null, "%", new String[]{"TABLE"})) {
+			while (rs.next()) {
+				String name = rs.getString("TABLE_NAME");
+				if (!IGNORED_TABLES.contains(name.toLowerCase())) {
+					tables.add(name);
+				}
+			}
+		}
+		return tables;
 	}
 }

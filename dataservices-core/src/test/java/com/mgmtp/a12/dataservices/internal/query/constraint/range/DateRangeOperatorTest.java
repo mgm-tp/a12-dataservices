@@ -31,6 +31,7 @@
  */
 package com.mgmtp.a12.dataservices.internal.query.constraint.range;
 
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -101,6 +102,127 @@ import com.mgmtp.a12.dataservices.query.constraint.range.DateRangeOperator;
 				.from("2023-11-26")
 				.to("2023-12-24")
 				.build() },
+
+			/* TIMESTAMP RANGE ****************************************************************************************/
+			new Object[] { "Timestamp range", """
+	{
+	    "operator": "date_range",
+	    "field": "/RootGroup/SomeField",
+	    "value": "2023-11-26T14:54:45.000",
+	    "reverse": true
+	}
+	""", DateRangeOperator
+				.builder()
+				.field("/RootGroup/SomeField")
+				.value("2023-11-26T14:54:45.000")
+				.reverse(true)
+				.build() },
+
+			/* TIME RANGE ****************************************************************************************/
+			new Object[] { "Time range", """
+	{
+	    "operator": "date_range",
+	    "field": "/RootGroup/SomeField",
+	    "value": "14:54:45.000",
+	    "reverse": true
+	}
+
+	""", DateRangeOperator
+				.builder()
+				.field("/RootGroup/SomeField")
+				.value("14:54:45.000")
+				.reverse(true)
+				.build() },
+
+			/* DATE RANGE ****************************************************************************************/
+			new Object[] { "Date range", """
+	{
+	    "operator": "date_range",
+	    "field": "/RootGroup/SomeField",
+	    "value": "2023-11-26T14:54:45.000",
+	    "reverse": true
+	}
+	""", DateRangeOperator
+				.builder()
+				.field("/RootGroup/SomeField")
+				.value("2023-11-26T14:54:45.000")
+				.reverse(true)
+				.build() },
+
+			/* DATE RANGE ****************************************************************************************/
+			new Object[] { "Date range", """
+	{
+	    "operator": "date_range",
+	    "field": "/RootGroup/SomeField",
+	    "value": "2023-11-26",
+	    "reverse": true
+	}
+	""", DateRangeOperator
+				.builder()
+				.field("/RootGroup/SomeField")
+				.value("2023-11-26")
+				.reverse(true)
+				.build() },
+			/* DATE RANGE - ISO 8601 INTERVAL FORMAT *********************************************************/
+			new Object[] { "Date range with ISO 8601 interval value", """
+	{
+	    "operator": "date_range",
+	    "field": "/RootGroup/SomeField",
+	    "value": "2015-01-01/2020-12-31"
+	}
+	""", DateRangeOperator
+				.builder()
+				.field("/RootGroup/SomeField")
+				.value("2015-01-01/2020-12-31")
+				.build() },
+
+			/* DATE RANGE - Open interval (from only) *******************************************************/
+			new Object[] { "Date range with open interval (from only)", """
+	{
+	    "operator": "date_range",
+	    "field": "/RootGroup/SomeField",
+	    "value": "2015-01-01/"
+	}
+	""", DateRangeOperator
+				.builder()
+				.field("/RootGroup/SomeField")
+				.value("2015-01-01/")
+				.build() },
+
+			/* DATE RANGE - Open interval (to only) *********************************************************/
+			new Object[] { "Date range with open interval (to only)", """
+	{
+	    "operator": "date_range",
+	    "field": "/RootGroup/SomeField",
+	    "value": "/2020-12-31"
+	}
+	""", DateRangeOperator
+				.builder()
+				.field("/RootGroup/SomeField")
+				.value("/2020-12-31")
+				.build() }
 		};
+	}
+
+	@DataProvider public static Object[][] reverseTestProvider() {
+		return new Object[][] {
+			new Object[] {
+				"reverse is null", false,
+				DateRangeOperator.builder().build()
+			},
+			new Object[] {
+				"reverse is false", false,
+				DateRangeOperator.builder().reverse(false).build()
+			},
+			new Object[] {
+				"reverse is true", true,
+				DateRangeOperator.builder().reverse(true).build()
+			},
+		};
+	}
+
+	@Test(dataProvider = "reverseTestProvider")
+	public void isReverseShouldReturnCorrectBoolean(String description, boolean expected, DateRangeOperator dateRangeOperator) {
+		Assert.assertEquals(dateRangeOperator.isReverse(), expected);
 	}
 }

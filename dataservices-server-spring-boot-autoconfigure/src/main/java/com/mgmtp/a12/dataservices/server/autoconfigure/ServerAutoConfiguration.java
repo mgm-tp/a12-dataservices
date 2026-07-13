@@ -33,22 +33,15 @@ package com.mgmtp.a12.dataservices.server.autoconfigure;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mgmtp.a12.dataservices.configuration.internal.ConfigurationPropertiesData;
-import com.mgmtp.a12.dataservices.document.internal.KernelDocumentSerializer;
 import com.mgmtp.a12.dataservices.server.actuator.internal.ConfigurationEndpoint;
 import com.mgmtp.a12.dataservices.server.internal.NoCacheControlFilter;
-import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 
 /**
  * Auto-configuration support for REST server library.
@@ -72,21 +65,6 @@ import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 	 */
 	@Override public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new NoCacheControlFilter());
-	}
-
-	/**
-	 * Configures the primary {@link Jackson2ObjectMapperBuilder} with modules used by DataServices.
-	 * Includes Java Time, JDK8 support, and a custom serializer for {@link DocumentV2}.
-	 *
-	 * @param kernelDocumentSerializer serializer for kernel {@link DocumentV2}; must not be null.
-	 * @return the configured {@link Jackson2ObjectMapperBuilder}.
-	 */
-	@Bean @Primary public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder(KernelDocumentSerializer kernelDocumentSerializer) {
-		return new Jackson2ObjectMapperBuilder().modules(
-			new JavaTimeModule(),
-			new Jdk8Module(),
-			new SimpleModule().addSerializer(DocumentV2.class, kernelDocumentSerializer)
-		);
 	}
 
 	/**

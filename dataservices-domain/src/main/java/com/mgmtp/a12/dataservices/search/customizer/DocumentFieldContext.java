@@ -135,7 +135,7 @@ public interface DocumentFieldContext {
 	/**
 	 * Checks whether core field indexing has been skipped for the current field.
 	 *
-	 * @return {@code true} if core field indexing is skipped, {@code false} otherwise
+	 * @return `true` if core field indexing is skipped, `false` otherwise
 	 */
 	boolean isCoreFieldIndexingSkipped();
 }

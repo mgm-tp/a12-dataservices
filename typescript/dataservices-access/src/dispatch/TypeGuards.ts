@@ -32,6 +32,7 @@
 import { LoadAttachmentUrlJsonRpc2, LoadThumbnailUrlsJsonRpc2 } from "../Attachment/attachment.js";
 import {
 	AddDocumentJsonRpc2Response,
+	CheckUniquenessJsonRpc2Response,
 	GetDocumentJsonRpc2Response,
 	ModifyJsonRpc2Response
 } from "../Document/index.js";
@@ -66,6 +67,7 @@ export const TypeGuards = {
 	COPY_DOCUMENT: JsonRpc2Response.ok.isInstance,
 	GET_DOCUMENT: GetDocumentJsonRpc2Response.isInstance,
 	VALIDATE_DOCUMENT: JsonRpc2Response.ok.isInstance,
+	CHECK_UNIQUENESS: CheckUniquenessJsonRpc2Response.isInstance,
 	ADD_LINK: RelationshipJsonRpc2response.AddLinkJsonRpc2Response.isInstance,
 	MODIFY_LINK: JsonRpc2Response.ok.isInstance,
 	DELETE_LINK: JsonRpc2Response.ok.isInstance,

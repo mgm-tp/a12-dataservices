@@ -47,6 +47,7 @@ import javax.sql.DataSource;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Component;
 
@@ -56,7 +57,7 @@ import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties.Query
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.document.persistence.internal.AggregatedDocumentRepository;
 import com.mgmtp.a12.dataservices.exception.query.QueryIndexingException;
-import com.mgmtp.a12.dataservices.migration.internal.TransactionHandler;
+import com.mgmtp.a12.dataservices.internal.TransactionHandler;
 import com.mgmtp.a12.dataservices.model.ModelConstants;
 import com.mgmtp.a12.dataservices.model.persistence.IModelLoader;
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.repository.ModelHeaderJpaRepository;
@@ -110,8 +111,8 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.ExecutionPhase.
  * - Utility classes for model and document handling.
  * - Executor services to manage multithreaded indexing tasks.
  */
-@Slf4j
-@RequiredArgsConstructor
+@Slf4j @RequiredArgsConstructor
+@ConditionalOnProperty(name = "mgmtp.a12.dataservices.query.search-indexing.enabled", havingValue = "true", matchIfMissing = true)
 @Component public class DefaultQueryIndexManager implements QueryIndexManager {
 
 	private final DocumentFieldsJpaRepository documentFieldsJpaRepository;

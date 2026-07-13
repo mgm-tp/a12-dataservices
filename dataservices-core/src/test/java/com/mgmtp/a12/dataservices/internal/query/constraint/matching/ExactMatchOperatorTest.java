@@ -31,6 +31,8 @@
  */
 package com.mgmtp.a12.dataservices.internal.query.constraint.matching;
 
+import java.util.List;
+
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -55,7 +57,7 @@ import com.mgmtp.a12.dataservices.query.constraint.matching.ExactMatchOperator;
 				.field("/RootGroup/SomeField")
 				.value("any value")
 				.build() },
-			new Object[] { "ExactMatch", """
+			new Object[] { "ExactMatch case insensitive", """
 				{
 					"operator": "exact_match",
 					"field": "/RootGroup/SomeField",
@@ -67,7 +69,31 @@ import com.mgmtp.a12.dataservices.query.constraint.matching.ExactMatchOperator;
 				.field("/RootGroup/SomeField")
 				.value("any value")
 				.caseSensitive(false)
-				.build() }
+				.build() },
+			new Object[] { "ExactMatch with values list", """
+				{
+					"operator": "exact_match",
+					"field": "/RootGroup/SomeField",
+					"values": ["value1", "value2", "value3"],
+					"caseSensitive": true
+				}
+				""", ExactMatchOperator
+				.builder()
+				.field("/RootGroup/SomeField")
+				.values(List.of("value1", "value2", "value3"))
+				.build() },
+			new Object[] { "ExactMatch with single values list", """
+				{
+					"operator": "exact_match",
+					"field": "/RootGroup/SomeField",
+					"values": ["only one"],
+					"caseSensitive": true
+				}
+				""", ExactMatchOperator
+				.builder()
+				.field("/RootGroup/SomeField")
+				.values(List.of("only one"))
+				.build() },
 		};
 	}
 }

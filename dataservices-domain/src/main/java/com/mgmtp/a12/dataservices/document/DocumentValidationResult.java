@@ -31,6 +31,7 @@
  */
 package com.mgmtp.a12.dataservices.document;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -46,13 +47,14 @@ import lombok.NoArgsConstructor;
 @Getter @NoArgsConstructor @AllArgsConstructor @Builder
 public class DocumentValidationResult implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	@Serial private static final long serialVersionUID = 1L;
 
 	private String errorText;
 	private String errorCode;
 	private String messageType;
 	private String rulePath;
-	private List<String> referencedFields;
+	private List<String> referencedFieldsPointers;
 	private String severityType;
-	private String entityInstance;
+	private String errorFieldPointer;
+	private List<String> refOmissionErrorResponsiblePointers;
 }

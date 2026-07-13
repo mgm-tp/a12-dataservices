@@ -33,8 +33,9 @@ package com.mgmtp.a12.dataservices.rpc;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.common.LocalizedEntry;
 import com.mgmtp.a12.dataservices.common.exception.ErrorDetail;
 
@@ -48,12 +49,15 @@ import lombok.Data;
 @Data
 public class ExceptionDetail {
 
+	@JsonCreator
+	public ExceptionDetail() {}
+
 	private String level;
 	private LocalizedEntry title;
 	private LocalizedEntry description;
 	private ErrorDetail details;
 	private String source;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
 	private Instant timestamp;
 	private String logId;

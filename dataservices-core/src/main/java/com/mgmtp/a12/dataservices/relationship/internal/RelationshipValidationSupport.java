@@ -43,6 +43,7 @@ import com.mgmtp.a12.dataservices.document.DataServicesDocument;
 import com.mgmtp.a12.dataservices.document.DataServicesDocumentMetadata;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.document.persistence.internal.AggregatedDocumentRepository;
+import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.model.internal.DefaultModelTypeService;
 import com.mgmtp.a12.dataservices.model.persistence.IModelLoader;
 import com.mgmtp.a12.dataservices.relationship.RelationshipLink;
@@ -67,7 +68,8 @@ import lombok.RequiredArgsConstructor;
  * Providing support for validating relationship-related data.
  */
 @RequiredArgsConstructor
-public class RelationshipValidationSupport {
+public class RelationshipValidationSupport
+	implements com.mgmtp.a12.dataservices.relationship.validation.RelationshipValidationSupport {
 	private final IModelLoader<RelationshipModel> modelLoader;
 	private final AggregatedDocumentRepository aggregatedDocumentRepository;
 	private final DefaultModelTypeService modelTypeService;
@@ -76,7 +78,7 @@ public class RelationshipValidationSupport {
 		String modelVersion = relationshipModel.getHeader().getModelVersion();
 		if (!RelationshipModel.VERSION.equals(modelVersion)) {
 			throw new RelationshipVersionValidationException(
-				String.format("Validation of relationship model [%s] failed because it contains invalid version [%s]. Currently valid version is [%s]",
+				"Validation of relationship model [%s] failed because it contains invalid version [%s]. Currently valid version is [%s]".formatted(
 					relationshipModel.getHeader().getId(),
 					modelVersion,
 					RelationshipModel.VERSION));
@@ -136,6 +138,7 @@ public class RelationshipValidationSupport {
 
 	}
 
+	@Override
 	public void validateLink(LinkDescriptor linkDescriptor, DocumentReference linkDocRef) {
 		RelationshipModel model = modelLoader.loadModel(linkDescriptor.getRelationshipModel());
 		validateLinkCharacteristic(linkDescriptor);
@@ -182,7 +185,7 @@ public class RelationshipValidationSupport {
 			aggregatedDocumentRepository.getByDocumentReference(linkDocRef)
 				.map(DataServicesDocument::getMetadata)
 				.map(DataServicesDocumentMetadata::getDocRef)
-				.orElseThrow(() -> new NotFoundException("Link documentation " + linkDocRef + " not found"));
+				.orElseThrow(() -> new NotFoundException(ExceptionKeys.RELATIONSHIP_LINK_NOT_FOUND_ERROR_KEY, "Link documentation " + linkDocRef + " not found"));
 		}
 	}
 }

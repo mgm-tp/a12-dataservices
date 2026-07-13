@@ -32,11 +32,19 @@
 package com.mgmtp.a12.dataservices.constants;
 
 public interface DocumentModelConstants {
-	// Document Models Names
+	// Insurance domain models
 	String CONTRACT_CDM_MODEL = "ContractCDM";
 	String ANONYMIZED_BUSINESS_PARTNER_CDM_MODEL = "AnonymizedBusinessPartnerCDM";
-	String BUSINESS_PARTNER_LTD_MODEL = "BusinessPartnerLTD";
+
 	String BUSINESS_PARTNER_SUPER_MODEL = "BusinessPartnerSuper";
+	String BUSINESS_PARTNER_DOCUMENT_MODEL = "BusinessPartner";
+	String BUSINESS_PARTNER_LTD_MODEL = "BusinessPartnerLTD";
+	String CONTRACT_DOCUMENT_MODEL = "Contract";
+	String CONTRACT_AUTOMOTIVE_DOCUMENT_MODEL = "ContractAutomotive";
+	String ADDRESS_DOCUMENT_MODEL = "Address";
+	String COINSURED_ADDITIONAL_FIELDS_MODEL = "CoInsuredAdditionalFields";
+
+	// Product domain models
 	String CAMPAIGN_MODEL_NAME = "Campaign";
 	String PRODUCT_MODEL_NAME = "Product";
 	String DOMAIN_BUNDLE_MODEL_NAME = "DomainBundle";
@@ -44,20 +52,17 @@ public interface DocumentModelConstants {
 	String SUPER_TYPE_MODEL = "DateTestModel";
 	String SUBTYPE_MODEL2 = "DateTestSubType2";
 	String SUBTYPE_MODEL3 = "DateTestSubType3";
-	String CONTRACT_DOCUMENT_MODEL = "Contract";
 	String BUSINESS_PARTNER_INVALID_MODEL = "1BusinessPartner";
 	String BUSINESS_PARTNER_SUPER_INVALID_MODEL = "0BusinessPartnerSuper";
 	String SUBTYPE_MODEL1 = "DateTestSubType1";
-	String BUSINESS_PARTNER_CDM = "AnonymizedBusinessPartnerCDM";
-	String BUSINESS_PARTNER_DOCUMENT_MODEL = "BusinessPartner";
-	String COINSURED_ADDITIONAL_FIELDS_MODEL = "CoInsuredAdditionalFields";
-	String CONTRACT_AUTOMOTIVE_DOCUMENT_MODEL = "ContractAutomotive";
-	String ADDRESS_DOCUMENT_MODEL = "Address";
+
 	String BUSINESS_PARTNER_MULTIPLE_ATTACHMENT_IDS = "BusinessPartnerWithMultipleAttachmentIds";
 	String NATURAL_PERSON_CDM = "NaturalPersonCDM";
 	String NATURAL_PERSON_CDM_WRONG_NESTED_MODEL = NATURAL_PERSON_CDM + "WrongNestedModel";
 	String NATURAL_PERSON_CDM_WRONG_RM = NATURAL_PERSON_CDM + "WrongRm";
 	String NATURAL_PERSON_CDM_WRONG_CRD = NATURAL_PERSON_CDM + "WrongCrd";
+
+	String STATUS_FIELD_PATH = "ContractRoot/ChangeLog/Changes/Status";
 
 	interface FieldConstants {
 
@@ -66,7 +71,7 @@ public interface DocumentModelConstants {
 	}
 
 	interface SearchConstants {
-		 String EN_LOCALE = "en";
+		String EN_LOCALE = "en";
 	}
 
 }

@@ -51,6 +51,7 @@ import com.mgmtp.a12.kernel.md.document.apiV2.DocumentPointer;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.FieldInstanceV2;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.utils.IDocumentV2Visitor;
+import com.mgmtp.a12.kernel.md.rt.api.DocumentProcessingConfig;
 import com.mgmtp.a12.kernel.md.rt.api.IComputedFieldInstance;
 import com.mgmtp.a12.kernel.md.rt.api.IDocumentComputationResult;
 import com.mgmtp.a12.kernel.md.rt.api.IDocumentRtService;
@@ -71,6 +72,8 @@ public class KernelDocumentServiceTest extends AbstractDataServicesCoreTest {
 		service = new KernelDocumentService(
 			true,
 			List.of(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL),
+			Collections.emptyList(),
+			Collections.emptyList(),
 			List.of("model2"),
 			List.of(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL),
 			rtService,
@@ -86,6 +89,8 @@ public class KernelDocumentServiceTest extends AbstractDataServicesCoreTest {
 		new KernelDocumentService(
 			true,
 			Arrays.asList(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL, "model2"),
+			Collections.emptyList(),
+			Collections.emptyList(),
 			List.of("model2"),
 			Collections.emptyList(),
 			rtService,
@@ -152,13 +157,15 @@ public class KernelDocumentServiceTest extends AbstractDataServicesCoreTest {
 
 	@Test
 	public void testCompute_NoErrors() {
-		Mockito.when(document.getDocumentModelId()).thenReturn(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL);
 		IDocumentComputationResult computationResult = Mockito.mock(IDocumentComputationResult.class);
-		Mockito.when(rtService.compute(Mockito.eq(document), Mockito.any(Locale.class))).thenReturn(computationResult);
+		Mockito.when(rtService.compute(Mockito.eq(document), Mockito.any(DocumentProcessingConfig.class))).thenReturn(computationResult);
 		Mockito.when(computationResult.getComputedFieldInstancesWithErrors()).thenReturn(Collections.emptyList());
 		Mockito.when(computationResult.applyTo(document)).thenReturn(document);
 
-		DocumentV2 result = service.compute(document, locale);
+		KernelDocumentService spyService = Mockito.spy(service);
+		Mockito.doReturn(locale).when(spyService).resolveLocale(Mockito.any(), Mockito.any(), Mockito.anyBoolean());
+
+		DocumentV2 result = spyService.compute(document, locale);
 
 		Assert.assertEquals(result, document);
 	}
@@ -168,9 +175,9 @@ public class KernelDocumentServiceTest extends AbstractDataServicesCoreTest {
 		Mockito.when(document.getDocumentModelId()).thenReturn(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL);
 		IDocumentComputationResult computationResult = Mockito.mock(IDocumentComputationResult.class);
 		IComputedFieldInstance errorField = Mockito.mock(IComputedFieldInstance.class);
-		Mockito.when(errorField.getPath()).thenReturn("/Some/Field");
+		Mockito.when(errorField.pointer()).thenReturn(DocumentPointer.of("/Some/Field"));
 		Mockito.when(errorField.getErrorMessage()).thenReturn(null);
-		Mockito.when(rtService.compute(Mockito.eq(document), Mockito.any(Locale.class))).thenReturn(computationResult);
+		Mockito.when(rtService.compute(Mockito.eq(document), Mockito.any(DocumentProcessingConfig.class))).thenReturn(computationResult);
 		Mockito.when(computationResult.getComputedFieldInstancesWithErrors()).thenReturn(Collections.singletonList(errorField));
 		Mockito.when(computationResult.applyTo(document)).thenReturn(document);
 
@@ -180,7 +187,7 @@ public class KernelDocumentServiceTest extends AbstractDataServicesCoreTest {
 	@Test
 	public void testValidateFull() {
 		IDocumentValidationResult validationResult = Mockito.mock(IDocumentValidationResult.class);
-		Mockito.when(rtService.validateFull(Mockito.eq(document), Mockito.any(Locale.class))).thenReturn(validationResult);
+		Mockito.when(rtService.validateFull(Mockito.eq(document), Mockito.any(DocumentProcessingConfig.class))).thenReturn(validationResult);
 
 		KernelDocumentService spyService = Mockito.spy(service);
 		Mockito.doReturn(locale).when(spyService).resolveLocale(Mockito.any(), Mockito.any(), Mockito.anyBoolean());
@@ -193,7 +200,7 @@ public class KernelDocumentServiceTest extends AbstractDataServicesCoreTest {
 	@Test
 	public void testValidatePartially() {
 		IDocumentValidationResult validationResult = Mockito.mock(IDocumentValidationResult.class);
-		Mockito.when(rtService.validatePart(Mockito.eq(document), Mockito.anySet(), Mockito.any(Locale.class))).thenReturn(validationResult);
+		Mockito.when(rtService.validatePart(Mockito.eq(document), Mockito.anySet(), Mockito.any(DocumentProcessingConfig.class))).thenReturn(validationResult);
 
 		Mockito.doAnswer(invocation -> {
 			IDocumentV2Visitor visitor = invocation.getArgument(0);
@@ -216,16 +223,18 @@ public class KernelDocumentServiceTest extends AbstractDataServicesCoreTest {
 		IDocumentComputationResult compResult = Mockito.mock(IDocumentComputationResult.class);
 		IComputedFieldInstance errorField = Mockito.mock(IComputedFieldInstance.class);
 
-		Mockito.when(document.getDocumentModelId()).thenReturn(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL);
 		Mockito.when(document.getId()).thenReturn(Optional.of("docId"));
-		Mockito.when(errorField.getPath()).thenReturn("/Some/Field");
+		Mockito.when(errorField.pointer()).thenReturn(DocumentPointer.of("/Some/Field"));
 		Mockito.when(errorField.getErrorMessage()).thenReturn(null);
 		Mockito.when(compResult.getComputedFieldInstancesWithErrors()).thenReturn(List.of(errorField));
 		Mockito.when(compResult.applyTo((DocumentV2) Mockito.any())).thenReturn(document);
-		Mockito.when(rtService.compute((DocumentV2) Mockito.any(), Mockito.any(Locale.class))).thenReturn(compResult);
+		Mockito.when(rtService.compute(Mockito.any(DocumentV2.class), Mockito.any(DocumentProcessingConfig.class))).thenReturn(compResult);
+
+		KernelDocumentService spyService = Mockito.spy(service);
+		Mockito.doReturn(locale).when(spyService).resolveLocale(Mockito.any(), Mockito.any(), Mockito.anyBoolean());
 
 		try {
-			service.compute(document, locale);
+			spyService.compute(document, locale);
 			Assert.fail("Expected DocumentComputationException");
 		} catch (DocumentComputationException ex) {
 			assertTrue(

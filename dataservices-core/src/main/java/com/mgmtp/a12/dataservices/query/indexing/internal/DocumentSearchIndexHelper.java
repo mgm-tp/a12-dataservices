@@ -40,9 +40,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.mgmtp.a12.dataservices.exception.query.QueryIndexingException;
 import com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants;
 import com.mgmtp.a12.dataservices.utils.internal.DateFieldFormatter;
 import com.mgmtp.a12.dataservices.utils.internal.DateFragmentFieldFormatter;
@@ -66,6 +63,7 @@ import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelSearchService;
 import io.hypersistence.utils.hibernate.type.range.Range;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import tools.jackson.databind.node.ObjectNode;
 
 import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.ExecutionPhase.QUERY_INDEXING;
 import static com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper.getEffectiveFieldType;
@@ -91,25 +89,18 @@ public class DocumentSearchIndexHelper {
 	public static List<String> getColumnNames(String target) {
 		return target.equals(DocumentSearchIndexBehaviour.DOCUMENTS_TARGET) ?
 			List.of(
-				QueryGeneratorConstants.ColumnNames.MODEL_NAME_COLUMN_NAME,
-				QueryGeneratorConstants.ColumnNames.DOC_REF_COLUMN_NAME,
+				QueryGeneratorConstants.ColumnNames.MODEL_NAME_COLUMN_NAME, QueryGeneratorConstants.ColumnNames.DOC_REF_COLUMN_NAME,
 				QueryGeneratorConstants.ColumnNames.ORIGINAL_VALUE_COLUMN_NAME,
-				QueryGeneratorConstants.ColumnNames.VALUE_COLUMN_NAME,
-				QueryGeneratorConstants.ColumnNames.SEARCH_DATA_COLUMN_NAME)
+				QueryGeneratorConstants.ColumnNames.VALUE_COLUMN_NAME, QueryGeneratorConstants.ColumnNames.SEARCH_DATA_COLUMN_NAME)
 			:
 			List.of(
-				QueryGeneratorConstants.ColumnNames.MODEL_NAME_COLUMN_NAME,
-				QueryGeneratorConstants.ColumnNames.DOC_REF_COLUMN_NAME,
+				QueryGeneratorConstants.ColumnNames.MODEL_NAME_COLUMN_NAME, QueryGeneratorConstants.ColumnNames.DOC_REF_COLUMN_NAME,
 				QueryGeneratorConstants.ColumnNames.FIELD_NAME_COLUMN_NAME,
-				QueryGeneratorConstants.ColumnNames.REPETITIONS_COLUMN_NAME,
-				QueryGeneratorConstants.ColumnNames.FIELD_TYPE_ID_COLUMN_NAME,
-				QueryGeneratorConstants.ColumnNames.FIELD_TYPE_COLUMN_NAME,
-				QueryGeneratorConstants.ColumnNames.VALUE_COLUMN_NAME,
+				QueryGeneratorConstants.ColumnNames.REPETITIONS_COLUMN_NAME, QueryGeneratorConstants.ColumnNames.FIELD_TYPE_ID_COLUMN_NAME,
+				QueryGeneratorConstants.ColumnNames.FIELD_TYPE_COLUMN_NAME, QueryGeneratorConstants.ColumnNames.VALUE_COLUMN_NAME,
 				QueryGeneratorConstants.ColumnNames.TYPED_VALUE_COLUMN_NAME,
-				QueryGeneratorConstants.ColumnNames.NUMBER_VALUE_COLUMN_NAME,
-				QueryGeneratorConstants.ColumnNames.TIMESTAMP_VALUE_COLUMN_NAME,
-				QueryGeneratorConstants.ColumnNames.TS_RANGE_VALUE_COLUMN_NAME,
-				QueryGeneratorConstants.ColumnNames.SOURCE_COLUMN_NAME);
+				QueryGeneratorConstants.ColumnNames.NUMBER_VALUE_COLUMN_NAME, QueryGeneratorConstants.ColumnNames.TIMESTAMP_VALUE_COLUMN_NAME,
+				QueryGeneratorConstants.ColumnNames.TS_RANGE_VALUE_COLUMN_NAME, QueryGeneratorConstants.ColumnNames.SOURCE_COLUMN_NAME);
 	}
 
 	public static boolean isRepeatableGroup(IDocumentModelSearchService documentModelSearchService, String currentPath) {
@@ -163,11 +154,7 @@ public class DocumentSearchIndexHelper {
 						documentModelSearchService, rootNode, pointerRelativeToBase), enumValue));
 			}
 		});
-		try {
-			return DocumentSearchIndexBehaviour.OBJECT_MAPPER.writeValueAsString(rootNode);
-		} catch (JsonProcessingException e) {
-			throw new QueryIndexingException(QUERY_INDEXING, "Parsing root node failed", e);
-		}
+		return DocumentSearchIndexBehaviour.OBJECT_MAPPER.writeValueAsString(rootNode);
 	}
 
 	private static boolean isRangeAwareFieldType(IFieldType fieldType) {

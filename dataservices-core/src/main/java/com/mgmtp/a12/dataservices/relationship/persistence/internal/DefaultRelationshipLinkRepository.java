@@ -58,16 +58,18 @@ import com.mgmtp.a12.dataservices.relationship.persistence.internal.jpa.reposito
 import com.mgmtp.a12.dataservices.relationship.persistence.internal.jpa.repository.RelationshipRoleJpaRepository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import static com.mgmtp.a12.dataservices.relationship.internal.RelationshipSortConstants.ORDER_BY_ROLES_SORT_COLUMNS;
 
 @RequiredArgsConstructor
-@Repository public class DefaultRelationshipLinkRepository implements RelationshipLinkRepository {
+@Repository public class DefaultRelationshipLinkRepository
+	implements com.mgmtp.a12.dataservices.relationship.persistence.RelationshipLinkRepository {
 	private final RelationshipLinkJpaRepository relationshipLinkJpaRepository;
 	private final RelationshipRoleJpaRepository relationshipRoleJpaRepository;
-	private final EntityManager entityManager;
+	@PersistenceContext(unitName = "dsPersistenceUnit") private EntityManager entityManager;
 
 	@Override public RelationshipLink create(@NonNull RelationshipLink relationshipLink) {
 		return save(makeLinkEntity(relationshipLink));
@@ -158,7 +160,7 @@ import static com.mgmtp.a12.dataservices.relationship.internal.RelationshipSortC
 	}
 
 	@Override
-	public Page<RelationshipLinkEntity> findAllByRoleDocRef(@NonNull Collection<DocumentReference> documentReferences, Pageable pageable) {
+	public Page<? extends RelationshipLink> findAllByRoleDocRef(@NonNull Collection<DocumentReference> documentReferences, Pageable pageable) {
 		return relationshipLinkJpaRepository.findAllByRolesDocRefIn(documentReferences, pageable);
 	}
 
@@ -181,16 +183,16 @@ import static com.mgmtp.a12.dataservices.relationship.internal.RelationshipSortC
 
 		List<String> newOrder = reorderFunction.apply(roles.size());
 		Assert.isTrue(newOrder.size() == roles.size(),
-			String.format("Count of links to order (%s) doesn't match count of new ranks (%s)", roles.size(), newOrder.size()));
+			"Count of links to order (%s) doesn't match count of new ranks (%s)".formatted(roles.size(), newOrder.size()));
 
 		return relationshipRoleJpaRepository.saveAll(StreamUtils.zip(roles.stream(), newOrder.stream(), RelationshipRoleEntity::order)
 			.toList()).size();
 	}
 
 	@Transactional(readOnly = true)
-	public Optional<String> findComplementaryBoundaryOrder(@NonNull String relationshipModelName, @NonNull String sourceRole, @NonNull String targetRole,
+	public Optional<String> findComplementaryBoundaryOrder(@NonNull String relationshipModelName, @NonNull String targetRole,
 		@NonNull DocumentReference targetRoleDocRef) {
-		return (relationshipRoleJpaRepository.findComplementaryRoleOrder(relationshipModelName, sourceRole, targetRole, targetRoleDocRef)).stream()
+		return (relationshipRoleJpaRepository.findComplementaryRoleOrder(relationshipModelName, targetRole, targetRoleDocRef)).stream()
 			.findFirst();
 	}
 

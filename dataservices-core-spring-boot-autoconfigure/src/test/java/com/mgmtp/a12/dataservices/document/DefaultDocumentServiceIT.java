@@ -43,6 +43,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -66,7 +67,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.AttachmentTestFunctions;
 import com.mgmtp.a12.dataservices.AttachmentTestFunctions.Prepared2Attachments;
@@ -92,7 +92,6 @@ import com.mgmtp.a12.dataservices.relationship.spec.LinkDescriptor;
 import com.mgmtp.a12.dataservices.relationship.spec.LinkPosition;
 import com.mgmtp.a12.dataservices.relationship.spec.RelationshipLinkSpec;
 import com.mgmtp.a12.dataservices.relationship.spec.RelationshipRoleSpec;
-import com.mgmtp.a12.dataservices.rpc.query.PageSpec;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentUtils;
 import com.mgmtp.a12.dataservices.utils.internal.KernelUtils;
 import com.mgmtp.a12.kernel.md.document.apiV2.DocumentPointer;
@@ -101,9 +100,11 @@ import com.mgmtp.a12.kernel.md.document.apiV2.immutable.GroupInstanceV2;
 
 import jakarta.persistence.OptimisticLockException;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.JsonNode;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertThrows;
@@ -115,11 +116,12 @@ import static org.testng.Assert.assertTrue;
 @Slf4j
 public class DefaultDocumentServiceIT extends AbstractSpringContextIT {
 
+	public static final int DEFAULT_MAX_RESULTS = 10;
+
 	@Autowired private DefaultDocumentService documentService;
 	@Autowired private KernelDocumentService kernelDocumentService;
 	@Autowired private RelationshipLinkService relationshipLinkService;
 	@Autowired private PlatformTransactionManager transactionManager;
-
 
 	private DocumentReference docRefAddress;
 	private DocumentReference docRefBusinessPartner;
@@ -136,7 +138,8 @@ public class DefaultDocumentServiceIT extends AbstractSpringContextIT {
 			PathConstants.ADDRESS_DOCUMENT_MODEL_PATH
 		);
 
-		docRefAddress = documentFunctions.createDocumentFromFileAndGetDocRef(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL, PathConstants.DOCUMENTS_PATH + "Address.json");
+		docRefAddress =
+			documentFunctions.createDocumentFromFileAndGetDocRef(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL, PathConstants.DOCUMENTS_PATH + "Address.json");
 
 		docRefBusinessPartner = attachmentTestFunctions.prepareDocumentWith2AttachmentsV2()
 			.getDataServicesDocument().getMetadata().getDocRef();
@@ -160,9 +163,9 @@ public class DefaultDocumentServiceIT extends AbstractSpringContextIT {
 	@Test
 	public void testLoadForModel() {
 		List<DocumentReference> documentRefFound = documentService.loadForModel(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL,
-			PageRequest.of(PageSpec.NO_OFFSET, PageSpec.DEFAULT_MAX_RESULTS));
+			PageRequest.of(0, DEFAULT_MAX_RESULTS));
 		assertFalse(documentRefFound.isEmpty());
-		assertTrue(documentRefFound.size() <= PageSpec.DEFAULT_MAX_RESULTS);
+		assertTrue(documentRefFound.size() <= DEFAULT_MAX_RESULTS);
 		assertSame(documentRefFound.getFirst().getDocumentModelName(), DocumentModelConstants.ADDRESS_DOCUMENT_MODEL);
 	}
 
@@ -186,10 +189,10 @@ public class DefaultDocumentServiceIT extends AbstractSpringContextIT {
 				Assert.fail();
 			} catch (DocumentValidationException e) {
 				Assert.assertEquals(e.getDocumentValidationResults().size(), 3);
-				Assert.assertEquals(e.getDocumentValidationResults().get(0).getErrorText(), "The value is not allowed for the enumeration.");
+				Assert.assertEquals(e.getDocumentValidationResults().getFirst().getErrorText(), "The value is not allowed for the enumeration.");
 				Assert.assertEquals(e.getDocumentValidationResults().get(1).getErrorText(), "Internal Error: Name must be filled.");
 				Assert.assertEquals(e.getDocumentValidationResults().get(2).getErrorText(), "Internal Error: Industry must be filled.");
-				Assert.assertEquals(e.getDocumentValidationResults().get(0).getErrorCode(), "stringFalschesMuster");
+				Assert.assertEquals(e.getDocumentValidationResults().getFirst().getErrorCode(), "stringFalschesMuster");
 				Assert.assertEquals(e.getDocumentValidationResults().get(1).getErrorCode(), "ErrorR33");
 				Assert.assertEquals(e.getDocumentValidationResults().get(2).getErrorCode(), "ErrorR34");
 			}
@@ -201,7 +204,7 @@ public class DefaultDocumentServiceIT extends AbstractSpringContextIT {
 		String jsonDocument = resourceFunctions.loadResource(PathConstants.ATTACHMENT_PATH + "BusinessPartnerWithInlineAttachment-ImagePlaceholder.json");
 		InputStream unicornStream = resourceFunctions.loadResourceAsStream(PathConstants.DOCUMENTS_PATH + "unicorn.jpg");
 		String image = Base64.getEncoder().withoutPadding().encodeToString(IOUtils.toByteArray(unicornStream));
-		jsonDocument = String.format(jsonDocument, image, image.length());
+		jsonDocument = jsonDocument.formatted(image, image.length());
 		DocumentV2 document = documentSupport.convertJSONToDocument(DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL, new StringReader(jsonDocument));
 		DataServicesDocument savedDocument = documentService.create(document, null);
 		assertTrue(documentService.load(savedDocument.getMetadata().getDocRef()).isPresent());
@@ -320,7 +323,8 @@ public class DefaultDocumentServiceIT extends AbstractSpringContextIT {
 		documentParts.add(constructPart("/BusinessPartnerRoot/Attachment/mime_type", new int[] { 1, 3, 1 }, newMimeType3));
 		documentParts.add(constructPart("/BusinessPartnerRoot/Attachment/content", new int[] { 1, 3, 1 }, newContent3));
 
-		DocumentV2 partialModifyDocument = documentService.update(docRefBusinessPartner, documentParts, new Locale.Builder().setLanguage("en").build()).getKernelDocument();
+		DocumentV2 partialModifyDocument =
+			documentService.update(docRefBusinessPartner, documentParts, new Locale.Builder().setLanguage("en").build()).getKernelDocument();
 
 		// Check modified document
 		assertFieldExistsAndHasValue(partialModifyDocument, "/BusinessPartnerRoot/Name", new int[] { 1, 1 }, newName);
@@ -401,13 +405,13 @@ public class DefaultDocumentServiceIT extends AbstractSpringContextIT {
 			txTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
 			txTemplate.executeWithoutResult(status -> {
 				documentService.update(preparedDocument.getDataServicesDocument().getMetadata().getDocRef(), newDocument, null);
-				// Short artificial delay to increase likelihood of overlapping DB operations
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException ignored) {
-					Thread.currentThread().interrupt();
-				}
 			});
+			// Short artificial delay to increase likelihood of overlapping DB operations — outside transaction
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException ignored) {
+				Thread.currentThread().interrupt();
+			}
 			return null;
 		};
 
@@ -569,6 +573,74 @@ public class DefaultDocumentServiceIT extends AbstractSpringContextIT {
 		documentService.deleteAll(List.of(relationshipLink.getLinkDocumentDocRef()));
 	}
 
+	@Test(description = "Appends a new top-level repeatable group repetition when the last repetition index is the wildcard 0")
+	public void shouldAppendNewTopLevelGroupRepetition() {
+		final String attachmentPath = "/BusinessPartnerRoot/Attachment";
+		final Map<String, Object> groupValue = Map.of("original_filename", "appended.pdf", "internal_filename", "abc123");
+
+		DocumentPart appendPart = constructPart(attachmentPath, new int[] { 1, 0 }, groupValue);
+
+		DocumentV2 result = documentService.update(docRefBusinessPartner, List.of(appendPart), null).getKernelDocument();
+
+		assertGroupExists(result, attachmentPath, new int[] { 1, 3 }, true);
+		GroupInstanceV2 appended = result.group(KernelUtils.fromPathAndRepetitions(attachmentPath, new int[] { 1, 3 }));
+		assertNotNull(appended);
+	}
+
+	@Test(description = "Appends a group into a specific intermediate repeatable group identified by a concrete repetition index")
+	public void shouldAppendIntoSpecificIntermediateRepetition() {
+		final String attachmentPath = "/BusinessPartnerRoot/Attachment";
+		final Map<String, Object> groupValue = Map.of("original_filename", "second_appended.pdf", "internal_filename", "def456");
+
+		DocumentPart appendPart = constructPart(attachmentPath, new int[] { 1, 0 }, groupValue);
+
+		DocumentV2 result = documentService.update(docRefBusinessPartner, List.of(appendPart), null).getKernelDocument();
+
+		assertGroupExists(result, attachmentPath, new int[] { 1, 3 }, true);
+	}
+
+	@Test(description = "Replaces an existing repeatable group at concrete repetitions with the supplied group value")
+	public void shouldReplaceExistingGroup() {
+		final String attachmentPath = "/BusinessPartnerRoot/Attachment";
+		final String newFilename = "replaced.pdf";
+		final Map<String, Object> groupValue = Map.of("original_filename", newFilename, "internal_filename", "xyz789");
+
+		DocumentPart replacePart = constructPart(attachmentPath, new int[] { 1, 1 }, groupValue);
+
+		DocumentV2 result = documentService.update(docRefBusinessPartner, List.of(replacePart), null).getKernelDocument();
+
+		assertGroupExists(result, attachmentPath, new int[] { 1, 1 }, true);
+		assertFieldExistsAndHasValue(result, "/BusinessPartnerRoot/Attachment/original_filename", new int[] { 1, 1, 1 }, newFilename);
+	}
+
+	@Test(description = "Inserts a group at a new repetition index whose ancestor groups do not yet exist in the document")
+	public void shouldInsertGroupWhereAncestorsMissing() {
+		final String attachmentPath = "/BusinessPartnerRoot/Attachment";
+		final Map<String, Object> groupValue = Map.of("original_filename", "deep_insert.pdf", "internal_filename", "ghi012");
+
+		DocumentPart insertPart = constructPart(attachmentPath, new int[] { 1, 5 }, groupValue);
+
+		DocumentV2 result = documentService.update(docRefBusinessPartner, List.of(insertPart), null).getKernelDocument();
+
+		assertGroupExists(result, attachmentPath, new int[] { 1, 5 }, true);
+		assertFieldExistsAndHasValue(result, "/BusinessPartnerRoot/Attachment/original_filename", new int[] { 1, 5, 1 }, "deep_insert.pdf");
+	}
+
+	@Test(description = "Appends multiple parts addressing the same repeatable group in a single atomic update call")
+	public void shouldAppendMultiplePartsToSameRepeatableGroupAtomically() {
+		final String attachmentPath = "/BusinessPartnerRoot/Attachment";
+		final Map<String, Object> firstGroupValue = Map.of("original_filename", "batch_first.pdf", "internal_filename", "jkl345");
+		final Map<String, Object> secondGroupValue = Map.of("original_filename", "batch_second.pdf", "internal_filename", "mno678");
+
+		DocumentPart firstAppend = constructPart(attachmentPath, new int[] { 1, 0 }, firstGroupValue);
+		DocumentPart secondAppend = constructPart(attachmentPath, new int[] { 1, 0 }, secondGroupValue);
+
+		DocumentV2 result = documentService.update(docRefBusinessPartner, List.of(firstAppend, secondAppend), null).getKernelDocument();
+
+		assertGroupExists(result, attachmentPath, new int[] { 1, 3 }, true);
+		assertGroupExists(result, attachmentPath, new int[] { 1, 4 }, true);
+	}
+
 	private RelationshipLink createPartnerContractLink(DocumentReference partnerDocRef, DocumentReference contractDocRef) {
 		RelationshipRoleSpec partnerRole = new RelationshipRoleSpec(RelationshipModelConstants.RoleConstants.PARTNER_ROLE, partnerDocRef);
 		RelationshipRoleSpec contractRole = new RelationshipRoleSpec(RelationshipModelConstants.RoleConstants.CONTRACT_ROLE, contractDocRef);
@@ -576,8 +648,8 @@ public class DefaultDocumentServiceIT extends AbstractSpringContextIT {
 			new LinkDescriptor(RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL, Arrays.asList(contractRole, partnerRole),
 				LinkPosition.TOP);
 
-		JsonNode rootGroup = objectMapper.createObjectNode().put("Name", "TestName");
-		rootGroup = objectMapper.createObjectNode().set(DocumentModelConstants.FieldConstants.CO_INSURED_ADDITIONAL_FIELDS_ROOT, rootGroup);
+		JsonNode rootGroup = JACKSON_2_OBJECT_MAPPER.createObjectNode().put("Name", "TestName");
+		rootGroup = JACKSON_2_OBJECT_MAPPER.createObjectNode().set(DocumentModelConstants.FieldConstants.CO_INSURED_ADDITIONAL_FIELDS_ROOT, rootGroup);
 		RelationshipLinkSpec relationshipLinkSpec = linksFunctions.addLink(linkDescriptor, rootGroup);
 		return relationshipLinkService.load(relationshipLinkSpec.getId());
 	}

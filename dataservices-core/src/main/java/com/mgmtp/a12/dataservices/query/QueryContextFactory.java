@@ -32,11 +32,12 @@
 package com.mgmtp.a12.dataservices.query;
 
 import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Factory bean to create instances of {@link QueryContext}.
  */
-public interface QueryContextFactory {
+@OnlyForUsage public interface QueryContextFactory {
 
 	/**
 	 * Creates a new instance of {@link QueryContext} with an empty enrichments instance. Original query is set to null.

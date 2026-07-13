@@ -50,7 +50,7 @@ import lombok.Data;
 @Configuration public class ContentStoreClientProperties {
 
 	@Valid private ClientConfiguration configuration = new ClientConfiguration();
-	private Content content = new Content();
+	@Valid private Content content = new Content();
 
 	/**
 	 * @topic contentstore_client
@@ -62,6 +62,8 @@ import lombok.Data;
 		 * This is the Content Store remote URL that Data Services will use to communicate with the Content Store HTTP APIs.
 		 * Please note that if Content Store is running on a cluster, then the host should be the Load Balancer domain name or service name,
 		 * which Data Services can access within the intranet.
+		 *
+		 * @default `""`
 		 */
 		@NotBlank(message = "The content store server url must not be blank") private String remoteUrl = "";
 
@@ -75,17 +77,19 @@ import lombok.Data;
 	public static class Content {
 
 		/**
-		 * Base URL to use as prefix of content relative download URL.
-		 * If download URL is relative and this property is configured properly,
-		 * Content Store will concatenate this property with relative download URL to have a full download URL.
+		 * String prefix to prepend to relative content download URLs returned by standalone-mode Content Store.
+		 * The value is concatenated as-is to the relative URL path without any URL validation.
+		 * Any scheme is supported (for example HTTP).
+		 * When this property is empty, the relative URL is returned unchanged.
 		 *
 		 * E.g:
 		 *
-		 * - baseUrl = "http://localhost:8080"
+		 * - basePrefix = "http://localhost:8080"
 		 * - relativeUrl = "/cs/api/content/93ebef0f-b034-4547-afb9-2ab51ab314ba"
 		 * - expected downloadUrl = "http://localhost:8080/cs/api/content/93ebef0f-b034-4547-afb9-2ab51ab314ba"
 		 *
+		 * @default (empty)
 		 */
-		private String baseUrl;
+		private String basePrefix;
 	}
 }

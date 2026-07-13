@@ -48,11 +48,11 @@ import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
 import com.mgmtp.a12.dataservices.constants.PathConstants;
 import com.mgmtp.a12.dataservices.constants.RelationshipModelConstants;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
+import com.mgmtp.a12.dataservices.relationship.OffsetBasedPageRequest;
 import com.mgmtp.a12.dataservices.relationship.RelationshipLink;
 import com.mgmtp.a12.dataservices.relationship.internal.RelationshipSortConstants;
 import com.mgmtp.a12.dataservices.relationship.spec.RelationshipLinkSpec;
-import com.mgmtp.a12.dataservices.relationship.persistence.internal.RelationshipLinkRepository;
-import com.mgmtp.a12.dataservices.relationship.OffsetBasedPageRequest;
+import com.mgmtp.a12.dataservices.relationship.persistence.RelationshipLinkRepository;
 
 public class RpcDeferredConstraintsIT extends AbstractSpringContextIT {
 
@@ -86,9 +86,12 @@ public class RpcDeferredConstraintsIT extends AbstractSpringContextIT {
 		businessPartner3DocRef = documentFunctions.createDocumentFromFileAndGetDocRef(
 			DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL, PathConstants.RPC_DOCUMENTS_PATH + "BusinessPartner-1.json");
 
-		address1DocRef = documentFunctions.createDocumentFromFileAndGetDocRef(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL, PathConstants.RPC_DOCUMENTS_PATH + "Address-1.json");
-		address2DocRef = documentFunctions.createDocumentFromFileAndGetDocRef(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL, PathConstants.RPC_DOCUMENTS_PATH + "Address-2.json");
-		address3DocRef = documentFunctions.createDocumentFromFileAndGetDocRef(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL, PathConstants.RPC_DOCUMENTS_PATH + "Address-3.json");
+		address1DocRef = documentFunctions.createDocumentFromFileAndGetDocRef(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL,
+			PathConstants.RPC_DOCUMENTS_PATH + "Address-1.json");
+		address2DocRef = documentFunctions.createDocumentFromFileAndGetDocRef(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL,
+			PathConstants.RPC_DOCUMENTS_PATH + "Address-2.json");
+		address3DocRef = documentFunctions.createDocumentFromFileAndGetDocRef(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL,
+			PathConstants.RPC_DOCUMENTS_PATH + "Address-3.json");
 	}
 
 	/*
@@ -97,8 +100,7 @@ public class RpcDeferredConstraintsIT extends AbstractSpringContextIT {
 	@Test
 	public void addLinkBelowUpperLimit() throws Exception {
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "deferred_constraints/add_link_PartnerAddress_1-address.json");
-		request = String.format(
-			request,
+		request = request.formatted(
 			BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, businessPartner1DocRef, address1DocRef
 		);
 
@@ -120,8 +122,7 @@ public class RpcDeferredConstraintsIT extends AbstractSpringContextIT {
 	public void add2LinksAddressUpperLimitViolation() throws Exception {
 		try {
 			String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "deferred_constraints/add_link_PartnerAddress_2-addresses.json");
-			request = String.format(
-				request,
+			request = request.formatted(
 				BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, businessPartner1DocRef, address1DocRef,
 				BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, businessPartner1DocRef, address2DocRef
 			);
@@ -130,9 +131,10 @@ public class RpcDeferredConstraintsIT extends AbstractSpringContextIT {
 		} catch (RpcException e) {
 			OperationError operationError = e.getOperationError();
 			Assert.assertEquals(operationError.getShortMessage().getDefaultMessage(), "Upper Limit Reached");
-			Assert.assertEquals(
-				operationError.getLongMessage().getDefaultMessage(),
-				"Upper limit reached for role [" + RelationshipModelConstants.RoleConstants.ADDRESS_ROLE + "] in relationship model [" + BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT + "]");
+			Assert.assertTrue(
+				operationError.getLongMessage().getDefaultMessage()
+					.contains("Upper limit reached for role [%s] in relationship model [%s]. Document ["
+					.formatted(RelationshipModelConstants.RoleConstants.ADDRESS_ROLE, BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT)));
 
 			checkEntityRelation(BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, businessPartner1DocRef, RelationshipModelConstants.RoleConstants.PARTNER_ROLE, 0);
 			checkEntityRelation(BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, address1DocRef, RelationshipModelConstants.RoleConstants.ADDRESS_ROLE, 0);
@@ -149,19 +151,21 @@ public class RpcDeferredConstraintsIT extends AbstractSpringContextIT {
 		try {
 			String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "deferred_constraints/add_link_PartnerAddress_1-address.json");
 			for (int i = 0; i < upperLimit + 1; i++) {
-				String req = String.format(
-						request,
-						BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, documentFunctions.createDocumentFromFileAndGetDocRef(DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL, PathConstants.RPC_DOCUMENTS_PATH + "BusinessPartner-1.json"), address1DocRef
-					);
-					sendRpcRequest(req);
+				String req = request.formatted(
+					BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT,
+					documentFunctions.createDocumentFromFileAndGetDocRef(DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL,
+						PathConstants.RPC_DOCUMENTS_PATH + "BusinessPartner-1.json"), address1DocRef
+				);
+				sendRpcRequest(req);
 			}
 			Assert.fail("Exception should be thrown!");
 		} catch (RpcException e) {
 			OperationError operationError = e.getOperationError();
 			Assert.assertEquals(operationError.getShortMessage().getDefaultMessage(), "Upper Limit Reached");
-			Assert.assertEquals(
-				operationError.getLongMessage().getDefaultMessage(),
-				"Upper limit reached for role [" + RelationshipModelConstants.RoleConstants.PARTNER_ROLE + "] in relationship model [" + BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT + "]");
+			Assert.assertTrue(
+				operationError.getLongMessage().getDefaultMessage()
+					.contains("Upper limit reached for role [%s] in relationship model [%s]. Document ["
+						.formatted(RelationshipModelConstants.RoleConstants.PARTNER_ROLE,BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT)));
 
 			checkEntityRelation(BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, address1DocRef, RelationshipModelConstants.RoleConstants.ADDRESS_ROLE, upperLimit);
 		}
@@ -173,8 +177,7 @@ public class RpcDeferredConstraintsIT extends AbstractSpringContextIT {
 	@Test
 	public void add3LinksOverUpperLimitWithUnbounded() throws Exception {
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "deferred_constraints/add_link_PartnerAddress_3-addresses.json");
-		request = String.format(
-			request,
+		request = request.formatted(
 			BUSINESS_PARTNER_ADDRESS_RM, businessPartner1DocRef, address1DocRef,
 			BUSINESS_PARTNER_ADDRESS_RM, businessPartner1DocRef, address2DocRef,
 			BUSINESS_PARTNER_ADDRESS_RM, businessPartner1DocRef, address3DocRef
@@ -185,7 +188,7 @@ public class RpcDeferredConstraintsIT extends AbstractSpringContextIT {
 			.toList();
 
 		Assert.assertEquals(addResponseObject.size(), 3);
-		LinkTestUtils.assertPartnerAddressLinkRef(BUSINESS_PARTNER_ADDRESS_RM, addResponseObject.get(0));
+		LinkTestUtils.assertPartnerAddressLinkRef(BUSINESS_PARTNER_ADDRESS_RM, addResponseObject.getFirst());
 		LinkTestUtils.assertPartnerAddressLinkRef(BUSINESS_PARTNER_ADDRESS_RM, addResponseObject.get(1));
 		LinkTestUtils.assertPartnerAddressLinkRef(BUSINESS_PARTNER_ADDRESS_RM, addResponseObject.get(2));
 
@@ -196,27 +199,24 @@ public class RpcDeferredConstraintsIT extends AbstractSpringContextIT {
 	}
 
 	/*
-	 * Constraints are checked after all requests are executed 
+	 * Constraints are checked after all requests are executed
 	 * => add links above limit is possible if supernumerous links are removed within same request
 	 */
-	@Test
 	@Transactional
-	public void deferredConstraintsCheckAfterAddLink() throws Exception {
+	@Test public void deferredConstraintsCheckAfterAddLink() throws Exception {
 		// SETUP -> limits are not broken but additional add would violate constraints
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "deferred_constraints/add_link_PartnerAddress_1-address.json");
-		request = String.format(
-			request,
+		request = request.formatted(
 			BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, businessPartner1DocRef, address1DocRef
 		);
 		sendRpcRequest(request);
 
 		request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "deferred_constraints/add_link_PartnerAddress_1-address.json");
-		request = String.format(
-			request,
+		request = request.formatted(
 			BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, businessPartner2DocRef, address1DocRef
 		);
-		sendRpcRequest(request);		
-		
+		sendRpcRequest(request);
+
 		List<? extends RelationshipLink> existingLinkIds = relationshipLinkRepository.findByRelationshipModelNameAndSource(
 			BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT,
 			RelationshipModelConstants.RoleConstants.ADDRESS_ROLE,
@@ -224,14 +224,13 @@ public class RpcDeferredConstraintsIT extends AbstractSpringContextIT {
 			OffsetBasedPageRequest.unpaged()
 		).getContent();
 
-		RelationshipLink relationshipLinkEntity = existingLinkIds.get(0);
+		RelationshipLink relationshipLinkEntity = existingLinkIds.getFirst();
 		RelationshipLink relationshipLinkEntity1 = existingLinkIds.get(1);
 		DocumentReference partner1 = relationshipLinkEntity.getRoles().get(RelationshipModelConstants.RoleConstants.PARTNER_ROLE).getDocRef();
 		DocumentReference partner2 = relationshipLinkEntity1.getRoles().get(RelationshipModelConstants.RoleConstants.PARTNER_ROLE).getDocRef();
 
 		request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "deferred_constraints/add_1_addresses_remove_1_address_exchange_1_address.json");
-		request = String.format(
-			request,
+		request = request.formatted(
 			BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, partner2, address2DocRef,
 			BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, businessPartner3DocRef, address2DocRef,
 			BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, partner1, address1DocRef, relationshipLinkEntity.getId(),
@@ -249,7 +248,7 @@ public class RpcDeferredConstraintsIT extends AbstractSpringContextIT {
 
 		Assert.assertEquals(successfulResponses.size(), 4);
 		Assert.assertEquals(addResponseObject.size(), 4);
-		LinkTestUtils.assertPartnerAddressLinkRef(BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, addResponseObject.get(0));
+		LinkTestUtils.assertPartnerAddressLinkRef(BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, addResponseObject.getFirst());
 		LinkTestUtils.assertPartnerAddressLinkRef(BUSINESS_PARTNER_ADDRESS_RM_UPPER_LIMIT, addResponseObject.get(1));
 
 		// Partner 1 left its address, address of partner 2 has been changed, address 2 is assigned to partner 2 and partner 3
@@ -266,8 +265,7 @@ public class RpcDeferredConstraintsIT extends AbstractSpringContextIT {
 	public void addDuplicatedLink() throws Exception {
 		try {
 			String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "deferred_constraints/add_link_PartnerAddress_2-addresses.json");
-			request = String.format(
-				request,
+			request = request.formatted(
 				BUSINESS_PARTNER_ADDRESS_RM, businessPartner1DocRef, address1DocRef,
 				BUSINESS_PARTNER_ADDRESS_RM, businessPartner1DocRef, address1DocRef
 			);
@@ -277,8 +275,9 @@ public class RpcDeferredConstraintsIT extends AbstractSpringContextIT {
 			OperationError operationError = e.getOperationError();
 			Assert.assertEquals(operationError.getShortMessage().getDefaultMessage(), "Duplicated link constraint violated");
 			Assert.assertEquals(operationError.getLongMessage().getDefaultMessage(),
-				String.format("Creation of the link of model [%s] between [%s/%s] and [%s/%s] violates duplication constraint", BUSINESS_PARTNER_ADDRESS_RM,
-					RelationshipModelConstants.RoleConstants.PARTNER_ROLE, businessPartner1DocRef, RelationshipModelConstants.RoleConstants.ADDRESS_ROLE, address1DocRef));
+				"Creation of the link of model [%s] between [%s/%s] and [%s/%s] violates duplication constraint".formatted(BUSINESS_PARTNER_ADDRESS_RM,
+					RelationshipModelConstants.RoleConstants.PARTNER_ROLE, businessPartner1DocRef, RelationshipModelConstants.RoleConstants.ADDRESS_ROLE,
+					address1DocRef));
 			checkEntityRelation(BUSINESS_PARTNER_ADDRESS_RM, businessPartner1DocRef, RelationshipModelConstants.RoleConstants.PARTNER_ROLE, 0);
 			checkEntityRelation(BUSINESS_PARTNER_ADDRESS_RM, address1DocRef, RelationshipModelConstants.RoleConstants.ADDRESS_ROLE, 0);
 		}

@@ -55,7 +55,8 @@ import lombok.SneakyThrows;
 	"spring.datasources.dataservices.embedded-postgres.enabled=true",
 	"spring.datasources.contentstore.embedded-postgres.enabled=true",
 	"spring.datasources.dataservices.embedded-postgres.connect-config.autosave=always",
-	"spring.datasources.dataservices.embedded-postgres.locale-c-type=en_US.UTF-8"
+	"spring.datasources.dataservices.embedded-postgres.locale-c-type=en_US.UTF-8",
+	"spring.datasources.dataservices.embedded-postgres.locale-collate=en_US.UTF-8"
 })
 @ContextConfiguration(initializers = EmbeddedPostgresInitializer.class)
 @SpringBootTest
@@ -83,5 +84,6 @@ public class DSEmbeddedPostgresDatasourceConfigurationIT extends AbstractTestNGS
 			.anyMatch(portNumber -> portNumber == expectedPort));
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dsDataSource);
 		Assert.assertEquals((jdbcTemplate.queryForObject("SELECT datctype FROM pg_database WHERE datname = current_database()", String.class)), EN_US_UTF_8);
+		Assert.assertEquals((jdbcTemplate.queryForObject("SELECT datcollate FROM pg_database WHERE datname = current_database()", String.class)), EN_US_UTF_8);
 	}
 }

@@ -32,9 +32,10 @@
 package com.mgmtp.a12.dataservices.rpc;
 
 
+import java.io.Serial;
 import java.io.Serializable;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.common.anonymizing.internal.masking.Sensitive;
 
 import lombok.AllArgsConstructor;
@@ -50,7 +51,7 @@ import lombok.ToString;
 @Data @ToString @NoArgsConstructor @AllArgsConstructor
 public class JsonRpc2ResponseError implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	@Serial private static final long serialVersionUID = 1L;
 
 	/** Error code for malformed JSON payloads (parse error). JSON-RPC 2.0 value: -32700. */
 	public static final int PARSE_ERROR = -32700;

@@ -45,7 +45,7 @@ import lombok.experimental.SuperBuilder;
 /**
  * Aggregation function that computes the arithmetic mean of values of the specified field.
  *
- * Applies to numeric field types. Non-numeric input handling depends on the underlying storage and mapping. TODO A12S-6443: Clarify contract (uncertain behavior).
+ * Applies to numeric field types and participates in {@link com.mgmtp.a12.dataservices.query.fields.aggregation.IAggregationFunction}.
  * Participates in {@link com.mgmtp.a12.dataservices.query.fields.aggregation.IAggregationFunction} and is identified by {@link QueryAggregationFunction} name "avg".
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)

@@ -51,7 +51,6 @@ public class KernelConfiguration {
 	@Bean public DocumentDeserializationConfig documentJsonDeserializationConfig( ) {
 		return DocumentDeserializationConfig.builder()
 			.format(DocumentSerializationConfig.Format.JSON)
-			.addTransientFields(coreProperties.getDocuments().getPersistTransientFields().isEnabled())
 			.build();
 	}
 

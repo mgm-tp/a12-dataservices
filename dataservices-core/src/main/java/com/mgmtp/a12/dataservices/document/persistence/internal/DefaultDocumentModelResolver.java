@@ -38,14 +38,12 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.model.document.persistence.DocumentModelReadRepository;
 import com.mgmtp.a12.dataservices.model.internal.IInternalModelProvider;
-import com.mgmtp.a12.dataservices.model.internal.ModelCacheManager;
 import com.mgmtp.a12.kernel.md.facade.DocumentModelServiceFactory;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelResolver;
@@ -75,7 +73,7 @@ import lombok.extern.slf4j.Slf4j;
 		return Optional.of(documentModelName)
 			.map(documentModelReadRepository::readModel)
 			.orElseThrow(() -> new NotFoundException(ExceptionKeys.DOCUMENT_NOT_FOUND_ERROR_KEY,
-				String.format("DocumentModel %s is not available.", documentModelName)));
+			"DocumentModel %s is not available.".formatted(documentModelName)));
 	}
 
 	private Optional<IDocumentModel> getInternalModel(String documentModelName) {
@@ -88,8 +86,7 @@ import lombok.extern.slf4j.Slf4j;
 			.findAny();
 	}
 
-	@Cacheable(cacheResolver = ModelCacheManager.INSECURE_MODEL_CACHE_RESOLVER)
-	@Override public Optional<IDocumentModelSearchService> getDocumentModelSearchService(String documentModelId) {
+	@Override @NonNull public Optional<IDocumentModelSearchService> getDocumentModelSearchService(@NonNull String documentModelId) {
 		return Optional.of(documentModelServiceFactory.createDocumentModelSearchService(getDocumentModelById(documentModelId)));
 	}
 }

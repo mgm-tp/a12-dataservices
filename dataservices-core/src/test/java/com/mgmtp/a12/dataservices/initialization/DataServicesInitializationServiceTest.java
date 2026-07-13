@@ -44,6 +44,7 @@ import org.testng.annotations.Test;
 import com.mgmtp.a12.dataservices.AbstractDataServicesCoreTest;
 import com.mgmtp.a12.dataservices.constants.UserConstants;
 import com.mgmtp.a12.dataservices.initialization.events.DataServicesCustomInitializationEvent;
+import com.mgmtp.a12.dataservices.initialization.internal.BusinessModelInitializer;
 import com.mgmtp.a12.dataservices.initialization.internal.DataServicesInitializationService;
 import com.mgmtp.a12.dataservices.initialization.internal.JsonRpcInitializer;
 import com.mgmtp.a12.dataservices.query.indexing.QueryIndexManager;

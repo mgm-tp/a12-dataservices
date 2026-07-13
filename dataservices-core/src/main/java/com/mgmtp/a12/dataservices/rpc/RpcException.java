@@ -32,8 +32,12 @@
 package com.mgmtp.a12.dataservices.rpc;
 
 /**
- * Runtime exception representing an error during a remote procedure call (RPC).
- * Carries an {@link OperationError} with structured error details suitable for client responses.
+ * Runtime exception for RPC operations carrying structured `OperationError` details.
+ * Extends `RuntimeException` directly because RPC error payloads are already
+ * prepared for client consumption via `OperationError`. All other Data Services
+ * exceptions should extend `BaseException` instead.
+ * 
+ * @see OperationError for structured error details  
  */
 // TODO [A12S-6311] : we need an exception which doesn't extends from BaseException but ideally from our local exception
 public class RpcException extends RuntimeException {

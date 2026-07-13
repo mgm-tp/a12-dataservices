@@ -32,6 +32,7 @@
 package com.mgmtp.a12.dataservices.document.persistence.internal;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,6 +46,7 @@ import org.testng.annotations.Test;
 
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
+import com.mgmtp.a12.dataservices.exception.UniqueConstraintViolationException;
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
@@ -296,8 +298,56 @@ public class DefaultDocumentServiceCreatingTest extends AbstractDefaultDocumentS
 		} catch (DocumentValidationException e) {
 			Assert.assertNotNull(e.getErrorDetail());
 			Assert.assertEquals(e.getCode(), INVALID_INPUT_EXCEPTION_CODE);
-			Assert.assertEquals(e.getMessage(), String.format("Document is not valid:%n[%s]", mockedMessage));
+			Assert.assertEquals(e.getMessage(), "Document is not valid:%n[%s]".formatted(mockedMessage));
 		}
+	}
+
+	@Test(description = "Should invoke uniqueConstraintValidator.insert with the correct docRef after a successful create")
+	public void shouldInvokeUniqueConstraintInsertAfterSuccessfulCreate() {
+		DocumentReference documentReference = DocumentReference.builder()
+			.documentModelName(testModelName)
+			.documentId(UUID.randomUUID().toString())
+			.build();
+
+		DocumentV2 kernelDocument = loadDocumentV2(testModelName, DOCUMENT_FILENAME);
+
+		Mockito.when(modelHeaderRepository.findById(testModelName)).thenReturn(Optional.of(headerEntity));
+		Mockito.when(documentRepository.supports(any())).thenReturn(true);
+		Mockito.when(documentUtils.generateDocRef(kernelDocument)).thenReturn(documentReference);
+		Mockito.when(documentModelUtils.isAbstract(headerEntity)).thenReturn(false);
+		Mockito.when(kernelDocumentService.computeDocument(Mockito.any(DocumentV2.class), Mockito.eq(null)))
+			.then(AdditionalAnswers.returnsFirstArg());
+
+		defaultDocumentService.create(kernelDocument, null);
+
+		ArgumentCaptor<DocumentReference> docRefCaptor = ArgumentCaptor.forClass(DocumentReference.class);
+		Mockito.verify(uniqueConstraintValidator, Mockito.times(1))
+			.insert(Mockito.any(DocumentV2.class), docRefCaptor.capture(), Mockito.nullable(Locale.class));
+		Assert.assertEquals(docRefCaptor.getValue(), documentReference);
+	}
+
+	@Test(description = "Should propagate UniqueConstraintViolationException when a unique constraint is violated during create")
+	public void shouldPropagateUniqueConstraintViolationExceptionOnCreate() {
+		DocumentReference documentReference = DocumentReference.builder()
+			.documentModelName(testModelName)
+			.documentId(UUID.randomUUID().toString())
+			.build();
+
+		DocumentV2 kernelDocument = loadDocumentV2(testModelName, DOCUMENT_FILENAME);
+
+		Mockito.when(modelHeaderRepository.findById(testModelName)).thenReturn(Optional.of(headerEntity));
+		Mockito.when(documentRepository.supports(any())).thenReturn(true);
+		Mockito.when(documentUtils.generateDocRef(kernelDocument)).thenReturn(documentReference);
+		Mockito.when(documentModelUtils.isAbstract(headerEntity)).thenReturn(false);
+		Mockito.when(kernelDocumentService.computeDocument(Mockito.any(DocumentV2.class), Mockito.eq(null)))
+			.then(AdditionalAnswers.returnsFirstArg());
+		Mockito.doThrow(new UniqueConstraintViolationException("c1", testModelName))
+			.when(uniqueConstraintValidator).insert(Mockito.any(DocumentV2.class), Mockito.any(DocumentReference.class), Mockito.any());
+
+		Assert.assertThrows(UniqueConstraintViolationException.class, () -> defaultDocumentService.create(kernelDocument, null));
+
+		Mockito.verify(uniqueConstraintValidator, Mockito.times(1)).insert(any(), any(), any());
+		Mockito.verify(documentRepository, Mockito.never()).create(any());
 	}
 
 	void assertCreatedDocument(DocumentV2 documentV2) {

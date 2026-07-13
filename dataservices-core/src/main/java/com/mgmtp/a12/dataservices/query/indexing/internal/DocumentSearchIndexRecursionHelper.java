@@ -34,8 +34,8 @@ package com.mgmtp.a12.dataservices.query.indexing.internal;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 import com.mgmtp.a12.kernel.md.document.apiV2.DocumentPointer;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelSearchService;
 

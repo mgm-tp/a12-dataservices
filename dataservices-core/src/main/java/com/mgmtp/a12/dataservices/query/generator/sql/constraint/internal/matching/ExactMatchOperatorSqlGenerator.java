@@ -31,8 +31,10 @@
  */
 package com.mgmtp.a12.dataservices.query.generator.sql.constraint.internal.matching;
 
+import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -68,6 +70,7 @@ import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConst
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.JSONB_TYPE;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.OPENING_BRACKET;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.OPENING_CURLED_BRACKET;
+import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.OR_OPERATOR;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.SPACE;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.TEXT_DOUBLE_QUOTE;
 
@@ -78,45 +81,139 @@ public class ExactMatchOperatorSqlGenerator implements ILogicOperatorGenerator<E
 	private static final Set<String> TYPES_WITHOUT_QUOTES = Set.of(BOOLEN_FIELD_TYPE, CONFIRM_FIELD_TYPE);
 	private final DataServicesCoreProperties dataServicesCoreProperties;
 
+	/**
+	 * Renders a SQL condition for the given `ExactMatchOperator`.
+	 *
+	 * The generated SQL depends on the target field and the number of values:
+	 *
+	 * *Metadata fields* (docref, model reference) produce column equality checks:
+	 * [source,sql]
+	 * ----
+	 * -- single value
+	 * doc_ref = :p0
+	 *
+	 * -- multiple values
+	 * (doc_ref = :p0 OR doc_ref = :p1)
+	 * ----
+	 *
+	 * *JSONB containment* (single value, non-repeatable, case-sensitive, non-number, non-enum fields):
+	 * [source,sql]
+	 * ----
+	 * (target_document.original_value @> :p0 :: JSONB)
+	 * -- where :p0 = '{ "ContractRoot" : { "Name" : "Insurance"}}'
+	 * ----
+	 *
+	 * *Regex search* (multiple values, or repeatable/number/enum fields):
+	 * [source,sql]
+	 * ----
+	 * (target_document.search_data ~ :p0 AND target_document.search_data ~ :p1)
+	 * -- where :p0 = '~(?:Insurance|Finance)~/' and :p1 = '(?:^|~)/ContractRoot/Name~(?:Insurance|Finance)~/'
+	 * ----
+	 *
+	 * @param sb the StringBuilder to append the condition to
+	 * @param operator the exact match operator containing field, value/values, and case sensitivity
+	 * @param generatorContext the query generator context providing table aliases, enrichments, and parameter binding
+	 * @return the updated StringBuilder with the rendered SQL condition appended
+	 */
 	@Override public StringBuilder renderCondition(StringBuilder sb, ExactMatchOperator<?> operator, QueryGeneratorContext generatorContext) {
 
-		if (dataServicesCoreProperties.getQuery().getExactMatch().getMaxInputValueLength() < StringUtils.length(operator.getValue().toString())) {
-			throw new QueryInvalidInputException(QUERY_VALIDATION, INVALID_QUERY_ERROR_KEY, null)
-				.withAnonymityMessage("Please reduce the input value length to a value lower than %s for the %s operator.".formatted(
-					dataServicesCoreProperties.getQuery().getExactMatch().getMaxInputValueLength(),
-					operator.getOperator()));
+		List<String> allValues = getEffectiveValues(operator);
+
+		int maxInputValueLength = dataServicesCoreProperties.getQuery().getExactMatch().getMaxInputValueLength();
+		for (String v : allValues) {
+			if (maxInputValueLength < StringUtils.length(v)) {
+				throw new QueryInvalidInputException(QUERY_VALIDATION, INVALID_QUERY_ERROR_KEY, null)
+					.withAnonymityMessage("Please reduce the input value length to a value lower than %s for the %s operator.".formatted(
+						maxInputValueLength,
+						operator.getOperator()));
+			}
 		}
 
 		String field = operator.getField();
 		if (DocumentMetadataConstants.DOCREF_METADATA_PATH.equalsIgnoreCase(field)) {
-			return sb.append(
-				CoreSqlQueriesTemplate.generateEqualityCheck(DOC_REF_COLUMN_NAME,
-					SqlGeneratorHelpers.addParam(operator.getValue().toString(), generatorContext)));
+			return appendColumnInCondition(sb, DOC_REF_COLUMN_NAME, allValues, generatorContext);
 		} else if (DocumentMetadataConstants.MODEL_REFERENCE_PATH.equalsIgnoreCase(field)) {
-			return sb.append(CoreSqlQueriesTemplate.generateEqualityCheck(MODEL_NAME_COLUMN_NAME,
-				SqlGeneratorHelpers.addParam(String.valueOf(operator.getValue()), generatorContext)));
-		} else if (useJsonbContains(operator, generatorContext)) {
-			return appendJsonbContainsCondition(sb, operator, generatorContext);
+			return appendColumnInCondition(sb, MODEL_NAME_COLUMN_NAME, allValues, generatorContext);
+		} else if (allValues.size() == 1 && useJsonbContains(operator, generatorContext)) {
+			return appendJsonbContainsCondition(sb, operator, allValues.getFirst(), generatorContext);
 		} else {
-			return RegexSearchHelper.appendExactMatchCondition(sb, operator, generatorContext.getCurrentDocumentTableAlias(), generatorContext, dataServicesCoreProperties.getQuery().getExactMatch().getEnumerationValueMatch().isEnabled());
+			return RegexSearchHelper.appendExactMatchCondition(sb, operator, generatorContext.getCurrentDocumentTableAlias(), generatorContext);
 		}
 	}
 
-	private static StringBuilder appendJsonbContainsCondition(StringBuilder sb, ExactMatchOperator<?> operator, QueryGeneratorContext generatorContext) {
+	/**
+	 * Returns the effective list of string values from the operator: if `values` is provided, use that;
+	 * otherwise fall back to the single `value`.
+	 */
+	private static List<String> getEffectiveValues(ExactMatchOperator<?> operator) {
+		if (!CollectionUtils.isEmpty(operator.getValues())) {
+			return operator.getValues().stream().map(Object::toString).toList();
+		}
+		return List.of(operator.getValue().toString());
+	}
+
+	/**
+	 * Generates an OR-based equality condition for a column against multiple values, e.g.:
+	 * `(col = :p0 OR col = :p1)` for two values, or simply `col = :p0` for one value.
+	 */
+	private static StringBuilder appendColumnInCondition(StringBuilder sb, String columnName, List<String> values,
+		QueryGeneratorContext generatorContext) {
+
+		if (values.size() == 1) {
+			return sb.append(CoreSqlQueriesTemplate.generateEqualityCheck(columnName,
+				SqlGeneratorHelpers.addParam(values.getFirst(), generatorContext)));
+		}
+		sb.append(OPENING_BRACKET);
+		for (int i = 0; i < values.size(); i++) {
+			if (i > 0) {
+				sb.append(OR_OPERATOR);
+			}
+			sb.append(CoreSqlQueriesTemplate.generateEqualityCheck(columnName,
+				SqlGeneratorHelpers.addParam(values.get(i), generatorContext)));
+		}
+		sb.append(CLOSING_BRACKET);
+		return sb;
+	}
+
+	/**
+	 * Appends a JSONB containment condition using the PostgreSQL `@>` operator.
+	 *
+	 * Example rendered SQL for field `/ContractRoot/Name` with value `Insurance`:
+	 * [source,sql]
+	 * ----
+	 * (target_document.original_value @> :p0 :: JSONB)
+	 * -- where :p0 = '{ "ContractRoot" : { "Name" : "Insurance"}}'
+	 * ----
+	 */
+	private static StringBuilder appendJsonbContainsCondition(StringBuilder sb, ExactMatchOperator<?> operator, String effectiveValue,
+		QueryGeneratorContext generatorContext) {
 		sb.append(OPENING_BRACKET)
 			.append(generatorContext.getCurrentDocumentTableAlias()).append(DOT_JOINER).append(ORIGINAL_VALUE_COLUMN_NAME)
 			.append(CONTAINS_OPERATOR);
 		sb.append(SqlGeneratorHelpers.addParam(
-				createContainsExpression(operator, generatorContext.getEnrichments().getFieldDescriptor(operator.getField()).getFieldType()),
+				createContainsExpression(operator.getField(), effectiveValue, generatorContext.getEnrichments().getFieldDescriptor(operator.getField()).getFieldType()),
 				generatorContext))
 			.append(CAST_OPERATOR)
 			.append(JSONB_TYPE);
 		return sb.append(CLOSING_BRACKET);
 	}
 
-	private static String createContainsExpression(ExactMatchOperator<?> operator, String fieldType) {
-		String[] elements = operator.getField().replaceFirst(FORWARD_SLASH, "").split(FORWARD_SLASH);
-		// this generates a JSON object like {"Group":{"Field":"Value"}} from the field path /Group/Field plus the value
+	/**
+	 * Builds a nested JSON object expression from a field path and value, used as the right-hand side
+	 * of a JSONB `@>` containment check.
+	 *
+	 * Example for field `/ContractRoot/Name`, value `Insurance`, and a string field type:
+	 * ----
+	 * { "ContractRoot" : { "Name" : "Insurance"}}
+	 * ----
+	 *
+	 * For boolean/confirm types the value is unquoted:
+	 * ----
+	 * { "Settings" : { "Active" : true}}
+	 * ----
+	 */
+	private static String createContainsExpression(String field, String effectiveValue, String fieldType) {
+		String[] elements = field.replaceFirst(FORWARD_SLASH, "").split(FORWARD_SLASH);
 		StringBuilder sb = new StringBuilder();
 		for (String name : elements) {
 			sb
@@ -129,13 +226,13 @@ public class ExactMatchOperatorSqlGenerator implements ILogicOperatorGenerator<E
 				.append(COLON)
 				.append(SPACE);
 		}
-		sb.append(getJsonLiteral(operator, fieldType))
+		sb.append(getJsonLiteral(effectiveValue, fieldType))
 			.append(StringUtils.repeat(CLOSING_CURLED_BRACKET, elements.length));
 		return sb.toString();
 	}
 
-	private static String getJsonLiteral(ExactMatchOperator<?> operator, String fieldType) {
-		String value = StringEscapeUtils.escapeJson(operator.getValue().toString());
+	private static String getJsonLiteral(String effectiveValue, String fieldType) {
+		String value = StringEscapeUtils.escapeJson(effectiveValue);
 		return TYPES_WITHOUT_QUOTES.contains(fieldType) ? StringUtils.strip(value, TEXT_DOUBLE_QUOTE) : StringUtils.wrap(value, TEXT_DOUBLE_QUOTE);
 	}
 
@@ -148,7 +245,7 @@ public class ExactMatchOperatorSqlGenerator implements ILogicOperatorGenerator<E
 			return false;
 		}
 		// We can't use the @> operator for numbers as we don't know at this point if the number allows leading zeros or not
-		// We can't use it for enumerations because we don't know if the passed value is the label value or the "internal" value.
+		// We can't use the @> operator for enumerations; matching is done via the search_data regex path to support path-qualified key-only lookup.
 		return operator.isCaseSensitive()
 			&& !descriptor.getRepeatable()
 			&& !NUMBER_FIELD_TYPE.equals(descriptor.getFieldType())

@@ -2,7 +2,7 @@
 	"header": {
 		"id": "ContractCoInsuredPartner",
 		"modelType": "relationship",
-		"modelVersion": "3.0.0",
+		"modelVersion": "4.0.0",
 		"locales": [{ "code": "de" }, { "code": "en" }, { "code": "en_US" }],
 		"modelReferences": [
 			{
@@ -36,7 +36,6 @@
 			{ "locale": "en", "text": "Contract and CoInsured Partner" },
 			{ "locale": "de", "text": "Vertrag und Mitversicherter" }
 		],
-		"associationType": "SHARED",
 		"linkDocumentModel": "CoInsuredAdditionalFields",
 		"duplicatesAllowed": false,
 		"entityCharacteristics": [
@@ -48,17 +47,11 @@
 				],
 				"documentModel": "Contract",
 				"ordered": true,
-				"navigable": true,
 				"linkConstraints": {
 					"multiplicity": {
-						"lowerLimit": 0,
 						"unbounded": true,
 						"upperLimit": null
 					}
-				},
-				"candidateConstraints": {
-					"population": null,
-					"populationParameters": null
 				}
 			},
 			{
@@ -69,21 +62,13 @@
 				],
 				"documentModel": "BusinessPartnerSuper",
 				"ordered": true,
-				"navigable": true,
 				"linkConstraints": {
 					"multiplicity": {
-						"lowerLimit": 1,
 						"unbounded": false,
 						"upperLimit": 8
 					}
-				},
-				"candidateConstraints": {
-					"population": null,
-					"populationParameters": null
 				}
 			}
-		],
-		"storage": "EXTERNAL",
-		"embeddedGroupPath": null
+		]
 	}
 }

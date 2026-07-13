@@ -51,6 +51,7 @@ import org.springframework.test.util.TestSocketUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.mgmtp.a12.contentstore.autoconfigure.internal.CSEmbeddedPostgresDatasourceConfiguration;
 import com.mgmtp.a12.contentstore.autoconfigure.internal.ContentStoreRepositoryConfiguration;
 
 import lombok.SneakyThrows;
@@ -60,17 +61,18 @@ import lombok.extern.slf4j.Slf4j;
 	"spring.datasources.contentstore.embedded-postgres.enabled=true",
 	"spring.datasources.contentstore.embedded-postgres.connect-config.autosave=always",
 	"spring.datasources.contentstore.liquibase.change-log=classpath:/contentstore_db/project_model.xml",
-	"spring.datasources.contentstore.embedded-postgres.locale-c-type=en_US.UTF-8"
+	"spring.datasources.contentstore.embedded-postgres.locale-c-type=en_US.UTF-8",
+	"spring.datasources.contentstore.embedded-postgres.locale-collate=en_US.UTF-8"
 })
 @EnableConfigurationProperties
 @ContextConfiguration(initializers = CSEmbeddedPostgresDatasourceConfigurationTest.CsInitializer.class)
-@SpringBootTest(classes = { ContentStoreRepositoryConfiguration.class })
+@SpringBootTest(classes = { CSEmbeddedPostgresDatasourceConfiguration.class, ContentStoreRepositoryConfiguration.class })
 @Slf4j
 public class CSEmbeddedPostgresDatasourceConfigurationTest extends AbstractTestNGSpringContextTests {
 
 	private static final String EN_US_UTF_8 = "en_US.UTF-8";
 
-	@Qualifier("contentstoreDataSource")
+	@Qualifier("csDataSource")
 	@Autowired private DataSource contentstoreDataSource;
 
 	@SneakyThrows
@@ -84,6 +86,7 @@ public class CSEmbeddedPostgresDatasourceConfigurationTest extends AbstractTestN
 		Assert.assertTrue(Arrays.stream(pgSimpleDataSource.getPortNumbers()).anyMatch(portNumber -> portNumber == CsInitializer.csEmbeddedPostgresPort));
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(contentstoreDataSource);
 		Assert.assertEquals((jdbcTemplate.queryForObject("SELECT datctype FROM pg_database WHERE datname = current_database()", String.class)), EN_US_UTF_8);
+		Assert.assertEquals((jdbcTemplate.queryForObject("SELECT datcollate FROM pg_database WHERE datname = current_database()", String.class)), EN_US_UTF_8);
 	}
 
 	static class CsInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {

@@ -101,7 +101,7 @@ public class PlantumlSequenceRenderer extends AbstractRenderer {
 
 	private void renderRelationship(PrintStream output, AbstractLoggedElement element) {
 		String r = element.getCallingMethods()
-			.map(e -> String.format(getFormatByModifier(e.getModifier()), e.getClassName().replaceFirst("^com\\.mgmtp\\.a12\\.dataservices", ""),
+			.map(e -> getFormatByModifier(e.getModifier()).formatted(e.getClassName().replaceFirst("^com\\.mgmtp\\.a12\\.dataservices", ""),
 				e.getMethodName()))
 			.collect(Collectors.joining("\\n↪ "));
 		if (StringUtils.isNotBlank(r)) {
@@ -111,17 +111,12 @@ public class PlantumlSequenceRenderer extends AbstractRenderer {
 	}
 
 	@NonNull private static String getFormatByModifier(Caller.CallerModifier modifier) {
-		switch (modifier) {
-		case PUBLIC:
-			return "**%s#%s**";
-		case PRIVATE:
-			return "--%s#%s--";
-		case INTERCEPTOR:
-			return "//%s#%s//";
-		case INTERNAL:
-			return "~~%s#%s~~";
-		default:
-			return "%s#%s";
-		}
+		return switch (modifier) {
+		case PUBLIC -> "**%s#%s**";
+		case PRIVATE -> "--%s#%s--";
+		case INTERCEPTOR -> "//%s#%s//";
+		case INTERNAL -> "~~%s#%s~~";
+		default -> "%s#%s";
+		};
 	}
 }

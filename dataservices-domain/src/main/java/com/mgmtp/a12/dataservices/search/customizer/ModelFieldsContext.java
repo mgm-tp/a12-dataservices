@@ -31,7 +31,7 @@
  */
 package com.mgmtp.a12.dataservices.search.customizer;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.kernel.md.model.api.IField;
 import com.mgmtp.a12.kernel.md.model.api.fieldtypes.IFieldType;
 

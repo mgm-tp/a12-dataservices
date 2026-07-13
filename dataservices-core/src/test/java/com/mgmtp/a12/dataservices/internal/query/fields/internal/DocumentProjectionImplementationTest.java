@@ -31,6 +31,8 @@
  */
 package com.mgmtp.a12.dataservices.internal.query.fields.internal;
 
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,10 +46,9 @@ import org.springframework.data.domain.PageImpl;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.authorization.ModelPermissionEvaluator;
+import com.mgmtp.a12.dataservices.constants.PathConstants;
+import com.mgmtp.a12.dataservices.rpc.internal.marshalling.DataServicesJacksonModule;
 import com.mgmtp.a12.dataservices.authorization.internal.DefaultDocumentModelPermissionEvaluator;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
 import com.mgmtp.a12.dataservices.document.DataServicesDocumentMetadata;
@@ -57,7 +58,7 @@ import com.mgmtp.a12.dataservices.document.persistence.IDocumentRepository;
 import com.mgmtp.a12.dataservices.document.persistence.internal.AggregatedDocumentRepository;
 import com.mgmtp.a12.dataservices.internal.query.fields.AbstractProjectionTest;
 import com.mgmtp.a12.dataservices.model.document.persistence.DocumentModelReadRepository;
-import com.mgmtp.a12.dataservices.model.document.persistence.internal.DocumentModelLoader;
+import com.mgmtp.a12.dataservices.model.document.persistence.internal.DefaultDocumentModelLoader;
 import com.mgmtp.a12.dataservices.query.DocumentTreeResult;
 import com.mgmtp.a12.dataservices.query.QueryContext;
 import com.mgmtp.a12.dataservices.query.QueryPage;
@@ -69,6 +70,10 @@ import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 
 import lombok.NonNull;
+import lombok.SneakyThrows;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 import static com.mgmtp.a12.dataservices.query.DocumentTreeNodeType.ROOT;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -99,14 +104,15 @@ public class DocumentProjectionImplementationTest extends AbstractProjectionTest
 	private final DocumentModelReadRepository documentModelReadRepository = mock(DocumentModelReadRepository.class);
 
 	private final ModelPermissionEvaluator<IDocumentModel> documentModelPermissionEvaluator = mock(DefaultDocumentModelPermissionEvaluator.class);
-	private final DocumentModelLoader documentModelLoader =
-		new DocumentModelLoader(documentModelPermissionEvaluator, eventPublisher, documentModelReadRepository);
+	private final DefaultDocumentModelLoader defaultDocumentModelLoader =
+		new DefaultDocumentModelLoader(documentModelPermissionEvaluator, eventPublisher, documentModelReadRepository);
 	private final QueryContext queryContext =
-		new DefaultQueryContext(documentModelLoader, relationshipModelLoader, queryMethod, documentModelServiceFactory, queryContextHelper, indexedModelFieldCache, null, null);
+		new DefaultQueryContext(defaultDocumentModelLoader, relationshipModelLoader, queryMethod, documentModelServiceFactory, queryContextHelper,
+			indexedModelFieldCache, null, null);
 	@Spy private IDocumentRepository documentRepository = mock(IDocumentRepository.class);
 	@Spy private List<IDocumentRepository> documentRepositories = spy(List.of(documentRepository));
 	@Spy private AggregatedDocumentRepository aggregatedDocumentRepository = spy(new AggregatedDocumentRepository(documentRepositories));
-	@Spy private ObjectMapper customObjectMapper = objectMapper.copy().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	@Spy private ObjectMapper customObjectMapper = objectMapper.rebuild().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).build();
 
 	private final DocumentProjectionImplementation documentProjection =
 		new DocumentProjectionImplementation(customObjectMapper, documentTreeHelper, aggregatedDocumentRepository, documentSupport);
@@ -178,6 +184,18 @@ public class DocumentProjectionImplementationTest extends AbstractProjectionTest
 			+ "\"Company\" : \"None\""
 			+ "}"
 			+ "}", documentJsonRoot.get("BusinessPartnerRoot").toString(), JSONCompareMode.NON_EXTENSIBLE);
+	}
+
+	@Override
+	@SneakyThrows
+	public DocumentTreeResult loadDocumentTreeResult(String documentName) {
+		String path = PathConstants.DOCUMENT_TREE_RESULT_PATH + documentName + PathConstants.JSON_EXT;
+		try (InputStream is = getClass().getResourceAsStream(path)) {
+			return jsonMapper.rebuild()
+				.addModule(new DataServicesJacksonModule(Collections.emptyList()))
+				.build()
+				.readValue(is, DocumentTreeResult.class);
+		}
 	}
 
 	private static void assertResults(QueryPage<DocumentTreeResult> actualResults, @NotNull Page<DocumentTreeResult> results) {

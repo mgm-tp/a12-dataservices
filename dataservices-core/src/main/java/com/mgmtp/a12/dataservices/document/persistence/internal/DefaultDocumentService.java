@@ -35,8 +35,10 @@ import java.io.StringReader;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -47,7 +49,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.authorization.DocumentPermissionEvaluator;
 import com.mgmtp.a12.dataservices.authorization.ModelPermissionEvaluator;
 import com.mgmtp.a12.dataservices.authorization.internal.UaaConnector;
@@ -71,6 +72,7 @@ import com.mgmtp.a12.dataservices.document.events.internal.DocumentAfterReposito
 import com.mgmtp.a12.dataservices.document.events.internal.DocumentAfterRepositoryUpdateEvent;
 import com.mgmtp.a12.dataservices.document.events.internal.DocumentsAfterDeleteEvent;
 import com.mgmtp.a12.dataservices.document.events.internal.DocumentsBeforeDeleteEvent;
+import com.mgmtp.a12.dataservices.document.exception.DataServicesDocumentSerializationException;
 import com.mgmtp.a12.dataservices.document.exception.DocumentValidationException;
 import com.mgmtp.a12.dataservices.document.internal.DefaultDataServicesDocumentFactory;
 import com.mgmtp.a12.dataservices.document.internal.DocumentValidationResultMapper;
@@ -81,6 +83,7 @@ import com.mgmtp.a12.dataservices.document.persistence.DocumentComputationStrate
 import com.mgmtp.a12.dataservices.document.persistence.DocumentValidationStrategy;
 import com.mgmtp.a12.dataservices.document.persistence.IDocumentRepository;
 import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
+import com.mgmtp.a12.dataservices.document.uniqueconstraint.internal.UniqueConstraintValidator;
 import com.mgmtp.a12.dataservices.exception.ExceptionCodes;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.internal.DocumentationDiagram;
@@ -96,12 +99,15 @@ import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.repository
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.repository.searchtable.DocumentFieldsJpaRepository;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentUtils;
+import com.mgmtp.a12.dataservices.utils.internal.GroupValueConverter;
 import com.mgmtp.a12.dataservices.utils.internal.KernelUtils;
 import com.mgmtp.a12.kernel.md.document.apiV2.DocumentPointer;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.GroupInstanceV2;
+import com.mgmtp.a12.kernel.md.document.apiV2.services.IDocumentV2Serializer;
 import com.mgmtp.a12.kernel.md.facade.DocumentModelServiceFactory;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
+import com.mgmtp.a12.kernel.md.model.api.IGroup;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelSearchService;
 import com.mgmtp.a12.kernel.md.rt.api.IDocumentValidationResult;
 import com.mgmtp.a12.model.header.Header;
@@ -109,6 +115,7 @@ import com.mgmtp.a12.model.header.Header;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.JsonNode;
 
 import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.DOCUMENT_ABSTRACT_MODEL_ERROR_KEY;
 import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.DOCUMENT_NOT_FOUND_ERROR_KEY;
@@ -139,11 +146,13 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_NOT_FOUND
 	private final DefaultDataServicesDocumentFactory dataServicesDocumentFactory;
 	private final DocumentModelServiceFactory documentModelServiceFactory;
 	private final IModelLoader<IDocumentModel> documentModelLoader;
-	private final DocumentSearchIndexBehaviour indexBehavior;
+	private final Optional<DocumentSearchIndexBehaviour> indexBehavior;
 	private final ModelFieldsJpaRepository modelFieldsJpaRepository;
 	private final DocumentSearchJpaRepository documentSearchJpaRepository;
 	private final QueryService queryService;
 	private final DocumentSupport documentSupport;
+	private final UniqueConstraintValidator uniqueConstraintValidator;
+	private final IDocumentV2Serializer documentV2Serializer;
 
 	private static final String REPOSITORY_NOT_FOUND = "No Document Repository found for model [%s]";
 
@@ -176,6 +185,7 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_NOT_FOUND
 
 		DocumentV2 computedDocument = computeAndValidateDocument(documentToCreate.getKernelDocument(), locale, validationStrategy, computationStrategy);
 		DataServicesDocument updatedDataServiceDocument = dataServicesDocumentFactory.newDataServicesDocument(computedDocument);
+		uniqueConstraintValidator.insert(computedDocument, updatedDataServiceDocument.getMetadata().getDocRef(), locale);
 		documentRepository.create(updatedDataServiceDocument);
 		indexFields(updatedDataServiceDocument);
 		eventPublisher.publishEvent(new DocumentAfterRepositoryCreateEvent(updatedDataServiceDocument));
@@ -187,13 +197,51 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_NOT_FOUND
 	}
 
 	/**
+	 * @event {@link DocumentBeforeCreateEvent}
+	 * @event {@link DocumentAfterCreateEvent}
+	 */
+	@Override
+	@Transactional
+	public DataServicesDocument create(@NonNull String documentModelName, @NonNull JsonNode documentContent, Locale locale) {
+		DocumentV2 document;
+		try {
+			document = documentSupport.convertJSONToDocument(documentModelName, documentContent);
+		} catch (NotFoundException e) {
+			// Guard: check permission before revealing that the model does not exist
+			documentPermissionEvaluator.checkDocumentCreatePermissionByModel(documentModelName);
+			// User has permission — wrap as serialization exception to distinguish from persistence-phase NotFoundException
+			throw new DataServicesDocumentSerializationException(e.getCode(), e.getShortMessage().getKey(),
+				e.getShortMessage().getDefaultMessage(), e);
+		}
+		return create(document, locale);
+	}
+
+	/**
+	 * @event {@link DocumentBeforeCreateEvent}
+	 * @event {@link DocumentAfterCreateEvent}
+	 * @event {@link DocumentAfterLoadEvent}
+	 */
+	@Override
+	@Transactional
+	public DataServicesDocument copy(@NonNull DocumentReference documentReference, Locale locale) {
+		DataServicesDocument sourceDocument = load(documentReference)
+			.orElseThrow(() -> {
+				// Guard: check permission before revealing that the document does not exist
+				documentPermissionEvaluator.checkDocumentCreatePermissionByModel(documentReference.getDocumentModelName());
+				// User has permission — safe to reveal "document not found"
+				return new NotFoundException(DOCUMENT_NOT_FOUND_ERROR_KEY, "Document [%s] not found".formatted(documentReference));
+			});
+		return create(sourceDocument.getKernelDocument().withId(null), locale);
+	}
+
+	/**
 	 * @event {@link DocumentBeforeUpdateEvent}
 	 * @event {@link DocumentAfterUpdateEvent}
 	 */
 	@Override
 	@Transactional
 	public DataServicesDocument update(@NonNull DocumentReference documentReference, @NonNull DocumentV2 document, Locale locale) {
-		return update(documentReference, document, locale,DocumentValidationStrategy.DEFAULT_CONFIGURATION, DocumentComputationStrategy.DEFAULT_CONFIGURATION);
+		return update(documentReference, document, locale, DocumentValidationStrategy.DEFAULT_CONFIGURATION, DocumentComputationStrategy.DEFAULT_CONFIGURATION);
 	}
 
 	/**
@@ -207,8 +255,11 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_NOT_FOUND
 		IDocumentRepository documentRepository = getDocumentRepository(newDocument);
 		DataServicesDocument oldDocument = documentRepository.findByDocumentReference(documentReference)
 			.orElseThrow(() -> {
+				// Guard: check permission before revealing that the document does not exist
+				documentPermissionEvaluator.checkDocumentUpdatePermissionByModel(documentReference.getDocumentModelName());
+				// User has permission — safe to reveal "document not found"
 				log.warn("Document [{}] not found", documentReference);
-				return new NotFoundException(DOCUMENT_NOT_FOUND_ERROR_KEY, String.format("Document [%s] not found", documentReference));
+				return new NotFoundException(DOCUMENT_NOT_FOUND_ERROR_KEY, "Document [%s] not found".formatted(documentReference));
 			});
 
 		documentPermissionEvaluator.checkDocumentUpdatePermission(oldDocument.getKernelDocument(), newDocument, documentReference);
@@ -222,7 +273,8 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_NOT_FOUND
 	@Override
 	@Transactional
 	public DataServicesDocument update(@NonNull DocumentReference documentReference, @NonNull List<DocumentPart> documentParts, Locale locale) {
-		return update(documentReference, documentParts, locale, DocumentValidationStrategy.DEFAULT_CONFIGURATION, DocumentComputationStrategy.DEFAULT_CONFIGURATION);
+		return update(documentReference, documentParts, locale, DocumentValidationStrategy.DEFAULT_CONFIGURATION,
+			DocumentComputationStrategy.DEFAULT_CONFIGURATION);
 	}
 
 	/**
@@ -234,18 +286,31 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_NOT_FOUND
 	public DataServicesDocument update(@NonNull DocumentReference documentReference, @NonNull List<DocumentPart> documentParts, Locale locale,
 		@NonNull DocumentValidationStrategy validationStrategy, @NonNull DocumentComputationStrategy computationStrategy) {
 		DataServicesDocument oldDocument = findByDocumentReference(documentReference)
-			.orElseThrow(() -> new NotFoundException(String.format("Partial modify document failed, document not found for [docRef = %s]", documentReference)));
+			.orElseThrow(() -> {
+				// Guard: check permission before revealing that the document does not exist
+				documentPermissionEvaluator.checkDocumentPartialUpdatePermissionByModel(documentReference.getDocumentModelName());
+				// User has permission — safe to reveal "document not found"
+				return new NotFoundException("Partial modify document failed, document not found for [docRef = %s]".formatted(documentReference));
+			});
 		DocumentV2 kernelDocument = oldDocument.getKernelDocument();
 		DocumentV2 updatedDocV2 = kernelDocument.withGroup(
 			DocumentMetadataConstants.DOCUMENT_METADATA_GROUP_PATH, kernelDocument.group(DocumentMetadataConstants.DOCUMENT_METADATA_GROUP_PATH)
 		);
 
+		IDocumentModel documentModel = documentModelLoader.loadModel(kernelDocument.getDocumentModelId());
+		IDocumentModelSearchService modelSearchService = documentModelServiceFactory.createDocumentModelSearchService(documentModel);
+
+		Map<String, Boolean> isGroupPathMap = new HashMap();
 		for (DocumentPart documentPart : documentParts) {
-			updatedDocV2 = modifyDocument(updatedDocV2, documentPart);
+			if (isGroupPath(isGroupPathMap, modelSearchService, documentPart.getPath())) {
+				validateForGroup(documentPart);
+				updatedDocV2 = modifyDocumentWithGroup(updatedDocV2, documentPart, documentModel, modelSearchService);
+			} else {
+				validateForField(documentPart);
+				updatedDocV2 = modifyDocumentWithField(updatedDocV2, documentPart);
+			}
 		}
-
 		documentPermissionEvaluator.checkDocumentPartialUpdatePermission(oldDocument.getKernelDocument(), updatedDocV2, documentReference);
-
 		return update(oldDocument, updatedDocV2, getDocumentRepository(kernelDocument), locale, validationStrategy, computationStrategy);
 	}
 
@@ -258,16 +323,15 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_NOT_FOUND
 			UaaConnector.getCurrentUserName(),
 			Instant.now()
 		);
-		DataServicesDocument updatedDocument = dataServicesDocumentFactory.newDataServicesDocument(
-			computeAndValidateDocument(
-				documentBeforeUpdate(oldDocument, updatedKernelDocument).getKernelDocument(),
-				locale,
-				validationStrategy,
-				computationStrategy
-			)
+		DocumentV2 updateKernelDocument = computeAndValidateDocument(
+			documentBeforeUpdate(oldDocument, updatedKernelDocument).getKernelDocument(),
+			locale,
+			validationStrategy,
+			computationStrategy
 		);
-
-		indexBehavior.dropDocumentFields(oldDocument);
+		DataServicesDocument updatedDocument = dataServicesDocumentFactory.newDataServicesDocument(updateKernelDocument);
+		uniqueConstraintValidator.update(updateKernelDocument, updatedDocument.getMetadata().getDocRef(), locale);
+		indexBehavior.ifPresent(behavior -> behavior.dropDocumentFields(oldDocument));
 		documentRepository.update(updatedDocument);
 		indexFields(updatedDocument);
 		eventPublisher.publishEvent(new DocumentAfterRepositoryUpdateEvent(oldDocument, updatedDocument));
@@ -289,27 +353,33 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_NOT_FOUND
 		modelPermissionEvaluator.checkModelReadPermission(documentReference.getDocumentModelName());
 		Optional<DataServicesDocument> dataServicesDocumentOpt = findByDocumentReference(documentReference);
 
-		dataServicesDocumentOpt.ifPresent(dataServicesDocument -> {
+		dataServicesDocumentOpt.ifPresentOrElse(dataServicesDocument -> {
 			documentPermissionEvaluator.checkDocumentDeletePermission(dataServicesDocument);
 			documentBeforeDelete(dataServicesDocument);
-			indexBehavior.dropDocumentFields(dataServicesDocument);
+			indexBehavior.ifPresent(behavior -> behavior.dropDocumentFields(dataServicesDocument));
 			getDocumentRepository(dataServicesDocument.getKernelDocument()).delete(documentReference);
+			uniqueConstraintValidator.deleteByDocRef(documentReference);
 
 			eventPublisher.publishEvent(new DocumentAfterRepositoryDeleteEvent(dataServicesDocument));
 			attachmentHandler.ifPresent(handler -> handler.deleteAttachmentsForDocument(dataServicesDocument.getKernelDocument(), documentReference));
 
 			eventPublisher.publishEvent(new DocumentAfterDeleteEvent(dataServicesDocument));
 			log.debug("Document [{}] has been deleted in [{}] ms", documentReference, stopWatch.getTime());
+		}, () -> {
+			// Guard: check permission before silently revealing that the document does not exist
+			documentPermissionEvaluator.checkDocumentDeletePermissionByModel(documentReference.getDocumentModelName());
+			// User has permission — no-op (same as original behavior when document not found)
 		});
 	}
 
 	@Override
-	@Transactional public void deleteAll(@NonNull Collection<DocumentReference> documentReferences) {
+	@Transactional
+	public void deleteAll(@NonNull Collection<DocumentReference> documentReferences) {
 		StopWatch stopWatch = StopWatch.createStarted();
 		if (documentReferences.size() > dataServicesCoreProperties.getDocuments().getMultiDelete().getLimit()) {
 			throw new InvalidInputException(ExceptionCodes.HARD_LIMIT_EXCEEDED_EXCEPTION_CODE, ExceptionKeys.HARD_LIMIT_EXCEEDED_ERROR_KEY,
-				String.format("Number of documents to be deleted is higher than maximum allowed one %s",
-					dataServicesCoreProperties.getDocuments().getMultiDelete().getLimit()));
+				"Number of documents to be deleted [%d] is higher than maximum allowed [%d]".formatted(
+					documentReferences.size(), dataServicesCoreProperties.getDocuments().getMultiDelete().getLimit()));
 		}
 
 		checkModelReadAndDocumentMultiDeletePermission(documentReferences);
@@ -317,11 +387,14 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_NOT_FOUND
 		eventPublisher.publishEvent(new DocumentsBeforeDeleteEvent(documentReferences));
 
 		List<String> docRefStrings = documentReferences.stream().map(DocumentReference::toString).toList();
-		documentFieldsJpaRepository.deleteDocumentFieldEntitiesByDocRefIn(docRefStrings);
-		documentSearchJpaRepository.deleteDocumentSearchEntitiesByDocRefIn(docRefStrings);
+		if (indexBehavior.isPresent()) {
+			documentFieldsJpaRepository.deleteDocumentFieldEntitiesByDocRefIn(docRefStrings);
+			documentSearchJpaRepository.deleteDocumentSearchEntitiesByDocRefIn(docRefStrings);
+		}
 		documentReferences.stream()
 			.collect(Collectors.groupingBy(DocumentReference::getDocumentModelName))
 			.forEach((key, value) -> getDocumentRepository(key).deleteAll(key, value));
+		documentReferences.forEach(uniqueConstraintValidator::deleteByDocRef);
 
 		attachmentHandler.ifPresent(ah -> ah.deleteAttachmentsForDocuments(documentReferences));
 
@@ -391,10 +464,12 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_NOT_FOUND
 	}
 
 	private void indexFields(DataServicesDocument documentToCreate) {
-		DataServicesDocument afterPublishedDocument = publishDocumentBeforeIndexEvent(documentToCreate);
-		IDocumentModel documentModel = documentModelLoader.loadModel(afterPublishedDocument.getMetadata().getDocumentModelReference());
-		IDocumentModelSearchService documentModelSearchService = documentModelServiceFactory.createDocumentModelSearchService(documentModel);
-		indexBehavior.saveDocumentFields(afterPublishedDocument, documentModelSearchService, this::getIdOfTheFieldType);
+		indexBehavior.ifPresent(behavior -> {
+			DataServicesDocument afterPublishedDocument = publishDocumentBeforeIndexEvent(documentToCreate);
+			IDocumentModel documentModel = documentModelLoader.loadModel(afterPublishedDocument.getMetadata().getDocumentModelReference());
+			IDocumentModelSearchService documentModelSearchService = documentModelServiceFactory.createDocumentModelSearchService(documentModel);
+			behavior.saveDocumentFields(afterPublishedDocument, documentModelSearchService, this::getIdOfTheFieldType);
+		});
 	}
 
 	private DataServicesDocument publishDocumentBeforeIndexEvent(DataServicesDocument toIndex) {
@@ -407,28 +482,170 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_NOT_FOUND
 		return modelFieldsJpaRepository.getByModelNameAndFieldName(m, f).getId();
 	}
 
-	private DocumentV2 modifyDocument(DocumentV2 document, DocumentPart part) {
+	private boolean isGroupPath(Map<String, Boolean> isGroupPathMap, IDocumentModelSearchService modelSearchService, String path) {
+		if (!isGroupPathMap.containsKey(path)) {
+			isGroupPathMap.put(path, isGroupPath(modelSearchService, path));
+		}
+		return isGroupPathMap.get(path);
+
+	}
+
+	/**
+	 * Determines whether the given part path addresses a group (rather than a field) in the document model.
+	 * Returns `false` when no model search service is available, preserving the field-modification fallback.
+	 */
+	private static boolean isGroupPath(IDocumentModelSearchService modelSearchService, String path) {
+		try {
+			return modelSearchService != null
+				&& modelSearchService.getByPath(path)
+				.filter(IGroup.class::isInstance)
+				.isPresent();
+		} catch (Exception e) {
+			throw new InvalidInputException(
+				ExceptionKeys.MODIFY_DOCUMENT_INVALID_DOCUMENT_PART_ERROR_KEY,
+				"Invalid documentPart for partial modify document",
+				e
+			);
+		}
+	}
+
+	/**
+	 * For fields, no wildcards are allowed in `DocumentPart.getRepetitions()`.
+	 */
+	private void validateForField(DocumentPart part) {
+		// No wildcards are allowed for field operations
+		if (KernelUtils.hasAnyWildcard(part.getRepetitions())) {
+			throw new InvalidInputException(
+				ExceptionKeys.MODIFY_DOCUMENT_INVALID_DOCUMENT_PART_ERROR_KEY,
+				"Wildcard repetition index is not supported for a field at path: " + part.getPath()
+			);
+		}
+	}
+
+	/**
+	 * For groups, in `DocumentPart.getRepetitions()`
+	 * - no intermediate wildcard are allowed
+	 * - a wildcard at the end is allowed only if `DocumentPart.getValue()` is not equal to `null`.
+	 */
+
+	private void validateForGroup(DocumentPart part) {
+		int[] repetitions = part.getRepetitions();
+
+		// For groups, wildcard `0` is allowed only at the end of the repetitions array
+		if (KernelUtils.hasIntermediateWildcard(repetitions)) {
+			throw new InvalidInputException(
+				ExceptionKeys.MODIFY_DOCUMENT_INVALID_DOCUMENT_PART_ERROR_KEY,
+				"Intermediate wildcard repetition index is not supported"
+			);
+		}
+
+		if (part.getValue() == null) {
+			// Removal by wildcard is not allowed
+			if (KernelUtils.isLastRepetitionWildcard(repetitions)) {
+				throw new InvalidInputException(
+					ExceptionKeys.MODIFY_DOCUMENT_INVALID_DOCUMENT_PART_ERROR_KEY,
+					"Cannot append a null value: wildcard repetition requires a non-null group value"
+				);
+			}
+		}
+
+	}
+
+	/**
+	 * Modifies the document when the part path addresses a group: replaces or inserts the group for concrete
+	 * repetitions, or appends a new repetition when the trailing repetition index is the wildcard `0`.
+	 * A group accepts a wildcard only at the last repetition index.
+	 */
+	private DocumentV2 modifyDocumentWithGroup(DocumentV2 document, DocumentPart part, IDocumentModel documentModel,
+		IDocumentModelSearchService modelSearchService) {
 		try {
 			if (part.getValue() == null) {
-				return implyNullValue(document, part);
+				// Remove the group from the document
+				return removeGroupFromDocument(document, part);
+			}
+			int[] repetitions = part.getRepetitions();
+			GroupValueConverter groupValueConverter = new GroupValueConverter(documentV2Serializer, documentModelLoader);
+			if (KernelUtils.isLastRepetitionWildcard(repetitions)) {
+				// We want to append to a repeatable group
+				boolean repeatable = modelSearchService.getByPath(part.getPath())
+					.filter(IGroup.class::isInstance)
+					.map(IGroup.class::cast)
+					.map(g -> g.getRepeatability() > 1)
+					.orElse(false);
+				if (!repeatable) {
+					throw new InvalidInputException(
+						ExceptionKeys.MODIFY_DOCUMENT_INVALID_DOCUMENT_PART_ERROR_KEY,
+						"Cannot append to a non-repeatable group at path: " + part.getPath()
+					);
+				}
+				// Append the group at the end of a repeatable group list
+				GroupInstanceV2 groupInstance = groupValueConverter.toGroupInstance(documentModel, part.getPath(), part.getValue());
+				DocumentPointer pointer = KernelUtils.pointerPreservingWildcard(part.getPath(), repetitions);
+				return document.withGroupRepetitionAppended(pointer, groupInstance);
 			} else {
+				// Update an existing group or add a new one if it does not exist
+				GroupInstanceV2 groupInstance = groupValueConverter.toGroupInstance(documentModel, part.getPath(), part.getValue());
+				DocumentPointer pointer = KernelUtils.fromPathAndRepetitions(part.getPath(),repetitions != null ? repetitions : new int[0]);
+				return document.withGroup(pointer, groupInstance);
+			}
+		} catch (InvalidInputException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new InvalidInputException(
+				ExceptionKeys.MODIFY_DOCUMENT_INVALID_DOCUMENT_PART_ERROR_KEY,
+				"Invalid documentPart for partial modify document",
+				e
+			);
+		}
+	}
+
+	/**
+	 * Modifies the document when the part path addresses a field: sets the field value, or removes it when the
+	 * value is null. A field does not accept any wildcard repetition index.
+	 */
+	private DocumentV2 modifyDocumentWithField(DocumentV2 document, DocumentPart part) {
+		try {
+			if (part.getValue() == null) {
+				// value null means deletion
+				return removeFieldFromDocument(document, part);
+			} else {
+				// update the field value or add the field if it does not exist
 				return document.withFieldValue(
 					KernelUtils.fromPathAndRepetitions(part.getPath(), part.getRepetitions()),
 					documentUtils.transformToV2Value(document.getDocumentModelId(), part.getPath(), part.getValue())
 				);
 			}
+		} catch (InvalidInputException e) {
+			throw e;
 		} catch (Exception e) {
-			throw new InvalidInputException("Invalid documentPart for partial modify document", e);
+			throw new InvalidInputException(
+				ExceptionKeys.MODIFY_DOCUMENT_INVALID_DOCUMENT_PART_ERROR_KEY,
+				"Invalid documentPart for partial modify document",
+				e
+			);
 		}
 	}
 
-	private static DocumentV2 implyNullValue(DocumentV2 document, DocumentPart part) {
-		DocumentPointer dp = KernelUtils.fromPathAndRepetitions(part.getPath(), part.getRepetitions());
-		GroupInstanceV2 groupInstanceV2 = document.group(dp);
-		if (groupInstanceV2 != null) {
-			return document.withGroupRemoved(dp);
-		} else if (document.field(dp) != null) {
-			return document.withFieldValue(dp, null);
+	/**
+	 * Removes the group addressed by the part from the document, returning the document unchanged when no group
+	 * is present at that pointer.
+	 */
+	private static DocumentV2 removeGroupFromDocument(DocumentV2 document, DocumentPart part) {
+		DocumentPointer pointer = KernelUtils.fromPathAndRepetitions(part.getPath(), part.getRepetitions());
+		if (document.group(pointer) != null) {
+			return document.withGroupRemoved(pointer);
+		}
+		return document;
+	}
+
+	/**
+	 * Removes the field addressed by the part from the document by setting its value to null, returning the
+	 * document unchanged when no field is present at that pointer.
+	 */
+	private static DocumentV2 removeFieldFromDocument(DocumentV2 document, DocumentPart part) {
+		DocumentPointer pointer = KernelUtils.fromPathAndRepetitions(part.getPath(), part.getRepetitions());
+		if (document.field(pointer) != null) {
+			return document.withFieldValue(pointer, null);
 		}
 		return document;
 	}
@@ -453,16 +670,16 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_NOT_FOUND
 		return dataServicesDocumentFactory.newDataServicesDocument(documentBeforeUpdateEvent.getUpdatedDocument());
 	}
 
-
 	private DocumentV2 computeAndValidateDocument(DocumentV2 document, Locale locale, DocumentValidationStrategy validationStrategy,
 		DocumentComputationStrategy computationStrategy) {
 		String modelName = document.getDocumentModelId();
 		Header header = modelHeaderJpaRepository.findById(document.getDocumentModelId())
-			.orElseThrow(() -> new NotFoundException(MODEL_NOT_FOUND_ERROR_KEY, String.format("Document model [%s] not found", modelName)));
+			.orElseThrow(() -> new NotFoundException(MODEL_NOT_FOUND_ERROR_KEY, "Document model [%s] not found".formatted(modelName)));
 		modelPermissionEvaluator.checkModelReadPermission(header);
+
 		if (documentModelUtils.isAbstract(header)) {
 			log.warn("Document creation failed as associated document model [{}] is defined as abstract", header);
-			throw new InvalidInputException(DOCUMENT_ABSTRACT_MODEL_ERROR_KEY, String.format("Document model [%s] is defined as Abstract", header.getId()));
+			throw new InvalidInputException(DOCUMENT_ABSTRACT_MODEL_ERROR_KEY, "Document model [%s] is defined as Abstract".formatted(header.getId()));
 		}
 
 		document = switch (computationStrategy) {
@@ -480,7 +697,7 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_NOT_FOUND
 		documentValidationResult.ifPresent(validationResult -> {
 			if (!validationResult.noErrorOccurred()) {
 				throw new DocumentValidationException(DocumentValidationResultMapper.toDocumentValidationResults(validationResult),
-					String.format("Document is not valid:%n%s", validationResult.getMessages())).withAnonymityMessage("Validation of document failed.");
+					"Document is not valid:%n%s".formatted(validationResult.getMessages())).withAnonymityMessage("Validation of document failed.");
 			}
 		});
 		return document;
@@ -511,19 +728,19 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_NOT_FOUND
 		return documentRepositories.stream()
 			.filter(repository -> repository.supports(document))
 			.findFirst()
-			.orElseThrow(() -> {
-				log.error(String.format(REPOSITORY_NOT_FOUND, document.getDocumentModelId()));
-				return new NotFoundException(String.format(REPOSITORY_NOT_FOUND, document.getDocumentModelId()));
-			});
+		.orElseThrow(() -> {
+			log.error(REPOSITORY_NOT_FOUND.formatted(document.getDocumentModelId()));
+			return new NotFoundException(ExceptionKeys.NO_MODEL_REPOSITORY_FOUND, REPOSITORY_NOT_FOUND.formatted(document.getDocumentModelId()));
+		});
 	}
 
 	private IDocumentRepository getDocumentRepository(String modelId) {
 		return documentRepositories.stream()
 			.filter(repository -> repository.supports(modelId, Optional.empty()))
 			.findFirst()
-			.orElseThrow(() -> {
-				log.error(String.format(REPOSITORY_NOT_FOUND, modelId));
-				return new NotFoundException(String.format(REPOSITORY_NOT_FOUND, modelId));
-			});
+		.orElseThrow(() -> {
+			log.error(REPOSITORY_NOT_FOUND.formatted(modelId));
+			return new NotFoundException(ExceptionKeys.NO_MODEL_REPOSITORY_FOUND, REPOSITORY_NOT_FOUND.formatted(modelId));
+		});
 	}
 }

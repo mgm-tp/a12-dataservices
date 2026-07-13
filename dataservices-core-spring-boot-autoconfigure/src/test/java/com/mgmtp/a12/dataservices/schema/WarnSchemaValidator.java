@@ -60,42 +60,44 @@ public class WarnSchemaValidator extends GroupedSchemaValidatorImpl {
 
 	@Override protected void validateTable(Table table, TableInformation tableInformation, Metadata metadata, ExecutionOptions options, Dialect dialect) {
 		if (tableInformation == null) {
-			log.warn(String.format("Schema-validation: missing table [%s]", table.getQualifiedTableName().toString()));
+			log.warn("Schema-validation: missing table [%s]".formatted(table.getQualifiedTableName().toString()));
 			return;
 		}
 
 		for (Selectable selectable : table.getColumns()) {
 			if (selectable instanceof Column column) {
-				ColumnInformation existingColumn = tableInformation.getColumn( Identifier.toIdentifier( column.getQuotedName()));
+				ColumnInformation existingColumn = tableInformation.getColumn(Identifier.toIdentifier(column.getQuotedName()));
 				if (existingColumn == null) {
-					String warnMessage = String.format("Schema-validation: missing column [%s] in table [%s]", column.getName(), table.getQualifiedTableName());
+					String warnMessage = "Schema-validation: missing column [%s] in table [%s]".formatted(column.getName(), table.getQualifiedTableName());
 					DatabaseSchemaValidationErrorsHolder.addValidationError(
-						new DatabaseSchemaValidationErrorsHolder.SchemaValidationError(column.getName(), table.getQualifiedTableName().toString(), warnMessage));
+						new DatabaseSchemaValidationErrorsHolder.SchemaValidationError(column.getName(), table.getQualifiedTableName().toString(),
+							warnMessage));
 					log.warn(warnMessage);
 
 					return;
 				}
 
-				validateColumnType( table, column, existingColumn, metadata, options, dialect );
+				validateColumnType(table, column, existingColumn, metadata, options, dialect);
 			}
 		}
 	}
 
-	@Override protected void validateColumnType(Table table, Column column, ColumnInformation columnInformation, Metadata metadata, ExecutionOptions options, Dialect dialect) {
-		boolean typesMatch = column.getSqlTypeCode( metadata ) == columnInformation.getTypeCode();
-		if ( !typesMatch ) {
+	protected void validateColumnType(Table table, Column column, ColumnInformation columnInformation, Metadata metadata, ExecutionOptions options,
+		Dialect dialect) {
+		boolean typesMatch = column.getSqlTypeCode(metadata) == columnInformation.getTypeCode();
+		if (!typesMatch) {
 			String warnMessage = String.format(
 				"Schema-validation: wrong column type encountered in column [%s] in " +
 					"table [%s]; found [%s (Types#%s)], but expecting [(Types#%s)]",
 				column.getName(),
 				table.getQualifiedTableName(),
 				columnInformation.getTypeName().toLowerCase(Locale.ROOT),
-				JdbcTypeNameMapper.getTypeName( columnInformation.getTypeCode() ),
-				JdbcTypeNameMapper.getTypeName( column.getSqlTypeCode( metadata ) )
+				JdbcTypeNameMapper.getTypeName(columnInformation.getTypeCode()),
+				JdbcTypeNameMapper.getTypeName(column.getSqlTypeCode(metadata))
 			);
 			DatabaseSchemaValidationErrorsHolder.addValidationError(
 				new DatabaseSchemaValidationErrorsHolder.SchemaValidationError(column.getName(), table.getQualifiedTableName().toString(),
-					JdbcTypeNameMapper.getTypeName( columnInformation.getTypeCode() ), JdbcTypeNameMapper.getTypeName( column.getSqlTypeCode( metadata ) ),
+					JdbcTypeNameMapper.getTypeName(columnInformation.getTypeCode()), JdbcTypeNameMapper.getTypeName(column.getSqlTypeCode(metadata)),
 					warnMessage));
 			log.warn(warnMessage);
 		}

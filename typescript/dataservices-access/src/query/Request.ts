@@ -29,7 +29,7 @@
  * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
  * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
  */
-import type { JsonRpc2Request } from "../json-rpc/index.js";
+import { JsonRpc2Request } from "../json-rpc/index.js";
 
 import type { Query } from "./Query.js";
 
@@ -62,4 +62,15 @@ export interface QueryJsonRpc2Request<
 		 */
 		readonly query: Q;
 	};
+}
+
+export namespace QueryJsonRpc2Request {
+	/**
+	 * Type guard to check if an object is an instance of QueryJsonRpc2Request.
+	 * @param obj The object to check.
+	 * @returns True if the object is an instance of QueryJsonRpc2Request, false otherwise.
+	 */
+	export function isInstance(obj: unknown): obj is QueryJsonRpc2Request {
+		return JsonRpc2Request.isInstance(obj) && obj.method === "QUERY" && "query" in obj.params;
+	}
 }

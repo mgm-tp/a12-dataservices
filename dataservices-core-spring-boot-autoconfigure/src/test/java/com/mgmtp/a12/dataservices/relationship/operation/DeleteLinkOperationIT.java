@@ -47,7 +47,7 @@ import com.mgmtp.a12.dataservices.relationship.OffsetBasedPageRequest;
 import com.mgmtp.a12.dataservices.relationship.RelationshipLink;
 import com.mgmtp.a12.dataservices.relationship.RelationshipLinkService;
 import com.mgmtp.a12.dataservices.relationship.operation.internal.DeleteLinkOperation;
-import com.mgmtp.a12.dataservices.relationship.persistence.internal.RelationshipLinkRepository;
+import com.mgmtp.a12.dataservices.relationship.persistence.RelationshipLinkRepository;
 import com.mgmtp.a12.dataservices.relationship.spec.LinkDescriptor;
 import com.mgmtp.a12.dataservices.relationship.spec.RelationshipLinkSpec;
 import com.mgmtp.a12.dataservices.rpc.RpcException;
@@ -72,7 +72,7 @@ public class DeleteLinkOperationIT extends AbstractListITBase {
 		try {
 			LinkDescriptor
 				linkDescriptor = createLinkDescriptor(relationship, RoleConstants.CONTRACT_ROLE, contractDocRef2, RoleConstants.PARTNER_ROLE, partnerDocRef1);
-			RelationshipLinkSpec linkSpec = new RelationshipLinkSpec(linkDescriptor, contract2Partner2Link);
+			RelationshipLinkSpec linkSpec = RelationshipLinkSpec.builder().linkDescriptor(linkDescriptor).id(contract2Partner2Link).build();
 			deleteLinkOperation.rpc(linkSpec);
 			Assert.fail("Exception was expected to be thrown");
 		} catch (RpcException e) {
@@ -84,8 +84,7 @@ public class DeleteLinkOperationIT extends AbstractListITBase {
 			Assert.assertEquals(longMessage.getKey(), "error.validation.link.badModel.description");
 			Assert.assertEquals(
 				longMessage.getDefaultMessage(),
-				String.format(
-					"Requested link [%s] is for relationship model [%s], but expected is [%s]",
+				"Requested link [%s] is for relationship model [%s], but expected is [%s]".formatted(
 					contract2Partner2Link,
 					RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL,
 					relationship
@@ -118,8 +117,8 @@ public class DeleteLinkOperationIT extends AbstractListITBase {
 	}
 
 	@Test(dataProvider = "ProvideDeleteDataForLimitTest")
-	public void lowerLimitUnboundedDeleteRelationshipLinkTest(DocumentReference contractDocRef, DocumentReference partnerDocRef) {
-		//lower limit is unbounded
+	public void unboundedDeleteRelationshipLinkTest(DocumentReference contractDocRef, DocumentReference partnerDocRef) {
+		//unbounded is true
 		checkIfEntityExists(contractDocRef, partnerDocRef, true);
 		deleteLinkOperation.rpc(createDeleteLinkParameter(contractDocRef, partnerDocRef));
 		checkIfEntityExists(contractDocRef, partnerDocRef, false);
@@ -131,8 +130,7 @@ public class DeleteLinkOperationIT extends AbstractListITBase {
 		LinkDescriptor linkDescriptor =
 			createLinkDescriptor(RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL, RoleConstants.CONTRACT_ROLE, contractDocRef2,
 				RoleConstants.PARTNER_ROLE, invalidDocRef);
-		RelationshipLinkSpec relationshipLinkSpec = new RelationshipLinkSpec(linkDescriptor, DocumentModelConstants.CONTRACT_DOCUMENT_MODEL);
-		relationshipLinkSpec.setId(contract2Partner2Link);
+		RelationshipLinkSpec relationshipLinkSpec = RelationshipLinkSpec.builder().linkDescriptor(linkDescriptor).id(contract2Partner2Link).build();
 		try {
 			deleteLinkOperation.rpc(relationshipLinkSpec);
 		} catch (RpcException e) {
@@ -142,7 +140,7 @@ public class DeleteLinkOperationIT extends AbstractListITBase {
 			Assert.assertEquals(shortMessage.getDefaultMessage(), "Wrong Entity");
 			Assert.assertEquals(longMessage.getKey(), "error.validation.link.badEntity_Partner.description");
 			Assert.assertEquals(longMessage.getDefaultMessage(),
-				String.format("Requested link [%s] has role:docRef [Contract:%s] and [Partner:%s], but expected is [Contract:%s] and [Partner:%s]", relationshipLinkSpec.getId(),contractDocRef2,
+				"Requested link [%s] has role:docRef [Contract:%s] and [Partner:%s], but expected is [Contract:%s] and [Partner:%s]".formatted(relationshipLinkSpec.getId(), contractDocRef2,
 					invalidDocRef, contractDocRef2, partnerDocRef1));
 		}
 	}
@@ -152,8 +150,7 @@ public class DeleteLinkOperationIT extends AbstractListITBase {
 		LinkDescriptor linkDescriptor =
 			createLinkDescriptor(RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL, RoleConstants.CONTRACT_ROLE, contractDocRef2,
 				INVALID_SECOND_ROLE_RM, partnerDocRef1);
-		RelationshipLinkSpec relationshipLinkSpec = new RelationshipLinkSpec(linkDescriptor, DocumentModelConstants.CONTRACT_DOCUMENT_MODEL);
-		relationshipLinkSpec.setId(contract2Partner2Link);
+		RelationshipLinkSpec relationshipLinkSpec = RelationshipLinkSpec.builder().linkDescriptor(linkDescriptor).id(contract2Partner2Link).build();
 		try {
 			deleteLinkOperation.rpc(relationshipLinkSpec);
 		} catch (RpcException e) {
@@ -163,7 +160,7 @@ public class DeleteLinkOperationIT extends AbstractListITBase {
 			Assert.assertEquals(shortMessage.getDefaultMessage(), "Wrong Entity");
 			Assert.assertEquals(longMessage.getKey(), "error.validation.link.badEntity_ContractCoinsuredPartner_InvalidSecondRole.description");
 			Assert.assertEquals(longMessage.getDefaultMessage(),
-				String.format("Requested link [%s] has role:docRef [Contract:%s] and [%s:%s], but expected is [Contract:%s] and [Partner:%s]", relationshipLinkSpec.getId(),contractDocRef2,
+				"Requested link [%s] has role:docRef [Contract:%s] and [%s:%s], but expected is [Contract:%s] and [Partner:%s]".formatted(relationshipLinkSpec.getId(), contractDocRef2,
 					INVALID_SECOND_ROLE_RM, partnerDocRef1, contractDocRef2, partnerDocRef1));
 		}
 	}
@@ -172,8 +169,7 @@ public class DeleteLinkOperationIT extends AbstractListITBase {
 	public void InvalidRMDeleteRelationshipLinkTest() {
 		LinkDescriptor linkDescriptor =
 			createLinkDescriptor(INVALID_LINK_DM_RM, RoleConstants.CONTRACT_ROLE, contractDocRef2, RoleConstants.PARTNER_ROLE, partnerDocRef1);
-		RelationshipLinkSpec relationshipLinkSpec = new RelationshipLinkSpec(linkDescriptor, DocumentModelConstants.CONTRACT_DOCUMENT_MODEL);
-		relationshipLinkSpec.setId(contract2Partner2Link);
+		RelationshipLinkSpec relationshipLinkSpec = RelationshipLinkSpec.builder().linkDescriptor(linkDescriptor).id(contract2Partner2Link).build();
 		try {
 			deleteLinkOperation.rpc(relationshipLinkSpec);
 		} catch (RpcException e) {
@@ -184,8 +180,7 @@ public class DeleteLinkOperationIT extends AbstractListITBase {
 			Assert.assertEquals(longMessage.getKey(), "error.validation.link.badModel.description");
 			Assert.assertEquals(
 				longMessage.getDefaultMessage(),
-				String.format(
-					"Requested link [%s] is for relationship model [%s], but expected is [%s]",
+				"Requested link [%s] is for relationship model [%s], but expected is [%s]".formatted(
 					contract2Partner2Link,
 					RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL,
 					INVALID_LINK_DM_RM
@@ -206,7 +201,7 @@ public class DeleteLinkOperationIT extends AbstractListITBase {
 		LinkDescriptor linkDescriptor =
 			createLinkDescriptor(RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL, RoleConstants.CONTRACT_ROLE, contractDocRef,
 				RoleConstants.PARTNER_ROLE, partnerDocRef);
-		return new RelationshipLinkSpec(linkDescriptor, byEntities.get(0).getId().toString());
+		return RelationshipLinkSpec.builder().linkDescriptor(linkDescriptor).id(byEntities.getFirst().getId()).build();
 	}
 
 	private void checkIfEntityExists(DocumentReference contractDocRef, DocumentReference partnerDocRef, boolean expectExists) {

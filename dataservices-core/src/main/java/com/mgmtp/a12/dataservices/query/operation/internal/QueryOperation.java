@@ -41,17 +41,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.mgmtp.a12.dataservices.common.anonymizing.Anonymizer;
 import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
-import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
+import com.mgmtp.a12.dataservices.query.QueryService;
 import com.mgmtp.a12.dataservices.query.operation.events.QueryAfterOperationEvent;
 import com.mgmtp.a12.dataservices.query.operation.events.QueryBeforeOperationEvent;
-import com.mgmtp.a12.dataservices.query.QueryService;
-import com.mgmtp.a12.dataservices.rpc.query.PagedResultSet;
+import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
 import com.mgmtp.a12.dataservices.request.internal.QueryPagingHelper;
 import com.mgmtp.a12.dataservices.rpc.RemoteOperation;
+import com.mgmtp.a12.dataservices.rpc.query.PagedResultSet;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
@@ -63,7 +62,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Slf4j
-@RemoteOperation(name = CoreOperationConstants.QUERY_OPERATION, group = CoreOperationConstants.A12_INTERNAL_OPERATIONS_GROUP)
+@RemoteOperation(isMutation = false, name = CoreOperationConstants.QUERY_OPERATION, group = CoreOperationConstants.A12_INTERNAL_OPERATIONS_GROUP)
 @RequiredArgsConstructor
 @Component public class QueryOperation {
 
@@ -76,10 +75,9 @@ import lombok.extern.slf4j.Slf4j;
 	 *
 	 * @param query The query parameters for fetching document results.
 	 * @return The result set of document tree results.
-	 * @throws JsonProcessingException if there is an error processing the JSON data.
 	 */
 	@Transactional(readOnly = true)
-	public <T> PagedResultSet<T> rpc(@NonNull @JsonRpcParam("query") QueryRoot query) throws JsonProcessingException {
+	public <T> PagedResultSet<T> rpc(@NonNull @JsonRpcParam("query") QueryRoot query) {
 		log.debug("{} called with parameters [{}]",
 			CoreOperationConstants.QUERY_OPERATION,
 			anonymizer.apply(query.toString()));

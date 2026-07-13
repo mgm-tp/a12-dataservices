@@ -3,6 +3,8 @@ plugins {
 }
 
 dependencies {
+	annotationProcessor libs.lombokMapstruct
+
 	api project(':dataservices-security-user-api')
 	api project(':dataservices-server')
 	implementation project(':dataservices-core-spring-boot-autoconfigure')

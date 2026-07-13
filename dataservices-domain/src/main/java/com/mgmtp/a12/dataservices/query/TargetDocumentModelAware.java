@@ -32,6 +32,7 @@
 package com.mgmtp.a12.dataservices.query;
 
 import com.mgmtp.a12.dataservices.internal.DocumentationDiagram;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Interface that represents an entity associated with a specific document model.
@@ -43,7 +44,7 @@ import com.mgmtp.a12.dataservices.internal.DocumentationDiagram;
  * document model name.
  */
 @DocumentationDiagram
-public interface TargetDocumentModelAware {
+@OnlyForUsage public interface TargetDocumentModelAware {
 
 	/**
 	 * Retrieves the name of the target document model associated with the implementing class.

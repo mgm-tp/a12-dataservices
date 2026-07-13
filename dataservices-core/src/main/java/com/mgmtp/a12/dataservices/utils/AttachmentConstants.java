@@ -31,10 +31,12 @@
  */
 package com.mgmtp.a12.dataservices.utils;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * All attachment type constants are stored here.
  */
-public interface AttachmentConstants {
+@OnlyForUsage public interface AttachmentConstants {
 
 	/**
 	 * Attachment visibility type indicating a private attachment.

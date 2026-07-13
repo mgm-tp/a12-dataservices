@@ -1,0 +1,10 @@
+{
+  "header": {
+    "id": "TestDocModel",
+    "modelType": "document",
+    "modelVersion": "1.0.0",
+    "labels": [],
+    "annotations": [],
+    "modelReferences": []
+  }
+}

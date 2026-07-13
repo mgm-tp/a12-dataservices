@@ -103,6 +103,6 @@ public class PlantumlTimingRenderer extends AbstractRenderer {
 	}
 
 	private static String getNanos(Instant timestamp) {
-		return String.format("%.0f",timestamp.getEpochSecond() * 1_000_000_000D + timestamp.getNano());
+		return "%.0f".formatted(timestamp.getEpochSecond() * 1_000_000_000D + timestamp.getNano());
 	}
 }

@@ -36,7 +36,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.repository.query.Param;
 
 import com.mgmtp.a12.dataservices.rpc.internal.jpa.entity.RequestIdEntity;
@@ -55,7 +55,7 @@ public interface RequestIdRepository extends JpaRepository<RequestIdEntity, Stri
 	 */
 	@Modifying
 	// dummy countQuery needed because of the spring bug https://github.com/spring-projects/spring-boot/issues/34363
-	@Query(value = "insert into " + REQUEST_ID_TABLE + " (id, state) values (:id, 'PENDING')", nativeQuery = true, countQuery = "select count(id) from "
+	@NativeQuery(value = "insert into " + REQUEST_ID_TABLE + " (id, state) values (:id, 'PENDING')", countQuery = "select count(id) from "
 		+ REQUEST_ID_TABLE + " where id=:id")
 	void insert(@Param("id") String id);
 

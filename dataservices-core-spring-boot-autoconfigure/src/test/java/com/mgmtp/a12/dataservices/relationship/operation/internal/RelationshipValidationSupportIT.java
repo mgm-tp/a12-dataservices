@@ -32,7 +32,7 @@
 package com.mgmtp.a12.dataservices.relationship.operation.internal;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -55,7 +55,6 @@ import com.mgmtp.a12.dataservices.relationship.operation.AbstractListITBase;
 import com.mgmtp.a12.dataservices.relationship.spec.LinkDescriptor;
 import com.mgmtp.a12.dataservices.relationship.spec.RelationshipLinkSpec;
 import com.mgmtp.a12.dataservices.relationship.spec.RelationshipRoleSpec;
-import com.mgmtp.a12.model.header.HeaderParseException;
 
 public class RelationshipValidationSupportIT extends AbstractListITBase {
 
@@ -68,11 +67,11 @@ public class RelationshipValidationSupportIT extends AbstractListITBase {
 	private static final DocumentReference OTHER_DOCREF = new DocumentReference("other", "OtherDocRef");
 	private static final String COMMON_RELATIONSHIPMODEL = "commonRM";
 	private static final String OTHER_RELATIONSHIPMODEL = "otherRM";
-	private static final Map<Role, Pair<String, DocumentReference>> ROLE_MAP = new HashMap<>() {{
+	private static final Map<Role, Pair<String, DocumentReference>> ROLE_MAP = new EnumMap<>(Role.class) {{
 		put(Role.BRAND, new ImmutablePair<>(BRAND_ROLE, BRAND_DOCREF));
 		put(Role.PRODUCT, new ImmutablePair<>(PRODUCT_ROLE, PRODUCT_DOCREF));
 		put(Role.BUNDLE, new ImmutablePair<>(BUNDLE_ROLE, BUNDLE_DOCREF));
-		put(Role.PRODUCT_OTHERDOCREF, new ImmutablePair<>(PRODUCT_ROLE, OTHER_DOCREF));
+		put(Role.PRODUCT_OTHER_DOCREF, new ImmutablePair<>(PRODUCT_ROLE, OTHER_DOCREF));
 	}};
 	private static final RelationshipLink
 		BRAND_PRODUCT_ENTITY = relationshipLinkEntityBuilder(Role.BRAND, Role.PRODUCT);
@@ -81,7 +80,7 @@ public class RelationshipValidationSupportIT extends AbstractListITBase {
 	private static final RelationshipLink BUNDLE_PRODUCT_ENTITY =
 		relationshipLinkEntityBuilder(Role.BUNDLE, Role.PRODUCT);
 	private static final RelationshipLink BRAND_PRODUCT_OTHER_DOCREF_ENTITY =
-		relationshipLinkEntityBuilder(Role.BRAND, Role.PRODUCT_OTHERDOCREF);
+		relationshipLinkEntityBuilder(Role.BRAND, Role.PRODUCT_OTHER_DOCREF);
 	private static final RelationshipLinkSpec
 		BRAND_PRODUCT_LINK_REF = linkRefBuilder(Role.BRAND, Role.PRODUCT);
 	private static final RelationshipLinkSpec PRODUCT_BRAND_LINK_REF =
@@ -89,7 +88,7 @@ public class RelationshipValidationSupportIT extends AbstractListITBase {
 	private static final RelationshipLinkSpec PRODCUT_BUNDLE_LINK_REF =
 		linkRefBuilder(Role.PRODUCT, Role.BUNDLE);
 	private static final RelationshipLinkSpec PRODUCT_BUNDLE_OTHER_DOC_REF_LINK_REF =
-		linkRefBuilder(Role.PRODUCT_OTHERDOCREF, Role.BUNDLE);
+		linkRefBuilder(Role.PRODUCT_OTHER_DOCREF, Role.BUNDLE);
 	private static final RelationshipLinkSpec OTHER_RM_LINK_REF =
 		linkRefBuilder(Role.BUNDLE, Role.PRODUCT, OTHER_RELATIONSHIPMODEL);
 	private String invalidVersionRM;
@@ -123,19 +122,16 @@ public class RelationshipValidationSupportIT extends AbstractListITBase {
 	}
 
 	private static RelationshipRoleSpec linkEntitySpecBuilder(Role role) {
-		RelationshipRoleSpec relationshipRoleSpec = new RelationshipRoleSpec();
-		relationshipRoleSpec.setRole(ROLE_MAP.get(role).getLeft());
-		relationshipRoleSpec.setDocRef(ROLE_MAP.get(role).getRight());
-		return relationshipRoleSpec;
+		return new RelationshipRoleSpec(ROLE_MAP.get(role).getLeft(), ROLE_MAP.get(role).getRight());
 	}
 
-	@BeforeClass public void init() throws Exception {
+	@BeforeClass @Override public void init() throws Exception {
 		super.init();
 		invalidVersionRM = resourceFunctions.loadResource(PathConstants.RELATIONSHIP_MODEL_INVALID_PATH + "InvalidVersionRM.json");
 	}
 
 	@Test(expectedExceptions = InvalidInputException.class)
-	public void createRMWithWrongVersion() throws HeaderParseException {
+	public void createRMWithWrongVersion() {
 		createModel(invalidVersionRM);
 	}
 
@@ -168,17 +164,17 @@ public class RelationshipValidationSupportIT extends AbstractListITBase {
 		assertValidation(BRAND_PRODUCT_OTHER_DOCREF_ENTITY, BRAND_PRODUCT_LINK_REF, "Wrong Entity");
 	}
 
-	private void assertValidation(RelationshipLink bundleProductEntity, RelationshipLinkSpec otherRMLinkRef, String Wrong_Relationship_Model) {
+	private void assertValidation(RelationshipLink bundleProductEntity, RelationshipLinkSpec otherRMLinkRef, String wrongRelationshipModel) {
 		try {
 			RelationshipValidationSupport.validateLink(bundleProductEntity, otherRMLinkRef.getLinkDescriptor());
 		} catch (RelationshipValidationException e) {
-			Assert.assertEquals(e.getTitle(), Wrong_Relationship_Model);
+			Assert.assertEquals(e.getTitle(), wrongRelationshipModel);
 			throw e;
 		}
 	}
 
 	private enum Role {
-		BRAND, PRODUCT, BUNDLE, PRODUCT_OTHERDOCREF;
+		BRAND, PRODUCT, BUNDLE, PRODUCT_OTHER_DOCREF
 	}
 
 }

@@ -47,7 +47,6 @@ import com.mgmtp.a12.kernel.md.model.api.fieldtypes.IFieldType;
 import com.mgmtp.a12.kernel.md.model.api.fieldtypes.INumberType;
 import com.mgmtp.a12.kernel.md.model.api.fieldtypes.IStringType;
 import com.mgmtp.a12.kernel.md.model.api.fieldtypes.ITypeDefType;
-import com.mgmtp.a12.kernel.md.model.api.fieldtypes.IUnspecifiedType;
 
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -57,7 +56,6 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.MODEL_MODEL_TYP
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class QueryTopologyHelper {
 	private static final List<Class<? extends IFieldType>> KNOWN_TYPES = List.of(
-		IUnspecifiedType.class,
 		IEnumerationType.class,
 		IDateRangeType.class,
 		ITypeDefType.class,

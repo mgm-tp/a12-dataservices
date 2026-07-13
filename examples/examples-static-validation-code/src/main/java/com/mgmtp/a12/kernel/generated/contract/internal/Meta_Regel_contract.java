@@ -39,12 +39,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.mgmtp.a12.kernel.core.rt.a12internal.validation.IIdentifier;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.formatdef.Identifier_t;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.formatdef.Identifier_t.ReferenzTyp;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.formatdef.Regel_t;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.meta.util.MapBuilder;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.Constants;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.RtIdentifierTemplate;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.formatdef.Identifier_t;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.formatdef.Identifier_t.ReferenzTyp;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.formatdef.Regel_t;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.meta.util.MapBuilder;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.Constants;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.RtIdentifierTemplate;
 
 /*
  * Enthält Metadaten über die Regeln.

@@ -127,7 +127,7 @@ public class DefaultContentStoreServiceIT extends AbstractContentStoreTest {
 		Assert.assertTrue(publicContentPersistenceResult.getUrl().isPresent());
 	}
 
-	@Test() public void testSaveSuccessfully_dataIsSaved() throws IOException {
+	@Test public void testSaveSuccessfully_dataIsSaved() throws IOException {
 		String contentId = UUID.randomUUID().toString();
 		persistContent(contentId, Constants.PERSISTENT_TYPE_PUBLIC, UPLOAD_CONTENT.getBytes(), FILE_NAME);
 		ContentStream contentStream = contentStoreService.getContent(contentId);
@@ -135,7 +135,7 @@ public class DefaultContentStoreServiceIT extends AbstractContentStoreTest {
 		verifyContentEntityIsNull(contentId);
 	}
 
-	@Test() public void testSaveContent_hasError_rollbackTicketSaved() {
+	@Test public void testSaveContent_hasError_rollbackTicketSaved() {
 		TestEventListener testEventListener = applicationContext.getBean(TestEventListener.class);
 		String contentId = testEventListener.getContentIdForSavingTest();
 		InputStream contentInputStream = new ByteArrayInputStream(UPLOAD_CONTENT.getBytes());
@@ -154,7 +154,7 @@ public class DefaultContentStoreServiceIT extends AbstractContentStoreTest {
 		Assert.assertEquals(notFoundException.getShortMessage().getKey(), "error.content-store.content.notFound");
 	}
 
-	@Test() public void getPrivateContent_updateTicketSuccessfully() throws IOException {
+	@Test public void getPrivateContent_updateTicketSuccessfully() throws IOException {
 
 		String contentId = UUID.randomUUID().toString();
 
@@ -176,7 +176,7 @@ public class DefaultContentStoreServiceIT extends AbstractContentStoreTest {
 		Assert.assertTrue(ticketOpt.get().isDownloaded());
 	}
 
-	@Test() public void getPrivateContent_hasError_rollbackTicketUpdate() {
+	@Test public void getPrivateContent_hasError_rollbackTicketUpdate() {
 
 		TestEventListener testEventListener = applicationContext.getBean(TestEventListener.class);
 		String contentId = testEventListener.getContentIdForDownloadPrivateTest();
@@ -227,7 +227,7 @@ public class DefaultContentStoreServiceIT extends AbstractContentStoreTest {
 		}
 	}
 
-	@Test() public void requestPrivateContentUrl_success_returnUrl() {
+	@Test public void requestPrivateContentUrl_success_returnUrl() {
 		String url = contentStoreService.requestContentUrl(privateContentId, 3000);
 		String ticketId = url.substring(url.lastIndexOf("/") + 1);
 
@@ -237,7 +237,7 @@ public class DefaultContentStoreServiceIT extends AbstractContentStoreTest {
 		verifyContentEntityIsNull(privateContentId);
 	}
 
-	@Test() public void requestNotFoundContentUrl_throwException() {
+	@Test public void requestNotFoundContentUrl_throwException() {
 		// content is not found throw error
 		String contentId = UUID.randomUUID().toString();
 		NotFoundException notFoundException1 = Assert.expectThrows(
@@ -252,7 +252,7 @@ public class DefaultContentStoreServiceIT extends AbstractContentStoreTest {
 		Assert.assertEquals(notFoundException2.getMessage(), "Cannot find content by id " + publicContentId);
 	}
 
-	@Test() public void getPublicContentUrl_testAllCase() {
+	@Test public void getPublicContentUrl_testAllCase() {
 		// with public content we can get public url
 		Assert.assertTrue(contentStoreService.findPublicContentUrl(publicContentId).isPresent());
 
@@ -261,7 +261,7 @@ public class DefaultContentStoreServiceIT extends AbstractContentStoreTest {
 		Assert.assertFalse(contentStoreService.findPublicContentUrl("randomId").isPresent());
 	}
 
-	@Test() public void exists_testAllCase() {
+	@Test public void exists_testAllCase() {
 		// assert true with exact id and persistent type.
 		Assert.assertTrue(contentStoreService.exists(publicContentId, Constants.PERSISTENT_TYPE_PUBLIC));
 		Assert.assertTrue(contentStoreService.exists(privateContentId, Constants.PERSISTENT_TYPE_PRIVATE));
@@ -273,7 +273,7 @@ public class DefaultContentStoreServiceIT extends AbstractContentStoreTest {
 		Assert.assertFalse(contentStoreService.exists("privateContentId", Constants.PERSISTENT_TYPE_PRIVATE));
 	}
 
-	@Test() public void deleteById_testAllCase() {
+	@Test public void deleteById_testAllCase() {
 		Assert.assertTrue(contentService.findByContentIdAndPersistentType(privateContentId, Constants.PERSISTENT_TYPE_PRIVATE).isPresent());
 		Assert.assertTrue(contentService.findByContentIdAndPersistentType(publicContentId, Constants.PERSISTENT_TYPE_PUBLIC).isPresent());
 
@@ -284,7 +284,7 @@ public class DefaultContentStoreServiceIT extends AbstractContentStoreTest {
 		Assert.assertFalse(contentService.findByContentIdAndPersistentType(publicContentId, Constants.PERSISTENT_TYPE_PUBLIC).isPresent());
 	}
 
-	@Test() public void deleteById_whenCanNotDeleteInFilesystem_ShouldBeRollback() {
+	@Test public void deleteById_whenCanNotDeleteInFilesystem_ShouldBeRollback() {
 		String errorMessage = RandomStringUtils.randomAlphabetic(20);
 		Mockito.doThrow(new UnexpectedException(ExceptionKeys.UNEXPECTED_ERROR_KEY, errorMessage)).when(fileSystemContentRepository).delete(privateContentId);
 		try {
@@ -298,7 +298,7 @@ public class DefaultContentStoreServiceIT extends AbstractContentStoreTest {
 		Assert.assertFalse(contentService.findHeaderById(publicContentId).isPresent());
 	}
 
-	@Test() public void testSave_WhenHavingErrorInFileStorage_rollbackContentHeader() {
+	@Test public void testSave_WhenHavingErrorInFileStorage_rollbackContentHeader() {
 		String contentId = UUID.randomUUID().toString();
 		String errorMessage = RandomStringUtils.randomAlphabetic(20);
 

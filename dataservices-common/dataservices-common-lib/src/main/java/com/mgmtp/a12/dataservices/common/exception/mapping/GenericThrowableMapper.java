@@ -125,11 +125,11 @@ public class GenericThrowableMapper<E extends Throwable> {
 	 * @param exception the exception to log.
 	 */
 	public void log(E exception) {
-		String commonMessage = String.format("[ERROR-ID: %s]", getErrorCode(exception));
+		String commonMessage = "[ERROR-ID: %s]".formatted(getErrorCode(exception));
 		if (shouldLogStackTrace(exception)) {
 			log(getErrorLevel(exception), commonMessage, exception);
 		} else {
-			log(getErrorLevel(exception), String.format("[Exception: %s] : %s", exception.getClass().getCanonicalName(), getSecureMessage(exception)));
+			log(getErrorLevel(exception), "[Exception: %s] : %s".formatted(exception.getClass().getCanonicalName(), getSecureMessage(exception)));
 			log.trace(commonMessage, exception);
 		}
 	}
@@ -141,8 +141,8 @@ public class GenericThrowableMapper<E extends Throwable> {
 	 * @return	the specific level if the exception implements {@link BaseError}; otherwise {@link ErrorLevel#ERROR}.
 	 */
 	public ErrorLevel getErrorLevel(E exception) {
-		if (exception instanceof BaseError) {
-			return ((BaseError) exception).getLevel();
+		if (exception instanceof BaseError error) {
+			return error.getLevel();
 		} else {
 			return ErrorLevel.ERROR;
 		}
@@ -156,7 +156,7 @@ public class GenericThrowableMapper<E extends Throwable> {
 	 * @return	a secure message string.
 	 */
 	public String getSecureMessage(E exception) {
-		return exception instanceof AnonymityException ? ((AnonymityException) exception).getAnonymityMessage() : getExceptionMessage(exception);
+		return exception instanceof AnonymityException ae ? ae.getAnonymityMessage() : getExceptionMessage(exception);
 	}
 
 	/**

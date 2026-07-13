@@ -45,7 +45,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 import com.mgmtp.a12.dataservices.common.exception.UnexpectedException;
 import com.mgmtp.a12.dataservices.exception.ExceptionCodes;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
@@ -53,7 +52,6 @@ import com.mgmtp.a12.dataservices.experimental.ListIProblemReporter;
 import com.mgmtp.a12.dataservices.model.exception.DocumentModelDeSerializationException;
 import com.mgmtp.a12.dataservices.model.exception.DocumentModelSerializationException;
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity.ModelEntity;
-import com.mgmtp.a12.kernel.md.document.api.IFieldInstance;
 import com.mgmtp.a12.kernel.md.facade.DocumentModelServiceFactory;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 import com.mgmtp.a12.kernel.md.model.api.IField;
@@ -69,8 +67,6 @@ import com.mgmtp.a12.model.header.HeaderParser;
 
 import lombok.RequiredArgsConstructor;
 
-import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.DOCUMENT_INTEGRITY_ERROR_KEY;
-
 /**
  * Internal tools to automatize common tasks with document models.
  */
@@ -82,15 +78,6 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.DOCUMENT_INTEGR
 	protected final IDocumentModelSerializer documentModelSerializer;
 
 	protected final HeaderParser headerParser;
-
-	public static IFieldType getFieldType(IFieldInstance fieldInstance, IDocumentModelSearchService modelSearchService) {
-		return modelSearchService.getByPath(fieldInstance.getPath())
-			.map(IField.class::cast)
-			.flatMap(IField::getEffectiveType)
-			.orElseThrow(() -> new InvalidInputException(DOCUMENT_INTEGRITY_ERROR_KEY,
-				String.format("Unable to get effective type for field %s", fieldInstance.getPath())).withAnonymityMessage(
-				"Unable to get effective field type."));
-	}
 
 	/**
 	 * Returns all fields paths for the given document model.
@@ -108,23 +95,6 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.DOCUMENT_INTEGR
 			}
 		});
 		return paths;
-	}
-
-	/**
-	 * Checks whether field corresponding to fieldInstance is correct type.
-	 *
-	 * @param requiredType class of type the field is supposed to be.
-	 * @param fieldInstance field instance to determine field definition.
-	 * @param documentModel document model field definitions.
-	 * @param <U> field type we expect.
-	 * @return true in case the field is of required type. False otherwise.
-	 */
-	public <U extends IFieldType> boolean checkFieldType(Class<U> requiredType, IFieldInstance fieldInstance, IDocumentModel documentModel) {
-		return findField(documentModel, fieldInstance.getPath())
-			.flatMap(IField::getEffectiveType)
-			.map(IFieldType::getClass)
-			.filter(requiredType::isAssignableFrom)
-			.isPresent();
 	}
 
 	/**

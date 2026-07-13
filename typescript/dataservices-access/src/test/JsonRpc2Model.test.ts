@@ -77,6 +77,33 @@ suite("JSON-RPC Model Tests", () => {
 				false,
 				"List Models response without models was incorrectly recognized"
 			);
+
+			const responseWithoutResult = { jsonrpc: "2.0", id: "ListModels" };
+			strictEqual(
+				ListModelsJsonRpc2Response.isInstance(responseWithoutResult),
+				false,
+				"List Models response without result field should not be valid"
+			);
+
+			const responseWithWrongModelsType = {
+				...rpcResponse,
+				result: { models: "not an object" }
+			};
+			strictEqual(
+				ListModelsJsonRpc2Response.isInstance(responseWithWrongModelsType),
+				true,
+				"List Models response only checks for presence of models field"
+			);
+
+			const responseWithError = {
+				...rpcResponse,
+				error: { code: -1, message: "Error", data: {} }
+			};
+			strictEqual(
+				ListModelsJsonRpc2Response.isInstance(responseWithError),
+				false,
+				"List Models response should not be valid with both result and error fields"
+			);
 		});
 	});
 
@@ -106,11 +133,36 @@ suite("JSON-RPC Model Tests", () => {
 				"List Validation Codes response was not recognized"
 			);
 
-			const omittedModelsResponse = { ...rpcResponse, result: {} };
+			const omittedValidationsResponse = { ...rpcResponse, result: {} };
 			strictEqual(
-				ListModelsJsonRpc2Response.isInstance(omittedModelsResponse),
+				ListValidationsJsonRpc2Response.isInstance(omittedValidationsResponse),
 				false,
-				"List Validation Codes response without validations was incorrectly recognized"
+				"List Validation Codes response without documentValidationCodes was incorrectly recognized"
+			);
+
+			const { documentValidationCodes, ...resultWithoutValidations } = rpcResponse.result;
+			const responseWithoutValidations = { ...rpcResponse, result: resultWithoutValidations };
+			strictEqual(
+				ListValidationsJsonRpc2Response.isInstance(responseWithoutValidations),
+				false,
+				"List Validation Codes response without documentValidationCodes field was incorrectly recognized"
+			);
+
+			const responseWithoutResult = { jsonrpc: "2.0", id: "ListValidationCodes" };
+			strictEqual(
+				ListValidationsJsonRpc2Response.isInstance(responseWithoutResult),
+				false,
+				"List Validation Codes response without result field should not be valid"
+			);
+
+			const responseWithError = {
+				...rpcResponse,
+				error: { code: -1, message: "Error", data: {} }
+			};
+			strictEqual(
+				ListValidationsJsonRpc2Response.isInstance(responseWithError),
+				false,
+				"List Validation Codes response should not be valid with both result and error fields"
 			);
 		});
 	});

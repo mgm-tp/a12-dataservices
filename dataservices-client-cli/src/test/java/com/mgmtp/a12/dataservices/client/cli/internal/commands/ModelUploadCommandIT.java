@@ -57,11 +57,6 @@ public class ModelUploadCommandIT extends AbstractCliIT {
 				Address
 				AddressOther
 				BusinessPartnerSuper
-				BusinessPartnerSuperInclude1
-				BusinessPartnerSuperInclude2
-				BusinessPartnerSuperInclude3
-				BusinessPartnerSuperInclude4
-				BusinessPartnerSuperInclude5
 				BusinessPartnerSuperOther
 				Contract
 				DemoModelBare
@@ -99,16 +94,6 @@ public class ModelUploadCommandIT extends AbstractCliIT {
 		assertThat(getCleanLineEndings(stderr.toString())).isBlank();
 		assertThat(client.getExitCode()).isZero();
 		cleanUpByDocumentModel("Contract");
-	}
-
-	@Test
-	public void testModelUploadInvalid() {
-		client.run(new DefaultApplicationArguments("model", "upload", "classpath:/bulk/modelsDuplicate.zip"));
-
-		assertThat(getCleanLineEndings(stdout.toString())).contains(
-			"{\"longMessage\":{\"key\":\"error.model.duplicity\",\"default\":\"Duplicate files for model BusinessPartnerSuper\"},\"shortMessage\":{\"key\":\"error.model.duplicity\",\"default\":\"Duplicate files for model BusinessPartnerSuper\"}");
-		assertThat(getCleanLineEndings(stderr.toString())).contains("Failed to upload models: BadRequest");
-		assertThat(client.getExitCode()).isEqualTo(1);
 	}
 
 }

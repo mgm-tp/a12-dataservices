@@ -37,5 +37,5 @@ export * from "./json-rpc/index.js";
 export * from "./model/index.js";
 export * from "./query/index.js";
 export * from "./Relationship/index.js";
-export * from "./SeedData/index.js";
+export * from "./Workspace/index.js";
 export * from "./monitor/index.js";

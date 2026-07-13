@@ -1,11 +1,10 @@
 {
 	"name": "@com.mgmtp.a12.dataservices/dataservices-access",
-	"version": "38.4.3-SNAPSHOT",
+	"version": "39.0.2",
 	"description": "A12 Data Services access descriptor & utilities",
-	"license": "(EUPL-1.2 OR LicenseRef-commercial)",
+	"license": "UNLICENSED",
 	"author": "mgm technology partners",
-	"main": "./lib/index.js",
-	"types": "lib/index.d.ts",
+	"exports": "./lib/index.js",
 	"type": "module",
 	"sideEffects": false,
 	"files": [
@@ -13,12 +12,12 @@
 		"!src/test",
 		"lib",
 		"cyclonedx.json",
+		"README.md",
+		"tsconfig.json",
 		"LICENSE",
 		"NOTICE",
 		"THIRD_PARTY_NOTICES",
-		"licenses",
-		"README.md",
-		"tsconfig.json"
+		"licenses"
 	],
 	"scripts": {
 		"clean": "rimraf ./lib ./package-lock.json ./target",
@@ -36,15 +35,16 @@
 		"setVersion": "npm version"
 	},
 	"dependencies": {
-		"typescript-fsa": "^3.0.0"
+		"@com.mgmtp.a12.client/typescript-fsa-redux-5-compat": "^1.0.0"
 	},
 	"devDependencies": {
-		"@com.mgmtp.a12.base/base-model-api": "29.3.0",
-		"@com.mgmtp.a12.devtools/tsconfig": "^1.1.0",
-		"@com.mgmtp.a12.devtools/eslint-config": "^3.1.0",
-		"@com.mgmtp.a12.devtools/prettier-config": "^1.1.0",
-		"@com.mgmtp.a12.utils/utils-connector": "8.2.1",
-		"@com.mgmtp.a12.utils/utils-localization": "7.2.0",
+		"@com.mgmtp.a12.base/base-model-api": "30.0.1",
+		"@com.mgmtp.a12.devtools/tsconfig": "2.0.1",
+		"@com.mgmtp.a12.devtools/eslint-config": "3.1.2",
+		"@com.mgmtp.a12.devtools/prettier-config": "^1.0.0",
+		"@com.mgmtp.a12.utils/utils-connector": "9.0.0",
+		"@com.mgmtp.a12.utils/utils-localization": "8.0.1",
+		"@cyclonedx/cyclonedx-npm": "^4.1.2",
 		"@types/mocha": "^10.0.10",
 		"@types/node": "^22.13.14",
 		"eslint": "^9.23.0",
@@ -55,19 +55,22 @@
 		"expect-type": "^1.2.1",
 		"mocha": "^11.7.1",
 		"npm-watch": "^0.13.0",
-		"prettier": "^3.5.3",
-		"redux": "^4.2.1",
+		"prettier": "3.9.1",
+		"redux": "^5.0.1",
 		"rimraf": "^6.0.1",
 		"ts-node": "^10.9.2",
 		"typedoc": "^0.28.1",
 		"typedoc-plugin-missing-exports": "^4.0.0",
-		"typescript": "5.8.2"
+		"typescript": "6.0.2"
+	},
+	"overrides": {
+		"glob": "^13.0.0"
 	},
 	"peerDependencies": {
-		"@com.mgmtp.a12.base/base-model-api": "^29.3.0",
-		"@com.mgmtp.a12.utils/utils-connector": "^8.2.1",
-		"@com.mgmtp.a12.utils/utils-localization": "^7.2.0",
-		"redux": "^4.0.5"
+		"@com.mgmtp.a12.base/base-model-api": "^30.0.1",
+		"@com.mgmtp.a12.utils/utils-connector": "^9.0.0",
+		"@com.mgmtp.a12.utils/utils-localization": "^8.0.1",
+		"redux": "^5.0.0"
 	},
 	"modelType": "relationship",
 	"modelVersion": "3.*.*",

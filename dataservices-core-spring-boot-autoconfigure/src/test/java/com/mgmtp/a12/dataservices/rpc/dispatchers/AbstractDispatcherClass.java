@@ -39,7 +39,7 @@ import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
 import com.mgmtp.a12.dataservices.constants.PathConstants;
 import com.mgmtp.a12.dataservices.constants.UserConstants;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
-import com.mgmtp.a12.dataservices.relationship.persistence.internal.RelationshipLinkRepository;
+import com.mgmtp.a12.dataservices.relationship.persistence.RelationshipLinkRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -76,7 +76,7 @@ abstract class AbstractDispatcherClass extends AbstractSpringContextIT {
 		createModel(resourceFunctions.loadResource(PathConstants.PRODUCT_CAMPAIGN_RM_PATH));
 
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "add/add_links_request_productcampaign.json");
-		request = String.format(request, product1DocRef, campaign1DocRef, product2DocRef, campaign1DocRef, product3DocRef,
+		request = request.formatted(product1DocRef, campaign1DocRef, product2DocRef, campaign1DocRef, product3DocRef,
 			campaign2DocRef, product4DocRef, campaign2DocRef, product5DocRef, campaign1DocRef, product5DocRef,
 			campaign2DocRef, product1DocRef, campaign3DocRef);
 

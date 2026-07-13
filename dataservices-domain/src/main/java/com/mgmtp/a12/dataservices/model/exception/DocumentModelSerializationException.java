@@ -67,7 +67,7 @@ public class DocumentModelSerializationException extends BaseException {
 	}
 
 	private static String formatMessage(String modelId) {
-		return String.format("Unable to serialize model %s", modelId);
+		return "Unable to serialize model %s".formatted(modelId);
 	}
 }
 

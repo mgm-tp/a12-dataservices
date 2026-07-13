@@ -31,25 +31,35 @@
  */
 package com.mgmtp.a12.dataservices.query.projection.internal;
 
-import java.time.Instant;
+import java.io.StringReader;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
-import org.springframework.util.Assert;
 
-import com.mgmtp.a12.dataservices.authorization.internal.UaaConnector;
+import com.mgmtp.a12.dataservices.common.exception.UnexpectedException;
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
-import com.mgmtp.a12.dataservices.document.DataServicesDocumentFactory;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.document.DocumentSpec;
-import com.mgmtp.a12.dataservices.document.internal.MetadataUtils;
+import com.mgmtp.a12.dataservices.document.internal.kernel.KernelDocumentService;
 import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
+import com.mgmtp.a12.dataservices.exception.ExceptionCodes;
+import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
+import com.mgmtp.a12.dataservices.exception.query.QueryInvalidInputException;
+import com.mgmtp.a12.dataservices.exception.query.QueryValidationException;
 import com.mgmtp.a12.dataservices.model.metadata.DocumentMetadataConstants;
 import com.mgmtp.a12.dataservices.query.DocumentTreeNodeType;
 import com.mgmtp.a12.dataservices.query.DocumentTreeResult;
@@ -57,161 +67,249 @@ import com.mgmtp.a12.dataservices.query.Paging;
 import com.mgmtp.a12.dataservices.query.QueryContext;
 import com.mgmtp.a12.dataservices.query.QueryPage;
 import com.mgmtp.a12.dataservices.query.annotation.QueryProjection;
+import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
+import com.mgmtp.a12.dataservices.query.constraint.logical.OrOperator;
 import com.mgmtp.a12.dataservices.query.constraint.matching.ExactMatchOperator;
+import com.mgmtp.a12.dataservices.query.internal.AbstractQueryTopology;
 import com.mgmtp.a12.dataservices.query.internal.DocumentTreeHelper;
-import com.mgmtp.a12.dataservices.query.internal.QueryConstants;
 import com.mgmtp.a12.dataservices.query.internal.RootBasedPageImpl;
 import com.mgmtp.a12.dataservices.query.projection.IQueryProjection;
 import com.mgmtp.a12.dataservices.query.topology.QueryLink;
 import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
-import com.mgmtp.a12.dataservices.utils.internal.KernelUtils;
+import com.mgmtp.a12.dataservices.utils.internal.GenericUtils;
 import com.mgmtp.a12.dataservices.utils.internal.LoadedDocumentReferencesContextHolder;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
+import com.mgmtp.a12.kernel.md.facade.DocumentModelServiceFactory;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
-import com.mgmtp.a12.kernel.md.model.api.IGroup;
+import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelSearchService;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelService;
-import com.mgmtp.a12.model.header.Annotation;
 
+import jakarta.annotation.Nullable;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 
-import static com.mgmtp.a12.dataservices.cdd.CddConstants.CDM_RELATIONSHIP_ANNOTATION;
-import static com.mgmtp.a12.dataservices.cdd.CddConstants.CDM_SOURCE_ROLE_ANNOTATION;
-import static com.mgmtp.a12.dataservices.cdd.CddConstants.CDM_TARGET_DOCUMENT_MODEL_ANNOTATION;
-import static com.mgmtp.a12.dataservices.cdd.CddConstants.CDM_TARGET_ROLE_ANNOTATION;
 import static com.mgmtp.a12.dataservices.cdd.CddConstants.RELATIONSHIP_GROUP_NAME;
+import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.ExecutionPhase.QUERY_PREPROCESSING;
+import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.QUERY_INVALID_INPUT_ERROR_KEY;
 import static com.mgmtp.a12.dataservices.query.projection.internal.CddProjectionImplementation.PROJECTION_NAME;
 import static com.mgmtp.a12.dataservices.utils.internal.ComposeDocumentModelUtils.getCrdModelName;
 
-/**
- * @deprecated To be replaced by {@link JsonbCddProjectionImplementation}.
- */
-//TODO A12S-5972: replace by JsonbCddProjectionImplementation
-@Deprecated(since = "38.0.0")
-@RequiredArgsConstructor
+@Slf4j @RequiredArgsConstructor
 @QueryProjection(PROJECTION_NAME) public class CddProjectionImplementation implements IQueryProjection<DocumentSpec> {
 
 	public static final String PROJECTION_NAME = "cdd";
+	public static final String INVALID_TARGET_DOCUMENT_MODEL =
+		"CDD projection expects a CDM in the targetDocumentModel";
 
 	private final IDocumentModelService documentModelService;
-	private final DataServicesDocumentFactory dataServicesDocumentFactory;
-	private final DocumentSupport documentSupport;
-	private final MetadataUtils metadataUtils;
+	private final DocumentModelServiceFactory documentModelServiceFactory;
 	private final DataServicesCoreProperties dataServicesCoreProperties;
+	private final ObjectMapper objectMapper;
 	private final DocumentTreeHelper documentTreeHelper;
+	private final Optional<KernelDocumentService> kernelDocumentService;
+	private final DocumentSupport documentSupport;
+	private final CdmHelper cdmHelper;
 
 	@Override public @NonNull QueryRoot preprocess(@NonNull QueryRoot originalQuery, QueryContext context) {
-		validateCddQuery(originalQuery);
-
-		return originalQuery.toBuilder()
-			// TODO A12S-5398: Check that field paths of CDM matches CRD.
-			.targetDocumentModel(getCrdModelName(context.getDocumentModel(originalQuery.getTargetDocumentModel())))
-			.fields(documentTreeHelper.getAllFieldNamesOfCdm(originalQuery.getTargetDocumentModel(), context, documentModelService))
-			.build();
+		IDocumentModel cdm = context.getDocumentModel(originalQuery.getTargetDocumentModel());
+		String crdModelName = getCrdModelName(cdm);
+		if (StringUtils.isBlank(crdModelName)) {
+			throw new QueryInvalidInputException(QUERY_PREPROCESSING, QUERY_INVALID_INPUT_ERROR_KEY, null)
+				.withAnonymityMessage(INVALID_TARGET_DOCUMENT_MODEL);
+		}
+		QueryRoot.QueryRootBuilder<?, ?> queryRootBuilder = originalQuery.toBuilder()
+			.targetDocumentModel(crdModelName)
+			.links(null);
+		// For aggregations, we must not preprocess field names.
+		if (!originalQuery.isAggregated()) {
+			validateCddQuery(originalQuery, cdm);
+			queryRootBuilder
+				.fields(documentTreeHelper.getAllFieldNamesOfCdm(originalQuery.getTargetDocumentModel(), context, documentModelService));
+		}
+		return queryRootBuilder.build();
 	}
 
 	@Override
-	public @NonNull QueryPage<DocumentSpec> postprocess(@NonNull QueryRoot originalQuery, @NonNull Page<DocumentTreeResult> crds, QueryContext context) {
-		IDocumentModel cdm = context.getDocumentModel(originalQuery.getTargetDocumentModel());
-		List<DocumentSpec> enrichedCrds = crds.stream()
-			.map(crd -> enrichCrdWithLinkedDocuments(context, crd, cdm.getHeader().getId()))
-			.map(dataServicesDocumentFactory::newDataServicesDocument)
-			.map(documentSupport::convertToDocumentSpec)
+	public @NonNull QueryPage<DocumentSpec> postprocess(@NonNull QueryRoot originalQuery, @NonNull Page<DocumentTreeResult> queryResult, QueryContext context) {
+		return originalQuery.isAggregated()
+			? postprocessAggregated(queryResult)
+			: postprocessNonAggregated(originalQuery, queryResult, context);
+	}
+
+	@NotNull private RootBasedPageImpl<DocumentSpec> postprocessNonAggregated(@NotNull QueryRoot originalQuery, @NotNull Page<DocumentTreeResult> queryResult,
+		QueryContext context) {
+		LoadedDocumentReferencesContextHolder.addDocumentReferencesFromDocumentTreeResults(queryResult.getContent());
+
+		String rootDocumentModel = originalQuery.getTargetDocumentModel();
+		IDocumentModel cdm = context.getDocumentModel(rootDocumentModel);
+
+		Collection<DocumentTreeResult> linkResults = queryForLinks(getCrdDocRefs(queryResult), cdm, context);
+
+		Map<DocumentReference, Map<String, List<DocumentTreeResult>>> linksBySourceDocRefAndBackReference = mergeLinkDocumentsToLinkedDocuments(linkResults)
+			.collect(
+				Collectors.groupingBy(DocumentTreeResult::getSourceDocRef,
+					Collectors.groupingBy(DocumentTreeResult::getBackReference, Collectors.toList())));
+
+		boolean computationsAllowed = kernelDocumentService.isPresent() && isComputationEnabledForModel(rootDocumentModel);
+		List<DocumentSpec> enrichedCrds = queryResult.stream()
+			.filter(r -> DocumentTreeNodeType.ROOT.equals(r.getType()))
+			.map(crd -> constructDocumentSpec(context, crd, rootDocumentModel, cdm, linksBySourceDocRefAndBackReference, computationsAllowed))
 			.toList();
-		LoadedDocumentReferencesContextHolder.addDocumentReferencesFromDocumentTreeResults(crds.getContent());
 
-		return new RootBasedPageImpl<>(enrichedCrds, crds.getPageable(), crds.getTotalElements());
+		return new RootBasedPageImpl<>(enrichedCrds, queryResult.getPageable(), queryResult.getTotalElements());
 	}
 
-	private static void validateCddQuery(@NonNull QueryRoot originalQuery) {
-		Assert.isNull(originalQuery.getAggregation(), "Aggregations are not allowed in query with cdd projection.");
-		Assert.isNull(originalQuery.getFields(), "Fields are not allowed in query with cdd projection.");
-		Assert.isTrue(CollectionUtils.isEmpty(originalQuery.getLinks()), "Links are not allowed in query with cdd projection.");
+	@NotNull private static RootBasedPageImpl<DocumentSpec> postprocessAggregated(@NotNull Page<DocumentTreeResult> queryResult) {
+		// For aggregations, we do not apply cdd postprocessing but just return the list of aggregated results.
+		List<DocumentSpec> aggregations = queryResult.stream()
+			.map(r -> new DocumentSpec(r.getDocRef(), r.getDocument().toString()))
+			.toList();
+		return new RootBasedPageImpl<>(aggregations, queryResult.getPageable(), queryResult.getTotalElements());
 	}
 
-	private DocumentV2 enrichCrdWithLinkedDocuments(QueryContext context, DocumentTreeResult crd, String cdmName) {
-		IDocumentModel cdm = context.getDocumentModel(cdmName);
+	@NotNull private DocumentSpec constructDocumentSpec(QueryContext context, DocumentTreeResult crd, String rootDocumentModel, IDocumentModel cdm,
+		Map<DocumentReference, Map<String, List<DocumentTreeResult>>> linkedDocuments, boolean computationsAllowed) {
+		DocumentReference docRef = new DocumentReference(rootDocumentModel, crd.getDocRef().toString());
+		String documentContent = handleComputations(rootDocumentModel,
+			context.getLocale(),
+			objectMapper.writeValueAsString(documentTreeHelper.constructDocumentFromFieldsAndLinks(crd, cdm, linkedDocuments)),
+			computationsAllowed);
+		return new DocumentSpec(docRef, documentContent);
+	}
 
-		AtomicReference<DocumentV2> documentAtomicReference = new AtomicReference<>(DocumentV2.empty(cdmName));
+	@NotNull private static Set<String> getCrdDocRefs(@NotNull Page<DocumentTreeResult> queryResult) {
+		return queryResult.stream()
+			.filter(r -> DocumentTreeNodeType.ROOT.equals(r.getType()))
+			.map(DocumentTreeResult::getDocRef)
+			.map(DocumentReference::toString)
+			.collect(Collectors.toSet());
+	}
 
-		Page<DocumentTreeResult> links = getLinkedDocuments(context, crd, cdm);
-		DocumentTreeHelper.LinkHierarchy linkedDocumentsHierarchy = new DocumentTreeHelper.LinkHierarchy(links);
-		documentTreeHelper.toFields("", crd, linkedDocumentsHierarchy, cdm)
-			.forEach(
-				e -> documentAtomicReference.set(
-					documentAtomicReference.get().withField(
-						KernelUtils.fromPathAndRepetitions(e.getPath(), e.getRepetitions()),
-						KernelUtils.fromV1Value(e)
-					)
-				)
+	@NotNull private Collection<DocumentTreeResult> queryForLinks(Set<String> docRefs, IDocumentModel cdm, QueryContext context) {
+		boolean hasLinks = CollectionUtils.isNotEmpty(context.getOriginalQuery().getLinks());
+		return Optional.of(docRefs)
+			.filter(CollectionUtils::isNotEmpty)
+			.map(dr -> constructDocRefConstraints(dr.stream()))
+			.filter(CollectionUtils::isNotEmpty)
+			.map(dr -> constructQueryFromLinks(cdm, dr,
+				hasLinks
+					? context.getOriginalQuery().getLinks()
+					: cdmHelper.cdmToLinks(cdm.getContent().getDocumentModelRoot(), context).toList(),
+				dataServicesCoreProperties.getQuery().getPageRequest()))
+			.filter(q -> CollectionUtils.isNotEmpty(q.getLinks()))
+			.map(q -> context.query(List.of(DocumentTreeNodeType.LINK, DocumentTreeNodeType.CHILD), q).getContent())
+			.orElse(Collections.emptyList());
+	}
+
+	@NotNull static List<ILogicOperator> constructDocRefConstraints(Stream<String> dr) {
+		return dr
+			.filter(StringUtils::isNotBlank)
+			.map(docRef -> (ILogicOperator) ExactMatchOperator.builder()
+				.field(DocumentMetadataConstants.DOCREF_METADATA_PATH)
+				.value(docRef)
+				.build())
+			.toList();
+	}
+
+	private String handleComputations(String targetCDMName, String locale, String documentStr, boolean computationsAllowed) {
+
+		if (!computationsAllowed) {
+			return documentStr;
+		}
+
+		DocumentV2 computedDocument = kernelDocumentService.get()
+			.computeDocument(
+				documentSupport.convertJSONToDocument(targetCDMName, new StringReader(documentStr)),
+				Optional.ofNullable(locale)
+					.filter(StringUtils::isNotBlank)
+					.map(Locale::of)
+					.orElse(Locale.getDefault())
 			);
-
-		links.forEach(l -> documentTreeHelper.toFields(l.getBackReference(), l, linkedDocumentsHierarchy, cdm)
-			.forEach(e -> documentAtomicReference.set(
-					documentAtomicReference.get().withField(
-						KernelUtils.fromPathAndRepetitions(e.getPath(), e.getRepetitions()),
-						KernelUtils.fromV1Value(e)
-					)
-				)
-			));
-
-		return metadataUtils.createDocumentMetadata(
-			documentAtomicReference.get(),
-			DocumentReference.builder().documentModelName(cdmName).documentId(crd.getDocRef().toString()).build(),
-			UaaConnector.getCurrentUserName(), Instant.now(), null);
+		return objectMapper.writeValueAsString(computedDocument);
 	}
 
-	private Page<DocumentTreeResult> getLinkedDocuments(QueryContext context, DocumentTreeResult crd, IDocumentModel cdm) {
+	@NotNull private static Stream<DocumentTreeResult> mergeLinkDocumentsToLinkedDocuments(Collection<DocumentTreeResult> linksAndLinkDocuments) {
 
-		ExactMatchOperator<Object> docRefConstraint = ExactMatchOperator.builder()
-			.field(DocumentMetadataConstants.DOCREF_METADATA_PATH)
-			.value(crd.getDocRef().toString())
-			.build();
+		Map<String, MutablePair<DocumentTreeResult, DocumentTreeResult>> linksWithLinkDocuments = new LinkedHashMap<>();
+		for (DocumentTreeResult entity : linksAndLinkDocuments) {
+			MutablePair<DocumentTreeResult, DocumentTreeResult> p = linksWithLinkDocuments
+				.computeIfAbsent(entity.getLinkId(), k -> MutablePair.of(null, null));
 
-		DataServicesCoreProperties.Query.PageRequest pageRequest = dataServicesCoreProperties.getQuery().getPageRequest();
-		QueryRoot linkedDocumentsQuery = QueryRoot.builder()
+			if (p.getLeft() == null || p.getRight() == null) {
+
+				if (DocumentTreeNodeType.LINK.equals(entity.getType())) {
+					p.setRight(entity);
+				} else if (DocumentTreeNodeType.CHILD.equals(entity.getType())) {
+					p.setLeft(entity);
+				} else {
+					throw new UnexpectedException("Illegal type.");
+				}
+
+				if (p.getLeft() != null && p.getRight() != null) {
+					ObjectNode relationshipNode = p.getLeft().getDocument().withObject(RELATIONSHIP_GROUP_NAME);
+					p.getRight().getDocument().properties().iterator()
+						.forEachRemaining(ld -> relationshipNode.set(ld.getKey(), ld.getValue()));
+				}
+			}
+		}
+		return linksWithLinkDocuments.values().stream()
+			.map(MutablePair::getLeft);
+	}
+
+	QueryRoot constructQueryFromLinks(IDocumentModel cdm, Collection<ILogicOperator> docRefsConstraint, Collection<QueryLink> links,
+		DataServicesCoreProperties.Query.PageRequest pageRequest) {
+		return QueryRoot.builder()
 			.targetDocumentModel(getCrdModelName(cdm))
 			.exclude(true)
-			.links(processGroupsForCdmAnnotations(cdm.getContent().getDocumentModelRoot(), context).toList())
+			.links(links)
 			.paging(new Paging(0, pageRequest.getPageNumberLimit() * pageRequest.getPageSizeLimit()))
 			.sort(null)
-			.constraint(docRefConstraint)
+			.constraint(OrOperator.builder()
+				.operands(docRefsConstraint)
+				.build())
 			.build();
 
-		return context.query(List.of(DocumentTreeNodeType.LINK, DocumentTreeNodeType.CHILD), linkedDocumentsQuery);
 	}
 
-	private Stream<QueryLink> processGroupsForCdmAnnotations(IGroup group, QueryContext queryContext) {
-		Map<String, String> annotations = group.getAnnotations().stream()
-			.filter(a -> Set.of(CDM_SOURCE_ROLE_ANNOTATION, CDM_TARGET_ROLE_ANNOTATION, CDM_RELATIONSHIP_ANNOTATION, CDM_TARGET_DOCUMENT_MODEL_ANNOTATION)
-				.contains(a.getName()))
-			.collect(Collectors.toMap(Annotation::getName, Annotation::getValue));
-		return annotations.containsKey(CDM_RELATIONSHIP_ANNOTATION)
-			? Stream.of(addLink(annotations, group, queryContext))
-			: getDirectChildGroups(group).flatMap(g -> processGroupsForCdmAnnotations(g, queryContext));
+	private void validateCddQuery(@NonNull QueryRoot originalQuery, IDocumentModel cdm) {
+		if (originalQuery.getFields() != null) {
+			throw new QueryValidationException(ExceptionKeys.ExecutionPhase.QUERY_VALIDATION, ExceptionCodes.QUERY_INVALID_INPUT_ERROR_CODE,
+				ExceptionKeys.INVALID_QUERY_ERROR_KEY, "Fields are not allowed in query with cdd projection.");
+		}
+		if (dataServicesCoreProperties.getQuery().getValidation().isEnabled()) {
+			validateLinks(originalQuery.getLinks(), documentModelServiceFactory.createDocumentModelSearchService(cdm));
+		}
 	}
 
-	private QueryLink addLink(Map<String, String> annotations, IGroup group, QueryContext queryContext) {
-
-		QueryLink link = QueryLink.builder()
-			.relationshipModel(annotations.get(CDM_RELATIONSHIP_ANNOTATION))
-			.targetRole(annotations.get(CDM_TARGET_ROLE_ANNOTATION))
-			.links(getDirectChildGroups(group)
-				.filter(g -> !(RELATIONSHIP_GROUP_NAME.equals(g.getName())))
-				.flatMap(g -> processGroupsForCdmAnnotations(g, queryContext)).toList())
-			.backReference(documentModelService.getPath(group))
-			.maxDepth(QueryConstants.CDM_LINK_MAX_DEPTH_FOR_NO_RECURSION)
-			.build();
-
-		queryContext.getEnrichments().setTargetDocumentModel(link, annotations.get(CDM_TARGET_DOCUMENT_MODEL_ANNOTATION));
-		queryContext.getEnrichments().setSourceRole(link, annotations.get(CDM_SOURCE_ROLE_ANNOTATION));
-
-		return link;
+	private void validateLinks(@Nullable Collection<QueryLink> links, IDocumentModelSearchService documentModelSearchService) {
+		Optional.ofNullable(links)
+			.stream()
+			.flatMap(Collection::stream)
+			.filter(Objects::nonNull)
+			.forEach(l -> {
+				Optional<String> backReference = Optional.ofNullable(l)
+					.map(AbstractQueryTopology::getBackReference)
+					.filter(StringUtils::isNotBlank);
+				if (backReference.isEmpty()) {
+					log.warn("Link does not have a back reference defined.");
+				} else if (backReference
+					.flatMap(documentModelSearchService::getByPath)
+					.isEmpty()) {
+					log.warn("Link with back reference '{}' does not point to a valid relationship group.", l.getBackReference());
+				}
+				validateLinks(l.getLinks(), documentModelSearchService);
+			});
 	}
 
-	public static Stream<IGroup> getDirectChildGroups(IGroup group) {
-		return group.getElements().stream()
-			.filter(IGroup.class::isInstance)
-			.map(IGroup.class::cast);
+	private boolean isComputationEnabledForModel(String targetDocumentModel) {
+		return Optional.of(dataServicesCoreProperties)
+			.map(DataServicesCoreProperties::getDocuments)
+			.map(DataServicesCoreProperties.Document::getComputation)
+			.map(DataServicesCoreProperties.Document.Computation::getEnabledForModels)
+			.filter(computationModels -> GenericUtils.matchOrAll(targetDocumentModel, computationModels))
+			.isPresent();
 	}
 }

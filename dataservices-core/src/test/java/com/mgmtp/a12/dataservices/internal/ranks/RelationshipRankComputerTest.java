@@ -70,8 +70,8 @@ public class RelationshipRankComputerTest {
 	public void insertAlwaysAtTheHead() throws OutOfRanksException {
 		List<String> ranks = new ArrayList<>(List.of(RelationshipRankComputer.computeRank(new ImmutablePair<>(null, null))));
 		for (int i = 2; i < NUMBER_OF_INSERTS; i++) {
-			String nextRank = RelationshipRankComputer.computeRank(new ImmutablePair<>(null, ranks.get(0)));
-			ranks.add(0, nextRank);
+			String nextRank = RelationshipRankComputer.computeRank(new ImmutablePair<>(null, ranks.getFirst()));
+			ranks.addFirst(nextRank);
 			//logStateOfRanks(i, 0, ranks);
 			assertThatListIsSorted(ranks);
 		}
@@ -81,13 +81,13 @@ public class RelationshipRankComputerTest {
 	public void testNewFirstOrder() throws OutOfRanksException {
 		Random randomGenerator = new Random();
 		List<String> ranks = new ArrayList<>(List.of(RelationshipRankComputer.computeRank(new ImmutablePair<>(null, null))));
-		ranks.add(RelationshipRankComputer.computeRank(new ImmutablePair<>(ranks.get(0), null)));
+		ranks.add(RelationshipRankComputer.computeRank(new ImmutablePair<>(ranks.getFirst(), null)));
 		for (int i = 0; i < NUMBER_OF_INSERTS; i++) {
 			int insertAfterIndex = randomGenerator.nextInt(ranks.size() - 1);
 			//	LOG.info(String.format("%d insert after %d position, rank size %d", i, insertAfterIndex, ranks.size()));
 			if (insertAfterIndex == 0) {
-				String newHead = RelationshipRankComputer.computeRank(new ImmutablePair<>(null, ranks.get(0)));
-				ranks.add(0, newHead);
+				String newHead = RelationshipRankComputer.computeRank(new ImmutablePair<>(null, ranks.getFirst()));
+				ranks.addFirst(newHead);
 			} else {
 				Pair<String, String> ranksFound = getRandomRanks(ranks, insertAfterIndex);
 				String nextRank = RelationshipRankComputer.computeRank(new ImmutablePair<>(ranksFound.first(), ranksFound.second()));
@@ -119,12 +119,12 @@ public class RelationshipRankComputerTest {
 			// we are picking 1 or 2 entries from this list therefore we must not consider the whole list
 			List<String> subList = ranks.subList(startIndex, startIndex + 2);
 			if (subList.size() > 1) {
-				return new Pair<>(subList.get(0), subList.get(1));
+				return new Pair<>(subList.getFirst(), subList.get(1));
 			} else {
-				return new Pair<>(subList.get(0), null);
+				return new Pair<>(subList.getFirst(), null);
 			}
 		} else {
-			return new Pair<>(ranks.get(0), null);
+			return new Pair<>(ranks.getFirst(), null);
 		}
 
 	}
@@ -149,9 +149,9 @@ public class RelationshipRankComputerTest {
 	}
 
 	private void logStateOfRanks(int insertCount, int insertAfter, List<String> ranks) {
-		log.info(String.format("Ranks after %d insert after %d:", insertCount, insertAfter));
+		log.info("Ranks after %d insert after %d:".formatted(insertCount, insertAfter));
 		for (int i = 0; i < ranks.size(); i++) {
-			log.info(String.format("%s [%d]", ranks.get(i), i));
+			log.info("%s [%d]".formatted(ranks.get(i), i));
 		}
 	}
 }

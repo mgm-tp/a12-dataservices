@@ -56,6 +56,8 @@ import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.reference.GenericReference;
 import com.mgmtp.a12.examples.AbstractITBase;
 
+import static com.mgmtp.a12.dataservices.constants.DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL;
+import static com.mgmtp.a12.dataservices.constants.PathConstants.BUSINESS_PARTNER_DOCUMENT_MODEL_PATH;
 import static com.mgmtp.a12.examples.attachment.ReusableAttachmentCleanupCondition.REUSABLE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -64,7 +66,7 @@ import static org.testng.Assert.assertTrue;
 @Test public class DirtyAttachmentCleanupConditionIT extends AbstractITBase {
 
 	public static final String ATTACHMENT_PATH = "attachment/";
-	public static final String ATTACHMENT_DOCUMENT_PATH = SRC_TEST_RESOURCES_PATH + ATTACHMENT_PATH + DOCUMENT_PATH;
+	public static final String ATTACHMENT_DOCUMENT_PATH = ATTACHMENT_PATH + DOCUMENT_PATH;
 
 	@Autowired private AttachmentService attachmentService;
 	@Autowired private DirtyAttachmentService dirtyAttachmentService;
@@ -79,20 +81,20 @@ import static org.testng.Assert.assertTrue;
 	}
 
 	@BeforeClass
-	public void beforeClass() throws Exception {
+	public void beforeClass() {
 		setUserTo(UserConstants.ADMIN_USER);
-		Optional.ofNullable(modelService.load(BUSINESS_PARTNER))
-			.ifPresent(model -> modelService.delete(model.getHeader().getId()));
-		createModel(SRC_TEST_RESOURCES_PATH + ATTACHMENT_PATH + MODEL_PATH, BUSINESS_PARTNER + ".json");
+		Optional.ofNullable(modelService.load(BUSINESS_PARTNER_DOCUMENT_MODEL))
+				.ifPresent(model -> modelService.delete(model.getHeader().getId()));
+		modelsFunctions.createModel(BUSINESS_PARTNER_DOCUMENT_MODEL_PATH);
 	}
 
 	@Test(dataProvider = "attachmentProvider")
 	public void testAttachmentCleanup(String name, List<AttachmentAnnotation> annotations, boolean presentAfterUnassignment) throws JobExecutionException, IOException {
 		AttachmentHeader savedAttachmentHeader = attachmentService.createAttachment(new ByteArrayInputStream("attachment content".getBytes()),
-			name + ".txt", BUSINESS_PARTNER, "/BusinessPartnerRoot/Attachment", annotations);
+			name + ".txt", BUSINESS_PARTNER_DOCUMENT_MODEL, "/BusinessPartnerRoot/Attachment", annotations);
 		String attachmentId = savedAttachmentHeader.getAttachmentId();
 
-		DocumentReference createdBusinessPartner = createDocument(BUSINESS_PARTNER, ATTACHMENT_DOCUMENT_PATH + "BusinessPartner.json");
+		DocumentReference createdBusinessPartner = documentFunctions.createDocumentFromFileAndGetDocRef(BUSINESS_PARTNER_DOCUMENT_MODEL, PARTNER_DOCUMENT_FILE);
 
 		AttachmentReference<GenericReference> attachmentReference = AttachmentReference.builder()
 			.reference(createdBusinessPartner)

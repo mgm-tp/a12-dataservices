@@ -35,9 +35,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.apache.tika.mime.MediaType;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
-
 import com.mgmtp.a12.dataservices.common.content.ContentTypeDetector;
 
 import lombok.RequiredArgsConstructor;
@@ -45,9 +42,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * Utility for media type detection using {@link ContentTypeDetector} and a default fallback type.
  */
-@ConditionalOnProperty(prefix = "com.mgmtp.a12.examples.attachments.mime-types.custom", name = "enabled", havingValue = "true")
 @RequiredArgsConstructor
-@Component public class MediaTypeUtils {
+public class MediaTypeUtils {
 	public static final MediaType APPLICATION_DOWNLOAD = MediaType.parse("application/x-msdownload");
 
 	private final ContentTypeDetector contentTypeDetector;

@@ -65,8 +65,7 @@ public class UrlUtils {
 	 * @return downloadable url String
 	 */
 	public static String buildContentUrl(String baseUrl, String contextPath, String id) {
-		return String.format(
-			CONTENT_STORE_DOWNLOAD_URL_PATTERN,
+		return CONTENT_STORE_DOWNLOAD_URL_PATTERN.formatted(
 			Optional.ofNullable(baseUrl).orElse(""),
 			Optional.ofNullable(contextPath).orElse(""),
 			id).replaceAll("(?<!(http:|https:))///?", "/");

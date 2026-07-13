@@ -35,13 +35,13 @@ import java.util.Objects;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.mgmtp.a12.dataservices.common.anonymizing.Anonymizer;
 import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
+import com.mgmtp.a12.dataservices.relationship.RelationshipLinkService;
 import com.mgmtp.a12.dataservices.relationship.exception.RelationshipLinkDocumentMissingException;
 import com.mgmtp.a12.dataservices.relationship.exception.RelationshipLinkDocumentNotAllowedException;
-import com.mgmtp.a12.dataservices.relationship.RelationshipLinkService;
 import com.mgmtp.a12.dataservices.relationship.spec.RelationshipLinkSpec;
 import com.mgmtp.a12.dataservices.relationship.spec.RelationshipRoleSpec;
 import com.mgmtp.a12.dataservices.rpc.RemoteOperation;

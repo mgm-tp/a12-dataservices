@@ -33,15 +33,12 @@ package com.mgmtp.a12.contentstore;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 
-import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.contentstore.autoconfigure.internal.ContentStoreAutoConfiguration;
 import com.mgmtp.a12.contentstore.autoconfigure.internal.ContentStoreRepositoryConfiguration;
 
-import lombok.SneakyThrows;
 
 /**
  * Base test class with all necessary configurations to run repository/service tests
@@ -51,14 +48,7 @@ import lombok.SneakyThrows;
 	properties = { "mgmtp.a12.dataservices.contentstore.server.api.enabled=true" })
 public abstract class AbstractSpringContextServerTests extends AbstractTestNGSpringContextTests {
 
-	@Autowired protected ResourceLoader resourceLoader;
 	@Autowired public ObjectMapper objectMapper;
 
-	@SneakyThrows
-	protected <T> T jsonToObject(TreeNode node, Class<T> type) {
-		return objectMapper
-			.treeAsTokens(node)
-			.readValueAs(type);
-	}
 }
 

@@ -82,7 +82,7 @@ public class LoadAttachmentUrlOperationTest extends AbstractDataServiceTest {
 		Mockito.doReturn(Optional.of(attachmentUrl)).when(attachmentService).findAttachmentUrl(attachmentId, docRef);
 		Mockito.doReturn(dataServicesAttachmentURL).when(attachmentMapper).toDataServicesAttachmentURL(attachmentUrl);
 
-		DataServicesAttachmentURL url = loadAttachmentUrlOperation.rpc(attachmentId, docRef);
+		DataServicesAttachmentURL url = loadAttachmentUrlOperation.rpc(attachmentId, docRef.toString());
 
 		Assert.assertEquals(url.getLocation(), randomUrl);
 	}
@@ -91,15 +91,15 @@ public class LoadAttachmentUrlOperationTest extends AbstractDataServiceTest {
 	public void testAttachmentNotFound_ShouldThrowException() {
 		Mockito.doReturn(Optional.empty()).when(attachmentService).findAttachmentUrl(attachmentId, docRef);
 
-		loadAttachmentUrlOperation.rpc(attachmentId, docRef);
+		loadAttachmentUrlOperation.rpc(attachmentId, docRef.toString());
 	}
 
 	@Test(expectedExceptions = NotFoundException.class, expectedExceptionsMessageRegExp="No URL from attachmentId .* could be found.")
 	public void testDocumentNotFound_ShouldThrowAttachmentException() {
-		Mockito.doThrow(new NotFoundException(String.format("No URL from attachmentId %s could be found.", attachmentId)))
+		Mockito.doThrow(new NotFoundException("No URL from attachmentId %s could be found.".formatted(attachmentId)))
 			.when(attachmentService).findAttachmentUrl(attachmentId, docRef);
 
-		loadAttachmentUrlOperation.rpc(attachmentId, docRef);
+		loadAttachmentUrlOperation.rpc(attachmentId, docRef.toString());
 	}
 
 }

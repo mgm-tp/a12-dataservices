@@ -60,14 +60,14 @@ public class RequestIdManager {
 		this.requestIdRepository = requestIdRepository;
 		this.requestId = requestId;
 		if (requestIdRepository.existsById(requestId)) {
-			throw new RequestIdConflictException(String.format(IS_ALREADY_PROCESSED, requestId), requestId,
+			throw new RequestIdConflictException(IS_ALREADY_PROCESSED.formatted(requestId), requestId,
 				requestIdRepository.getReferenceById(requestId).getState());
 		} else {
 			try {
 				requestIdRepository.insert(requestId);
 				requestIdRepository.flush();
 			} catch (Exception e) {
-				throw new RequestIdConflictException(String.format(IS_ALREADY_PROCESSED, requestId), requestId, PENDING);
+				throw new RequestIdConflictException(IS_ALREADY_PROCESSED.formatted(requestId), requestId, PENDING);
 			}
 		}
 	}
@@ -84,9 +84,9 @@ public class RequestIdManager {
 
 	private void finalizeRequestTransaction(RequestIdState state) {
 		RequestIdEntity entity = requestIdRepository.findById(requestId)
-			.orElseThrow(() -> new RequestIdConflictException(String.format(IS_ALREADY_PROCESSED, requestId), requestId, PENDING));
+			.orElseThrow(() -> new RequestIdConflictException(IS_ALREADY_PROCESSED.formatted(requestId), requestId, PENDING));
 		if (entity.getState() != PENDING) {
-			throw new RequestIdConflictException(String.format(IS_ALREADY_PROCESSED_WITH_STATE_S, entity.getId(), entity.getState()),
+			throw new RequestIdConflictException(IS_ALREADY_PROCESSED_WITH_STATE_S.formatted(entity.getId(), entity.getState()),
 				entity.getId(), entity.getState());
 		}
 		entity.setState(state);

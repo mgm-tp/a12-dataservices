@@ -128,7 +128,7 @@ public class InMemoryDocumentRepositoryTest {
 		repository.create(document);
 		List<DocumentReference> refs = repository.findAllDocRefsForModel(InMemoryDocumentRepository.MODEL_NAME);
 		assertEquals(refs.size(), 1);
-		assertEquals(refs.get(0), docRef);
+		assertEquals(refs.getFirst(), docRef);
 	}
 
 	@Test
@@ -136,7 +136,7 @@ public class InMemoryDocumentRepositoryTest {
 		repository.create(document);
 		List<DataServicesDocument> docs = repository.findDocumentsByDocRefs(List.of(docRef));
 		assertEquals(docs.size(), 1);
-		assertEquals(docs.get(0), document);
+		assertEquals(docs.getFirst(), document);
 	}
 
 	@Test

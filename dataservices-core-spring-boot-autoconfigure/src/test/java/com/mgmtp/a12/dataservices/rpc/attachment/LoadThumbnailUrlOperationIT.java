@@ -67,12 +67,12 @@ public class LoadThumbnailUrlOperationIT extends AbstractSpringContextIT {
 
 	@Test public void testSendLoadThumbnailRequest() throws IOException {
 		String loadThumbnailUrlRequest =
-			String.format(loadResourceFromClasspathAsString(PathConstants.ATTACHMENT_RPC_PATH + "/load_thumbnail_url_request.json"), attachemnt.getAttachmentId());
+			loadResourceFromClasspathAsString(PathConstants.ATTACHMENT_RPC_PATH + "/load_thumbnail_url_request.json").formatted(attachemnt.getAttachmentId());
 		List<JsonRpc2Response> responses = sendRpcRequest(loadThumbnailUrlRequest);
 		JsonRpc2Response jsonRpcresponse = responses.stream().filter(r -> Objects.equals(r.getId(), "loadThumbnailUrl")).findFirst().orElseThrow();
 		assertTrue(jsonRpcresponse.isSuccess());
 		AttachmentThumbnailUrl result = objectMapper.treeToValue(jsonRpcresponse.getResult(), AttachmentThumbnailUrl.class);
-		String expected = String.format(resourceFunctions.loadResource(PathConstants.ATTACHMENT_RPC_PATH + "load_thumbnail_url_response.json"), result.getSmallThumbnailUrl(),
+		String expected = resourceFunctions.loadResource(PathConstants.ATTACHMENT_RPC_PATH + "load_thumbnail_url_response.json").formatted(result.getSmallThumbnailUrl(),
 			result.getBigThumbnailUrl());
 		String actual = objectMapper.writeValueAsString(responses);
 		JSONAssert.assertEquals(expected, actual, false);

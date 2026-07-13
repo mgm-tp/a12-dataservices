@@ -2,7 +2,7 @@
   "header": {
     "id": "BusinessPartnerSuper",
     "modelType": "document",
-    "modelVersion": "28.4.0",
+    "modelVersion": "29.2.0",
     "locales": [
       {
         "code": "en"
@@ -42,13 +42,11 @@
       {
         "purpose": "include",
         "modelType": "document",
-        "alias": "BusinessPartnerSuperInclude1",
         "reference": "BusinessPartnerSuperInclude1"
       },
       {
         "purpose": "include",
         "modelType": "document",
-        "alias": "BusinessPartnerSuperInclude2",
         "reference": "BusinessPartnerSuperInclude2"
       }
     ]
@@ -80,7 +78,9 @@
                 "name": "BusinessPartnerSuperInclude1",
                 "Group": {
                   "repeatability": 1,
-                  "modelAlias": "BusinessPartnerSuperInclude1"
+                  "includeConfig": {
+                    "reference": "BusinessPartnerSuperInclude1"
+                  }
                 }
               },
               {
@@ -89,7 +89,9 @@
                 "name": "BusinessPartnerSuperInclude2",
                 "Group": {
                   "repeatability": 1,
-                  "modelAlias": "BusinessPartnerSuperInclude2"
+                  "includeConfig": {
+                    "reference": "BusinessPartnerSuperInclude2"
+                  }
                 }
               },
               {

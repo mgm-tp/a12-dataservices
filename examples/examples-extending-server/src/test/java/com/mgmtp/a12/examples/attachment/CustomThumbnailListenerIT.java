@@ -58,9 +58,10 @@ import com.mgmtp.a12.examples.AbstractITBase;
 import com.mgmtp.a12.examples.attachment.thumbnails.CustomThumbnailListener;
 import com.mgmtp.a12.examples.extra.ExtraEntity;
 import com.mgmtp.a12.examples.extra.ExtraEntityRepository;
-import com.mgmtp.a12.examples.util.ResourceUtil;
 
-@ActiveProfiles({ "dataservices-example-common", "dataservices-example-attachments-audit", "dataservices-example-attachments-thumbnail-custom" })
+import static com.mgmtp.a12.dataservices.constants.DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL;
+
+@ActiveProfiles({ "dataservices-example-common", "dataservices-example-attachments_audit", "dataservices-example-attachments_thumbnail_custom" })
 public class CustomThumbnailListenerIT extends AbstractITBase {
 
 	public static final String ATTACHMENT_PDF = "attachment.pdf";
@@ -73,8 +74,6 @@ public class CustomThumbnailListenerIT extends AbstractITBase {
 	@Autowired private AttachmentService attachmentService;
 	@Autowired private ContentStoreService contentStoreService;
 	@Autowired private DataServicesCoreProperties properties;
-
-	@Autowired private ResourceUtil resourceUtil;
 
 	@Autowired private ExtraEntityRepository repository;
 
@@ -90,8 +89,8 @@ public class CustomThumbnailListenerIT extends AbstractITBase {
 
 	@Test(dataProvider = "customUploadThumbnails")
 	public void testCustomUploadAttachmentThumbnail(String attachmentName, String attachmentMimeType, String expectedThumbnailName,
-		ThumbnailType thumbnailType) {
-		AttachmentHeader header = createAttachment(attachmentName, ATTACHMENT_UPLOAD_PATH + attachmentName);
+		ThumbnailType thumbnailType) throws IOException {
+		AttachmentHeader header = createAttachment(attachmentName, ATTACHMENT_PATH + attachmentName);
 		Assert.assertTrue(attachmentService.findThumbnailUrl(header.getAttachmentId(), thumbnailType).isPresent());
 	}
 
@@ -104,11 +103,11 @@ public class CustomThumbnailListenerIT extends AbstractITBase {
 	}
 
 	@Test(dataProvider = "normalAttachmentThumbnails")
-	public void testNormalUploadAttachmentThumbnail(String attachmentName, ThumbnailType thumbnailType, int expectedSize) {
-		AttachmentHeader attachmentHeader = createAttachment(attachmentName, ATTACHMENT_UPLOAD_PATH + attachmentName);
+	public void testNormalUploadAttachmentThumbnail(String attachmentName, ThumbnailType thumbnailType, int expectedSize) throws IOException {
+		AttachmentHeader attachmentHeader = createAttachment(attachmentName, ATTACHMENT_PATH + attachmentName);
 
 		ThumbnailUtil.convertToDSThumbnail(
-				resourceUtil.getInputStream(ATTACHMENT_UPLOAD_PATH + attachmentName),
+				resourceFunctions.loadResourceAsStream(ATTACHMENT_PATH + attachmentName),
 				thumbnailType,
 				expectedSize,
 				properties.getAttachments().getThumbnail())
@@ -128,8 +127,8 @@ public class CustomThumbnailListenerIT extends AbstractITBase {
 	}
 
 	@Test
-	public void testUploadAttachment_shouldCreateExtraEntity_whenHandleAttachmentBeforeCreateEvent() {
-		AttachmentHeader attachmentHeader = createAttachment(ATTACHMENT_JPG, ATTACHMENT_UPLOAD_PATH + ATTACHMENT_JPG);
+	public void testUploadAttachment_shouldCreateExtraEntity_whenHandleAttachmentBeforeCreateEvent() throws IOException {
+		AttachmentHeader attachmentHeader = createAttachment(ATTACHMENT_JPG, ATTACHMENT_PATH + ATTACHMENT_JPG);
 
 		Optional<ExtraEntity> extraEntity = repository.findById(attachmentHeader.getAttachmentId());
 		Assert.assertTrue(extraEntity.isPresent());
@@ -144,21 +143,21 @@ public class CustomThumbnailListenerIT extends AbstractITBase {
 	}
 
 	@Test(expectedExceptions = UnexpectedException.class, expectedExceptionsMessageRegExp = "Throwing exception for rolling back persisted attachment from content store")
-	public void testForbiddenAttachmentThrowsAnException() {
+	public void testForbiddenAttachmentThrowsAnException() throws IOException {
 		attachmentService.createAttachment(
-			resourceUtil.getInputStream(ATTACHMENT_UPLOAD_PATH + ATTACHMENT_JPG),
-			CustomThumbnailListener.ROLLBACK_ATTACHMENT_FILE_NAME,
-			AbstractITBase.BUSINESS_PARTNER,
-			"/BusinessPartnerRoot/Attachment",
-			Collections.emptyList());
+				resourceFunctions.loadResourceAsStream(ATTACHMENT_PATH + ATTACHMENT_JPG),
+				CustomThumbnailListener.ROLLBACK_ATTACHMENT_FILE_NAME,
+				BUSINESS_PARTNER_DOCUMENT_MODEL,
+				"/BusinessPartnerRoot/Attachment",
+				Collections.emptyList());
 	}
 
-	private AttachmentHeader createAttachment(String attachmentName, String location) {
+	private AttachmentHeader createAttachment(String attachmentName, String location) throws IOException {
 		return attachmentService.createAttachment(
-			resourceUtil.getInputStream(location),
-			attachmentName,
-			AbstractITBase.BUSINESS_PARTNER,
-			RandomStringUtils.randomAlphabetic(10),
-			Collections.emptyList());
+				resourceFunctions.loadResourceAsStream(location),
+				attachmentName,
+				BUSINESS_PARTNER_DOCUMENT_MODEL,
+				RandomStringUtils.randomAlphabetic(10),
+				Collections.emptyList());
 	}
 }

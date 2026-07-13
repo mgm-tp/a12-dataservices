@@ -48,13 +48,14 @@ import com.mgmtp.a12.dataservices.relationship.events.RelationshipLinkAfterCreat
 import com.mgmtp.a12.dataservices.relationship.events.RelationshipLinkAfterDeleteEvent;
 import com.mgmtp.a12.dataservices.relationship.events.RelationshipLinkAfterUpdateEvent;
 import com.mgmtp.a12.dataservices.relationship.spec.LinkDescriptor;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 import lombok.NonNull;
 
 /**
  * The interface provides methods for commands and queries of relationship links.
  */
-public interface RelationshipLinkService {
+@OnlyForUsage public interface RelationshipLinkService {
 
 	/**
 	 * Creates a new relationship link with the specified link descriptor.

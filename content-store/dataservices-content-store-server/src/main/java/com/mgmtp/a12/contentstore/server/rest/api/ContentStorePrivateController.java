@@ -83,7 +83,8 @@ import lombok.extern.slf4j.Slf4j;
 	 * @param content Content upload data.
 	 * @param persistentType Persistent Type for Content, public or private.
 	 * @param filename The name of content.
-	 * @param mimeType The mime type of uploading content, this mime type will only be accepted if `mgmtp.a12.dataservices.contentstore.server.api.mimeType.trustExternalMimeType.enabled` is true
+	 * @param mimeType The mime type of uploading content, this mime type will only be accepted
+	 * if `mgmtp.a12.dataservices.contentstore.server.api.mimeType.trustExternalMimeType.enabled` is true.
 	 * @return Information about uploaded content, if content is public then return.
 	 * @title Upload Content
 	 * @responseSuccess 200 OK:: Content has been uploaded to file system.
@@ -128,7 +129,7 @@ import lombok.extern.slf4j.Slf4j;
 		return contentStoreService.findPublicContentUrl(id)
 			.map(url -> ResponseEntity.ok(new DownloadUrlResponse(url)))
 			.orElseThrow(
-				() -> new NotFoundException(ExceptionKeys.CONTENT_NOT_FOUND_ERROR_KEY, String.format(Constants.CANNOT_FIND_CONTENT_BY_ID_PATTERN, id))
+				() -> new NotFoundException(ExceptionKeys.CONTENT_NOT_FOUND_ERROR_KEY, Constants.CANNOT_FIND_CONTENT_BY_ID_PATTERN.formatted(id))
 			);
 	}
 

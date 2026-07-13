@@ -32,8 +32,6 @@
 package com.mgmtp.a12.kernel.generated.businesspartnersuper.internal;
 
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -48,28 +46,28 @@ import com.mgmtp.a12.kernel.core.rt.a12internal.meta.IMetaModel;
 import com.mgmtp.a12.kernel.core.rt.a12internal.utils.IMetaKeys;
 import com.mgmtp.a12.kernel.core.rt.a12internal.validation.IValidator;
 import com.mgmtp.a12.kernel.core.rt.internal.utils.IExtmpMetaKeysBase;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.core.IDynEnumsIntern;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.core.IMetaDataValidierung;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.formatdef.*;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.meta.*;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.sorter.SortOrder;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.meta.util.MapBuilder;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.IMetaKeysInternal;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.Constants;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.PresentationInformationValues;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.VersionCompatibilityCheck;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.TrieNode;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.core.IDynEnumsIntern;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.core.IMetaDataValidierung;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.formatdef.*;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.meta.*;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.sorter.SortOrder;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.meta.util.MapBuilder;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.IMetaKeysInternal;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.Constants;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.PresentationInformationValues;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.VersionCompatibilityCheck;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.TrieNode;
 public class Meta_businesspartnersuper implements IMetaModel, IMetaEntityInternal {
 
 	// Don't remove 'new String(..)' to prevent constant inlining (at compile-time).
-	private static final String RUNTIME_VERSION = new String("30.8");
+	private static final String RUNTIME_VERSION = new String("31.1");
 
     private final MetaModelImpl meta;
     private Meta_Felder_businesspartnersuper metaFelder = new Meta_Felder_businesspartnersuper();
     private Meta_Regel_businesspartnersuper metaRegeln = new Meta_Regel_businesspartnersuper();
-    private final List<Locale> unterstuetzteSprachen = Arrays.asList( new Locale("en"), Locale.US, new Locale("de") );
+    private final List<Locale> unterstuetzteSprachen = Arrays.asList( Locale.of("en"), Locale.US, Locale.of("de") );
 
-    private static final Map<Locale, PresentationInformationValues> DEFAULT_PRESENTATION_INFO = new MapBuilder<Locale, PresentationInformationValues>().put(new Locale("de"), new PresentationInformationValues(".", ",", "-", "JMT", PresentationInformation.FALSE, "~", "dd.MM.yyyy HH:mm", "HH:mm")).put(new Locale("en"), new PresentationInformationValues(".", ",", "-", "JMT", PresentationInformation.FALSE, "~", "MM/dd/yyyy HH:mm", "HH:mm")).put(Locale.US, new PresentationInformationValues(".", ",", "-", "JMT", PresentationInformation.FALSE, "~", "yyyy-MM-dd HH:mm", "HH:mm")).build();
+    private static final Map<Locale, PresentationInformationValues> DEFAULT_PRESENTATION_INFO = new MapBuilder<Locale, PresentationInformationValues>().put(Locale.of("de"), new PresentationInformationValues(".", ",", "-", "JMT", PresentationInformation.FALSE, "~", "dd.MM.yyyy HH:mm", "HH:mm")).put(Locale.of("en"), new PresentationInformationValues(".", ",", "-", "JMT", PresentationInformation.FALSE, "~", "MM/dd/yyyy HH:mm", "HH:mm")).put(Locale.US, new PresentationInformationValues(".", ",", "-", "JMT", PresentationInformation.FALSE, "~", "yyyy-MM-dd HH:mm", "HH:mm")).build();
 
 	public static final int[] LEGAL_CHARACTERS_START = null;
 	public static final int[] LEGAL_CHARACTERS_END = null;
@@ -115,9 +113,9 @@ public class Meta_businesspartnersuper implements IMetaModel, IMetaEntityInterna
 	};
 
 	private Model_t da = new Model_t (
-		"28.4.0", //Produkt-Version
+		"29.4.0", //Produkt-Version
 	    '.', //dezimaltrenner
-		Arrays.asList( new Locale("en"), Locale.US, new Locale("de") ), // unterstuetzte Sprachen
+		Arrays.asList( Locale.of("en"), Locale.US, Locale.of("de") ), // unterstuetzte Sprachen
 		MetaDataHelper.createSetOfStrings(), // Namen der Applikationsbedingungen
 		MetaDataHelper.createSetOfStrings(), // Names of custom field types
 		null,

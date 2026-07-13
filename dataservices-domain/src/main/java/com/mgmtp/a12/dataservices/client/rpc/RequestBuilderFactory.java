@@ -31,7 +31,7 @@
  */
 package com.mgmtp.a12.dataservices.client.rpc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.client.rpc.internal.JsonRpc2RequestBuilder;
 
 /**

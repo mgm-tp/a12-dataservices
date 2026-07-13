@@ -35,13 +35,12 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 import com.mgmtp.a12.dataservices.document.exception.InvalidDocumentReferenceException;
-import com.mgmtp.a12.dataservices.marshalling.DocumentReferenceDeserializer;
-import com.mgmtp.a12.dataservices.marshalling.DocumentReferenceFromStringConverter;
 import com.mgmtp.a12.dataservices.marshalling.DocumentReferenceSerializer;
 import com.mgmtp.a12.dataservices.reference.GenericReference;
+import com.mgmtp.a12.dataservices.marshalling.internal.DocumentReferenceDeserializer;
 
 import lombok.Builder;
 import lombok.Data;
@@ -52,7 +51,7 @@ import lombok.EqualsAndHashCode;
  * Neither part may contain "/" or "..". The model name must have at least two characters.
  */
 @JsonSerialize(using = DocumentReferenceSerializer.class)
-@JsonDeserialize(converter = DocumentReferenceFromStringConverter.class, using = DocumentReferenceDeserializer.class)
+@JsonDeserialize(using = DocumentReferenceDeserializer.class)
 @Data @EqualsAndHashCode @Builder
 public class DocumentReference implements Comparable<DocumentReference>, GenericReference {
 
@@ -147,7 +146,7 @@ public class DocumentReference implements Comparable<DocumentReference>, Generic
 	 */
 	protected void setIfValid(String docRef) {
 		if (StringUtils.countMatches(docRef, SEPARATOR) < 1 || StringUtils.contains(docRef, "../") || StringUtils.contains(docRef, "./")) {
-			throw new InvalidDocumentReferenceException(String.format("docRef [%s] is not a valid DocumentReference", docRef));
+			throw new InvalidDocumentReferenceException("docRef [%s] is not a valid DocumentReference".formatted(docRef));
 		}
 
 		String[] s = docRef.split(SEPARATOR, 2);
@@ -164,7 +163,7 @@ public class DocumentReference implements Comparable<DocumentReference>, Generic
 	 */
 	protected void setIfValid(String documentModelName, String documentId) {
 		if (StringUtils.length(documentModelName) < 2 || StringUtils.isBlank(documentId)) {
-			throw new InvalidDocumentReferenceException(String.format("docRef [%s/%s] is not a valid DocumentReference", documentModelName, documentId));
+			throw new InvalidDocumentReferenceException("docRef [%s/%s] is not a valid DocumentReference".formatted(documentModelName, documentId));
 		}
 
 		setDocumentModelName(documentModelName);

@@ -33,13 +33,16 @@ package com.mgmtp.a12.dataservices.marshalling;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.fasterxml.jackson.databind.util.StdConverter;
+import tools.jackson.databind.util.StdConverter;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 
 /**
- * Converts a string of the format "modelName/documentId" to a {@link DocumentReference}. It is needed for automatic
- * conversion in JSON deserialization.
+ * Converts a string of the format "modelName/documentId" to a {@link DocumentReference}.
+ *
+ * @deprecated A deserializer for {@link DocumentReference} is already registered automatically.
+ *             There is no need to reference or register this class directly.
  */
+@Deprecated(since = "39.0.0", forRemoval = true)
 public class DocumentReferenceFromStringConverter extends StdConverter<String, DocumentReference> {
 
 	/**

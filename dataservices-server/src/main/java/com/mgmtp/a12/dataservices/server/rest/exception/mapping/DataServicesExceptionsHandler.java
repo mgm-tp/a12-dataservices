@@ -42,8 +42,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.mgmtp.a12.contentstore.exception.TicketNotFoundException;
 import com.mgmtp.a12.dataservices.common.exception.BaseException;
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
@@ -59,23 +57,31 @@ import com.mgmtp.a12.dataservices.exception.ContentStoreClientException;
 import com.mgmtp.a12.dataservices.exception.CorruptedDataException;
 import com.mgmtp.a12.dataservices.exception.FunctionalityDisabledException;
 import com.mgmtp.a12.dataservices.exception.IntegrityException;
+import com.mgmtp.a12.dataservices.exception.RequestIdConflictException;
+import com.mgmtp.a12.dataservices.exception.SecurityException;
 import com.mgmtp.a12.dataservices.exception.query.QueryException;
 import com.mgmtp.a12.dataservices.exception.query.QueryInvalidInputException;
 import com.mgmtp.a12.dataservices.exception.query.QueryNotFoundException;
-import com.mgmtp.a12.dataservices.exception.RequestIdConflictException;
-import com.mgmtp.a12.dataservices.exception.SecurityException;
-import com.mgmtp.a12.dataservices.model.bulkload.ModelBulkImportException;
 import com.mgmtp.a12.dataservices.model.exception.SerializationException;
 import com.mgmtp.a12.dataservices.rpc.internal.JsonRpcOperationDispatcher.PreviousOperationFailedException;
 import com.mgmtp.a12.dataservices.server.rest.exception.internal.mapping.ContentStoreClientExceptionMapper;
 
 import lombok.NonNull;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DatabindException;
+import tools.jackson.databind.exc.MismatchedInputException;
 
 import static com.mgmtp.a12.dataservices.common.exception.mapping.GenericThrowableMapper.EXCEPTION_KEY;
 
 /**
- * Handler class for all DS exceptions.
+ * Spring `@ControllerAdvice` that handles exceptions for REST controllers and provides structured error responses.
+ * Key features:
  *
+ * * Maps exceptions to HTTP status codes and response entities
+ * * Uses `AnonymityException.getAnonymityMessage()` for privacy-safe logging
+ * * Delegates to specialized mapper classes for type-specific handling
+ * 
+ * @see AnonymityException for privacy protection guidelines
  */
 @ControllerAdvice(basePackages = { DataServicesCoreProperties.DS_PACKAGE_PREFIX })
 public class DataServicesExceptionsHandler extends ResponseEntityExceptionHandler {
@@ -177,15 +183,27 @@ public class DataServicesExceptionsHandler extends ResponseEntityExceptionHandle
 	}
 
 	/**
-	 * Handles JSON mapping failures when deserializing request payloads.
+	 * Handles old Jackson v2 JSON mapping failures when deserializing request payloads.
 	 *
-	 * @param ex a {@link JsonMappingException}; never null.
+	 * @param ex a {@link DatabindException}; never null.
 	 * @param request the current web request context; never null.
 	 * @return a {@link ResponseEntity} with BAD_REQUEST status and localized message.
 	 */
-	@ExceptionHandler(value = { JsonMappingException.class })
-	protected ResponseEntity<Object> handleJsonMappingException(JsonMappingException ex, WebRequest request) {
+	@ExceptionHandler(value = { DatabindException.class })
+	protected ResponseEntity<Object> handleJsonMappingException(DatabindException ex, WebRequest request) {
 		return handle(new JsonMappingExceptionMapper<>(), ex, request);
+	}
+
+	/**
+	 * Handles JSON mapping failures when deserializing request payloads.
+	 *
+	 * @param ex a {@link JacksonException}; never null.
+	 * @param request the current web request context; never null.
+	 * @return a {@link ResponseEntity} with BAD_REQUEST status and localized message.
+	 */
+	@ExceptionHandler(value = { JacksonException.class })
+	protected ResponseEntity<Object> handleJsonMappingException(JacksonException ex, WebRequest request) {
+		return handle(new JacksonMappingExceptionMapper<>(), ex, request);
 	}
 
 	/**
@@ -198,18 +216,6 @@ public class DataServicesExceptionsHandler extends ResponseEntityExceptionHandle
 	@ExceptionHandler(value = { MismatchedInputException.class })
 	protected ResponseEntity<Object> handleMismatchedInputException(MismatchedInputException ex, WebRequest request) {
 		return handle(new MismatchedInputExceptionMapper<>(), ex, request);
-	}
-
-	/**
-	 * Handles bulk import errors for models.
-	 *
-	 * @param ex a {@link ModelBulkImportException}; never null.
-	 * @param request the current web request context; never null.
-	 * @return a {@link ResponseEntity} containing aggregated import errors.
-	 */
-	@ExceptionHandler(value = { ModelBulkImportException.class })
-	protected ResponseEntity<Object> handleModelBulkImportException(ModelBulkImportException ex, WebRequest request) {
-		return handle(new ModelBulkImportExceptionMapper(), ex, request);
 	}
 
 	/**
@@ -353,13 +359,19 @@ public class DataServicesExceptionsHandler extends ResponseEntityExceptionHandle
 	}
 
 	/**
-	 * Delegates exception mapping to the given mapper and builds a {@link ResponseEntity}.
+	 * Central exception processing method that delegates to mappers.
 	 *
-	 * @param <E> the exception type handled by the mapper.
-	 * @param mapper the mapper responsible for building the response; never null.
-	 * @param ex the thrown exception; never null.
-	 * @param request the current web request context; never null.
-	 * @return a {@link ResponseEntity} with headers, body, and status provided by the mapper.
+	 * Coordinates exception-to-response transformation:
+	 *
+	 * * Calls `mapper.log(ex)` for anonymized logging when `AnonymityException` is implemented
+	 * * Adds exception headers when configured  
+	 * * Builds final `ResponseEntity` with mapper-provided content and HTTP status
+	 * 
+	 * @param <E> the exception type handled by the mapper
+	 * @param mapper the mapper for exception-to-response transformation; never null
+	 * @param ex the thrown exception to process; never null
+	 * @param request the current web request context; never null
+	 * @return `ResponseEntity` with headers, body, and HTTP status from the mapper
 	 */
 	protected <E extends Exception> ResponseEntity<Object> handle(GenericThrowableMapper<E> mapper, E ex, WebRequest request) {
 		mapper.log(ex);

@@ -42,11 +42,14 @@ import com.mgmtp.a12.dataservices.utils.internal.DataServicesDocumentProblemRepo
 import com.mgmtp.a12.kernel.md.document.api.services.DocumentDeserializationConfig;
 import com.mgmtp.a12.kernel.md.document.api.services.DocumentSerializationConfig;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
+import tools.jackson.databind.JsonNode;
 
 /**
  * Convenient methods for dealing with documents.
  */
-public interface DocumentSupport {
+@OnlyForUsage public interface DocumentSupport {
 
 	/**
 	 * Convert the given JSON document to {@link DocumentV2} type.
@@ -114,4 +117,34 @@ public interface DocumentSupport {
 	 * @param serializationConfig The serialization configuration.
 	 */
 	void serialize(DocumentV2 document, Writer writer, DocumentSerializationConfig serializationConfig);
+
+	/**
+	 * Convert the given JSON document to {@link DocumentV2} type.
+	 *
+	 * This method accepts a `JsonNode` directly, centralizing the JSON-to-Document conversion
+	 * in one place. Internally, the JsonNode is converted to a String and deserialized using
+	 * the standard Reader-based deserialization path.
+	 *
+	 * @param documentModelName The document model name.
+	 * @param jsonNode The JSON document as a Jackson `JsonNode`.
+	 * @return The converted {@link DocumentV2} instance.
+	 * @throws DataServicesDocumentProblemReporterException if the document cannot be deserialized.
+	 */
+	DocumentV2 convertJSONToDocument(String documentModelName, JsonNode jsonNode) throws DataServicesDocumentProblemReporterException;
+
+	/**
+	 * Convert the given JSON document to {@link DocumentV2} type with document reference for logging.
+	 *
+	 * Provides improved log messages by including document reference in error messages.
+	 * This method accepts a `JsonNode` directly, centralizing the JSON-to-Document conversion
+	 * in one place. Internally, the JsonNode is converted to a String and deserialized using
+	 * the standard Reader-based deserialization path.
+	 *
+	 * @param documentModelName The document model name.
+	 * @param jsonNode The JSON document as a Jackson `JsonNode`.
+	 * @param documentReference The document reference for improved error messages.
+	 * @return The converted {@link DocumentV2} instance.
+	 * @throws DataServicesDocumentProblemReporterException if the document cannot be deserialized.
+	 */
+	DocumentV2 convertJSONToDocument(String documentModelName, JsonNode jsonNode, DocumentReference documentReference);
 }

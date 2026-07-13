@@ -39,6 +39,7 @@ import org.springframework.data.domain.Sort;
 
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
+import com.mgmtp.a12.dataservices.query.DirectFieldOrder;
 import com.mgmtp.a12.dataservices.query.DocumentTreeNodeType;
 import com.mgmtp.a12.dataservices.query.DocumentTreeResult;
 import com.mgmtp.a12.dataservices.query.Order;
@@ -94,21 +95,24 @@ import lombok.extern.slf4j.Slf4j;
 		if (sort == null) {
 			return Sort.unsorted();
 		}
+		// Filter out relationship orders - they are handled directly in SQL generation
 		List<Sort.Order> orders = sort.stream()
+			.filter(DirectFieldOrder.class::isInstance)
+			.map(DirectFieldOrder.class::cast)
 			.map(QueryPagingHelper::makeOrder)
 			.toList();
 		return Sort.by(orders);
 	}
 
-	private static @NonNull Sort.Order makeOrder(Order o) {
-		if (o.field() == null || o.direction() == null || o.nullHandling() == null || o.ignoreCase() == null) {
+	private static @NonNull Sort.Order makeOrder(DirectFieldOrder dfo) {
+		if (dfo.field() == null || dfo.direction() == null || dfo.nullHandling() == null || dfo.ignoreCase() == null) {
 			log.error("None of the sorting parameters 'field', 'direction', 'nullHandling', and 'ignoreCase' must be null");
 			throw new InvalidInputException(ExceptionKeys.QUERY_INVALID_SORTING_ERROR_KEY,
 				"None of the sorting parameters 'field', 'direction', 'nullHandling', and 'ignoreCase' must be null");
 		}
-		Sort.Direction direction = Sort.Direction.valueOf(o.direction().name());
-		Sort.NullHandling nullHandling = Sort.NullHandling.valueOf(o.nullHandling().name());
-		return new Sort.Order(direction, o.field(), o.ignoreCase(), nullHandling);
+		Sort.Direction direction = Sort.Direction.valueOf(dfo.direction().name());
+		Sort.NullHandling nullHandling = Sort.NullHandling.valueOf(dfo.nullHandling().name());
+		return new Sort.Order(direction, dfo.field(), dfo.ignoreCase(), nullHandling);
 	}
 
 	public static <T> PagedResultSet<T> pageToResultSet(QueryPage<T> page, boolean isExclude) {

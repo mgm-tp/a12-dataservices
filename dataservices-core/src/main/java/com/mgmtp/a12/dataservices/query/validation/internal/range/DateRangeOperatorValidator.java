@@ -50,6 +50,8 @@ import com.mgmtp.a12.dataservices.query.validation.ValidationItem;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 import com.mgmtp.a12.kernel.md.model.api.IField;
+import com.mgmtp.a12.kernel.md.model.api.fieldtypes.IDateRangeType;
+import com.mgmtp.a12.kernel.md.model.api.fieldtypes.IFieldType;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -67,30 +69,39 @@ import static com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper.getE
 	@Override
 	public @NonNull Collection<ValidationItem> validate(ILogicOperator operator, String parentDocumentModel, String[] path, QueryContext context,
 		boolean validationEnabled) {
-		if (validationEnabled && operator instanceof DateRangeOperator dateRangeOperator) {
-			if (dateRangeOperator.getFrom() == null && dateRangeOperator.getTo() == null && dateRangeOperator.getValue() == null) {
-				return List.of(ValidationItem.invalid(path,
-					"Please provide `value` or `from` or `to` or both `from` and `to` in %s operator.".formatted(context.getOperatorName(operator))));
-			} else {
-				IDocumentModel documentModel = context.getDocumentModel(parentDocumentModel);
-				Optional<IField> fieldOptional = documentModelUtils.findField(documentModel, dateRangeOperator.getField());
-				if (fieldOptional.isPresent()) {
-					IField field = fieldOptional.get();
-					FieldDescriptor fieldDescriptor = context.getEnrichments().getFieldDescriptor(dateRangeOperator.getField());
-					if (fieldDescriptor.getFieldType() == null) {
-						fieldDescriptor.setFieldType(fieldTypeAsString(getEffectiveFieldType(field, QUERY_VALIDATION)));
-					}
-					try {
-						EnrichmentHelper.enrichDateRangeOperator(dateRangeOperator, field, documentModel, context, QUERY_VALIDATION);
-					} catch (QueryInvalidInputException e) {
-						return List.of(ValidationItem.invalid(path, e.getMessage()));
-					} catch (Exception e) {
-						return List.of(ValidationItem.invalid(path, "Validation failed for operator %s".formatted(context.getOperatorName(operator))));
-					}
-				}
-			}
-			return List.of(ValidationItem.valid(path, "Validation passed for operator %s".formatted(context.getOperatorName(operator))));
+		if (!(validationEnabled && operator instanceof DateRangeOperator dateRangeOperator)) {
+			return Collections.emptyList();
 		}
-		return Collections.emptyList();
+		if (dateRangeOperator.getFrom() == null && dateRangeOperator.getTo() == null && dateRangeOperator.getValue() == null) {
+			return List.of(ValidationItem.invalid(path,
+				"Please provide `value` or `from` or `to` or both `from` and `to` in %s operator.".formatted(context.getOperatorName(operator))));
+		}
+		// Skip validation if parentDocumentModel is null (e.g., due to invalid role in link constraint)
+		// The LinkAwareValidator will report the specific role validation error
+		if (parentDocumentModel == null) {
+			return Collections.emptyList();
+		}
+		IDocumentModel documentModel = context.getDocumentModel(parentDocumentModel);
+		Optional<IField> fieldOptional = documentModelUtils.findField(documentModel, dateRangeOperator.getField());
+		if (fieldOptional.isPresent()) {
+			IField field = fieldOptional.get();
+			IFieldType effectiveFieldType = getEffectiveFieldType(field, QUERY_VALIDATION);
+			FieldDescriptor fieldDescriptor = context.getEnrichments().getFieldDescriptor(dateRangeOperator.getField());
+			if (fieldDescriptor.getFieldType() == null) {
+				fieldDescriptor.setFieldType(fieldTypeAsString(effectiveFieldType));
+			}
+			if (dateRangeOperator.getValue() != null && !(effectiveFieldType instanceof IDateRangeType)) {
+				return List.of(ValidationItem.invalid(path,
+					"By value you can only search with field of type \"IDateRangeType\""));
+			}
+			try {
+				EnrichmentHelper.enrichDateRangeOperator(dateRangeOperator, field, documentModel, context, QUERY_VALIDATION);
+			} catch (QueryInvalidInputException e) {
+				return List.of(ValidationItem.invalid(path, e.getMessage()));
+			} catch (Exception e) {
+				return List.of(ValidationItem.invalid(path, "Validation failed for operator %s".formatted(context.getOperatorName(operator))));
+			}
+		}
+		return List.of(ValidationItem.valid(path, "Validation passed for operator %s".formatted(context.getOperatorName(operator))));
 	}
 }

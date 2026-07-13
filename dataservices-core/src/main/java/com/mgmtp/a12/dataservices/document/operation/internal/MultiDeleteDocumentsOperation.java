@@ -39,13 +39,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.mgmtp.a12.dataservices.common.anonymizing.Anonymizer;
+import com.mgmtp.a12.dataservices.common.exception.ErrorDetail;
+import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.document.DocumentService;
 import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
+import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.rpc.RemoteOperation;
+import com.mgmtp.a12.dataservices.rpc.internal.RpcDocRefParser;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -76,13 +79,19 @@ public class MultiDeleteDocumentsOperation extends AbstractDocumentOperation {
 	 *
 	 * @param documentReferences A collection of document references to be deleted.
 	 */
-	@Transactional public void rpc(@NonNull @JsonRpcParam("docRefs") Collection<DocumentReference> documentReferences) {
+	@Transactional public void rpc(@JsonRpcParam("docRefs") Collection<String> documentReferences) {
+		if (documentReferences == null) {
+			throw new InvalidInputException(ErrorDetail.RPC_ERROR_EXCEPTION_CODE, ExceptionKeys.INVALID_INPUT_ERROR_KEY, "docRefs is marked non-null but is null");
+		}
+		Collection<DocumentReference> docRefs = documentReferences.stream()
+			.map(RpcDocRefParser::parseDocRef)
+			.collect(Collectors.toList());
 		log.debug("{} called with parameters [docRefs={}]",
 			CoreOperationConstants.MULTI_DELETE_DOCUMENTS_OPERATION,
-			anonymizer.apply(documentReferences.stream()
+			anonymizer.apply(docRefs.stream()
 				.map(Object::toString)
 				.collect(Collectors.joining(","))));
 
-		documentService.deleteAll(documentReferences);
+		documentService.deleteAll(docRefs);
 	}
 }

@@ -31,6 +31,7 @@
  */
 package com.mgmtp.a12.examples.mime;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -43,21 +44,18 @@ import org.testng.annotations.Test;
 import com.mgmtp.a12.dataservices.attachment.AttachmentHeader;
 import com.mgmtp.a12.dataservices.attachment.AttachmentService;
 import com.mgmtp.a12.examples.AbstractITBase;
-import com.mgmtp.a12.examples.util.ResourceUtil;
 
 @WithUserDetails("admin")
-@ActiveProfiles({ "dataservices-example-common","dataservices-example-import_models", "dataservices-example-attachments-mime-type-custom" })
+@ActiveProfiles({ "dataservices-example-common","dataservices-example-import-models", "dataservices-example-attachments_mime_type_custom" })
 public class CustomZipTypeListenerIT extends AbstractITBase {
 
 	public static final String ATTACHMENT_ZIP = "file.zip";
 
 	@Autowired private AttachmentService attachmentService;
 
-	@Autowired private ResourceUtil resourceUtil;
-
 	@Test
-	public void testCustomZipTYpeDetection() {
-		InputStream zipFile = resourceUtil.getInputStream(ATTACHMENT_UPLOAD_PATH + ATTACHMENT_ZIP);
+	public void testCustomZipTypeDetection() throws IOException {
+		InputStream zipFile = resourceFunctions.loadResourceAsStream(ATTACHMENT_PATH + ATTACHMENT_ZIP);
 		AttachmentHeader attachmentHeader =
 			attachmentService.createAttachment(
 				zipFile,

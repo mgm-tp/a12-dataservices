@@ -1,4 +1,4 @@
-== Embedded Postgres Database
+= Embedded Postgres Database
 
 Set up the application to use an embedded file-based Postgres database. Default superuser is `postgres` and db name is `postgres`.
 If `spring.datasources.dataservices.embedded-postgres.path` is not provided, a temp folder will be used to persist data.

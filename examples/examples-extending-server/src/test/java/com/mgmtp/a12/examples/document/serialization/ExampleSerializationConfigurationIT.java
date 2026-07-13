@@ -53,7 +53,6 @@ public class ExampleSerializationConfigurationIT extends AbstractTestNGSpringCon
 	@Test
 	public void serializationConfigBean_properties_set() {
 		Assert.assertNotNull(serializationConfig);
-		Assert.assertTrue(serializationConfig.isFailIfUnreadableXML());
 		Assert.assertTrue(serializationConfig.isSkipTransientFields());
 		Assert.assertNotNull(serializationConfig.getPrettyJsonPrinter());
 	}
@@ -61,7 +60,6 @@ public class ExampleSerializationConfigurationIT extends AbstractTestNGSpringCon
 	@Test
 	public void deserializationConfigBean_properties_set() {
 		Assert.assertNotNull(deserializationConfig);
-		Assert.assertTrue(deserializationConfig.isAddTransientFields());
 		Assert.assertFalse(deserializationConfig.isRemoveEmptyFieldsAndGroups());
 	}
 }

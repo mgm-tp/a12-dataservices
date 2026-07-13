@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-License-Identifier: EUPL-1.2 OR LicenseRef-commercial
+
+  Copyright (c) 2012-2026 mgm technology partners GmbH
+
+  Dual License
+  ————————————
+  This source file is part of the mgm A12 Platform and available under
+  a choice of two different licenses:
+
+  1. Open-Source License – EUPL v1.2
+     You may redistribute and/or modify this file under the terms of the
+     European Union Public License, version 1.2 - see https://eupl.eu/.
+
+  2. Commercial License
+     Alternatively, you may obtain a commercial license from
+     mgm technology partners GmbH, that permits use of this software
+     under different terms (including support and maintenance services).
+
+     Please contact a12-license@mgm-tp.com for more information.
+
+  You must select and comply with exactly one of the above license options.
+
+  Warranty Disclaimer (applies to either option)
+  ——————————————————————————————————————————————
+  THIS SOFTWARE IS PROVIDED “AS IS” AND WITHOUT WARRANTY OF ANY KIND,
+  WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+  NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
+  LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
+-->
+<!--
+  Infinispan cache definitions for Data Services.
+
+  Defines all named caches with their eviction properties (TTL, maxCount). The
+  cache mode (INVALIDATION_SYNC in a cluster, LOCAL without transport) is set
+  programmatically by InfinispanCacheConfiguration based on whether transport
+  is configured — the element type here does not affect runtime behavior.
+
+  The deployment-specific JGroups stack and transport element are configured
+  separately in infinispan.xml (or a custom override) and must not appear here.
+
+  Cache TTL values (lifespan in ms): -1 = no expiry.
+  memory max-count: maximum number of entries per cache; oldest entries are
+  evicted when the limit is exceeded.
+  Calibrate max-count values in staging using GET /actuator/caches.
+-->
+<infinispan xmlns="urn:infinispan:config:15.0">
+
+	<cache-container default-cache="default">
+
+		<!-- Default cache: general-purpose fallback for any cache without explicit configuration -->
+		<invalidation-cache name="default" statistics="true">
+			<expiration lifespan="1200000"/>
+			<memory max-count="200"/>
+		</invalidation-cache>
+
+		<!-- Validation cache: document model validation results (TTL: 1 hour) -->
+		<invalidation-cache name="validationCache" statistics="true">
+			<expiration lifespan="3600000"/>
+			<memory max-count="500"/>
+		</invalidation-cache>
+
+		<!-- Secured model read cache: security-filtered model reads (TTL: 10 hours) -->
+		<!-- Evicted cluster-wide on security model update via cache.invalidate() -->
+		<invalidation-cache name="securedModelReadCache" statistics="true">
+			<expiration lifespan="36000000"/>
+			<memory max-count="200"/>
+		</invalidation-cache>
+
+		<!-- Generic model read cache (TTL: 10 hours) -->
+		<invalidation-cache name="com.mgmtp.a12.dataservices.model.GenericModel" statistics="true">
+			<expiration lifespan="36000000"/>
+			<memory max-count="100"/>
+		</invalidation-cache>
+
+		<!-- Document model read cache (TTL: 10 hours) -->
+		<invalidation-cache name="com.mgmtp.a12.kernel.md.model.api.IDocumentModel" statistics="true">
+			<expiration lifespan="36000000"/>
+			<memory max-count="100"/>
+		</invalidation-cache>
+
+		<!-- Relationship model read cache (TTL: 10 hours) -->
+		<invalidation-cache name="com.mgmtp.a12.dataservices.relationship.model.RelationshipModel" statistics="true">
+			<expiration lifespan="36000000"/>
+			<memory max-count="100"/>
+		</invalidation-cache>
+
+		<!-- Compose document model read cache (TTL: 10 hours) -->
+		<invalidation-cache name="com.mgmtp.a12.dataservices.cdd.jms.internal.ComposeDocumentModel" statistics="true">
+			<expiration lifespan="36000000"/>
+			<memory max-count="200"/>
+		</invalidation-cache>
+
+		<!-- Document model indexed fields cache: derived structural data, no TTL -->
+		<invalidation-cache name="documentModelIndexedFieldsCache" statistics="true">
+			<expiration lifespan="-1"/>
+			<memory max-count="200"/>
+		</invalidation-cache>
+
+		<!-- Document model is-indexed-field lookup cache: no TTL -->
+		<invalidation-cache name="documentModelIsIndexedFieldCache" statistics="true">
+			<expiration lifespan="-1"/>
+			<memory max-count="500"/>
+		</invalidation-cache>
+
+		<!-- Model graph cache: model type hierarchy (TTL: 24 hours) -->
+		<invalidation-cache name="modelGraphCache" statistics="true">
+			<expiration lifespan="86400000"/>
+			<memory max-count="100"/>
+		</invalidation-cache>
+
+		<!-- Model sub-types map cache: model hierarchy subtypes (TTL: 24 hours) -->
+		<invalidation-cache name="modelSubTypesMapCache" statistics="true">
+			<expiration lifespan="86400000"/>
+			<memory max-count="100"/>
+		</invalidation-cache>
+
+		<!-- Document model search service cache: no TTL -->
+		<invalidation-cache name="documentModelSearchServiceCache" statistics="true">
+			<expiration lifespan="-1"/>
+			<memory max-count="200"/>
+		</invalidation-cache>
+
+		<!-- User cache: authenticated user details, no TTL (invalidated on logout) -->
+		<invalidation-cache name="userCache" statistics="true">
+			<expiration lifespan="-1"/>
+			<memory max-count="200"/>
+		</invalidation-cache>
+
+		<!-- Token cache: authentication tokens (TTL: 24 hours) -->
+		<invalidation-cache name="tokenCache" statistics="true">
+			<expiration lifespan="86400000"/>
+			<memory max-count="50"/>
+		</invalidation-cache>
+
+		<!-- Role mapping cache: user role assignments (TTL: 24 hours) -->
+		<invalidation-cache name="roleMapping" statistics="true">
+			<expiration lifespan="86400000"/>
+			<memory max-count="100"/>
+		</invalidation-cache>
+
+	</cache-container>
+
+</infinispan>

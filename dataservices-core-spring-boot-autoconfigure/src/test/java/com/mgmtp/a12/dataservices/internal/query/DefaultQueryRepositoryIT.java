@@ -39,7 +39,7 @@ import org.springframework.data.domain.Page;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.constants.PathConstants;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
@@ -91,7 +91,7 @@ public class DefaultQueryRepositoryIT extends AbstractSpringContextIT {
 		docRefContract = documentFunctions.createDocumentFromFileAndGetDocRef("Contract", "document/Contract-1.json");
 		docRefPartner = documentFunctions.createDocumentFromFileAndGetDocRef("BusinessPartner", "document/BusinessPartner-1.json");
 		docRefCoInsured = documentFunctions.createDocumentFromFileAndGetDocRef("BusinessPartner", "document/BusinessPartner-2.json");
-		JsonNode linkDocJsonNode = objectMapper.readTree(new ClassPathResource("document/CoInsuredAdditionalFields-1.json").getInputStream());
+		tools.jackson.databind.JsonNode linkDocJsonNode = JACKSON_2_OBJECT_MAPPER.readTree(new ClassPathResource("document/CoInsuredAdditionalFields-1.json").getInputStream());
 
 		relationshipLinkSpecPartner = linksFunctions.addLink("ContractBusinessPartner", "Contract", docRefContract, "Partner", docRefPartner);
 		relationshipLinkSpecCoInsured =

@@ -62,12 +62,12 @@ public class RelationshipRoleMismatchException extends RelationshipValidationExc
 	public RelationshipRoleMismatchException(String linkId, Map<String, ? extends RelationshipRole> expectedRole, List<RelationshipRoleSpec> requestRole,
 		RelationshipRoleSpec role) {
 		super(new RelationshipValidationException.Builder(ExceptionCodes.RELATIONSHIP_ROLE_MISMATCH_EXCEPTION_CODE,
-			String.format(ExceptionKeys.RELATIONSHIP_VALIDATION_BAD_ENTITY_ERROR_KEY, role.getRole()), "Wrong Entity",
-			String.format("Requested link [%s] has role:docRef %s, but expected is %s", linkId, requestRole.stream()
-				.map(e -> String.format("[%s:%s]", e.getRole(), e.getDocRef()))
+			ExceptionKeys.RELATIONSHIP_VALIDATION_BAD_ENTITY_ERROR_KEY.formatted(role.getRole()), "Wrong Entity",
+			"Requested link [%s] has role:docRef %s, but expected is %s".formatted(linkId, requestRole.stream()
+				.map(e -> "[%s:%s]".formatted(e.getRole(), e.getDocRef()))
 				.sorted()
 				.collect(Collectors.joining(" and ")), expectedRole.values().stream()
-				.map(e -> String.format("[%s:%s]", e.getName(), e.getDocRef()))
+				.map(e -> "[%s:%s]".formatted(e.getName(), e.getDocRef()))
 				.sorted()
 				.collect(Collectors.joining(" and ")))));
 		this.linkId = linkId;

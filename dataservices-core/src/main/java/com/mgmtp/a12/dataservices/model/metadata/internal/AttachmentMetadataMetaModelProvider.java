@@ -34,11 +34,11 @@ package com.mgmtp.a12.dataservices.model.metadata.internal;
 import org.springframework.stereotype.Component;
 
 import com.mgmtp.a12.dataservices.model.internal.AbstractInternalModelProvider;
-import com.mgmtp.a12.dataservices.model.metadata.DocumentModelMetadataInjectorFactory;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 
 @Component public class AttachmentMetadataMetaModelProvider extends AbstractInternalModelProvider {
 
+	public static final String ATTACHMENT_META_DATA_MODEL_NAME = "attachment-meta-data";
 	public static final String ATTACHMENT_METADATA_MODEL_PATH = "/com/mgmtp/a12/platform/model/attachment-meta-data.json";
 
 	public AttachmentMetadataMetaModelProvider(DocumentModelUtils documentModelUtils) {
@@ -46,7 +46,7 @@ import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 	}
 
 	@Override protected String getModelName() {
-		return DocumentModelMetadataInjectorFactory.ATTACHMENT_META_DATA_MODEL_NAME;
+		return ATTACHMENT_META_DATA_MODEL_NAME;
 	}
 
 	@Override protected String getModelPath() {

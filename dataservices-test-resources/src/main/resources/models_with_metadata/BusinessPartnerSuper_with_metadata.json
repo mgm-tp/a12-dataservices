@@ -2,7 +2,7 @@
   "header": {
     "id": "BusinessPartnerSuper",
     "modelType": "document",
-    "modelVersion": "28.4.0",
+    "modelVersion": "29.2.0",
     "locales": [
       {
         "code": "en"
@@ -429,6 +429,25 @@
               },
               {
                 "type": "Field",
+                "id": "field_663d3",
+                "name": "EndOfRelationship",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "End of business relationship"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
                 "id": "field_74a24",
                 "name": "CustomerDiscount",
                 "Field": {
@@ -702,6 +721,19 @@
                       }
                     }
                   ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_5dsk4",
+                "name": "accountNumber",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "leadingZerosAllowed": true
+                    }
+                  }
                 }
               },
               {

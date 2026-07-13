@@ -86,14 +86,16 @@ import static com.mgmtp.a12.dataservices.query.indexing.internal.DocumentSearchI
 		String to = (String) generatorContext.getEnrichments().getOperatorEnrichment(operator).get(Enrichments.TO_PROPERTY);
 		if (generatorContext.getEnrichments().getOperatorEnrichment(operator).get(Enrichments.VALUE_PROPERTY) != null) {
 
-			if (from == null && to == null) {
+			if (from != null || to != null) {
 				throw new QueryException(ExceptionKeys.ExecutionPhase.QUERY_EXECUTION,
 					ExceptionCodes.QUERY_INVALID_INPUT_ERROR_CODE,
+					ExceptionKeys.INVALID_QUERY_ERROR_KEY,
 					"For a range operator you can specify either \"from\" and \"to\" or \"value\", but not both.");
 			}
-			if (operator.isRangeType() && operator.isReverse()) {
+			if (operator.isRangeType() && !operator.isReverse()) {
 				throw new QueryException(ExceptionKeys.ExecutionPhase.QUERY_EXECUTION,
 					ExceptionCodes.QUERY_INVALID_INPUT_ERROR_CODE,
+					ExceptionKeys.INVALID_QUERY_ERROR_KEY,
 					"By value you can search in range type only with reverse enabled.");
 			}
 			sb.append(valueLiteral(Objects.toString(generatorContext.getEnrichments().getOperatorEnrichment(operator).get(Enrichments.VALUE_PROPERTY)),

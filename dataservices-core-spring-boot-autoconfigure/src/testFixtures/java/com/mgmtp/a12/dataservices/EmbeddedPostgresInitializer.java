@@ -67,7 +67,18 @@ import lombok.extern.slf4j.Slf4j;
 				CS_PORT_PROPERTY + "=" + csEmbeddedPostgresPort,
 				// Enable data directory cleaning in tests for isolation
 				"spring.datasources.dataservices.embedded-postgres.clean-data-directory=true",
-				"spring.datasources.contentstore.embedded-postgres.clean-data-directory=true")
+				"spring.datasources.contentstore.embedded-postgres.clean-data-directory=true",
+				// Unique scheduler name prevents Quartz JVM-registry conflicts when multiple contexts coexist
+				"spring.quartz.scheduler-name=test-quartz-" + uniqueId,
+				// Use mmap (file-backed) instead of posix for dynamic shared memory so running Postgres instances
+				// do not consume /dev/shm. Multiple cached Spring contexts each start two Postgres instances;
+				// posix DSM exhausts /dev/shm on CI and causes initdb bootstrap failures in later contexts.
+				"spring.datasources.dataservices.embedded-postgres.postgres-config.dynamic_shared_memory_type=mmap",
+				"spring.datasources.contentstore.embedded-postgres.postgres-config.dynamic_shared_memory_type=mmap",
+				// Increase startup wait to 60s to provide headroom on CI where I/O contention from parallel
+				// Gradle modules and multiple cached Spring contexts may delay Postgres readiness.
+				"spring.datasources.dataservices.embedded-postgres.pg-startup-wait=60s",
+				"spring.datasources.contentstore.embedded-postgres.pg-startup-wait=60s")
 			.applyTo(configurableApplicationContext.getEnvironment());
 		log.info("Using embedded Postgres in {} ({}): DS={}@{}, CS={}@{} (clean data directory enabled)",
 			configurableApplicationContext.getApplicationName(),

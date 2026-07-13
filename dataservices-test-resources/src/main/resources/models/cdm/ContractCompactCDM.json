@@ -2,7 +2,7 @@
   "header": {
     "id": "ContractCompactCDM",
     "modelType": "document",
-    "modelVersion": "28.4.0",
+    "modelVersion": "29.2.0",
     "locales": [
       {
         "code": "en"
@@ -40,25 +40,21 @@
     ],
     "modelReferences": [
       {
-        "alias": "Contract",
         "modelType": "document",
         "purpose": "include",
         "reference": "Contract"
       },
       {
-        "alias": "BusinessPartnerSuper",
         "modelType": "document",
         "purpose": "include",
         "reference": "BusinessPartnerSuper"
       },
       {
-        "alias": "CoInsuredAdditionalFields",
         "modelType": "document",
         "purpose": "include",
         "reference": "CoInsuredAdditionalFields"
       },
       {
-        "alias": "Address",
         "modelType": "document",
         "purpose": "include",
         "reference": "Address"
@@ -67,7 +63,9 @@
   },
   "content": {
     "modelInfo": {
-      "name": "ContractCDM"
+      "name": "ContractCDM",
+      "immutable": false,
+      "joinedModelsInfo": "ContractCDM-document-meta-data+Add"
     },
     "modelConfig": {
       "decimalSeparator": ".",
@@ -76,6 +74,153 @@
         "code": "en_US"
       }
     },
+    "typeDefinitions": [
+      {
+        "id": "typedef_da989e7e-fac0-49a8-8b77-e4c9dbef2ba7",
+        "name": "StatusType",
+        "fieldType": {
+          "type": "EnumerationType",
+          "EnumerationType": {
+            "values": [
+              {
+                "value": "dummy",
+                "label": [
+                  {
+                    "locale": "en",
+                    "text": "imitation"
+                  },
+                  {
+                    "locale": "en_US",
+                    "text": "imitation"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "attrape"
+                  }
+                ]
+              },
+              {
+                "value": "draft",
+                "label": [
+                  {
+                    "locale": "en",
+                    "text": "blueprint"
+                  },
+                  {
+                    "locale": "en_US",
+                    "text": "blueprint"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "entwurf"
+                  }
+                ]
+              },
+              {
+                "value": "reviewed",
+                "label": [
+                  {
+                    "locale": "en",
+                    "text": "examined"
+                  },
+                  {
+                    "locale": "en_US",
+                    "text": "examined"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "uberpruft"
+                  }
+                ]
+              },
+              {
+                "value": "reverted",
+                "label": [
+                  {
+                    "locale": "en",
+                    "text": "returned"
+                  },
+                  {
+                    "locale": "en_US",
+                    "text": "returned"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "zuruckgesetzt"
+                  }
+                ]
+              },
+              {
+                "value": "approved",
+                "label": [
+                  {
+                    "locale": "en",
+                    "text": "accepted"
+                  },
+                  {
+                    "locale": "en_US",
+                    "text": "accepted"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "genehmigt"
+                  }
+                ]
+              },
+              {
+                "value": "done",
+                "label": [
+                  {
+                    "locale": "en",
+                    "text": "finished"
+                  },
+                  {
+                    "locale": "en_US",
+                    "text": "finished"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "fertig"
+                  }
+                ]
+              },
+              {
+                "value": "deployed",
+                "label": [
+                  {
+                    "locale": "en",
+                    "text": "utilized"
+                  },
+                  {
+                    "locale": "en_US",
+                    "text": "utilized"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "bereitgestelt"
+                  }
+                ]
+              }
+            ],
+            "categories": [
+              {
+                "name": "Status",
+                "values": [
+                  "Status",
+                  "Status",
+                  "Status",
+                  "Status",
+                  "Status",
+                  "Status",
+                  "Status"
+                ],
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    ],
     "modelRoot": {
       "rootGroups": [
         {
@@ -260,6 +405,7 @@
                 "id": "group_7a5d0",
                 "name": "ChangeLog",
                 "Group": {
+                  "repeatability": 10000,
                   "label": [
                     {
                       "locale": "en",
@@ -274,7 +420,6 @@
                       "text": "Änderungsprotokoll"
                     }
                   ],
-                  "repeatability": 10000,
                   "elements": [
                     {
                       "type": "Field",
@@ -432,6 +577,7 @@
                       "id": "group_61e6a",
                       "name": "Changes",
                       "Group": {
+                        "repeatability": 99,
                         "label": [
                           {
                             "locale": "en",
@@ -446,7 +592,6 @@
                             "text": "Änderungen"
                           }
                         ],
-                        "repeatability": 99,
                         "elements": [
                           {
                             "type": "Field",
@@ -555,8 +700,8 @@
         },
         {
           "type": "Group",
-          "name": "ContractBusinessPartner",
           "id": "group_f3eb0",
+          "name": "ContractBusinessPartner",
           "annotations": [
             {
               "name": "cdm.relationship",
@@ -607,8 +752,8 @@
                     },
                     {
                       "type": "Field",
-                      "name": "Industry",
                       "id": "field_d6581",
+                      "name": "Industry",
                       "Field": {
                         "fieldType": {
                           "type": "StringType"
@@ -630,8 +775,8 @@
               },
               {
                 "type": "Group",
-                "name": "PartnerAddresses",
                 "id": "group_513ee",
+                "name": "PartnerAddresses",
                 "annotations": [
                   {
                     "name": "cdm.relationship",
@@ -702,14 +847,199 @@
                           }
                         ]
                       }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_513ee_group_8f4b1",
+                      "name": "__meta",
+                      "Group": {
+                        "repeatability": 1,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Meta"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Meta"
+                          }
+                        ],
+                        "usageType": "metadata",
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "group_513ee_field_1169c",
+                            "name": "docRef",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Document Reference"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Dokumentreferenz"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_513ee_field_cfb40",
+                            "name": "modelReference",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Document Model Reference"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Document Model-Referenz"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_513ee_field_17e3b",
+                            "name": "modelVersion",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Model Version"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Model-Version"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_513ee_field_cdaf9",
+                            "name": "creator",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Creator"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erstellt von"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_513ee_field_65672",
+                            "name": "createdAt",
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateTimeType",
+                                "DateTimeType": {
+                                  "format": "yyyy-MM-dd'T'HH:mm:ss"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Created At"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erstellt am"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_513ee_field_1fa32",
+                            "name": "modifier",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Modifier"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Bearbeitet von"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_513ee_field_5cd66",
+                            "name": "modifiedAt",
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateTimeType",
+                                "DateTimeType": {
+                                  "format": "yyyy-MM-dd'T'HH:mm:ss"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Modified At"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Bearbeitet am"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Group",
+                            "id": "group_513ee_group_4c9a1",
+                            "name": "extensions",
+                            "Group": {
+                              "repeatability": 1,
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Extensions"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erweiterungen"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
                     }
                   ]
                 }
               },
               {
                 "type": "Group",
-                "name": "PartnerPostalAddress",
                 "id": "group_368d1",
+                "name": "PartnerPostalAddress",
                 "annotations": [
                   {
                     "name": "cdm.relationship",
@@ -780,6 +1110,376 @@
                           }
                         ]
                       }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_368d1_group_8f4b1",
+                      "name": "__meta",
+                      "Group": {
+                        "repeatability": 1,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Meta"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Meta"
+                          }
+                        ],
+                        "usageType": "metadata",
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "group_368d1_field_1169c",
+                            "name": "docRef",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Document Reference"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Dokumentreferenz"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_368d1_field_cfb40",
+                            "name": "modelReference",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Document Model Reference"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Document Model-Referenz"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_368d1_field_17e3b",
+                            "name": "modelVersion",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Model Version"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Model-Version"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_368d1_field_cdaf9",
+                            "name": "creator",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Creator"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erstellt von"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_368d1_field_65672",
+                            "name": "createdAt",
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateTimeType",
+                                "DateTimeType": {
+                                  "format": "yyyy-MM-dd'T'HH:mm:ss"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Created At"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erstellt am"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_368d1_field_1fa32",
+                            "name": "modifier",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Modifier"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Bearbeitet von"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_368d1_field_5cd66",
+                            "name": "modifiedAt",
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateTimeType",
+                                "DateTimeType": {
+                                  "format": "yyyy-MM-dd'T'HH:mm:ss"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Modified At"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Bearbeitet am"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Group",
+                            "id": "group_368d1_group_4c9a1",
+                            "name": "extensions",
+                            "Group": {
+                              "repeatability": 1,
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Extensions"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erweiterungen"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_f3eb0_group_8f4b1",
+                "name": "__meta",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Meta"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Meta"
+                    }
+                  ],
+                  "usageType": "metadata",
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "group_f3eb0_field_1169c",
+                      "name": "docRef",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Document Reference"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Dokumentreferenz"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f3eb0_field_cfb40",
+                      "name": "modelReference",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Document Model Reference"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Document Model-Referenz"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f3eb0_field_17e3b",
+                      "name": "modelVersion",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Model Version"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Model-Version"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f3eb0_field_cdaf9",
+                      "name": "creator",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Creator"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erstellt von"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f3eb0_field_65672",
+                      "name": "createdAt",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateTimeType",
+                          "DateTimeType": {
+                            "format": "yyyy-MM-dd'T'HH:mm:ss"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Created At"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erstellt am"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f3eb0_field_1fa32",
+                      "name": "modifier",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Modifier"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bearbeitet von"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f3eb0_field_5cd66",
+                      "name": "modifiedAt",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateTimeType",
+                          "DateTimeType": {
+                            "format": "yyyy-MM-dd'T'HH:mm:ss"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Modified At"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bearbeitet am"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_f3eb0_group_4c9a1",
+                      "name": "extensions",
+                      "Group": {
+                        "repeatability": 1,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Extensions"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erweiterungen"
+                          }
+                        ]
+                      }
                     }
                   ]
                 }
@@ -789,8 +1489,8 @@
         },
         {
           "type": "Group",
-          "name": "ContractCoInsuredPartner",
           "id": "group_4bc78",
+          "name": "ContractCoInsuredPartner",
           "annotations": [
             {
               "name": "cdm.relationship",
@@ -837,8 +1537,8 @@
                     },
                     {
                       "type": "Field",
-                      "name": "Industry",
                       "id": "field_d6580",
+                      "name": "Industry",
                       "Field": {
                         "fieldType": {
                           "type": "StringType"
@@ -856,15 +1556,15 @@
               },
               {
                 "type": "Group",
-                "name": "relationship",
                 "id": "group_4da5e",
+                "name": "relationship",
                 "Group": {
                   "repeatability": 1,
                   "elements": [
                     {
                       "type": "Group",
-                      "name": "CoInsuredRoot",
                       "id": "include_50c1e",
+                      "name": "CoInsuredRoot",
                       "Group": {
                         "repeatability": 1,
                         "elements": [
@@ -894,6 +1594,561 @@
                           }
                         ]
                       }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_4da5e_group_8f4b1",
+                      "name": "__meta",
+                      "Group": {
+                        "repeatability": 1,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Meta"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Meta"
+                          }
+                        ],
+                        "usageType": "metadata",
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "group_4da5e_field_1169c",
+                            "name": "docRef",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Document Reference"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Dokumentreferenz"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_4da5e_field_cfb40",
+                            "name": "modelReference",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Document Model Reference"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Document Model-Referenz"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_4da5e_field_17e3b",
+                            "name": "modelVersion",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Model Version"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Model-Version"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_4da5e_field_cdaf9",
+                            "name": "creator",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Creator"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erstellt von"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_4da5e_field_65672",
+                            "name": "createdAt",
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateTimeType",
+                                "DateTimeType": {
+                                  "format": "yyyy-MM-dd'T'HH:mm:ss"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Created At"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erstellt am"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_4da5e_field_1fa32",
+                            "name": "modifier",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Modifier"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Bearbeitet von"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_4da5e_field_5cd66",
+                            "name": "modifiedAt",
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateTimeType",
+                                "DateTimeType": {
+                                  "format": "yyyy-MM-dd'T'HH:mm:ss"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Modified At"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Bearbeitet am"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Group",
+                            "id": "group_4da5e_group_4c9a1",
+                            "name": "extensions",
+                            "Group": {
+                              "repeatability": 1,
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Extensions"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erweiterungen"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_4bc78_group_8f4b1",
+                "name": "__meta",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Meta"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Meta"
+                    }
+                  ],
+                  "usageType": "metadata",
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "group_4bc78_field_1169c",
+                      "name": "docRef",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Document Reference"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Dokumentreferenz"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_4bc78_field_cfb40",
+                      "name": "modelReference",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Document Model Reference"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Document Model-Referenz"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_4bc78_field_17e3b",
+                      "name": "modelVersion",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Model Version"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Model-Version"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_4bc78_field_cdaf9",
+                      "name": "creator",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Creator"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erstellt von"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_4bc78_field_65672",
+                      "name": "createdAt",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateTimeType",
+                          "DateTimeType": {
+                            "format": "yyyy-MM-dd'T'HH:mm:ss"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Created At"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erstellt am"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_4bc78_field_1fa32",
+                      "name": "modifier",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Modifier"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bearbeitet von"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_4bc78_field_5cd66",
+                      "name": "modifiedAt",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateTimeType",
+                          "DateTimeType": {
+                            "format": "yyyy-MM-dd'T'HH:mm:ss"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Modified At"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bearbeitet am"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_4bc78_group_4c9a1",
+                      "name": "extensions",
+                      "Group": {
+                        "repeatability": 1,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Extensions"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erweiterungen"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "id": "abc6a6767a60488754aace2accb73824_group_8f4b1",
+          "name": "__meta",
+          "Group": {
+            "repeatability": 1,
+            "label": [
+              {
+                "locale": "en",
+                "text": "Meta"
+              },
+              {
+                "locale": "de",
+                "text": "Meta"
+              }
+            ],
+            "usageType": "metadata",
+            "elements": [
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_1169c",
+                "name": "docRef",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Document Reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Dokumentreferenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_cfb40",
+                "name": "modelReference",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Document Model Reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Document Model-Referenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_17e3b",
+                "name": "modelVersion",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Model Version"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Model-Version"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_cdaf9",
+                "name": "creator",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Creator"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erstellt von"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_65672",
+                "name": "createdAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Created At"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erstellt am"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_1fa32",
+                "name": "modifier",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Modifier"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Bearbeitet von"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_5cd66",
+                "name": "modifiedAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Modified At"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Bearbeitet am"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "abc6a6767a60488754aace2accb73824_group_4c9a1",
+                "name": "extensions",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Extensions"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erweiterungen"
                     }
                   ]
                 }

@@ -31,6 +31,7 @@
  */
 package com.mgmtp.a12.dataservices.query.enrichment.internal;
 
+import java.util.List;
 import java.util.Set;
 
 import org.mockito.Mock;
@@ -42,9 +43,13 @@ import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
 import com.mgmtp.a12.dataservices.constants.RelationshipModelConstants;
 import com.mgmtp.a12.dataservices.constants.RelationshipModelConstants.RoleConstants;
+import com.mgmtp.a12.dataservices.exception.query.QueryInvalidInputException;
+import com.mgmtp.a12.dataservices.model.ModelConstants;
 import com.mgmtp.a12.dataservices.query.QueryContext;
 import com.mgmtp.a12.dataservices.query.constraint.logical.AndOperator;
 import com.mgmtp.a12.dataservices.query.constraint.matching.ExactMatchOperator;
+import com.mgmtp.a12.dataservices.query.constraint.matching.HasOperator;
+import com.mgmtp.a12.dataservices.query.constraint.matching.SimpleSearchOperator;
 import com.mgmtp.a12.dataservices.query.enrichement.FieldDescriptor;
 import com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants;
 import com.mgmtp.a12.dataservices.query.topology.QueryLink;
@@ -53,7 +58,10 @@ import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertThrows;
+import static org.testng.Assert.assertTrue;
 
 public class DefaultQueryEnricherTest extends AbstractQueryContextAwareTest {
 	@Mock DataServicesCoreProperties.Query queryProperties;
@@ -121,7 +129,8 @@ public class DefaultQueryEnricherTest extends AbstractQueryContextAwareTest {
 		FieldDescriptor descriptor = ctx.getEnrichments().getFieldDescriptor(path);
 		assertNull(descriptor.getFieldType(), "Precondition: field type should be null before enrichment");
 
-		queryEnricher.enrichFieldTypes(ctx, DocumentModelConstants.CONTRACT_DOCUMENT_MODEL);
+		FieldTypeEnrichmentHelper.enrichFieldTypes(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL,
+			ctx, modelTypeService, documentModelUtils, documentModelServiceFactory);
 
 		assertEquals(ctx.getEnrichments().getFieldDescriptor(path).getFieldType(), QueryGeneratorConstants.FieldTypes.STRING_FIELD_TYPE);
 	}
@@ -138,9 +147,11 @@ public class DefaultQueryEnricherTest extends AbstractQueryContextAwareTest {
 		assertNull(descriptorMake.getFieldType(), "Precondition: field type should be null before enrichment");
 
 		// Mock model-graph
-		when(modelTypeService.findAllSubtypes(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL)).thenReturn(Set.of(DocumentModelConstants.CONTRACT_AUTOMOTIVE_DOCUMENT_MODEL));
+		when(modelTypeService.findAllSubtypes(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL)).thenReturn(
+			Set.of(DocumentModelConstants.CONTRACT_AUTOMOTIVE_DOCUMENT_MODEL));
 
-		queryEnricher.enrichFieldTypes(ctx, DocumentModelConstants.CONTRACT_DOCUMENT_MODEL);
+		FieldTypeEnrichmentHelper.enrichFieldTypes(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL,
+			ctx, modelTypeService, documentModelUtils, documentModelServiceFactory);
 
 		assertEquals(ctx.getEnrichments().getFieldDescriptor(pathModel).getFieldType(), QueryGeneratorConstants.FieldTypes.STRING_FIELD_TYPE);
 		assertEquals(ctx.getEnrichments().getFieldDescriptor(pathMake).getFieldType(), QueryGeneratorConstants.FieldTypes.STRING_FIELD_TYPE);
@@ -153,8 +164,180 @@ public class DefaultQueryEnricherTest extends AbstractQueryContextAwareTest {
 		FieldDescriptor descriptor = ctx.getEnrichments().getFieldDescriptor(path);
 		descriptor.setFieldType("PRESET_TYPE");
 
-		queryEnricher.enrichFieldTypes(ctx, DocumentModelConstants.CONTRACT_DOCUMENT_MODEL);
+		FieldTypeEnrichmentHelper.enrichFieldTypes(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL,
+			ctx, modelTypeService, documentModelUtils, documentModelServiceFactory);
 
 		assertEquals(ctx.getEnrichments().getFieldDescriptor(path).getFieldType(), "PRESET_TYPE");
+	}
+
+	/**
+	 * Verifies that `DefaultQueryEnricher` delegates to `QueryAPIOperatorWalker` and
+	 * `HasOperatorEnricher` so that an end-to-end `enrichQuery` call for a query containing a
+	 * `HasOperator` produces the expected enrichment results:
+	 *
+	 * - The target document model for the `HasOperator` is resolved and stored in the enrichments.
+	 * - The source role for the `HasOperator` is resolved and stored in the enrichments.
+	 * - Field types for the linked document model are populated.
+	 */
+	@Test(description = "Should enrich query containing a HasOperator using the new architecture")
+	public void shouldEnrichQueryWithHasOperatorUsingNewArchitecture() {
+		HasOperator hasOperator = HasOperator.builder()
+			.relationshipModel(RelationshipModelConstants.CONTRACT_BUSINESS_PARTNER_MODEL)
+			.targetRole(RoleConstants.PARTNER_ROLE)
+			.build();
+		QueryRoot queryRoot = QueryRoot.builder()
+			.targetDocumentModel(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL)
+			.constraint(hasOperator)
+			.build();
+
+		QueryContext context = newQueryContext();
+		queryEnricher.enrichQuery(queryRoot, context);
+
+		// Target document model for the HasOperator must be set by HasOperatorEnricher via the walker.
+		assertEquals(
+			context.getEnrichments().getTargetDocumentModel(hasOperator),
+			DocumentModelConstants.BUSINESS_PARTNER_SUPER_MODEL,
+			"Target document model must be resolved and stored for the HasOperator");
+
+		// Source role for the HasOperator must be set.
+		assertEquals(
+			context.getEnrichments().getSourceRole(hasOperator),
+			RoleConstants.CONTRACT_ROLE,
+			"Source role must be resolved and stored for the HasOperator");
+
+		// Field types for the linked BusinessPartnerSuper model must be populated.
+		assertNotNull(
+			context.getEnrichments().getFieldDescriptor("/BusinessPartnerRoot/Name").getFieldType(),
+			"Field types for the linked document model must be populated");
+	}
+
+	@Test(description = "Should enrich field type correctly when field path has a leading slash")
+	public void shouldEnrichFieldTypeWhenFieldPathHasLeadingSlash() {
+		QueryRoot query = QueryRoot.builder()
+			.targetDocumentModel(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL)
+			.constraint(ExactMatchOperator.builder()
+				.field(ModelConstants.FIELD_SEPARATOR + DocumentModelConstants.STATUS_FIELD_PATH)
+				.value("draft")
+				.build())
+			.build();
+		QueryContext context = newQueryContext();
+
+		queryEnricher.enrichQuery(query, context);
+
+		FieldDescriptor descriptor = context.getEnrichments().getFieldDescriptor(ModelConstants.FIELD_SEPARATOR + DocumentModelConstants.STATUS_FIELD_PATH);
+		assertNotNull(descriptor.getFieldType());
+	}
+
+	@Test(description = "Should enrich repeatability correctly when field path has a leading slash")
+	public void shouldEnrichRepeatabilityWhenFieldPathHasLeadingSlash() {
+		QueryRoot query = QueryRoot.builder()
+			.targetDocumentModel(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL)
+			.constraint(ExactMatchOperator.builder()
+				.field(ModelConstants.FIELD_SEPARATOR + DocumentModelConstants.STATUS_FIELD_PATH)
+				.value("draft")
+				.build())
+			.build();
+		QueryContext context = newQueryContext();
+
+		queryEnricher.enrichQuery(query, context);
+
+		FieldDescriptor descriptor = context.getEnrichments().getFieldDescriptor(ModelConstants.FIELD_SEPARATOR + DocumentModelConstants.STATUS_FIELD_PATH);
+		assertTrue(descriptor.getRepeatable());
+	}
+
+	@Test(description = "Should throw QueryInvalidInputException during enrichment when the field path has no leading slash")
+	public void shouldThrowWhenFieldPathHasNoLeadingSlash() {
+		QueryRoot query = QueryRoot.builder()
+			.targetDocumentModel(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL)
+			.constraint(ExactMatchOperator.builder()
+				.field(DocumentModelConstants.STATUS_FIELD_PATH)
+				.value("draft")
+				.build())
+			.build();
+		QueryContext context = newQueryContext();
+
+		assertThrows(QueryInvalidInputException.class, () -> queryEnricher.enrichQuery(query, context));
+	}
+
+	@Test(description = "Should throw QueryInvalidInputException when root projection field has no leading slash")
+	public void shouldThrowWhenRootProjectionFieldHasNoLeadingSlash() {
+		QueryRoot query = QueryRoot.builder()
+			.targetDocumentModel(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL)
+			.field(DocumentModelConstants.STATUS_FIELD_PATH)
+			.build();
+		QueryContext context = newQueryContext();
+
+		assertThrows(QueryInvalidInputException.class, () -> queryEnricher.enrichQuery(query, context));
+	}
+
+	@Test(description = "Should throw QueryInvalidInputException when link projection field has no leading slash")
+	public void shouldThrowWhenLinkProjectionFieldHasNoLeadingSlash() {
+		QueryLink link = QueryLink.builder()
+			.relationshipModel(RelationshipModelConstants.CONTRACT_BUSINESS_PARTNER_MODEL)
+			.targetRole(RoleConstants.PARTNER_ROLE)
+			.field(DocumentModelConstants.STATUS_FIELD_PATH)
+			.build();
+		QueryRoot query = QueryRoot.builder()
+			.targetDocumentModel(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL)
+			.link(link)
+			.build();
+		QueryContext context = newQueryContext();
+
+		assertThrows(QueryInvalidInputException.class, () -> queryEnricher.enrichQuery(query, context));
+	}
+
+	@Test(description = "Should throw QueryInvalidInputException when link linkDocumentFields has no leading slash")
+	public void shouldThrowWhenLinkDocumentFieldHasNoLeadingSlash() {
+		QueryLink link = QueryLink.builder()
+			.relationshipModel(RelationshipModelConstants.CONTRACT_BUSINESS_PARTNER_MODEL)
+			.targetRole(RoleConstants.PARTNER_ROLE)
+			.linkDocumentFields(List.of(DocumentModelConstants.STATUS_FIELD_PATH))
+			.build();
+		QueryRoot query = QueryRoot.builder()
+			.targetDocumentModel(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL)
+			.link(link)
+			.build();
+		QueryContext context = newQueryContext();
+
+		assertThrows(QueryInvalidInputException.class, () -> queryEnricher.enrichQuery(query, context));
+	}
+
+	@Test(description = "Should accept valid locale when enriching simple search query")
+	public void shouldAcceptValidLocaleWhenEnrichingSimpleSearch() {
+		QueryRoot query = QueryRoot.builder()
+			.targetDocumentModel(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL)
+			.constraint(SimpleSearchOperator.builder().value("foo").build())
+			.build();
+		QueryContext context = newQueryContextWithLocale(DocumentModelConstants.SearchConstants.EN_LOCALE);
+
+		queryEnricher.enrichQuery(query, context);
+
+		assertEquals(
+			context.getEnrichments().getModelLocale(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL),
+			DocumentModelConstants.SearchConstants.EN_LOCALE);
+	}
+
+	@Test(description = "Should accept blank locale when enriching simple search query")
+	public void shouldAcceptBlankLocaleWhenEnrichingSimpleSearch() {
+		QueryRoot query = QueryRoot.builder()
+			.targetDocumentModel(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL)
+			.constraint(SimpleSearchOperator.builder().value("foo").build())
+			.build();
+		QueryContext context = newQueryContextWithLocale(null);
+
+		queryEnricher.enrichQuery(query, context);
+
+		assertNull(context.getEnrichments().getModelLocale(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL));
+	}
+
+	@Test(description = "Should throw QueryInvalidInputException when locale is completely unsupported")
+	public void shouldThrowWhenLocaleIsUnsupportedWhenEnrichingSimpleSearch() {
+		QueryRoot query = QueryRoot.builder()
+			.targetDocumentModel(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL)
+			.constraint(SimpleSearchOperator.builder().value("foo").build())
+			.build();
+		QueryContext context = newQueryContextWithLocale("fr");
+
+		assertThrows(QueryInvalidInputException.class, () -> queryEnricher.enrichQuery(query, context));
 	}
 }

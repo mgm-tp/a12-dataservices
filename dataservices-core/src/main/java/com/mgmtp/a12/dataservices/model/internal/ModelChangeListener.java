@@ -31,7 +31,6 @@
  */
 package com.mgmtp.a12.dataservices.model.internal;
 
-import java.io.StringReader;
 import java.util.Objects;
 
 import org.springframework.core.Ordered;
@@ -39,6 +38,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.mgmtp.a12.dataservices.common.events.CommonDataServicesEventListener;
+import com.mgmtp.a12.dataservices.document.uniqueconstraint.internal.UniqueConstraintValidator;
 import com.mgmtp.a12.dataservices.model.GenericModel;
 import com.mgmtp.a12.dataservices.model.ModelConstants;
 import com.mgmtp.a12.dataservices.model.events.AbstractModelEvent;
@@ -48,11 +48,7 @@ import com.mgmtp.a12.dataservices.model.events.ModelAfterUpdateEvent;
 import com.mgmtp.a12.dataservices.model.events.ModelBeforeDeleteEvent;
 import com.mgmtp.a12.dataservices.model.events.ModelBeforeUpdateEvent;
 import com.mgmtp.a12.dataservices.model.events.ModelsAfterImportEvent;
-import com.mgmtp.a12.dataservices.model.exception.DocumentModelDeSerializationException;
-import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
-import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
-import com.mgmtp.a12.kernel.md.rt.api.IDocumentRtService;
-import com.mgmtp.a12.kernel.md.rt.api.IDocumentServiceConfig;
+import com.mgmtp.a12.model.header.Header;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,18 +57,21 @@ import lombok.extern.slf4j.Slf4j;
 @Component class ModelChangeListener {
 
 	private final ModelCacheManager modelCacheManager;
-	private final IDocumentServiceConfig iDocumentServiceConfig;
 	private final DataServicesModelCodeCache modelCodeCache;
-	private final DocumentModelUtils documentModelUtils;
-	private final IDocumentRtService iDocumentRtService;
+	private final UniqueConstraintValidator uniqueConstraintValidator;
 
 	@Order(Ordered.HIGHEST_PRECEDENCE)
 	@CommonDataServicesEventListener public void listenOnBulkImportEvent(ModelsAfterImportEvent event) {
 		modelCacheManager.invalidateModelGraphCaches();
+		modelCacheManager.invalidateDocumentModelSearchServiceCache();
 		event.getImportedModels().stream()
 			.filter(Objects::nonNull)
 			.filter(header -> ModelConstants.DOCUMENT_MODEL_TYPE.equals(header.getModelType()))
-			.forEach(header -> modelCacheManager.invalidateValidationCodeCacheForDocumentModel(header.getId()));
+			.forEach(header -> {
+				String documentModelId = header.getId();
+				modelCacheManager.invalidateValidationCodeCacheForDocumentModel(documentModelId);
+				modelCodeCache.remove(documentModelId);
+			});
 	}
 
 	@Order(Ordered.HIGHEST_PRECEDENCE)
@@ -83,21 +82,20 @@ import lombok.extern.slf4j.Slf4j;
 	@Order(Ordered.HIGHEST_PRECEDENCE)
 	@CommonDataServicesEventListener({ ModelBeforeUpdateEvent.class, ModelBeforeDeleteEvent.class })
 	public void listenBeforeModelUpdated(AbstractModelEvent<GenericModel> event) {
-		// we clean up modelCodeCache in "before" events for reasons:
-		// 1. User may add their custom encryption for model, at the time we reach "after" events, data has been encrypted,
-		// and we don't know how to decrypt it to rebuild the model.
-		// 2. createModelCodeIdentifier use document model as input, so passing updated version may result in a different key,
-		// hence the old cache can never be deleted.
-		String modelName = event.getModel().getHeader().getId();
-		try {
-			if (event.getModel().getHeader().getModelType().equals("document")) {
-				IDocumentModel iDocumentModel =
-					documentModelUtils.deserializeDocumentModel(modelName, new StringReader(event.getModel().getContent().getRawContent()));
-				modelCodeCache.remove(
-					iDocumentRtService.createModelCodeIdentifier(iDocumentModel, iDocumentServiceConfig.getVariant().orElse(null)));
-			}
-		} catch (DocumentModelDeSerializationException e) {
-			log.warn("Error while deserializing model code on before updating/deleting phase.", e);
+		// we clean up modelCodeCache in "before" events because the user may add their custom encryption for model, at the time we reach "after" events,
+		// data has been encrypted,  and we don't know how to decrypt it to get model id
+		Header header = event.getModel().getHeader();
+		if (ModelConstants.DOCUMENT_MODEL_TYPE.equals(header.getModelType())) {
+			modelCodeCache.remove(header.getId());
+		}
+	}
+
+	@Order(Ordered.HIGHEST_PRECEDENCE)
+	@CommonDataServicesEventListener(ModelBeforeDeleteEvent.class)
+	public void listenBeforeModelDeleted(ModelBeforeDeleteEvent event) {
+		Header header = event.getModel().getHeader();
+		if (ModelConstants.DOCUMENT_MODEL_TYPE.equals(header.getModelType())) {
+			uniqueConstraintValidator.deleteByModel(header.getId());
 		}
 	}
 
@@ -108,7 +106,7 @@ import lombok.extern.slf4j.Slf4j;
 		modelCacheManager.invalidateModelGraphCaches();
 		modelCacheManager.invalidateValidationCodeCacheForDocumentModel(modelName);
 		modelCacheManager.invalidateSecuredModelReadCaches(modelName);
-		modelCacheManager.invalidateUnsecuredModelReadCaches();
+		modelCacheManager.invalidateDocumentModelSearchServiceCache();
 		modelCacheManager.invalidateModelReadCaches(modelName);
 	}
 

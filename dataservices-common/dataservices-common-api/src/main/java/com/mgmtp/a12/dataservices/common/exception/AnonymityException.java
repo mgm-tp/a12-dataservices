@@ -31,6 +31,8 @@
  */
 package com.mgmtp.a12.dataservices.common.exception;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Contract for providing an anonymity-safe message representation.
  * Use this to avoid logging user-related or sensitive content while still conveying context.
@@ -49,7 +51,7 @@ package com.mgmtp.a12.dataservices.common.exception;
  * @see com.mgmtp.a12.dataservices.common.anonymizing.Anonymizer
  * @see BaseException#getAnonymityMessage()
  */
-public interface AnonymityException {
+@OnlyForUsage public interface AnonymityException {
 
 	/**
 	 * Returns a message with all sensitive information removed or masked.

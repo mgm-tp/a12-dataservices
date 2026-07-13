@@ -1,11 +1,10 @@
 {
 	"name": "@com.mgmtp.a12.dataservices/dataservices-relationship-model-migration",
-	"version": "38.4.3-SNAPSHOT",
+	"version": "39.0.2",
 	"description": "Relationship Model Migration Tool",
-	"license": "(EUPL-1.2 OR LicenseRef-commercial)",
+	"license": "UNLICENSED",
 	"author": "mgm technology partners",
-	"main": "lib/api.js",
-	"types": "lib/api.d.ts",
+	"exports": "./lib/api.js",
 	"type": "module",
 	"bin": {
 		"relationship-model-migration": "./bin/relationship-model-migration"
@@ -13,12 +12,12 @@
 	"files": [
 		"bin",
 		"lib",
+		"src",
+		"cyclonedx.json",
 		"LICENSE",
 		"NOTICE",
 		"THIRD_PARTY_NOTICES",
-		"licenses",
-		"src",
-		"cyclonedx.json"
+		"licenses"
 	],
 	"scripts": {
 		"clean": "rimraf ./lib ./package-lock.json ./target",
@@ -66,15 +65,17 @@
 		"usePathForSuiteName": "true"
 	},
 	"dependencies": {
-		"@com.mgmtp.a12.migrationtool/migrationtool-core": "2.1.1"
+		"@com.mgmtp.a12.migrationtool/migrationtool-core": "3.0.0",
+		"@com.mgmtp.a12.base/base-model-api": "30.0.1"
 	},
 	"devDependencies": {
-		"@com.mgmtp.a12.base/base-model-api": "29.3.0",
-		"@com.mgmtp.a12.devtools/tsconfig": "^1.1.0",
-		"@com.mgmtp.a12.devtools/eslint-config": "^3.1.0",
-		"@com.mgmtp.a12.devtools/prettier-config": "^1.1.0",
-		"@com.mgmtp.a12.migrationtool/migrationtool-utils": "2.1.1",
-		"@com.mgmtp.a12.utils/utils-localization": "^7.2.0",
+		"@com.mgmtp.a12.base/base-model-api": "30.0.1",
+		"@com.mgmtp.a12.devtools/tsconfig": "2.0.1",
+		"@com.mgmtp.a12.devtools/eslint-config": "3.1.2",
+		"@com.mgmtp.a12.devtools/prettier-config": "^1.0.0",
+		"@com.mgmtp.a12.migrationtool/migrationtool-utils": "3.0.0",
+		"@com.mgmtp.a12.utils/utils-localization": "^8.0.1",
+		"@cyclonedx/cyclonedx-npm": "^4.1.2",
 		"@swc/core": "^1.11.13",
 		"@swc/jest": "^0.2.37",
 		"@types/jest": "^29.5.14",
@@ -87,10 +88,13 @@
 		"eslint-plugin-unused-imports": "^4.1.4",
 		"jest": "^29.7.0",
 		"jest-junit": "^16.0.0",
-		"prettier": "^3.5.3",
+		"prettier": "3.9.1",
 		"rimraf": "^6.0.1",
 		"ts-jest": "^29.3.0",
 		"ts-node": "^10.9.2",
-		"typescript": "5.8.2"
+		"typescript": "6.0.2"
+	},
+	"overrides": {
+		"glob": "^13.0.0"
 	}
 }

@@ -77,37 +77,26 @@ public class ContentStorePrivateControllerTest extends AbstractSpringContextServ
 			.build();
 	}
 
-	@Test
-	public void uploadPublicContent() throws Exception {
+	@Test(description = "Should upload and retrieve public content successfully")
+	public void shouldUploadAndRetrievePublicContent() throws Exception {
+		// Given
 		String contentId = UUID.randomUUID().toString();
-		String persistentType = "public";
-		mockMvc.perform(MockMvcRequestBuilders
-				.post(contentStoreProperties.getServer().getContextPath() + CONTENT_ENDPOINT_PATH)
-				.queryParam("contentId", contentId)
-				.queryParam("persistentType", persistentType)
-				.content("helloWorld".getBytes(StandardCharsets.UTF_8))
-				.contentType(MediaType.TEXT_PLAIN))
-			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-			.andExpect(jsonPath("$.size").value(10))
-			.andExpect(jsonPath("$.url").isNotEmpty())
-			.andExpect(jsonPath("$.url", Matchers.matchesPattern(THUMBNAIL_URL_PATTERN)));
-	}
+		byte[] content = "helloWorld".getBytes(StandardCharsets.UTF_8);
 
-	@Test
-	public void getPublicContent() throws Exception {
-		String contentId = UUID.randomUUID().toString();
+		// When - Upload public content
 		mockMvc.perform(MockMvcRequestBuilders
 				.post(contentStoreProperties.getServer().getContextPath() + CONTENT_ENDPOINT_PATH)
 				.queryParam("contentId", contentId)
 				.queryParam("persistentType", PERSISTENT_TYPE_PUBLIC)
-				.content("helloWorld".getBytes(StandardCharsets.UTF_8))
+				.content(content)
 				.contentType(MediaType.TEXT_PLAIN))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(jsonPath("$.size").value(10))
 			.andExpect(jsonPath("$.url").isNotEmpty())
 			.andExpect(jsonPath("$.url", Matchers.matchesPattern(THUMBNAIL_URL_PATTERN)));
+
+		// Then - Retrieve the uploaded content
 		mockMvc.perform(MockMvcRequestBuilders
 				.get(contentStoreProperties.getServer().getContextPath() + CONTENT_ENDPOINT_PATH + "/" + contentId))
 			.andExpect(status().isOk())
@@ -185,7 +174,7 @@ public class ContentStorePrivateControllerTest extends AbstractSpringContextServ
 			.andExpect(jsonPath("$.shortMessage.key").value("error.content-store.content.notFound"));
 	}
 
-	@Test()
+	@Test
 	public void uploadPublicContent_largeFileSize_hasError() throws Exception {
 		try (InputStream file = new FileInputStream(LARGE_ATTACHMENT_FILE)) {
 			String contentId = UUID.randomUUID().toString();

@@ -31,30 +31,22 @@
  */
 package com.mgmtp.a12.examples.custom.type;
 
-import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldType;
-import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldTypeFactory;
+import java.util.Optional;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
+import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldTypeFactory;
+import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldValidator;
 
+import lombok.NonNull;
+
+@ConditionalOnProperty(prefix = "com.mgmtp.a12.examples.custom.type", name = "enabled", havingValue = "true")
 @Component public class RenamedTaxIDCustomFieldTypeFactory implements ICustomFieldTypeFactory {
 
 	public static final String TAX_ID_CUSTOM_FIELD_TYPE = "TaxIDCustomFieldType";
 
-	@Override
-	public Set<String> getSupportedTypeNames() {
-		return Collections.singleton(TAX_ID_CUSTOM_FIELD_TYPE);
-	}
-
-	@Override
-	public ICustomFieldType createCustomFieldType(String s) {
-		return new TaxIDCustomFieldType();
-	}
-
-	@Override public Optional<ICustomFieldType> createCustomFieldTypeV2(String customFieldTypeName) {
-		return Optional.ofNullable(createCustomFieldType(customFieldTypeName));
+	@Override public Optional<ICustomFieldValidator> createCustomFieldValidator(@NonNull String customFieldTypeName) {
+		return Optional.ofNullable(new TaxIDCustomFieldType());
 	}
 }

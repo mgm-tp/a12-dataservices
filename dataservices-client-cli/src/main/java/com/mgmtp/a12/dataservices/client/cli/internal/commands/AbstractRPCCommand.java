@@ -45,10 +45,12 @@ import com.mgmtp.a12.dataservices.client.exception.A12ClientException;
 import com.mgmtp.a12.dataservices.client.exception.RestErrorDetail;
 import com.mgmtp.a12.uaa.client.rest.UAARestClientException;
 
-import lombok.NonNull;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @Slf4j
 public abstract class AbstractRPCCommand<T> implements ICommandProcessor<T> {
 	public static final int EXIT_SUCCESS = 0;
@@ -56,10 +58,6 @@ public abstract class AbstractRPCCommand<T> implements ICommandProcessor<T> {
 	public static final int EXIT_INVALID_ARGS = 2;
 
 	protected final IApplicationOutput applicationOutput;
-
-	protected AbstractRPCCommand(@NonNull IApplicationOutput applicationOutput) {
-		this.applicationOutput = applicationOutput;
-	}
 
 	protected abstract ICommandProcessor.CommandResponse<T> executeRemoteCommand(T args);
 

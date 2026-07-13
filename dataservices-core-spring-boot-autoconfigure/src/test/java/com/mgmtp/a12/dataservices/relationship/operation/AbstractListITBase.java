@@ -35,7 +35,7 @@ import java.util.Arrays;
 
 import org.testng.annotations.BeforeClass;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants.FieldConstants;
@@ -156,8 +156,8 @@ public class AbstractListITBase extends AbstractSpringContextIT {
 	}
 
 	protected JsonNode createLinkDocument(String name) {
-		JsonNode rootGroup = objectMapper.createObjectNode().put("Name", name);
-		return objectMapper.createObjectNode().set(FieldConstants.CO_INSURED_ADDITIONAL_FIELDS_ROOT, rootGroup);
+		JsonNode rootGroup = JACKSON_2_OBJECT_MAPPER.createObjectNode().put("Name", name);
+		return JACKSON_2_OBJECT_MAPPER.createObjectNode().set(FieldConstants.CO_INSURED_ADDITIONAL_FIELDS_ROOT, rootGroup);
 	}
 
 }

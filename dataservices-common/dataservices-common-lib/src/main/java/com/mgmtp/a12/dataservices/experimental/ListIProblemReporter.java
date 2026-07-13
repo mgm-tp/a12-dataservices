@@ -65,6 +65,6 @@ public class ListIProblemReporter extends AbstractListProblemReporter<IProblem> 
 	 * @return a {@link ProblemFormatter} that formats message, severity, line, source start and end positions.
 	 */
 	@Override public ProblemFormatter<IProblem> getFormatter() {
-		return p -> String.format("%s [%s,L%d,s%d,e%d],", p.getMessage(), p.getSeverity(), p.getLine(), p.getSourceStart(), p.getSourceEnd());
+		return p -> "%s [%s,L%d,s%d,e%d],".formatted(p.getMessage(), p.getSeverity(), p.getLine(), p.getSourceStart(), p.getSourceEnd());
 	}
 }

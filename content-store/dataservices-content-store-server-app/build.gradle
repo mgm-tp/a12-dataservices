@@ -1,3 +1,6 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+import org.springframework.boot.gradle.tasks.run.BootRun
+
 plugins {
 	id 'com.mgmtp.a12.dataservices.spring-boot-conventions'
 }
@@ -5,7 +8,6 @@ plugins {
 dependencies {
 	api project(':content-store:dataservices-content-store-server-spring-boot-autoconfigure')
 	api libs.jaxbApi
-	api libs.jacksonDatatypeJsr310, libs.jacksonDatatypeJdk8
 	api libs.springBootStarterDataJpa
 	api(libs.springBootStarterWeb) {
 		exclude group: 'org.glassfish', module: 'jakarta.el'
@@ -22,12 +24,15 @@ springBoot {
 	mainClass.set 'com.mgmtp.a12.contentstore.server.app.ContentStoreServerApplication'
 }
 
-bootRun {
-	systemProperties 'workDir': "${project.rootDir}/", 'spring.profiles.active': 'contentstore-uaa,contentstore-external_postgres,contentstore-actuators'
-	systemProperties 'mgmtp.a12.uaa.authentication.jwt.secret': 'YXNkZmdoamtscXdlcnR6dWlvcHl4Y3Zibm0xMjM0NTY='
-	systemProperties 'mgmtp.a12.uaa.authentication.jwt.privateKeyLocation': 'classpath:/uaa_private_key.pem'
-	systemProperties 'mgmtp.a12.uaa.authentication.jwt.publicKeyLocation': 'classpath:/uaa_public_key.pem'
-	systemProperties 'mgmtp.a12.uaa.authentication.types': 'UAA_ACCESS_TOKEN'
+tasks.withType(BootRun).named(SpringBootPlugin.BOOT_RUN_TASK_NAME).configure {
+	it.systemProperty 'spring.profiles.active', 'contentstore-uaa,contentstore-embedded_postgres,contentstore-actuators'
+	it.systemProperty 'mgmtp.a12.uaa.authentication.types', 'LOCAL'
+	['publicKeyLocation' : 'uaa_public_key',
+	 'privateKeyLocation': 'uaa_private_key']
+			.each { k, v -> it.systemProperty "mgmtp.a12.uaa.authentication.jwt.$k", "file:${project(':dataservices-core').file("src/testFixtures/resources/${v}.pem").absolutePath}" }
+	it.systemProperty 'mgmtp.a12.uaa.authentication.jwt.secret', 'YXNkZmdoamtscXdlcnR6dWlvcHl4Y3Zibm0xMjM0NTY='
+	it.systemProperty 'mgmtp.a12.uaa.authentication.principal.localConfig.userResources', project(':dataservices-core-spring-boot-autoconfigure').fileTree('src/testFixtures/resources/local_users').files.collect { "file:$it.absolutePath" }.join(',')
+	it.systemProperty 'mgmtp.a12.uaa.authentication.principal.accessRightsResource', "file:${project(':dataservices-core-spring-boot-autoconfigure').file('src/testFixtures/resources/testUserRoles.yaml').absolutePath}"
 }
 
 artifacts {

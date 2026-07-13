@@ -33,6 +33,8 @@ package com.mgmtp.a12.dataservices.query.indexing;
 
 import java.util.Collection;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Provides a functionality to explicitly manage the query index. This includes indexing of all or specific document models
  * as well as cleaning the index.
@@ -42,7 +44,7 @@ import java.util.Collection;
  * the methods of this interface. During migration, it also recommended to use {@link com.mgmtp.a12.dataservices.document.DocumentService}
  * and not call the methods of this interface directly for performance and consistency reasons.
  */
-public interface QueryIndexManager {
+@OnlyForUsage public interface QueryIndexManager {
 	/**
 	 * Indexes the query data. All document models are indexed.
 	 */

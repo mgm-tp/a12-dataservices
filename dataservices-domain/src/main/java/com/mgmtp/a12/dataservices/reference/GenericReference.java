@@ -35,6 +35,7 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Generic Reference interface. Only known sub-type is {@link DocumentReference}.
@@ -43,5 +44,5 @@ import com.mgmtp.a12.dataservices.document.DocumentReference;
 @JsonSubTypes({
 	@JsonSubTypes.Type(value = DocumentReference.class, name = "DOCUMENT")
 })
-public interface GenericReference extends Serializable, CharSequence {
+@OnlyForUsage public interface GenericReference extends Serializable, CharSequence {
 }

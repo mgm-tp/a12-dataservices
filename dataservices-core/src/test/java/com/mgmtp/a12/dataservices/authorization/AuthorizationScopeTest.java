@@ -60,7 +60,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.AbstractDataServicesCoreTest;
 import com.mgmtp.a12.dataservices.attachment.AttachmentHeader;
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
@@ -76,12 +75,17 @@ import com.mgmtp.a12.uaa.authorization.security.PolicyProcessorFactory;
 import com.mgmtp.a12.uaa.authorization.security.PropertyChangesChecker;
 import com.mgmtp.a12.uaa.authorization.security.spel.internal.SpelPolicyProcessorFactory;
 
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+
 public class AuthorizationScopeTest extends AbstractDataServicesCoreTest {
 
 	private final ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
 	private AuthorizationDefinitionRepository authorizationDefinitionRepository = new RuntimeAuthorizationDefinitionRepository();
-	private final ObjectMapper mapper = new ObjectMapper().setDefaultMergeable(false);
+	private final ObjectMapper mapper = JsonMapper.builder()
+		.withConfigOverride(Object.class, cfg -> cfg.setMergeable(false))
+		.build();
 
 	@Mock private SecurityContext securityContext;
 	@Mock private ApplicationContext applicationContext;
@@ -148,11 +152,14 @@ public class AuthorizationScopeTest extends AbstractDataServicesCoreTest {
 			new Object[] { AuthConstants.DOCUMENT_PARTIAL_UPDATE_PERMISSION, "DOCUMENT_PARTIAL_UPDATE", true, makeTestDsDocument() },
 			new Object[] { AuthConstants.DOCUMENT_PARTIAL_UPDATE_PERMISSION, "DOCUMENT_UPDATE,DOCUMENT_CREATE", false, makeTestDsDocument() },
 			new Object[] { AuthConstants.DOCUMENT_MULTI_DELETE_PERMISSION, "DOCUMENT_MULTI_DELETE", true, makeTestDsDocument() },
-			new Object[] { AuthConstants.DOCUMENT_MULTI_DELETE_PERMISSION, "DOCUMENT_UPDATE,DOCUMENT_CREATE,DOCUMENT_PARTIAL_UPDATE", false, makeTestDsDocument() },
-			new Object[] { AuthConstants.ATTACHMENT_UPLOAD_PERMISSION, "ATTACHMENT_UPLOAD", true, AttachmentHeader.builder().attachmentId(UUID.randomUUID().toString()).build() },
+			new Object[] { AuthConstants.DOCUMENT_MULTI_DELETE_PERMISSION, "DOCUMENT_UPDATE,DOCUMENT_CREATE,DOCUMENT_PARTIAL_UPDATE", false,
+				makeTestDsDocument() },
+			new Object[] { AuthConstants.ATTACHMENT_UPLOAD_PERMISSION, "ATTACHMENT_UPLOAD", true,
+				AttachmentHeader.builder().attachmentId(UUID.randomUUID().toString()).build() },
 			new Object[] { AuthConstants.ATTACHMENT_UPLOAD_PERMISSION, "ATTACHMENT_UPLOAD1,DOCUMENT_UPDATE,MANAGE_CACHES", false,
 				AttachmentHeader.builder().attachmentId(UUID.randomUUID().toString()).build() },
-			new Object[] { "RelativePath", "", true, null },
+			new Object[] { "RelativePath", "", false, null },
+			new Object[] { "RelativePath", "ACCESS_ACTUATOR", true, null },
 			new Object[] { "Endpoint", "", true, null },
 			new Object[] { AuthConstants.EXPORT_LIST_CDD_PERMISSION, "", true, null },
 		};
@@ -232,7 +239,7 @@ public class AuthorizationScopeTest extends AbstractDataServicesCoreTest {
 		String roleName1 = "roleName1";
 		String roleName2 = "roleName2";
 		String roleDoesNotBelongToModel = "roleDoesNotBelongToModel";
-		List<Annotation> annotations = List.of(new TestAnnotation("roles", String.format("%s,%s", roleName1, roleName2)));
+		List<Annotation> annotations = List.of(new TestAnnotation("roles", "%s,%s".formatted(roleName1, roleName2)));
 
 		// Model have `roleName1` and `roleName2`
 		Header header = makeTestModelHeader(RandomStringUtils.randomAlphabetic(7), annotations);

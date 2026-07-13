@@ -36,6 +36,7 @@ import java.util.List;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModelConfig;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModelContent;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModelInfo;
+import com.mgmtp.a12.kernel.md.model.api.IDocumentUniquenessCriterion;
 import com.mgmtp.a12.kernel.md.model.api.IFieldTypeDefinition;
 import com.mgmtp.a12.kernel.md.model.api.IGroup;
 
@@ -52,6 +53,10 @@ public class ComposeDocumentModelContent implements IDocumentModelContent {
 
 	@Override public @NonNull IDocumentModelConfig getDocumentModelConfig() {
 		return documentContent.getDocumentModelConfig();
+	}
+
+	@Override public @NonNull List<IDocumentUniquenessCriterion> getDocumentUniquenessCriteria() {
+		throw new UnsupportedOperationException("Uniqueness criteria are not supported in the context of Compose Document Models");
 	}
 
 	@Override public @NonNull List<IFieldTypeDefinition> getTypeDefinitions() {

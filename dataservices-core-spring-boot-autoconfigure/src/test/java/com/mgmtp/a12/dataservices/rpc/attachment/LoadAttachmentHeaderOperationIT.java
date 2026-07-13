@@ -64,7 +64,7 @@ public class LoadAttachmentHeaderOperationIT extends AbstractSpringContextIT {
 	}
 
 	@Test public void testFindAttachment() throws IOException {
-		AttachmentHeaderSpec header = loadAttachmentHeaderOperation.rpc(attachmentId, docRef);
+		AttachmentHeaderSpec header = loadAttachmentHeaderOperation.rpc(attachmentId, docRef.toString());
 		assertEquals(header.getAttachmentId(), attachmentId);
 		assertEquals(header.getSize(), FileUtils.sizeOf(attachmentTestFunctions.createTestImage()));
 		assertEquals(header.getMimeType(), MimeTypeUtils.IMAGE_PNG_VALUE);
@@ -74,6 +74,6 @@ public class LoadAttachmentHeaderOperationIT extends AbstractSpringContextIT {
 
 	@Test(expectedExceptions = NotFoundException.class, expectedExceptionsMessageRegExp = "Attachment \\[.*] not found")
 	public void attachmentNotFound_ShouldThrowException() {
-		loadAttachmentHeaderOperation.rpc("notExistedAttachmentId", docRef);
+		loadAttachmentHeaderOperation.rpc("notExistedAttachmentId", docRef.toString());
 	}
 }

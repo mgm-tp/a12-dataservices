@@ -1,0 +1,251 @@
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0003
+displayName: ModelUtils.validateHeterogeneity removed
+description: >
+  ModelUtils.validateHeterogeneity removed
+recipeList:
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: com.mgmtp.a12.dataservices.utils.ModelUtils validateHeterogeneity(java.util.List)
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0004
+displayName: ModelUtils.validateHeader removed
+description: >
+  ModelUtils.validateHeader removed
+recipeList:
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: com.mgmtp.a12.dataservices.utils.ModelUtils validateHeader(com.mgmtp.a12.dataservices.model.Header, boolean)
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0005
+displayName: ModelUtils.getObjectRoles removed
+description: >
+  ModelUtils.getObjectRoles removed
+recipeList:
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: com.mgmtp.a12.dataservices.utils.ModelUtils getObjectRoles(com.mgmtp.a12.dataservices.model.Header)
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0006
+displayName: ModelUtils.getMatchingRoles removed
+description: >
+  ModelUtils.getMatchingRoles removed
+recipeList:
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: com.mgmtp.a12.dataservices.utils.ModelUtils getMatchingRoles(com.mgmtp.a12.dataservices.model.Header)
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0012
+displayName: DocumentValidationError merged into DocumentValidationResult
+description: >
+  DocumentValidationError merged into DocumentValidationResult
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: com.mgmtp.a12.dataservices.document.operation.validate.DocumentValidationError
+      newFullyQualifiedTypeName: com.mgmtp.a12.dataservices.document.DocumentValidationResult
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0013
+displayName: ModelsClient.importModelBulk renamed to importRuntimeModels
+description: >
+  ModelsClient.importModelBulk renamed to importRuntimeModels
+recipeList:
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: com.mgmtp.a12.dataservices.model.client.ModelsClient importModelBulk(java.io.InputStream)
+      newMethodName: importRuntimeModels
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0014
+displayName: RestModelsClient.importModelBulk renamed to importRuntimeModels
+description: >
+  RestModelsClient.importModelBulk renamed to importRuntimeModels
+recipeList:
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: com.mgmtp.a12.dataservices.model.client.rest.RestModelsClient importModelBulk(java.io.InputStream)
+      newMethodName: importRuntimeModels
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0016
+displayName: RpcExceptionSupport.createException() removed
+description: >
+  RpcExceptionSupport.createException() removed
+recipeList:
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: com.mgmtp.a12.dataservices.rpc.RpcExceptionSupport createException()
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0017
+displayName: ThumbnailType.getNameSuffix() removed
+description: >
+  ThumbnailType.getNameSuffix() removed
+recipeList:
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: com.mgmtp.a12.dataservices.attachment.ThumbnailType getNameSuffix()
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0019
+displayName: IAttachmentRepository.createAttachment removed
+description: >
+  IAttachmentRepository.createAttachment removed
+recipeList:
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: com.mgmtp.a12.dataservices.attachment.persistence.IAttachmentRepository createAttachment()
+      newMethodName: create
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0020
+displayName: IAttachmentRepository.createThumbnail removed
+description: >
+  IAttachmentRepository.createThumbnail removed
+recipeList:
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: com.mgmtp.a12.dataservices.attachment.persistence.IAttachmentRepository createThumbnail()
+      newMethodName: create
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0021
+displayName: IAttachmentRepository.findAttachmentUrl removed
+description: >
+  IAttachmentRepository.findAttachmentUrl removed
+recipeList:
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: com.mgmtp.a12.dataservices.attachment.persistence.IAttachmentRepository findAttachmentUrl()
+      newMethodName: findUrl
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0022
+displayName: IAttachmentRepository.findThumbnailUrl removed
+description: >
+  IAttachmentRepository.findThumbnailUrl removed
+recipeList:
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: com.mgmtp.a12.dataservices.attachment.persistence.IAttachmentRepository findThumbnailUrl()
+      newMethodName: findUrl
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0023
+displayName: IAttachmentRepository.deleteThumbnail removed
+description: >
+  IAttachmentRepository.deleteThumbnail removed
+recipeList:
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: com.mgmtp.a12.dataservices.attachment.persistence.IAttachmentRepository deleteThumbnail()
+      newMethodName: delete
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0043
+displayName: application-contentstore-http1-only.properties renamed to application-contentstore-http1_only.properties
+description: >
+  application-contentstore-http1-only.properties renamed to application-contentstore-http1_only.properties
+recipeList:
+  - org.openrewrite.properties.ChangePropertyKey:
+      oldPropertyKey: application-contentstore-http1-only.properties
+      newPropertyKey: application-contentstore-http1_only.properties
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0045
+displayName: mgmtp.a12.dataservices.contentstore.client.content.base-url renamed to base-prefix
+description: >
+  mgmtp.a12.dataservices.contentstore.client.content.base-url renamed to base-prefix
+recipeList:
+  - org.openrewrite.properties.ChangePropertyKey:
+      oldPropertyKey: mgmtp.a12.dataservices.contentstore.client.content.base-url
+      newPropertyKey: mgmtp.a12.dataservices.contentstore.client.content.base-prefix
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0048
+displayName: dataservices-core-tooling module renamed to dataservices-modelgraph-fs-impl
+description: >
+  dataservices-core-tooling module renamed to dataservices-modelgraph-fs-impl
+recipeList:
+  - org.openrewrite.gradle.ChangeDependencyArtifactId:
+      groupId: com.mgmtp.a12.dataservices
+      artifactId: dataservices-core-tooling
+      newArtifactId: dataservices-modelgraph-fs-impl
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0050
+displayName: dataservices-data-seed module renamed to dataservices-sme-workspace-support
+description: >
+  dataservices-data-seed module renamed to dataservices-sme-workspace-support
+recipeList:
+  - org.openrewrite.gradle.ChangeDependencyArtifactId:
+      groupId: com.mgmtp.a12.dataservices
+      artifactId: dataservices-data-seed
+      newArtifactId: dataservices-sme-workspace-support
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0062
+displayName: BulkImporterConfiguration class renamed to ModelImportConfiguration
+description: >
+  BulkImporterConfiguration class renamed to ModelImportConfiguration
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: com.mgmtp.a12.dataservices.model.bulkload.BulkImporterConfiguration
+      newFullyQualifiedTypeName: com.mgmtp.a12.dataservices.initialization.ModelImportConfiguration
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0066
+displayName: ContentStoreClientProperties.Content.getBaseUrl() renamed to getBasePrefix()
+description: >
+  ContentStoreClientProperties.Content.getBaseUrl() renamed to getBasePrefix()
+recipeList:
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: com.mgmtp.a12.contentstore.client.configuration.ContentStoreClientProperties.Content getBaseUrl()
+      newMethodName: getBasePrefix
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.mgmtp.a12.dataservices.rewrite.upgradeTo39_0_0
+displayName: Upgrade to Data Services 39.0.0
+description: >
+  Upgrade to Data Services 39.0.0.
+  (Covers all breaking changes accumulated across the full 2026.06 release line.)
+
+  - ModelUtils.validateHeterogeneity removed
+  - ModelUtils.validateHeader removed
+  - ModelUtils.getObjectRoles removed
+  - ModelUtils.getMatchingRoles removed
+  - DocumentValidationError merged into DocumentValidationResult
+  - ModelsClient.importModelBulk renamed to importRuntimeModels
+  - RestModelsClient.importModelBulk renamed to importRuntimeModels
+  - RpcExceptionSupport.createException() removed
+  - ThumbnailType.getNameSuffix() removed
+  - IAttachmentRepository.createAttachment removed
+  - IAttachmentRepository.createThumbnail removed
+  - IAttachmentRepository.findAttachmentUrl removed
+  - IAttachmentRepository.findThumbnailUrl removed
+  - IAttachmentRepository.deleteThumbnail removed
+  - application-contentstore-http1-only.properties renamed to application-contentstore-http1_only.properties
+  - mgmtp.a12.dataservices.contentstore.client.content.base-url renamed to base-prefix
+  - dataservices-core-tooling module renamed to dataservices-modelgraph-fs-impl
+  - dataservices-data-seed module renamed to dataservices-sme-workspace-support
+  - BulkImporterConfiguration class renamed to ModelImportConfiguration
+  - ContentStoreClientProperties.Content.getBaseUrl() renamed to getBasePrefix()
+recipeList:
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0003
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0004
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0005
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0006
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0012
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0013
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0014
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0016
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0017
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0019
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0020
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0021
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0022
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0023
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0043
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0045
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0048
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0050
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0062
+  - com.mgmtp.a12.dataservices.rewrite.bc.bc_39_0_0_rc_2_0066
+  # CUSTOM entry bc-39_0_0_SNAPSHOT-0001: ModelBulkImporter class removed — implement manually
+  # Notes: Replace with RuntimeModelImporter injection or configuration-based import.
+  # CUSTOM entry bc-39_0_0_SNAPSHOT-0014: RelationshipModel.Content: associationType, storage, embeddedGroupPath fields removed — implement manually
+  # Notes: Multiple fields removed from RelationshipModel.Content.
+  # CUSTOM entry bc-39_0_0_SNAPSHOT-0015: AssociationType enum removed from RelationshipModel — implement manually
+  # CUSTOM entry bc-39_0_0_SNAPSHOT-0016: Storage enum removed from RelationshipModel — implement manually

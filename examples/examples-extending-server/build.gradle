@@ -27,7 +27,7 @@ dependencies {
 
 	implementation project(':dataservices-core-spring-boot-autoconfigure')
 	implementation project(':dataservices-server-spring-boot-autoconfigure')
-	implementation project(':dataservices-data-seed')
+	implementation project(':dataservices-sme-workspace-support')
 	implementation project(':examples:examples-static-validation-code')
 
 //	In your external project, you should also specify Data Services BOM by specifying:
@@ -40,9 +40,7 @@ dependencies {
 	implementation libs.uaaAuthenticationPrincipalExtension
 	implementation libs.uaaAuthorization
 	implementation libs.uaaAuthorizationA12Extension
-	implementation libs.hazelcast
-	implementation libs.hazelcastSpring
-	modelGraph project(path: ':dataservices-core-tooling', configuration: 'runtimeElements')
+	modelGraph project(path: ':dataservices-modelgraph-fs-impl', configuration: 'runtimeElements')
 
 	testImplementation libs.testng
 	testImplementation libs.springTest
@@ -75,9 +73,9 @@ def buildModelGraphTask = tasks.register('buildModelGraph', JavaExec) {
 	outputs.file project.layout.buildDirectory.file('modelGraph.json').map { it.asFile }.get()
 	args '--logging.level.com.mgmtp.a12.dataservices.tooling=DEBUG'
 	args "--output=${outputs.files.files.find()}"
-	args "file:${projectDir}/src/test/resources/modelgraph/"
+	args "file:${projectDir}/src/test/resources/modelgraph/models/"
 
-	dependsOn ':dataservices-core-tooling:bootJar'
+	dependsOn ':dataservices-modelgraph-fs-impl:bootJar'
 }
 
 tasks.register('testModelGraph') {

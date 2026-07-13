@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 import com.mgmtp.a12.dataservices.authorization.ModelPermissionEvaluator;
 
@@ -74,14 +74,14 @@ public abstract class AbstractLoggedElement {
 
 	@Override public String toString() {
 		if (getDirection() == LoggedEventDirection.CALL) {
-			return String.format("%s \"%s\" as %s", getType(), getName(), getId());
+			return "%s \"%s\" as %s".formatted(getType(), getName(), getId());
 		} else {
-			return String.format("'return %s \"%s\" as %s\nreturn", getType(), getName(), getId());
+			return "'return %s \"%s\" as %s\nreturn".formatted(getType(), getName(), getId());
 		}
 	}
 
 	@SneakyThrows public Caller getCaller() {
-		StackTraceElement element = callHistory.get(0);
+		StackTraceElement element = callHistory.getFirst();
 		return new Caller(element.getClassName(), element.getMethodName(), getModifier(element.getClassName(), element.getMethodName()));
 	}
 

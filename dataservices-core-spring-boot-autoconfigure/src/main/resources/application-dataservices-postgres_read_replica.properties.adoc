@@ -1,0 +1,23 @@
+= PostgreSQL Read Replica
+
+Route read-only database transactions to a PostgreSQL read replica datasource.
+
+Routing is activated automatically when `spring.datasources.dataservices-read-replica.url` is present.
+No other changes are required. When the property is absent, all traffic goes to the primary datasource
+and the routing infrastructure is not started.
+
+This profile enforces read-only mode at the JDBC driver level for every connection in the replica pool
+(`spring.datasources.dataservices-read-replica.hikari.read-only=true`), which prevents accidental
+writes through the replica connection pool.
+
+Provide the connection details for your read replica in addition to this profile:
+
+[source,properties]
+----
+spring.datasources.dataservices-read-replica.url=jdbc:postgresql://replica-host:5432/dataservices
+spring.datasources.dataservices-read-replica.username=ds_user
+spring.datasources.dataservices-read-replica.password=secret
+----
+
+See <<read-replica-configuration>> for all available properties and <<read-replica-routing>> for
+routing behavior and consistency considerations.

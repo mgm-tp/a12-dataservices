@@ -33,9 +33,9 @@ package com.mgmtp.a12.dataservices.utils.internal;
 
 import java.net.URISyntaxException;
 
-import org.apache.http.client.utils.URIBuilder;
-
 import com.mgmtp.a12.dataservices.attachment.AttachmentUrl;
+
+import org.apache.hc.core5.net.URIBuilder;
 import com.mgmtp.a12.dataservices.utils.AttachmentConstants;
 
 import lombok.experimental.UtilityClass;

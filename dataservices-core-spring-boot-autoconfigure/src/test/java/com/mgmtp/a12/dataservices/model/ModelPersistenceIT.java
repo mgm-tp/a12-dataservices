@@ -44,19 +44,21 @@ import java.util.stream.IntStream;
 import org.apache.commons.collections4.SetUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener;
+import org.mockito.testng.MockitoTestNGListener;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.Assert;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.mgmtp.a12.dataservices.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity.ModelEntity;
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity.ModelHeaderEntity;
 
-@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, MockitoTestExecutionListener.class, TransactionalTestExecutionListener.class })
+@Listeners(MockitoTestNGListener.class)
+@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class })
 @Transactional
 public class ModelPersistenceIT extends AbstractSpringContextIT {
 
@@ -111,7 +113,7 @@ public class ModelPersistenceIT extends AbstractSpringContextIT {
 		persistedModelHeader.setModelReferences(null);
 		modelHeaderJpaRepository.save(persistedModelHeader);
 		persistedModelHeader = findHeaderByModelName(MODEL_ID_1);
-		assertModelHeader(persistedModelHeader, MODEL_ID_1, MODEL_TYPE_1, MODEL_TYPE_VERSION_1,  MODEL_DESCRIPTION_1, LOCALES_1, LABELS_1, ANNOTATIONS_1, null);
+		assertModelHeader(persistedModelHeader, MODEL_ID_1, MODEL_TYPE_1, MODEL_TYPE_VERSION_1, MODEL_DESCRIPTION_1, LOCALES_1, LABELS_1, ANNOTATIONS_1, null);
 	}
 
 	@Test

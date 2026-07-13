@@ -33,12 +33,12 @@ import {
 	ConnectorLocator,
 	type RestRequestPayload,
 	type RestServerConnector
-} from "@com.mgmtp.a12.utils/utils-connector/lib/main/index.js";
+} from "@com.mgmtp.a12.utils/utils-connector";
 
 import type { JsonRpc2ResponseOK } from "../json-rpc/index.js";
 import { JsonRpc2Request, JsonRpc2Response } from "../json-rpc/index.js";
 
-import type { ResponseFor, SupportedRequest } from "./ResponseTypings.js";
+import type { ResponseFor, RpcSettledResult, SupportedRequest } from "./ResponseTypings.js";
 import { TypeGuards } from "./TypeGuards.js";
 
 type TypeGuard<T> = (value: unknown) => value is T;
@@ -55,10 +55,10 @@ async function fetchServerRequest(request: RestRequestPayload): Promise<Response
 	return response;
 }
 
-async function dispatchRpc<T extends JsonRpc2ResponseOK>(
+async function sendRpc(
 	language: string,
 	...requests: JsonRpc2Request[]
-): Promise<T[]> {
+): Promise<JsonRpc2Response | JsonRpc2Response[]> {
 	const request = JsonRpc2Request.build(requests);
 
 	const requestWithLanguageHeader: typeof request = {
@@ -70,7 +70,14 @@ async function dispatchRpc<T extends JsonRpc2ResponseOK>(
 		return JsonRpc2Response.isInstance(value) || isJsonRpc2ResponseArray(value);
 	}
 
-	const response = await rest(requestWithLanguageHeader, responseChecker);
+	return rest(requestWithLanguageHeader, responseChecker);
+}
+
+async function dispatchRpc<T extends JsonRpc2ResponseOK>(
+	language: string,
+	...requests: JsonRpc2Request[]
+): Promise<T[]> {
+	const response = await sendRpc(language, ...requests);
 
 	if (!Array.isArray(response) && JsonRpc2Response.hasError(response)) {
 		throw response;
@@ -82,6 +89,14 @@ async function dispatchRpc<T extends JsonRpc2ResponseOK>(
 	}
 
 	return (Array.isArray(response) ? response : [response]) as T[];
+}
+
+async function dispatchRpcSettled(
+	language: string,
+	...requests: JsonRpc2Request[]
+): Promise<JsonRpc2Response[]> {
+	const response = await sendRpc(language, ...requests);
+	return Array.isArray(response) ? response : [response];
 }
 
 function isJsonRpc2ResponseArray(value: unknown): value is JsonRpc2Response[] {
@@ -132,4 +147,40 @@ export async function rpc<
 
 		return response;
 	}) as Responses;
+}
+
+export async function rpcSettled<
+	Requests extends (SupportedRequest | undefined)[],
+	Results = {
+		[K in keyof Requests]: Requests[K] extends SupportedRequest
+			? RpcSettledResult<Requests[K]>
+			: RpcSettledResult<NonNullable<Requests[K]>> | undefined;
+	}
+>(language: string, requests: [...Requests]): Promise<Results> {
+	const nonNullableRequests = requests.filter(request => !!request);
+
+	const responses = await dispatchRpcSettled(language, ...nonNullableRequests);
+
+	return requests.map(request => {
+		if (!request) {
+			return undefined;
+		}
+
+		const response = responses.find(r => r.id === request.id);
+		if (!response) {
+			throw new Error(`No response found for request ${request.id}`);
+		}
+
+		if (JsonRpc2Response.error.isInstance(response)) {
+			return { status: "rejected", reason: response };
+		}
+
+		if (!TypeGuards[request.method](response)) {
+			throw new Error(
+				`Expect a response of type ${request.method}. Got: ${JSON.stringify(response)}`
+			);
+		}
+
+		return { status: "fulfilled", value: response };
+	}) as Results;
 }

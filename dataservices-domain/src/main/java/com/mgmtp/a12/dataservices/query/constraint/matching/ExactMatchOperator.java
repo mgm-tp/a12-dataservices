@@ -31,14 +31,16 @@
  */
 package com.mgmtp.a12.dataservices.query.constraint.matching;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.mgmtp.a12.dataservices.query.annotation.QueryOperator;
 import com.mgmtp.a12.dataservices.query.constraint.CaseSensitive;
 import com.mgmtp.a12.dataservices.query.constraint.FieldAwareOperator;
 import com.mgmtp.a12.dataservices.query.constraint.ValueAware;
+import com.mgmtp.a12.dataservices.query.constraint.ValuesAware;
 
 import lombok.Builder;
 import lombok.Data;
@@ -51,11 +53,13 @@ import lombok.experimental.SuperBuilder;
 @JsonClassDescription("This operator checks if the value of a field exactly matches the specified value. " +
 		"It is case-sensitive by default, but can be configured to be case-insensitive.")
 @Data @NoArgsConstructor @EqualsAndHashCode(callSuper = true) @ToString(callSuper = true) @SuperBuilder
-@QueryOperator("exact_match") public class ExactMatchOperator<T> extends FieldAwareOperator implements CaseSensitive, ValueAware<T> {
+@QueryOperator("exact_match") public class ExactMatchOperator<T> extends FieldAwareOperator implements CaseSensitive, ValueAware<T>, ValuesAware<T> {
 
-	@JsonProperty(required=true)
-	@JsonPropertyDescription("The value to match exactly against the field's value.")
+	@JsonPropertyDescription("The value to match exactly against the field's value. Either this or 'values' must be provided.")
 	private T value;
+
+	@JsonPropertyDescription("The list of values to match exactly against the field's value. Either this or 'value' must be provided.")
+	private List<T> values;
 
 	@JsonPropertyDescription("If the match should be done case sensitively.")
 	@Builder.Default private boolean caseSensitive = true;

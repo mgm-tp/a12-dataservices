@@ -93,7 +93,7 @@ public class DefaultAttachmentHeaderService implements AttachmentHeaderService {
 
 		if (attachmentNotExist) {
 			throw new NotFoundException(ExceptionKeys.ATTACHMENT_GENERAL_ERROR_KEY,
-				String.format("Unable to unassign attachment %s.", header.getAttachmentId()));
+				"Unable to unassign attachment %s.".formatted(header.getAttachmentId()));
 		}
 
 		attachmentHeaderRepository.removeReference(header, reference);

@@ -1,9 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd"
-				   logicalFilePath="database/schema/39.0.0/model.xml">
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd"
+                   logicalFilePath="database/schema/39.0.0/model.xml">
+
+    <changeSet id="A12S-6744" author="A12S-6744-author" dbms="postgresql">
+        <sql>
+            DROP TRIGGER IF EXISTS createFulltextTrigger ON localized_fields;
+            DROP TABLE IF EXISTS localized_fields;
+        </sql>
+    </changeSet>
+	<changeSet id="A12S-6768" author="A12S-6768-author" dbms="postgresql">
+		<createSequence sequenceName="DOCUMENT_UNIQUE_CONSTRAINT_SEQ" startValue="1" incrementBy="1"/>
+		<createTable tableName="DOCUMENT_UNIQUE_CONSTRAINT">
+			<column name="id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="DOCUMENT_UNIQUE_CONSTRAINT_PK" nullable="false"/>
+			</column>
+			<column name="model_name" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="constraint_name" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="field_values_hash" type="TEXT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="doc_ref" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addUniqueConstraint
+			tableName="DOCUMENT_UNIQUE_CONSTRAINT"
+			columnNames="model_name, constraint_name, field_values_hash"
+			constraintName="UQ_DOC_UNIQUE_CONSTRAINT"/>
+		<createIndex tableName="DOCUMENT_UNIQUE_CONSTRAINT" indexName="IDX_DOC_UNIQUE_CONSTRAINT_DOC_REF">
+			<column name="doc_ref"/>
+		</createIndex>
+	</changeSet>
 
 	<changeSet id="A12S-6620" author="A12S-6620-author" dbms="postgresql" ignore="true">
 		<addColumn tableName="document_fields">

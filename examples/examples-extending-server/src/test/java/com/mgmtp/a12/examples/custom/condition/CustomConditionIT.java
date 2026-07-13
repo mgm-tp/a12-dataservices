@@ -55,14 +55,14 @@ public class CustomConditionIT extends AbstractITBase {
 
 	private DocumentV2 validDoc;
 	private DocumentV2 inValidDoc;
-	private static final String CUSTOMCONDITION_PATH = "custom_condition/model/";
-	private static final String CUSTOMCONDITION_DOCUMENT_PATH = "custom_condition/document/";
+	private static final String CUSTOM_CONDITION_PATH = "custom_condition/model/";
+	private static final String CUSTOM_CONDITION_DOCUMENT_PATH = "custom_condition/document/";
 
 	@BeforeClass
 	public void init() throws IOException {
-		createModel(SRC_TEST_RESOURCES_PATH, CUSTOMCONDITION_PATH + "CustomConditionModel.json");
-		validDoc = loadFromResource(MODEL_NAME, SRC_TEST_RESOURCES_PATH + CUSTOMCONDITION_DOCUMENT_PATH + "CustomCondition-valid.json");
-		inValidDoc = loadFromResource(MODEL_NAME, SRC_TEST_RESOURCES_PATH + CUSTOMCONDITION_DOCUMENT_PATH + "CustomCondition-invalid.json");
+		modelsFunctions.createModel(CUSTOM_CONDITION_PATH + "CustomConditionModel.json");
+		validDoc = documentFunctions.getKernelDocumentFromFile(MODEL_NAME, CUSTOM_CONDITION_DOCUMENT_PATH + "CustomCondition-valid.json");
+		inValidDoc = documentFunctions.getKernelDocumentFromFile(MODEL_NAME, CUSTOM_CONDITION_DOCUMENT_PATH + "CustomCondition-invalid.json");
 	}
 
 	@Test
@@ -78,7 +78,8 @@ public class CustomConditionIT extends AbstractITBase {
 		Optional<IDocumentValidationResult> testResults = kernelDocumentService.validateDocument(inValidDoc, null);
 		assertNotNull(testResults);
 		assertTrue(testResults.isPresent());
-		IMessage message = testResults.get().getMessages().get(0);
+
+		IMessage message = testResults.get().getMessages().getFirst();
 		assertEquals(message.getErrorCode(), "SampleErrorCode");
 		assertEquals(message.getErrorText(), "numberB should be greater than 0");
 		assertEquals(message.getRulePath().orElse(""), "/top/CustomCondition1");

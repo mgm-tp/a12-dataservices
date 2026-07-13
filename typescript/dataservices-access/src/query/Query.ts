@@ -29,41 +29,116 @@
  * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
  * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
  */
-import type { RestRequestPayload } from "@com.mgmtp.a12.utils/utils-connector/lib/main/index.js";
+import type { RestRequestPayload } from "@com.mgmtp.a12.utils/utils-connector";
 
-import { isObject } from "../common/TypeGuardUtils.js";
+import { isNumber, isObject, isString } from "../common/TypeGuardUtils.js";
 
+/**
+ * Namespace for aggregation query operations.
+ *
+ * Aggregation queries allow computing aggregate values (count, sum, avg, min, max)
+ * grouped by specified fields.
+ *
+ * == Validation Rules
+ *
+ * The backend AggregationController enforces the following rules:
+ *
+ * *Required:*
+ *
+ * - `aggregation` - must be present with at least one aggregation function
+ * - `targetDocumentModel` - the document model to query
+ *
+ * *Forbidden (will cause validation error):*
+ *
+ * - `links` - not allowed for aggregation queries
+ * - `exclude: true` - aggregation queries must not exclude
+ * - `backReference` - not allowed for aggregation queries
+ *
+ * *Auto-populated by backend (client values are overwritten):*
+ *
+ * - `projectionName` - always set to "document"
+ * - `paging` - set from server configuration
+ *
+ */
 export namespace Aggregation {
-	import QueryRoot = Query.QueryRoot;
-
+	/**
+	 * Request structure for aggregation queries.
+	 *
+	 * The `queryRoot` should contain:
+	 *
+	 * - `targetDocumentModel` - the document model to aggregate
+	 * - `aggregation` - the aggregation specification with group fields and functions
+	 * - `constraint` (optional) - filter criteria for documents to aggregate
+	 *
+	 * Do NOT include `links`, `exclude: true`, or `backReference` as these will
+	 * cause validation errors. The `projectionName` and `paging` fields are
+	 * automatically set by the backend and any client-provided values are ignored.
+	 */
 	export interface Request {
-		readonly queryRoot: QueryRoot;
+		readonly queryRoot: Query.QueryRoot;
 	}
 
 	export namespace Request {
+		/**
+		 * Builds a REST request payload for aggregation queries.
+		 *
+		 * The request body is JSON-stringified to ensure proper content type handling
+		 * by the backend AggregationController which expects `application/json`.
+		 *
+		 * Note: The backend automatically sets `projectionName` and `paging` fields,
+		 * so these should NOT be included in the queryRoot sent by the client.
+		 *
+		 * @param request the aggregation request containing the query root
+		 * @return a REST request payload ready for dispatch
+		 * @see AggregationController#loadAggregations
+		 */
 		export function build(request: Request): RestRequestPayload {
 			return {
 				method: "POST",
 				relativeUrl: `/aggregation`,
-				body: request.queryRoot,
-				customHeaders: [["Accept", "application/json"]]
+				body: JSON.stringify(request.queryRoot),
+				customHeaders: [
+					["Accept", "application/json"],
+					["Content-Type", "application/json;charset=utf8"]
+				]
 			};
 		}
 	}
 
-	export type AggregationTuple = [string, number];
+	export type AggregationTuple = (string | number)[];
 
 	export namespace Response {
 		export function isInstance(value: unknown): value is AggregationTuple[] {
 			return (
 				Array.isArray(value) &&
-				value.every(
-					elm =>
-						Array.isArray(elm) &&
-						elm.length === 2 &&
-						typeof elm[0] === "string" &&
-						typeof elm[1] === "number"
-				)
+				value.every(elm => {
+					if (!Array.isArray(elm) || elm.length === 0) {
+						return false;
+					}
+					const firstNumberIndex = elm.findIndex(item => isNumber(item));
+
+					// Must contain at least one number
+					if (firstNumberIndex === -1) {
+						return false;
+					}
+
+					// All elements before the first number must be strings
+					for (let i = 0; i < firstNumberIndex; i++) {
+						// Allow null in string positions
+						if (elm[i] !== null && !isString(elm[i])) {
+							return false;
+						}
+					}
+
+					// All elements from the first number onwards must be numbers
+					for (let i = firstNumberIndex; i < elm.length; i++) {
+						if (!isNumber(elm[i])) {
+							return false;
+						}
+					}
+
+					return true;
+				})
 			);
 		}
 	}
@@ -99,9 +174,11 @@ export namespace Query {
 		export function isInstance(obj: unknown): obj is QueryRoot {
 			return (
 				isObject(obj) &&
+				"targetDocumentModel" in obj &&
+				isString(obj.targetDocumentModel) &&
 				"projectionName" in obj &&
+				isString(obj.projectionName) &&
 				"paging" in obj &&
-				typeof obj.projectionName === "string" &&
 				Paging.isInstance(obj.paging)
 			);
 		}
@@ -124,9 +201,9 @@ export namespace Query {
 			return (
 				isObject(obj) &&
 				"relationshipModel" in obj &&
+				isString(obj.relationshipModel) &&
 				"targetRole" in obj &&
-				typeof obj.relationshipModel === "string" &&
-				typeof obj.targetRole === "string"
+				isString(obj.targetRole)
 			);
 		}
 	}
@@ -246,8 +323,8 @@ export namespace Query {
 				isObject(obj) &&
 				"function" in obj &&
 				"field" in obj &&
-				typeof obj.function === "string" &&
-				typeof obj.field === "string"
+				isString(obj.function) &&
+				isString(obj.field)
 			);
 		}
 	}
@@ -285,9 +362,9 @@ export namespace Query {
 			return (
 				isObject(obj) &&
 				"function" in obj &&
-				typeof obj.function === "string" &&
+				isString(obj.function) &&
 				"field" in obj &&
-				typeof obj.field === "string"
+				isString(obj.field)
 			);
 		}
 	}
@@ -406,7 +483,7 @@ export namespace Query {
 		 * @returns {boolean} True if the object is a LogicOperator, false otherwise.
 		 */
 		export function isInstance(obj: unknown): obj is LogicOperator {
-			return isObject(obj) && "operator" in obj && typeof obj.operator === "string";
+			return isObject(obj) && "operator" in obj && isString(obj.operator);
 		}
 	}
 
@@ -598,6 +675,19 @@ export namespace Query {
 		 * @readonly
 		 */
 		readonly to?: string;
+
+		/**
+		 * Date value used for reverse range
+		 * @readonly
+		 */
+		readonly value?: string;
+
+		/**
+		 * If true, checks if the specified date or date range is within the range stored in the database.
+		 * If false (default), checks if the database value is within the specified date range.
+		 * @readonly
+		 */
+		readonly reverse?: boolean;
 	}
 
 	export namespace DateRangeOperator {
@@ -676,15 +766,19 @@ export namespace Query {
 		/**
 		 * Value for comparison with field's value.
 		 * For matching with number value please use numeric value here, for other types please use `string`.
+		 * Either this or `values` must be provided.
 		 * @readonly
 		 */
-		readonly value: number | string;
+		readonly value?: number | string;
 		/**
-		 * @deprecated since 38.1.0. This property was introduced by mistake and has no effect on the query execution.
+		 * Multiple values to be compared with the field's value.
 		 *
+		 * This is an alternative to the `value` parameter, allowing multiple values to be matched simultaneously.
+		 * The behavior is similar to `value`, but it matches documents where the field equals any of the specified
+		 * values (logical OR). Either this or `value` must be provided.
 		 * @readonly
 		 */
-		readonly lang?: string;
+		readonly values?: (number | string)[];
 		/**
 		 * Enable to match exact case-sensitive value.
 		 * @default true
@@ -862,9 +956,9 @@ export namespace Query {
 			return (
 				isObject(obj) &&
 				"docRef" in obj &&
-				typeof obj.docRef === "string" &&
+				isString(obj.docRef) &&
 				"type" in obj &&
-				typeof obj.type === "string" &&
+				DocumentTreeNodeType.isInstance(obj.type) &&
 				"document" in obj
 			);
 		}
@@ -881,6 +975,17 @@ export namespace Query {
 		ROOT = "ROOT",
 		CHILD = "CHILD",
 		LINK = "LINK"
+	}
+
+	export namespace DocumentTreeNodeType {
+		/**
+		 * Checks if a value is a valid DocumentTreeNodeType enum value.
+		 * @param value - The value to check.
+		 * @returns {boolean} True if the value is a valid DocumentTreeNodeType, false otherwise.
+		 */
+		export function isInstance(value: unknown): value is DocumentTreeNodeType {
+			return Object.values(DocumentTreeNodeType).includes(value as DocumentTreeNodeType);
+		}
 	}
 
 	/**
@@ -913,58 +1018,119 @@ export namespace Query {
 			return (
 				isObject(obj) &&
 				"pageNumber" in obj &&
-				typeof obj.pageNumber === "number" &&
+				isNumber(obj.pageNumber) &&
 				"pageSize" in obj &&
-				typeof obj.pageSize === "number"
+				isNumber(obj.pageSize)
 			);
 		}
 	}
 
 	/**
-	 * Interface for ordering configuration.
-	 * @interface Order
+	 * Interface for direct field ordering configuration.
+	 * Allows sorting by a field on the current (or related) document.
+	 * @interface DirectFieldOrder
 	 */
-	export interface Order {
+	export interface DirectFieldOrder {
+		/**
+		 * The document field to sort by.
+		 * @readonly
+		 */
+		readonly field: string;
 		/**
 		 * Direction of ordering.
 		 * @readonly
 		 */
 		readonly direction: Direction;
 		/**
-		 * The document field to be applied ordering.
+		 * True if sorting should be case-insensitive; false if case-sensitive.
 		 * @readonly
 		 */
-		readonly field: string;
+		readonly ignoreCase?: boolean;
 		/**
-		 * True if sorting should be case-insensitive. false if sorting should be case-sensitive.
+		 * Null handling strategy.
 		 * @readonly
 		 */
-		readonly ignoreCase: boolean;
-		/**
-		 * Enumeration for null handling hints that can be used.
-		 * @readonly
-		 */
-		readonly nullHandling: NullHandling;
+		readonly nullHandling?: NullHandling;
 	}
 
-	export namespace Order {
+	export namespace DirectFieldOrder {
 		/**
-		 * Checks if an object is an instance of Order.
+		 * Checks if an object is an instance of DirectFieldOrder.
 		 * @param obj - The object to check.
-		 * @returns {boolean} True if the object is a Order, false otherwise.
+		 * @returns {boolean} True if the object is a DirectFieldOrder, false otherwise.
 		 */
-		export function isInstance(obj: unknown): obj is Order {
+		export function isInstance(obj: unknown): obj is DirectFieldOrder {
 			return (
 				isObject(obj) &&
-				"direction" in obj &&
-				typeof obj.direction === "string" &&
 				"field" in obj &&
-				typeof obj.field === "string" &&
+				isString(obj.field) &&
+				"direction" in obj &&
+				Direction.isInstance(obj.direction) &&
 				"ignoreCase" in obj &&
 				typeof obj.ignoreCase === "boolean" &&
 				"nullHandling" in obj &&
-				typeof obj.nullHandling === "string"
+				NullHandling.isInstance(obj.nullHandling)
 			);
+		}
+	}
+
+	/**
+	 * Interface for relationship-based ordering configuration.
+	 * Allows sorting by fields of related documents through to-1 relationships.
+	 * @interface RelationshipOrder
+	 */
+	export interface RelationshipOrder {
+		/**
+		 * Name of the relationship model to traverse.
+		 * @readonly
+		 */
+		readonly relationshipModel: string;
+		/**
+		 * Target role in the relationship.
+		 * @readonly
+		 */
+		readonly targetRole: string;
+		/**
+		 * Nested sort specification (either another RelationshipOrder for multi-hop traversal
+		 * or a DirectFieldOrder for the terminal field).
+		 * @readonly
+		 */
+		readonly sortBy: Order;
+	}
+
+	export namespace RelationshipOrder {
+		/**
+		 * Checks if an object is an instance of RelationshipOrder.
+		 * @param obj - The object to check.
+		 * @returns {boolean} True if the object is a RelationshipOrder, false otherwise.
+		 */
+		export function isInstance(obj: unknown): obj is RelationshipOrder {
+			return (
+				isObject(obj) &&
+				"relationshipModel" in obj &&
+				isString(obj.relationshipModel) &&
+				"targetRole" in obj &&
+				isString(obj.targetRole) &&
+				"sortBy" in obj &&
+				Order.isInstance(obj.sortBy)
+			);
+		}
+	}
+
+	/**
+	 * Type for ordering configuration (union of direct field and relationship-based ordering).
+	 * @type Order
+	 */
+	export type Order = DirectFieldOrder | RelationshipOrder;
+
+	export namespace Order {
+		/**
+		 * Checks if an object is an instance of Order (either DirectFieldOrder or RelationshipOrder).
+		 * @param obj - The object to check.
+		 * @returns {boolean} True if the object is a valid Order, false otherwise.
+		 */
+		export function isInstance(obj: unknown): obj is Order {
+			return DirectFieldOrder.isInstance(obj) || RelationshipOrder.isInstance(obj);
 		}
 	}
 
@@ -983,6 +1149,17 @@ export namespace Query {
 		DESC = "DESC"
 	}
 
+	export namespace Direction {
+		/**
+		 * Checks if a value is a valid Direction enum value.
+		 * @param value - The value to check.
+		 * @returns {boolean} True if the value is a valid Direction, false otherwise.
+		 */
+		export function isInstance(value: unknown): value is Direction {
+			return Object.values(Direction).includes(value as Direction);
+		}
+	}
+
 	/**
 	 * Enum representing how null values should be handled in ordering.
 	 * @enum {string}
@@ -996,6 +1173,17 @@ export namespace Query {
 		 * A hint to the used data store to order entries with null values after non null entries.
 		 */
 		NULLS_LAST = "NULLS_LAST"
+	}
+
+	export namespace NullHandling {
+		/**
+		 * Checks if a value is a valid NullHandling enum value.
+		 * @param value - The value to check.
+		 * @returns {boolean} True if the value is a valid NullHandling, false otherwise.
+		 */
+		export function isInstance(value: unknown): value is NullHandling {
+			return Object.values(NullHandling).includes(value as NullHandling);
+		}
 	}
 
 	// === Convenience typings

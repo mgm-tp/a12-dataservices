@@ -31,66 +31,20 @@
  */
 package com.mgmtp.a12.dataservices.query;
 
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-
-import lombok.extern.slf4j.Slf4j;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+import tools.jackson.databind.annotation.JsonDeserialize;
 
 /**
- * @param direction Returns the order the property shall be sorted for.
- * @param field Returns the property to order for.
- * @param ignoreCase Returns whether the sort will be case-sensitive or case-insensitive.
- * @param nullHandling Returns the used {@link NullHandling} hint, which can but may not be respected by the used datastore.
+ * Sealed interface representing a sort specification (either root-level or nested).
+ *
+ * Implementations are {@link DirectFieldOrder} (sorts by a field directly)
+ * and {@link RelationshipOrder} (sorts by traversing a to-1 relationship).
+ *
+ * Jackson dispatches on the presence of `"relationshipModel"` to select the concrete
+ * subtype: JSON containing that property deserializes as {@link RelationshipOrder};
+ * any other JSON deserializes as {@link DirectFieldOrder}.
  */
-@Slf4j
-public record Order(@JsonPropertyDescription("The direction of sorting") Direction direction,
-					@JsonPropertyDescription("The field used for sorting") String field,
-					@JsonPropertyDescription("Whether the sorting should be case-sensitive") Boolean ignoreCase,
-					@JsonPropertyDescription("Selects the mode of handling NULLs in sorting") NullHandling nullHandling) {
-
-	public Order(String field) {
-		this(Direction.ASC, field, false, NullHandling.NATIVE);
-	}
-
-	public Order(String field, Direction direction) {
-		this(direction, field, false, NullHandling.NATIVE);
-	}
-
-	public Order(String field, Direction direction, boolean ignoreCase) {
-		this(direction, field, ignoreCase, NullHandling.NATIVE);
-	}
-
-	public Order(String field, Direction direction, NullHandling nullHandling) {
-		this(direction, field, false, nullHandling);
-	}
-
-	/**
-	 * Enumeration for null handling hints that can be used in {@link Order} expressions.
-	 *
-	 */
-	public enum NullHandling {
-
-		/**
-		 * Lets the data store decide what to do with nulls.
-		 */
-		NATIVE,
-
-		/**
-		 * A hint to the used data store to order entries with null values before non null entries.
-		 */
-		NULLS_FIRST,
-
-		/**
-		 * A hint to the used data store to order entries with null values after non null entries.
-		 */
-		NULLS_LAST
-	}
-
-	/**
-	 * Enumeration for sort directions.
-	 */
-	public enum Direction {
-
-		ASC, DESC
-
-	}
+@OnlyForUsage
+@JsonDeserialize(using = OrderDeserializer.class)
+public sealed interface Order permits DirectFieldOrder, RelationshipOrder {
 }

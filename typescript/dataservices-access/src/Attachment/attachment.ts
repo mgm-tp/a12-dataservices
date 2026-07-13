@@ -29,9 +29,16 @@
  * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
  * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
  */
-import type { RestRequestPayload } from "@com.mgmtp.a12.utils/utils-connector/lib/main/index.js";
+import type { RestRequestPayload } from "@com.mgmtp.a12.utils/utils-connector";
 
-import { isNullableType, isObject } from "../common/TypeGuardUtils.js";
+import {
+	isArray,
+	isNull,
+	isNumber,
+	isObject,
+	isOptionalFieldOfType,
+	isString
+} from "../common/TypeGuardUtils.js";
 import { JsonRpc2Response, type JsonRpc2Request } from "../json-rpc/index.js";
 
 export interface Attachment {
@@ -48,10 +55,24 @@ export interface Attachment {
 
 export namespace Attachment {
 	export function isInstance(obj: unknown): obj is Attachment {
+		if (!isObject(obj)) {
+			return false;
+		}
+
+		const hasAttachmentId = "attachment_id" in obj && isString(obj.attachment_id);
+		const hasContent = "content" in obj && isString(obj.content);
+
+		if ((!hasAttachmentId && !hasContent) || (hasAttachmentId && hasContent)) {
+			return false;
+		}
+
 		return (
-			isObject(obj) &&
-			((typeof obj.attachment_id === "string" && isNullableType(obj.content)) ||
-				(typeof obj.content === "string" && isNullableType(obj.attachment_id)))
+			isOptionalFieldOfType(obj, "internal_filename", value => isNull(value) || isString(value)) &&
+			isOptionalFieldOfType(obj, "original_filename", value => isNull(value) || isString(value)) &&
+			isOptionalFieldOfType(obj, "mime_type", value => isNull(value) || isString(value)) &&
+			isOptionalFieldOfType(obj, "category", value => isNull(value) || isString(value)) &&
+			isOptionalFieldOfType(obj, "description", value => isNull(value) || isString(value)) &&
+			isOptionalFieldOfType(obj, "size", value => isNull(value) || isNumber(value))
 		);
 	}
 }
@@ -65,8 +86,8 @@ export namespace ThumbnailUrl {
 	export function isInstance(obj: unknown): obj is ThumbnailUrl {
 		return (
 			isObject(obj) &&
-			(isNullableType(obj.smallThumbnailUrl) || typeof obj.smallThumbnailUrl === "string") &&
-			(isNullableType(obj.bigThumbnailUrl) || typeof obj.bigThumbnailUrl === "string")
+			isOptionalFieldOfType(obj, "smallThumbnailUrl", isString) &&
+			isOptionalFieldOfType(obj, "bigThumbnailUrl", isString)
 		);
 	}
 }
@@ -86,14 +107,15 @@ export namespace AttachmentHeader {
 		return (
 			isObject(obj) &&
 			"attachmentId" in obj &&
-			typeof obj.attachmentId === "string" &&
-			(isNullableType(obj.filename) || typeof obj.filename === "string") &&
-			(isNullableType(obj.smallThumbnailUrl) || typeof obj.smallThumbnailUrl === "string") &&
-			(isNullableType(obj.bigThumbnailUrl) || typeof obj.bigThumbnailUrl === "string") &&
-			(isNullableType(obj.mimeType) || typeof obj.mimeType === "string") &&
-			(isNullableType(obj.size) || typeof obj.size === "number") &&
-			(isNullableType(obj.annotations) ||
-				(Array.isArray(obj.annotations) && obj.annotations.every(AttachmentAnnotation.isInstance)))
+			isString(obj.attachmentId) &&
+			isOptionalFieldOfType(obj, "filename", isString) &&
+			isOptionalFieldOfType(obj, "smallThumbnailUrl", isString) &&
+			isOptionalFieldOfType(obj, "bigThumbnailUrl", isString) &&
+			isOptionalFieldOfType(obj, "mimeType", isString) &&
+			isOptionalFieldOfType(obj, "size", isNumber) &&
+			isOptionalFieldOfType(obj, "annotations", value =>
+				isArray(value, AttachmentAnnotation.isInstance)
+			)
 		);
 	}
 }
@@ -106,11 +128,7 @@ export interface AttachmentAnnotation {
 export namespace AttachmentAnnotation {
 	export function isInstance(obj: unknown): obj is AttachmentAnnotation {
 		return (
-			isObject(obj) &&
-			"name" in obj &&
-			typeof obj.name === "string" &&
-			"value" in obj &&
-			typeof obj.value === "string"
+			isObject(obj) && "name" in obj && isString(obj.name) && "value" in obj && isString(obj.value)
 		);
 	}
 }
@@ -145,13 +163,13 @@ export namespace AttachmentUpload {
 			return (
 				isObject(obj) &&
 				"attachmentId" in obj &&
-				typeof obj.attachmentId === "string" &&
+				isString(obj.attachmentId) &&
 				"uploadedFile" in obj &&
-				typeof obj.uploadedFile === "string" &&
+				isString(obj.uploadedFile) &&
 				"thumbnailSmall" in obj &&
-				typeof obj.thumbnailSmall === "string" &&
+				isString(obj.thumbnailSmall) &&
 				"thumbnailBig" in obj &&
-				typeof obj.thumbnailBig === "string"
+				isString(obj.thumbnailBig)
 			);
 		}
 	}
@@ -246,7 +264,7 @@ export namespace LoadAttachmentHeaderJsonRpc2 {
 
 	export namespace Response {
 		export function isInstance(obj: unknown): obj is Response {
-			return isObject(obj) && "result" in obj && AttachmentHeader.isInstance(obj.result);
+			return JsonRpc2Response.ok.isInstance(obj) && AttachmentHeader.isInstance(obj.result);
 		}
 	}
 }
@@ -265,11 +283,7 @@ export namespace LoadThumbnailUrlJsonRpc2 {
 
 	export namespace Response {
 		export function isInstance(obj: unknown): obj is Response {
-			return (
-				JsonRpc2Response.ok.isInstance(obj) &&
-				"result" in obj &&
-				ThumbnailUrl.isInstance(obj.result)
-			);
+			return JsonRpc2Response.ok.isInstance(obj) && ThumbnailUrl.isInstance(obj.result);
 		}
 	}
 }
@@ -286,14 +300,13 @@ export namespace LoadThumbnailUrlsJsonRpc2 {
 	export namespace Response {
 		export function isInstance(obj: unknown): obj is Response {
 			return (
-				JsonRpc2Response.isInstance(obj) &&
-				"result" in obj &&
-				isObject(obj["result"]) &&
-				Object.keys(obj["result"]).every(
+				JsonRpc2Response.ok.isInstance(obj) &&
+				isObject(obj.result) &&
+				Object.keys(obj.result).every(
 					key =>
-						isObject(obj["result"][key]) &&
-						Object.keys(obj["result"][key]).every(innerKey =>
-							ThumbnailUrl.isInstance(obj["result"][key][innerKey])
+						isObject(obj.result[key]) &&
+						Object.keys(obj.result[key]).every(innerKey =>
+							ThumbnailUrl.isInstance(obj.result[key][innerKey])
 						)
 				)
 			);
@@ -320,9 +333,8 @@ export namespace LoadAttachmentUrlJsonRpc2 {
 		export function isInstance(obj: unknown): obj is Response {
 			return (
 				JsonRpc2Response.ok.isInstance(obj) &&
-				"result" in obj &&
 				"location" in obj.result &&
-				typeof obj.result.location === "string"
+				isString(obj.result.location)
 			);
 		}
 	}

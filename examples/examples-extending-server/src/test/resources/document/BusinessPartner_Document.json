@@ -1,0 +1,29 @@
+{
+  "BusinessPartnerRoot": {
+    "Name": "Tester",
+    "Industry": "IT",
+    "StartOfRelationship": "2012-12-12",
+    "EndOfRelationship": "2019-02-28T09:56:00",
+    "TimeOfContractSignature": "14:00:30",
+    "ApproximateOfferDate": "04-30",
+    "PremiumPartner": true,
+    "CustomerDiscount": "90%",
+    "PersonOrEntity": "Legal Entity",
+    "SubtypeGroup": {
+    },
+    "Offer": {
+      "Discount": "50%",
+      "ValidityPeriod": "2022-06-30/2023-12-31"
+    },
+    "Employment": {
+      "signingDateTime": "2020-02-28T09:30:00",
+      "employedSince": "2010-02",
+      "employedTill": "2020-12",
+      "currentlyEmployed": true,
+      "role": "Junior Data Engineer",
+      "income": "25000"
+    },
+    "birthday": "2000-01-00",
+    "accountNumber": "-39120"
+  }
+}

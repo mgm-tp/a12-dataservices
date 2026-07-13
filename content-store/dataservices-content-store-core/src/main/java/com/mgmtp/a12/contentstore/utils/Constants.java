@@ -31,11 +31,13 @@
  */
 package com.mgmtp.a12.contentstore.utils;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * All constants for the content store are defined here.
  *
  **/
-public interface Constants {
+@OnlyForUsage public interface Constants {
 
 	/**
 	 * Persistent type discriminator for public content.

@@ -43,7 +43,7 @@ public class OperationCall extends AbstractLoggedElement {
 	private String operation;
 
 	public OperationCall(String operation, Map<String, ?> attributes, List<StackTraceElement> callHistory, LoggedEventDirection direction) {
-		super(LoggedEventType.OPERATION, tidyUpId("operation_" + operation), String.format("**%s**", operation), Instant.now(), direction, callHistory);
+		super(LoggedEventType.OPERATION, tidyUpId("operation_" + operation), "**%s**".formatted(operation), Instant.now(), direction, callHistory);
 		this.operation = operation;
 		this.setProperties(attributes);
 	}

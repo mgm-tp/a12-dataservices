@@ -66,7 +66,7 @@
 			"header": {
 				"id": "ProductBundle",
 				"modelType": "relationship",
-				"modelVersion": "3.0.0",
+				"modelVersion": "4.0.0",
 				"locales": [
 					{
 						"code": "de"
@@ -117,7 +117,6 @@
 						"text": "ProductBundle"
 					}
 				],
-				"associationType": "SHARED",
 				"linkDocumentModel": null,
 				"duplicatesAllowed": false,
 				"entityCharacteristics": [
@@ -135,17 +134,11 @@
 						],
 						"documentModel": "DomainProduct",
 						"ordered": false,
-						"navigable": true,
 						"linkConstraints": {
 							"multiplicity": {
-								"lowerLimit": 0,
 								"unbounded": true,
 								"upperLimit": 1
 							}
-						},
-						"candidateConstraints": {
-							"population": "",
-							"populationParameters": []
 						}
 					},
 					{
@@ -162,29 +155,21 @@
 						],
 						"documentModel": "DomainBundle",
 						"ordered": false,
-						"navigable": true,
 						"linkConstraints": {
 							"multiplicity": {
-								"lowerLimit": 0,
 								"unbounded": true,
 								"upperLimit": null
 							}
-						},
-						"candidateConstraints": {
-							"population": "",
-							"populationParameters": []
 						}
 					}
-				],
-				"storage": "EXTERNAL",
-				"embeddedGroupPath": ""
+				]
 			}
 		},
 		{
 			"header": {
 				"id": "ProductBrand",
 				"modelType": "relationship",
-				"modelVersion": "3.0.0",
+				"modelVersion": "4.0.0",
 				"locales": [
 					{
 						"code": "de"
@@ -235,7 +220,6 @@
 						"text": "ProductBrand"
 					}
 				],
-				"associationType": "SHARED",
 				"duplicatesAllowed": false,
 				"entityCharacteristics": [
 					{
@@ -252,22 +236,11 @@
 						],
 						"documentModel": "DomainProduct",
 						"ordered": false,
-						"navigable": true,
 						"linkConstraints": {
 							"multiplicity": {
-								"lowerLimit": 1,
 								"unbounded": true,
 								"upperLimit": 1
 							}
-						},
-						"candidateConstraints": {
-							"population": "",
-							"populationParameters": [
-								{
-									"name": "requiredField",
-									"value": "requiredField"
-								}
-							]
 						}
 					},
 					{
@@ -284,27 +257,14 @@
 						],
 						"documentModel": "DomainBrand",
 						"ordered": false,
-						"navigable": true,
 						"linkConstraints": {
 							"multiplicity": {
-								"lowerLimit": 0,
 								"unbounded": true,
 								"upperLimit": null
 							}
-						},
-						"candidateConstraints": {
-							"population": "",
-							"populationParameters": [
-								{
-									"name": "requiredField",
-									"value": "requiredField"
-								}
-							]
 						}
 					}
-				],
-				"storage": "EXTERNAL",
-				"embeddedGroupPath": ""
+				]
 			}
 		}
 	]

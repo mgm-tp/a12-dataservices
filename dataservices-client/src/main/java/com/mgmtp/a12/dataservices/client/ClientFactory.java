@@ -36,6 +36,7 @@ import java.security.GeneralSecurityException;
 
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.connector.rest.RestDeleteConnector;
 import com.mgmtp.a12.connector.rest.RestGetConnector;
 import com.mgmtp.a12.connector.rest.RestPostConnector;
@@ -80,10 +81,11 @@ public class ClientFactory {
 	 *
 	 * @param uaaRestClientProperties UAA REST client configuration properties; must not be `null`.
 	 * @param clientConfiguration Data Services client configuration including base URL and query settings; must not be `null`.
+	 * @param objectMapper the object mapper used for error handling; must not be `null`.
 	 * @return a builder to configure interceptors and build a {@link ClientFactory}.
 	 */
-	public static ClientFactoryBuilder builder(UAARestClientProperties uaaRestClientProperties, ClientConfiguration clientConfiguration) {
-		return new ClientFactoryBuilder(uaaRestClientProperties, clientConfiguration);
+	public static ClientFactoryBuilder builder(UAARestClientProperties uaaRestClientProperties, ClientConfiguration clientConfiguration, ObjectMapper objectMapper) {
+		return new ClientFactoryBuilder(uaaRestClientProperties, clientConfiguration, objectMapper);
 	}
 
 	/**
@@ -94,11 +96,12 @@ public class ClientFactory {
 	public static class ClientFactoryBuilder {
 		private final ClientConfiguration clientConfiguration;
 		private final UAARestClientFactoryBuilder uaaRestClientFactoryBuilder;
-		private ClientFactoryBuilder(UAARestClientProperties uaaRestClientProperties, ClientConfiguration clientConfiguration) {
+
+		private ClientFactoryBuilder(UAARestClientProperties uaaRestClientProperties, ClientConfiguration clientConfiguration, ObjectMapper objectMapper) {
 			this.clientConfiguration = clientConfiguration;
 			this.uaaRestClientFactoryBuilder = UAARestClientFactoryBuilder
 				.withConfiguration(uaaRestClientProperties)
-				.withErrorHandlers(new DataServicesErrorHandler());
+				.withErrorHandlers(new DataServicesErrorHandler(objectMapper));
 		}
 
 		/**

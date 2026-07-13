@@ -40,7 +40,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.AttachmentTestFunctions;
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
@@ -64,8 +64,7 @@ public class DocumentCascadeDeleteTest  extends AbstractSpringContextIT {
 	private DocumentReference docRefBusinessPartner;
 	private static final String CONFIGURATION_FIELD = "dataServicesCoreProperties";
 
-	@BeforeMethod
-	public void init() throws Exception {
+	@BeforeMethod public void init() throws Exception {
 		super.cleanUpTestEnvironment();
 		modelsFunctions.createModels(
 			PathConstants.COINSURED_ADDITIONAL_PARTNER_DOCUMENT_MODEL_PATH,
@@ -173,8 +172,8 @@ public class DocumentCascadeDeleteTest  extends AbstractSpringContextIT {
 			new LinkDescriptor(RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL, Arrays.asList(contractRole, partnerRole),
 				LinkPosition.TOP);
 
-		JsonNode rootGroup = objectMapper.createObjectNode().put("Name", "TestName");
-		rootGroup = objectMapper.createObjectNode().set(DocumentModelConstants.FieldConstants.CO_INSURED_ADDITIONAL_FIELDS_ROOT, rootGroup);
+		JsonNode rootGroup = JACKSON_2_OBJECT_MAPPER.createObjectNode().put("Name", "TestName");
+		rootGroup = JACKSON_2_OBJECT_MAPPER.createObjectNode().set(DocumentModelConstants.FieldConstants.CO_INSURED_ADDITIONAL_FIELDS_ROOT, rootGroup);
 		RelationshipLinkSpec relationshipLinkSpec = linksFunctions.addLink(linkDescriptor, rootGroup);
 		return relationshipLinkService.load(relationshipLinkSpec.getId());
 	}

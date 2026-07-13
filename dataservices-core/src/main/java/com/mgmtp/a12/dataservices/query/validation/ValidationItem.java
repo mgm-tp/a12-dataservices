@@ -43,14 +43,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public record ValidationItem(String[] path, boolean valid, String message) {
 
-	/**
-	 * @deprecated since 38.1.0, forRemoval = true, please use {@link #valid(String[], String)} instead.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static ValidationItem valid(String[] path) {
-		return new ValidationItem(path, true, null);
-	}
-
 	public static ValidationItem valid(String[] path, String message) {
 		return new ValidationItem(path, true, message);
 	}

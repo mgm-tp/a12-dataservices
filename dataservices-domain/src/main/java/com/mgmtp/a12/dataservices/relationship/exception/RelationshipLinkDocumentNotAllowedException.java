@@ -51,7 +51,7 @@ public class RelationshipLinkDocumentNotAllowedException extends RelationshipVal
 	public RelationshipLinkDocumentNotAllowedException(String linkDocument) {
 		super(new RelationshipValidationException.Builder(ExceptionCodes.RELATIONSHIP_LINK_DOCUMENT_NOT_ALLOWED_EXCEPTION_CODE,
 			ExceptionKeys.RELATIONSHIP_LINK_VALIDATION_MODEL_MISSING_ERROR_KEY, MISSING_LINK_MODEL_WARN,
-			String.format("Link document [%s] must be blank if link document model is not set.", linkDocument)));
+			"Link document [%s] must be blank if link document model is not set.".formatted(linkDocument)));
 		this.linkDocument = linkDocument;
 	}
 

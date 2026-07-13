@@ -31,16 +31,16 @@
  */
 package com.mgmtp.a12.dataservices.server.actuator.internal;
 
-import com.mgmtp.a12.dataservices.initialization.events.DataServicesInitializationFinishedEvent;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.boot.actuate.health.Status;
-import com.mgmtp.a12.dataservices.common.events.CommonDataServicesEventListener;
-
+import org.springframework.boot.health.contributor.Health;
+import org.springframework.boot.health.contributor.HealthIndicator;
+import org.springframework.boot.health.contributor.Status;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Component public class InitializationFinishedHealthIndicator implements HealthIndicator {
+import com.mgmtp.a12.dataservices.common.events.CommonDataServicesEventListener;
+import com.mgmtp.a12.dataservices.initialization.events.DataServicesInitializationFinishedEvent;
+
+@Component("dataservicesInitializationFinished") public class InitializationFinishedHealthIndicator implements HealthIndicator {
 	private static final String DETAIL_KEY = "dataServicesInitialization";
 	private static final String FINISHED_DETAIL = "Finished";
 	private static final String NOT_FINISHED_DETAIL = "Not Finished";
@@ -48,8 +48,8 @@ import org.springframework.stereotype.Component;
 
 	@Override public Health health() {
 		return Health.status(finished ? Status.UP : Status.DOWN)
-				.withDetail(DETAIL_KEY, finished ? FINISHED_DETAIL : NOT_FINISHED_DETAIL)
-				.build();
+			.withDetail(DETAIL_KEY, finished ? FINISHED_DETAIL : NOT_FINISHED_DETAIL)
+			.build();
 	}
 
 	/**

@@ -93,15 +93,17 @@ public class RestModelsClient implements ModelsClient {
 	}
 
 	/**
-	 * Imports multiple models from a bulk ZIP or stream payload.
+	 * Imports runtime models from a ZIP or JAR archive stream.
 	 *
-	 * @param modelBulk the input stream containing a bulk of models; must not be `null`.
+	 * The archive is sent to the server which extracts and imports each model individually.
+	 *
+	 * @param modelsArchive the input stream containing the archive of models; must not be `null`.
 	 * @return the list of imported model identifiers.
 	 * @throws RestClientException if reading the stream or uploading fails.
 	 */
-	@Override public List<String> importModelBulk(@NonNull InputStream modelBulk) {
+	@Override public List<String> importRuntimeModels(@NonNull InputStream modelsArchive) {
 		RestServerRequest<InputStreamResource> request = RestServerRequest
-			.withPayload(new InputStreamResource(modelBulk))
+			.withPayload(new InputStreamResource(modelsArchive))
 			.withContentType(MediaType.APPLICATION_OCTET_STREAM);
 
 		String[] response = putConnector.callServer(urlBuilderSupport.createBuilder().toUriString(), request, String[].class).getData();
@@ -118,14 +120,12 @@ public class RestModelsClient implements ModelsClient {
 	 * @throws RestClientException if the reader cannot be consumed.
 	 */
 	@Override public String createModel(@NonNull Reader modelContent) {
-		String model;
 		try {
-			model = IOUtils.toString(modelContent);
+			RestServerRequest<String> modelRequest = RestServerRequest.withPayload(IOUtils.toString(modelContent));
+			return postConnector.callServer(uriBuilder().toUriString(), modelRequest, String.class).getData();
 		} catch (IOException e) {
 			throw new RestClientException("Unable to read model", e);
 		}
-		RestServerRequest<String> modelRequest = RestServerRequest.withPayload(model);
-		return postConnector.callServer(uriBuilder().toUriString(), modelRequest, String.class).getData();
 	}
 
 	/**

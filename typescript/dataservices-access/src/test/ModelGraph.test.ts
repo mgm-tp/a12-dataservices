@@ -94,6 +94,20 @@ suite("Model Graph Test", () => {
 				false,
 				`Check for ${item.modelId} without subTypes!`
 			);
+
+			const { abstractModel, ...modelWithoutAbstractModel } = item;
+			strictEqual(
+				ModelGraph.DocumentModel.isInstance(modelWithoutAbstractModel),
+				true,
+				`Check for ${item.modelId} without abstractModel!`
+			);
+
+			const modelWithInvalidAbstractModel = { ...item, abstractModel: "notABoolean" };
+			strictEqual(
+				ModelGraph.DocumentModel.isInstance(modelWithInvalidAbstractModel),
+				true,
+				`Check for ${item.modelId} with invalid abstractModel!`
+			);
 		});
 	});
 

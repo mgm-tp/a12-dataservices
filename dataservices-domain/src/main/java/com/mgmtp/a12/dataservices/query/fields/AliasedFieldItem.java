@@ -32,12 +32,13 @@
 package com.mgmtp.a12.dataservices.query.fields;
 
 import com.mgmtp.a12.dataservices.internal.DocumentationDiagram;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * This is a parent for fields and aggregation functions in the view part of the query.
  */
 @DocumentationDiagram
-public interface AliasedFieldItem {
+@OnlyForUsage public interface AliasedFieldItem {
 	/**
 	 * Resolves the alias to use when presenting this item in a projection and in aggregations.
 	 *

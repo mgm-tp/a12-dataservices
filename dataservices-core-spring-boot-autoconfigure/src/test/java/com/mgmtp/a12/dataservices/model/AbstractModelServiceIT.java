@@ -70,7 +70,7 @@ public abstract class AbstractModelServiceIT extends AbstractSpringContextIT {
 
 	protected void assertContains(Set<String> subTypes, boolean shouldContain, String modelName) {
 		Assert.assertEquals(subTypes.contains(modelName), shouldContain,
-			String.format("Model [%s] should %s included as Sub-Type!", modelName, shouldContain ? "be" : "not be"));
+			"Model [%s] should %s included as Sub-Type!".formatted(modelName, shouldContain ? "be" : "not be"));
 	}
 
 }

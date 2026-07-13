@@ -1,0 +1,105 @@
+{
+  "header": {
+    "id": "ContractBusinessPartner",
+    "modelType": "relationship",
+    "modelVersion": "4.0.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Contract and Business Partner"
+      },
+      {
+        "locale": "de",
+        "text": "Vertrag und Geschäftspartner"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Contract",
+        "reference": "Contract"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "BusinessPartner",
+        "reference": "BusinessPartner"
+      }
+    ]
+  },
+  "content": {
+    "duplicatesAllowed": false,
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Contract and Business Partner"
+      },
+      {
+        "locale": "de",
+        "text": "Vertrag und Geschäftspartner"
+      }
+    ],
+    "entityCharacteristics": [
+      {
+        "ordered": false,
+        "linkConstraints": {
+          "multiplicity": {
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Contract"
+          },
+          {
+            "locale": "de",
+            "text": "Vertrag"
+          }
+        ],
+        "role": "Contract",
+        "documentModel": "Contract"
+      },
+      {
+        "ordered": false,
+        "linkConstraints": {
+          "multiplicity": {
+            "unbounded": false,
+            "upperLimit": 1
+          }
+        },
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Main Policy Holder"
+          },
+          {
+            "locale": "de",
+            "text": "Hauptversicherungsnehmer"
+          }
+        ],
+        "role": "Partner",
+        "documentModel": "BusinessPartner"
+      }
+    ]
+  }
+}

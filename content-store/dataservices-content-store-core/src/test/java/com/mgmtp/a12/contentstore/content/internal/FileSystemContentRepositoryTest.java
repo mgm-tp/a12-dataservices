@@ -79,7 +79,7 @@ public class FileSystemContentRepositoryTest extends AbstractContentStoreTest {
 		}
 	}
 
-	@Test()
+	@Test
 	public void testDelete_noThrowUnexpectedExceptionWhenHavingError() {
 		String contentId = UUID.randomUUID().toString();
 

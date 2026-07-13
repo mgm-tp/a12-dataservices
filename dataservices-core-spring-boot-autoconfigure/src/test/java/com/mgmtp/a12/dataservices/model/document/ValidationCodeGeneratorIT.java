@@ -45,16 +45,19 @@ import org.testng.annotations.Test;
 
 import com.mgmtp.a12.dataservices.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.constants.UserConstants;
+import com.mgmtp.a12.dataservices.experimental.ListIProblemReporter;
 import com.mgmtp.a12.dataservices.model.document.internal.ValidationCodeGenerator;
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity.ModelEntity;
 import com.mgmtp.a12.dataservices.utils.internal.DataServicesDocumentProblemReporterException;
-import com.mgmtp.a12.dataservices.experimental.ListIProblemReporter;
 import com.mgmtp.a12.kernel.core.tool.a12internal.api.error.IProblem;
+
+import lombok.extern.slf4j.Slf4j;
 
 import static com.mgmtp.a12.dataservices.constants.DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL;
 import static com.mgmtp.a12.dataservices.constants.PathConstants.BUSINESS_PARTNER_DOCUMENT_MODEL_PATH;
 import static com.mgmtp.a12.dataservices.constants.PathConstants.DOCUMENT_MODEL_PATH;
 
+@Slf4j
 public class ValidationCodeGeneratorIT extends AbstractSpringContextIT {
 
 	private static final String CORRUPTED_MODEL = "CorruptedModel";
@@ -97,7 +100,7 @@ public class ValidationCodeGeneratorIT extends AbstractSpringContextIT {
 		validationCodeGenerator.getValidationCode(BUSINESS_PARTNER_DOCUMENT_MODEL, pr);
 		pr.validate(0, "");
 		watch.stop();
-		logger.info(watch.prettyPrint());
+		log.info(watch.prettyPrint());
 		// There is no assert because it's hard to assert something. Even 2 repetitive calls have totally different times.
 
 	}
@@ -110,15 +113,11 @@ public class ValidationCodeGeneratorIT extends AbstractSpringContextIT {
 		} catch (final DataServicesDocumentProblemReporterException validationException) {
 			List<IProblem> errors = validationException.getProblems();
 			Assert.assertNotNull(errors);
-			Assert.assertEquals(errors.size(), 4);
+			Assert.assertEquals(errors.size(), 2);
 			Assert.assertEquals(errors.get(0).getMessage(),
-				"The maximum value of the number type in field [id: NumberField1] is specified with '1E+15'. It may not exceed '9999999999999.99'.");
-			Assert.assertEquals(errors.get(1).getMessage(),
-				"The maximum value of the number type in field [id: NumberField2] is specified with '1E+15'. It may not exceed '9999999999999.99'.");
-			Assert.assertEquals(errors.get(2).getMessage(),
-				"Field with path '/root/NumberField2': Only values with up to 15 digits are allowed.");
-			Assert.assertEquals(errors.get(3).getMessage(),
 				"Field with path '/root/NumberField1': Only values with up to 15 digits are allowed.");
+			Assert.assertEquals(errors.get(1).getMessage(),
+				"Field with path '/root/NumberField2': Only values with up to 15 digits are allowed.");
 		}
 	}
 }

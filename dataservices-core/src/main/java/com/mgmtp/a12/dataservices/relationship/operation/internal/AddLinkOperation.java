@@ -35,7 +35,7 @@ import java.util.Objects;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.mgmtp.a12.dataservices.common.anonymizing.Anonymizer;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
@@ -96,8 +96,20 @@ public class AddLinkOperation {
 
 			RelationshipLink createdLink = (Objects.isNull(linkDocument) || linkDocument.isNull()) ? relationshipLinkService.create(linkDescriptor) :
 				relationshipLinkService.create(linkDescriptor, linkDocument.toString());
-
-			RelationshipLinkSpec result = new RelationshipLinkSpec(linkDescriptor, String.valueOf(createdLink.getId()));
+			linkDescriptor.setLinkDocumentDocRef(createdLink.getLinkDocumentDocRef());
+			linkDescriptor.getEntities().forEach(entity -> {
+				if (Objects.isNull(entity.getModelName()) && Objects.nonNull(entity.getDocRef())) {
+					entity.setModelName(entity.getDocRef().getDocumentModelName());
+				}
+			});
+			String sourceRoleName = linkDescriptor.getSourceRole().getRole();
+			String targetRoleName = linkDescriptor.getTargetRole().getRole();
+			RelationshipLinkSpec result = RelationshipLinkSpec.builder()
+				.linkDescriptor(linkDescriptor)
+				.id(String.valueOf(createdLink.getId()))
+				.sourceRank(createdLink.getRoles().get(sourceRoleName).getOrder())
+				.targetRank(createdLink.getRoles().get(targetRoleName).getOrder())
+				.build();
 			OperationContextHolder.put(result);
 			return result;
 		}, CoreOperationConstants.ADD_LINK_OPERATION);

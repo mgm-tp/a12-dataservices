@@ -31,201 +31,190 @@
  */
 package com.mgmtp.a12.dataservices.server;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
+import com.mgmtp.a12.dataservices.constants.UserConstants;
+import org.testng.Assert;
+import org.testng.annotations.AfterGroups;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
-import com.mgmtp.a12.dataservices.constants.UserConstants;
-import com.mgmtp.a12.uaa.authentication.backend.BackendAuthenticationService;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static com.mgmtp.a12.dataservices.constants.DocumentModelConstants.ADDRESS_DOCUMENT_MODEL;
+import static com.mgmtp.a12.dataservices.constants.DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL;
+import static com.mgmtp.a12.dataservices.constants.DocumentModelConstants.BUSINESS_PARTNER_LTD_MODEL;
+import static com.mgmtp.a12.dataservices.constants.DocumentModelConstants.BUSINESS_PARTNER_SUPER_MODEL;
+import static com.mgmtp.a12.dataservices.constants.DocumentModelConstants.CONTRACT_DOCUMENT_MODEL;
+import static com.mgmtp.a12.dataservices.constants.PathConstants.ADDRESS_DOCUMENT_MODEL_PATH;
+import static com.mgmtp.a12.dataservices.constants.PathConstants.BUSINESS_PARTNER_DOCUMENT_MODEL_PATH;
+import static com.mgmtp.a12.dataservices.constants.PathConstants.BUSINESS_PARTNER_SUPER_DOCUMENT_MODEL_PATH;
+import static com.mgmtp.a12.dataservices.constants.PathConstants.COINSURED_ADDITIONAL_PARTNER_DOCUMENT_MODEL_PATH;
+import static com.mgmtp.a12.dataservices.constants.PathConstants.CONTRACT_AMENDMENT_RELATIONSHIP_MODEL_PATH;
+import static com.mgmtp.a12.dataservices.constants.PathConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_RELATIONSHIP_MODEL_PATH;
+import static com.mgmtp.a12.dataservices.constants.PathConstants.CONTRACT_DOCUMENT_MODEL_PATH;
 
 public class ModelAuthorizationTest extends AbstractSpringContextServerTests {
 
-	@Autowired private WebApplicationContext context;
-	@Autowired private DataServicesCoreProperties dataServicesCoreProperties;
-	@Autowired private BackendAuthenticationService backendAuthenticationService;
+	private static final String PREPARED_MODEL_GROUP = "preparedModel";
+	private static final String PREPARATION_REQUIRED = "preparationRequired";
+	private static final String CLEANUP_REQUIRED = "cleanupRequired";
 
-	private MockMvc mockMvc;
-	private static final String ENDPOINT_PATH = "/v2/models";
-	private static final String AUTHORIZATION_MODELS_PATH = "model/document/authorizationTests/";
+	@BeforeGroups(value = { PREPARATION_REQUIRED })
+	public void beforeGroups() throws IOException {
+		super.cleanUpTestEnvironment();
+		super.changeUserInContext(UserConstants.ADMIN_USER);
 
-	@BeforeClass public void initClass() {
-		mockMvc = MockMvcBuilders.webAppContextSetup(this.context).build();
+		createModelWithRole(ADDRESS_DOCUMENT_MODEL_PATH, ADMIN_ROLE_ONLY);
+		createModelWithRole(BUSINESS_PARTNER_DOCUMENT_MODEL_PATH, COMMON_ROLES);
+
+		modelsFunctions.createModel(BUSINESS_PARTNER_SUPER_DOCUMENT_MODEL_PATH);
+		modelsFunctions.createModel(CONTRACT_DOCUMENT_MODEL_PATH);
+		modelsFunctions.createModel(COINSURED_ADDITIONAL_PARTNER_DOCUMENT_MODEL_PATH);
+
+		modelsFunctions.createModel(CONTRACT_COINSURED_BUSINESS_PARTNER_RELATIONSHIP_MODEL_PATH);
+		modelsFunctions.createModel(CONTRACT_AMENDMENT_RELATIONSHIP_MODEL_PATH);
 	}
 
-	@BeforeMethod public void initMethod() {
+	@AfterGroups(value = { PREPARATION_REQUIRED, CLEANUP_REQUIRED })
+	public void afterGroups() {
+		super.changeUserInContext(UserConstants.ADMIN_USER);
 		super.cleanUpTestEnvironment();
+	}
+
+	@AfterMethod(onlyForGroups = { PREPARED_MODEL_GROUP })
+	public void cleanupModels() {
+		changeUserInContext(UserConstants.ADMIN_USER);
+		try {
+			modelService.delete(BUSINESS_PARTNER_LTD_MODEL);
+		} catch (Exception ignored) {
+			// Ignore
+		}
 	}
 
 	@DataProvider(name = "modelCreateDataProvider")
 	public Object[][] modelCreateDataProvider() {
 		return new Object[][] {
-			{ UserConstants.ADMIN_USER, AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", true },
-			{ "actuator", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false },
-			{ "guest", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false },
-			{ "model_manager_user", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", true },
-			{ UserConstants.MODEL_READ_USER, AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false  },
-			{ "model_create_user", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", true  },
-			{ "model_update_user", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false  },
-			{ "model_delete_user", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false  }
+			{ UserConstants.ADMIN_USER, true },
+			{ UserConstants.ACTUATOR_USER, false },
+			{ UserConstants.GUEST_USER, false },
+			{ UserConstants.MODEL_MANAGER_USER, true },
+			{ UserConstants.MODEL_READ_USER, false  },
+			{ UserConstants.MODEL_CREATE_USER, true  },
+			{ UserConstants.MODEL_UPDATE_USER, false  },
+			{ UserConstants.MODEL_DELETE_USER, false  }
 		};
 	}
 
 	@DataProvider(name = "modelUpdateDataProvider")
 	public Object[][] modelUpdateDataProvider() {
 		return new Object[][] {
-			{ UserConstants.ADMIN_USER, AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", true },
-			{ "actuator", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false },
-			{ "guest", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false },
-			{ "model_manager_user", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", true },
-			{ UserConstants.MODEL_READ_USER, AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false  },
-			{ "model_create_user", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false  },
-			{ "model_update_user", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", true  },
-			{ "model_delete_user", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false  }
+			{ UserConstants.ADMIN_USER, true },
+			{ UserConstants.ACTUATOR_USER, false },
+			{ UserConstants.GUEST_USER, false },
+			{ UserConstants.MODEL_MANAGER_USER, true },
+			{ UserConstants.MODEL_READ_USER, false  },
+			{ UserConstants.MODEL_CREATE_USER, false  },
+			{ UserConstants.MODEL_UPDATE_USER, true  },
+			{ UserConstants.MODEL_DELETE_USER, false  }
 		};
 	}
 
 	@DataProvider(name = "modelReadDataProvider")
 	public Object[][] modelReadDataProvider() {
 		return new Object[][] {
-			{ UserConstants.ADMIN_USER, "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", true },
-			{ "actuator", "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false },
-			{ "guest", "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", true },
-			{ "model_manager_user", "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", true },
-			{ UserConstants.MODEL_READ_USER, "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", true  },
-			{ "model_create_user", "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false  },
-			{ "model_update_user", "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false  },
-			{ "model_delete_user", "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false  }
+				{ UserConstants.ADMIN_USER, true },
+				{ UserConstants.ACTUATOR_USER, false },
+				{ UserConstants.GUEST_USER, true },
+				{ UserConstants.MODEL_MANAGER_USER, true },
+				{ UserConstants.MODEL_READ_USER, true  },
+				{ UserConstants.MODEL_CREATE_USER, false  },
+				{ UserConstants.MODEL_UPDATE_USER, false  },
+				{ UserConstants.MODEL_DELETE_USER, false  }
 		};
 	}
 
 	@DataProvider(name = "modelDeleteDataProvider")
 	public Object[][] modelDeleteDataProvider() {
 		return new Object[][] {
-			{ UserConstants.ADMIN_USER, "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", true },
-			{ "actuator", "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false },
-			{ "guest", "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false },
-			{ "model_manager_user", "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", true },
-			{ UserConstants.MODEL_READ_USER, "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false  },
-			{ "model_create_user", "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false  },
-			{ "model_update_user", "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", false  },
-			{ "model_delete_user", "AuthorizationTestModel", AUTHORIZATION_MODELS_PATH + "ModelAuthorizationTestModel.json", true  }
+			{ UserConstants.ADMIN_USER, true },
+			{ UserConstants.ACTUATOR_USER, false },
+			{ UserConstants.GUEST_USER, false },
+			{ UserConstants.MODEL_MANAGER_USER, true },
+			{ UserConstants.MODEL_READ_USER, false  },
+			{ UserConstants.MODEL_CREATE_USER, false  },
+			{ UserConstants.MODEL_UPDATE_USER, false  },
+			{ UserConstants.MODEL_DELETE_USER, true  }
 		};
 	}
 
-	@Test(dataProvider = "modelCreateDataProvider")
-	public void testModelCreateAccess(String username, String modelPath, boolean hasModelCreatePermission) throws Exception {
+	@DataProvider(name = "modelListDataProvider")
+	public Object[][] modelListDataProvider() {
+		return new Object[][] {
+				{ UserConstants.ADMIN_USER, List.of(ADDRESS_DOCUMENT_MODEL, BUSINESS_PARTNER_SUPER_MODEL, BUSINESS_PARTNER_DOCUMENT_MODEL, CONTRACT_DOCUMENT_MODEL) },
+				{ UserConstants.GUEST_USER, List.of(BUSINESS_PARTNER_SUPER_MODEL, BUSINESS_PARTNER_DOCUMENT_MODEL, CONTRACT_DOCUMENT_MODEL) },
+				{ UserConstants.MODEL_MANAGER_USER, List.of(ADDRESS_DOCUMENT_MODEL, BUSINESS_PARTNER_SUPER_MODEL, BUSINESS_PARTNER_DOCUMENT_MODEL, CONTRACT_DOCUMENT_MODEL) },
+				{ UserConstants.MODEL_READ_USER, List.of(BUSINESS_PARTNER_SUPER_MODEL, CONTRACT_DOCUMENT_MODEL) },
+				{ UserConstants.ACTUATOR_USER, List.of() }
+		};
+	}
+
+	@Test(dataProvider = "modelCreateDataProvider", groups = { PREPARED_MODEL_GROUP })
+	public void testModelCreateAccess(String username, boolean hasPermission) throws IOException {
+		String modelContent = loadModelWithRoles("admin,guest,ModelCreate");
 		changeUserInContext(username);
-		assertModelCreateAccess(modelPath, hasModelCreatePermission);
+
+		assertAccessPermission(() -> modelService.create(modelContent), hasPermission,
+			"Model creation for user: " + username);
 	}
 
-	@Test(dataProvider = "modelUpdateDataProvider")
-	public void testModelUpdateAccess(String username, String modelPath, boolean hasModelUpdatePermission) throws Exception {
-		backendAuthenticationService.executeWithBackendAuthentication("superUser", () -> modelService.create(loadResourceFromClasspathAsString(modelPath)));
+	@Test(dataProvider = "modelUpdateDataProvider", groups = { PREPARATION_REQUIRED, PREPARED_MODEL_GROUP })
+	public void testModelUpdateAccess(String username, boolean hasPermission) throws IOException {
+		String modelContent = loadModelWithRoles("admin,guest,ModelUpdate");
 
+		modelsFunctions.createModelFromJson(modelContent);
 		changeUserInContext(username);
-		assertModelUpdateAccess(modelPath, hasModelUpdatePermission);
+
+		assertAccessPermission(() -> {
+			try {
+				modelService.update(replaceRoles(modelContent, "admin,guest,tester"));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}, hasPermission, "Model update for user: " + username);
 	}
 
-	@Test(dataProvider = "modelReadDataProvider")
-	public void testModelReadAccess(String username, String modelId, String modelPath, boolean hasModelReadPermission) throws Exception {
-		backendAuthenticationService.executeWithBackendAuthentication("superUser", () -> modelService.create(loadResourceFromClasspathAsString(modelPath)));
-
+	@Test(dataProvider = "modelReadDataProvider", groups = { PREPARATION_REQUIRED, PREPARED_MODEL_GROUP })
+	public void testModelReadAccess(String username, boolean hasPermission) throws IOException {
+		String modelContent = loadModelWithRoles("admin,guest,ModelRead");
+		modelsFunctions.createModelFromJson(modelContent);
 		changeUserInContext(username);
-		assertModelReadAccess(modelId, hasModelReadPermission);
+
+		assertAccessPermission(() -> modelService.load(BUSINESS_PARTNER_LTD_MODEL),
+			hasPermission, "Model read for user: " + username);
 	}
 
-	@Test(dataProvider = "modelDeleteDataProvider")
-	public void testModelDeleteAccess(String username, String modelId, String modelPath, boolean hasModelReadPermission) throws Exception {
-		backendAuthenticationService.executeWithBackendAuthentication("superUser", () -> modelService.create(loadResourceFromClasspathAsString(modelPath)));
-
+	@Test(dataProvider = "modelDeleteDataProvider", groups = { PREPARATION_REQUIRED, PREPARED_MODEL_GROUP })
+	public void testModelDeleteAccess(String username, boolean hasPermission) throws IOException {
+		String modelContent = loadModelWithRoles("admin,guest,ModelDelete");
+		modelsFunctions.createModelFromJson(modelContent);
 		changeUserInContext(username);
-		assertModelDeleteAccess(modelId, hasModelReadPermission);
+
+		assertAccessPermission(() -> modelService.delete(BUSINESS_PARTNER_LTD_MODEL),
+			hasPermission, "Model delete for user: " + username);
 	}
 
-	private void assertModelCreateAccess(String modelPath, boolean isAllowed) throws Exception {
-		String model = readFile(modelPath);
-		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-			.post(dataServicesCoreProperties.getServer().getContextPath() + ENDPOINT_PATH)
-			.accept(MediaType.APPLICATION_JSON)
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(model);
-		mockMvc.perform(builder)
-			.andExpect(isAllowed ? status().isOk() : status().isForbidden())
-			.andDo(result -> {
-				int status = result.getResponse().getStatus();
-				if (status == HttpStatus.FORBIDDEN.value()) {
-					jsonPath("$.longMessage.key").value("error.security.notAuthorized.description").match(result);
-					jsonPath("$.longMessage.default").value("User is not allowed to perform requested operation").match(result);
-					jsonPath("$.shortMessage.key").value("error.security.notAuthorized.title").match(result);
-					jsonPath("$.shortMessage.default").value("User is not allowed to perform requested operation").match(result);
-				}
-			});
+	@Test(dataProvider = "modelListDataProvider", groups = { PREPARATION_REQUIRED })
+	public void testModelListAccess(String username, List<String> expectedModels) {
+		changeUserInContext(username);
+
+		List<String> modelsList = List.of(ADDRESS_DOCUMENT_MODEL, BUSINESS_PARTNER_SUPER_MODEL, BUSINESS_PARTNER_DOCUMENT_MODEL, CONTRACT_DOCUMENT_MODEL);
+		Collection<String> modelsCollection = modelService.load(modelsList).stream()
+				.map(e -> e.getHeader().getId())
+				.toList();
+		Assert.assertEquals(modelsCollection, expectedModels);
 	}
 
-	private void assertModelUpdateAccess(String modelPath, boolean isAllowed) throws Exception {
-		String model = readFile(modelPath);
-		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-			.put(dataServicesCoreProperties.getServer().getContextPath() + ENDPOINT_PATH)
-			.accept(MediaType.APPLICATION_JSON)
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(model);
-		mockMvc.perform(builder)
-			.andExpect(isAllowed ? status().isOk() : status().isForbidden())
-			.andDo(result -> {
-				int status = result.getResponse().getStatus();
-				if (status == HttpStatus.FORBIDDEN.value()) {
-					jsonPath("$.longMessage.key").value("error.security.notAuthorized.description").match(result);
-					jsonPath("$.longMessage.default").value("User is not allowed to perform requested operation").match(result);
-					jsonPath("$.shortMessage.key").value("error.security.notAuthorized.title").match(result);
-					jsonPath("$.shortMessage.default").value("User is not allowed to perform requested operation").match(result);
-				}
-			});
-	}
-
-	private void assertModelReadAccess(String modelName, boolean isAllowed) throws Exception {
-		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-				.get(dataServicesCoreProperties.getServer().getContextPath() + ENDPOINT_PATH + "/" + modelName)
-				.accept(MediaType.APPLICATION_JSON);
-		mockMvc.perform(builder)
-				.andExpect(isAllowed ? status().isOk() : status().isForbidden())
-				.andDo(result -> {
-					int status = result.getResponse().getStatus();
-					if (status == HttpStatus.FORBIDDEN.value()) {
-						jsonPath("$.longMessage.key").value("error.security.notAuthorized.description").match(result);
-						jsonPath("$.longMessage.default").value("User is not allowed to perform requested operation").match(result);
-						jsonPath("$.shortMessage.key").value("error.security.notAuthorized.title").match(result);
-						jsonPath("$.shortMessage.default").value("User is not allowed to perform requested operation").match(result);
-					}
-				});
-	}
-
-	private void assertModelDeleteAccess(String modelName, boolean isAllowed) throws Exception {
-		MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
-			.delete(dataServicesCoreProperties.getServer().getContextPath() + ENDPOINT_PATH + "/" + modelName)
-			.accept(MediaType.APPLICATION_JSON);
-		mockMvc.perform(builder)
-			.andExpect(isAllowed ? status().isOk() : status().isForbidden())
-			.andDo(result -> {
-				int status = result.getResponse().getStatus();
-				if (status == HttpStatus.FORBIDDEN.value()) {
-					jsonPath("$.longMessage.key").value("error.security.notAuthorized.description").match(result);
-					jsonPath("$.longMessage.default").value("User is not allowed to perform requested operation").match(result);
-					jsonPath("$.shortMessage.key").value("error.security.notAuthorized.title").match(result);
-					jsonPath("$.shortMessage.default").value("User is not allowed to perform requested operation").match(result);
-				}
-			});
-	}
 }

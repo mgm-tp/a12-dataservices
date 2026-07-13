@@ -51,6 +51,7 @@ import com.mgmtp.a12.dataservices.AbstractDataServicesCoreTest;
 import com.mgmtp.a12.dataservices.authorization.AuthConstants;
 import com.mgmtp.a12.dataservices.authorization.ModelPermissionEvaluator;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.DocumentModelFieldsIndexer;
+import com.mgmtp.a12.dataservices.exception.ModelSerializationException;
 import com.mgmtp.a12.dataservices.model.GenericModel;
 import com.mgmtp.a12.dataservices.model.events.ModelAfterCreateEvent;
 import com.mgmtp.a12.dataservices.model.events.ModelAfterDeleteEvent;
@@ -78,12 +79,13 @@ public class DefaultModelServiceTest extends AbstractDataServicesCoreTest {
 	@Mock private GenericModelReadRepository genericModelReadRepository;
 	@Mock private ModelPermissionEvaluator<GenericModel> modelPermissionEvaluator;
 	@Mock private DocumentModelFieldsIndexer documentModelFieldsIndexer;
+	@Mock private UniqueConstraintModelValidator uniqueConstraintModelValidator;
 
 	@InjectMocks private DefaultModelService defaultModelService;
 
 	@BeforeMethod
 	public void clearAndSetup() {
-		Mockito.reset(eventPublisher, modelHeaderJpaRepository, modelRepository, modelPermissionEvaluator);
+		Mockito.reset(eventPublisher, modelHeaderJpaRepository, modelRepository, modelPermissionEvaluator, uniqueConstraintModelValidator);
 		Mockito.when(modelRepositories.stream()).thenAnswer(a -> Stream.of(modelRepository));
 	}
 
@@ -135,7 +137,24 @@ public class DefaultModelServiceTest extends AbstractDataServicesCoreTest {
 		Mockito.verify(modelPermissionEvaluator, Mockito.times(1)).checkModelCreatePermission(header);
 		Mockito.verifyNoInteractions(eventPublisher, modelRepository, modelHeaderJpaRepository);
 		Assert.assertEquals(e.getMessage(), AuthConstants.ACCESS_DENIED);
+	}
 
+	@Test public void testCreateModel_shouldCheckPermissionBeforeValidation() throws HeaderParseException {
+		// Header mock returns null for getId() by default, which would fail validateHeader with InvalidInputException.
+		// If permission is checked first and throws AccessDeniedException, validation is never reached.
+		// If ordering were reversed, InvalidInputException would be thrown and the expectThrows below would fail.
+		String modelContent = RandomStringUtils.randomAlphabetic(20);
+		Header invalidHeader = Mockito.mock(Header.class);
+
+		Mockito.when(headerParser.parseJson(modelContent)).thenReturn(invalidHeader);
+		Mockito.doThrow(new AccessDeniedException(AuthConstants.ACCESS_DENIED)).when(modelPermissionEvaluator)
+			.checkModelCreatePermission(ArgumentMatchers.any(Header.class));
+
+		AccessDeniedException e = Assert.expectThrows(AccessDeniedException.class, () -> defaultModelService.create(modelContent));
+
+		Mockito.verify(modelPermissionEvaluator, Mockito.times(1)).checkModelCreatePermission(invalidHeader);
+		Mockito.verifyNoInteractions(eventPublisher, modelRepository, modelHeaderJpaRepository);
+		Assert.assertEquals(e.getMessage(), AuthConstants.ACCESS_DENIED);
 	}
 
 	@Test void testUpdateModel_shouldUpdateSuccessfully() throws HeaderParseException {
@@ -174,8 +193,8 @@ public class DefaultModelServiceTest extends AbstractDataServicesCoreTest {
 			Assert.assertEquals(modelHeaderEntity.getModelType(), header.getModelType());
 			Assert.assertEquals(modelHeaderEntity.getId(), header.getId());
 			Assert.assertEquals(modelHeaderEntity.getAnnotations().size(), header.getAnnotations().size());
-			Assert.assertEquals(modelHeaderEntity.getAnnotations().get(0).getName(), header.getAnnotations().get(0).getName());
-			Assert.assertEquals(modelHeaderEntity.getAnnotations().get(0).getValue(), header.getAnnotations().get(0).getValue());
+			Assert.assertEquals(modelHeaderEntity.getAnnotations().getFirst().getName(), header.getAnnotations().getFirst().getName());
+			Assert.assertEquals(modelHeaderEntity.getAnnotations().getFirst().getValue(), header.getAnnotations().getFirst().getValue());
 			return true;
 		}));
 
@@ -208,6 +227,85 @@ public class DefaultModelServiceTest extends AbstractDataServicesCoreTest {
 		Mockito.verify(modelHeaderJpaRepository, Mockito.times(1)).findById(header.getId());
 		Mockito.verifyNoMoreInteractions(modelHeaderJpaRepository);
 		Assert.assertEquals(e.getMessage(), AuthConstants.ACCESS_DENIED);
+	}
+
+	@Test(description = "Should invoke validateModel during create")
+	public void shouldInvokeValidateModelOnCreate() throws HeaderParseException {
+		String modelContent = RandomStringUtils.randomAlphabetic(20);
+		Header header = makeTestModelHeader();
+		GenericModel mockedModel = new GenericModel();
+		mockedModel.setHeader(header);
+
+		Mockito.when(headerParser.parseJson(modelContent)).thenReturn(header);
+		Mockito.when(modelRepository.supports(header)).thenReturn(true);
+		Mockito.when(modelRepository.save(ArgumentMatchers.eq(header), ArgumentMatchers.any())).thenReturn(mockedModel);
+
+		defaultModelService.create(modelContent);
+
+		Mockito.verify(uniqueConstraintModelValidator, Mockito.times(1))
+			.validateModel(ArgumentMatchers.argThat(m -> m.getHeader().equals(header)));
+	}
+
+	@Test(description = "Should propagate ModelSerializationException when validateModel fails during create")
+	public void shouldPropagateModelSerializationExceptionWhenValidateModelFailsOnCreate() throws HeaderParseException {
+		String modelContent = RandomStringUtils.randomAlphabetic(20);
+		Header header = makeTestModelHeader();
+
+		Mockito.when(headerParser.parseJson(modelContent)).thenReturn(header);
+		Mockito.doThrow(new ModelSerializationException("invalid unique constraint"))
+			.when(uniqueConstraintModelValidator).validateModel(ArgumentMatchers.any(GenericModel.class));
+
+		Assert.expectThrows(ModelSerializationException.class, () -> defaultModelService.create(modelContent));
+
+		Mockito.verify(uniqueConstraintModelValidator, Mockito.times(1)).validateModel(ArgumentMatchers.any(GenericModel.class));
+		Mockito.verify(modelRepository, Mockito.times(0)).save(ArgumentMatchers.any(), ArgumentMatchers.any());
+	}
+
+	@Test(description = "Should invoke validateModel during update")
+	public void shouldInvokeValidateModelOnUpdate() throws HeaderParseException {
+		String updatedModelContent = RandomStringUtils.randomAlphabetic(20);
+		Header header = makeTestModelHeader();
+		ModelHeaderEntity oldHeader = new ModelHeaderEntity();
+		oldHeader.setModelType(header.getModelType());
+		oldHeader.setId(header.getId());
+		GenericModel oldModel = new GenericModel();
+		oldModel.setHeader(oldHeader);
+		GenericModel updatedModel = new GenericModel();
+		updatedModel.setHeader(header);
+
+		Mockito.when(modelHeaderJpaRepository.findById(header.getId())).thenReturn(Optional.of(oldHeader));
+		Mockito.when(headerParser.parseJson(updatedModelContent)).thenReturn(header);
+		Mockito.when(modelRepository.supports(header)).thenReturn(true);
+		Mockito.when(modelRepository.load(header)).thenReturn(Optional.of(oldModel));
+		Mockito.when(modelRepository.update(header, updatedModelContent)).thenReturn(updatedModel);
+
+		defaultModelService.update(updatedModelContent);
+
+		Mockito.verify(uniqueConstraintModelValidator, Mockito.times(1))
+			.validateModel(ArgumentMatchers.argThat(m -> m.getHeader().equals(header)));
+	}
+
+	@Test(description = "Should propagate ModelSerializationException when validateModel fails during update")
+	public void shouldPropagateModelSerializationExceptionWhenValidateModelFailsOnUpdate() throws HeaderParseException {
+		String updatedModelContent = RandomStringUtils.randomAlphabetic(20);
+		Header header = makeTestModelHeader();
+		ModelHeaderEntity oldHeader = new ModelHeaderEntity();
+		oldHeader.setModelType(header.getModelType());
+		oldHeader.setId(header.getId());
+		GenericModel oldModel = new GenericModel();
+		oldModel.setHeader(oldHeader);
+
+		Mockito.when(modelHeaderJpaRepository.findById(header.getId())).thenReturn(Optional.of(oldHeader));
+		Mockito.when(headerParser.parseJson(updatedModelContent)).thenReturn(header);
+		Mockito.when(modelRepository.supports(header)).thenReturn(true);
+		Mockito.when(modelRepository.load(header)).thenReturn(Optional.of(oldModel));
+		Mockito.doThrow(new ModelSerializationException("invalid unique constraint"))
+			.when(uniqueConstraintModelValidator).validateModel(ArgumentMatchers.any(GenericModel.class));
+
+		Assert.expectThrows(ModelSerializationException.class, () -> defaultModelService.update(updatedModelContent));
+
+		Mockito.verify(uniqueConstraintModelValidator, Mockito.times(1)).validateModel(ArgumentMatchers.any(GenericModel.class));
+		Mockito.verify(modelRepository, Mockito.times(0)).update(ArgumentMatchers.any(), ArgumentMatchers.any());
 	}
 
 	@Test void testDeleteModel_shouldDeleteSuccessfully() {
@@ -322,9 +420,9 @@ public class DefaultModelServiceTest extends AbstractDataServicesCoreTest {
 		Mockito.verify(eventPublisher, Mockito.times(1)).publishEvent(afterLoadEventArgumentCaptor.capture());
 		List models = afterLoadEventArgumentCaptor.getValue().getModels().stream().toList();
 		Assert.assertEquals(models.size(), 2);
-		assertModel((Model) models.get(0), model1);
+		assertModel((Model) models.getFirst(), model1);
 		assertModel((Model) models.get(1), model2);
-		assertModel(result.get(0), model1);
+		assertModel(result.getFirst(), model1);
 		assertModel(result.get(1), model2);
 	}
 

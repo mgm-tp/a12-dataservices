@@ -57,7 +57,7 @@ public class NoCacheControlFilter extends AbstractAnnotationBasedControlFilter {
 
 	@Override public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		getParameterAnnotations(handler, NoCache.class).findAny().ifPresent(a -> {
-				response.addHeader(CACHE_CONTROL, String.format("%s, %s, %s, %s", PRIVATE, NO_CACHE, NO_STORE, MUST_REVALIDATE));
+				response.addHeader(CACHE_CONTROL, "%s, %s, %s, %s".formatted(PRIVATE, NO_CACHE, NO_STORE, MUST_REVALIDATE));
 				response.addHeader(PRAGMA, NO_CACHE);
 				response.addHeader(VARY, STAR);
 				response.addHeader(EXPIRES, IN_THE_PAST);

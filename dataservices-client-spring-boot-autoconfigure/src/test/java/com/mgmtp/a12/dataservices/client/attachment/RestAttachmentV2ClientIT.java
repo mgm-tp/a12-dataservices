@@ -39,8 +39,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -53,13 +53,11 @@ public class RestAttachmentV2ClientIT extends AbstractSpringContextIT {
 	public static final String PATH_TO_FIELD = "Contract/logo";
 	@Autowired AttachmentClientV2 restAttachmentClient;
 
-	@BeforeClass
-	public void setUp() {
+	@BeforeMethod public void setUp() {
 		createModelFromFile(CONTRACT_MODEL_FILE);
 	}
 
-	@AfterClass
-	public void cleanUp() {
+	@AfterMethod public void cleanUp() {
 		cleanUpByDocumentModel(CONTRACT_MODEL_NAME);
 	}
 

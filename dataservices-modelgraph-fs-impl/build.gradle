@@ -1,0 +1,25 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.spring-boot-conventions'
+}
+
+dependencies {
+	annotationProcessor libs.lombokMapstruct
+
+	implementation project(':dataservices-modelgraph-common-lib')
+	implementation libs.springBootStarter
+	implementation libs.commonsCollections4
+	implementation libs.springBootStarterPicocli
+	implementation libs.httpCore5
+	implementation libs.kernelMdFacade
+
+	testImplementation libs.testng
+	testImplementation libs.assertjCore
+	testImplementation libs.mockitoCore
+	testImplementation libs.mockitoTestNG
+}
+
+springBoot {
+	mainClass.set 'com.mgmtp.a12.dataservices.modelgraph.fs.impl.ModelGraphGenerator'
+}
+
+description = 'File-system based implementation of the ModelGraph library for standalone model graph generation'

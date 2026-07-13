@@ -37,6 +37,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -45,6 +46,7 @@ import org.testng.collections.Lists;
 
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.query.DocumentTreeResult;
+import com.mgmtp.a12.dataservices.query.DirectFieldOrder;
 import com.mgmtp.a12.dataservices.query.Order;
 import com.mgmtp.a12.dataservices.query.Paging;
 import com.mgmtp.a12.dataservices.query.QueryPage;
@@ -60,11 +62,12 @@ import com.mgmtp.a12.examples.AbstractITBase;
 import static com.mgmtp.a12.dataservices.constants.DocumentModelConstants.SearchConstants.EN_LOCALE;
 
 @Test
+@ActiveProfiles({ "dataservices-example-custom-type_env" })
 public class SearchCustomTypeIT extends AbstractITBase {
 
 	private static final String FIELD_NAME = "/Person/TaxIDCustomFieldType";
 
-	public static final String RESOURCE_ROOT_DIR = "file:src/main/resources/profile_specific/example_custom_type_profile/";
+	public static final String RESOURCE_ROOT_DIR = "profile_specific/example_custom_type_profile/";
 	private static final String PERSON_A = "document/PersonCustomType_A.json";
 	private static final String PERSON_B = "document/PersonCustomType_B.json";
 	private static final String PERSON_C = "document/PersonCustomType_C.json";
@@ -78,20 +81,21 @@ public class SearchCustomTypeIT extends AbstractITBase {
 	@Autowired
 	private QueryService queryService;
 
+	@BeforeClass
+	public void init() throws IOException {
+		// Be aware: AbstractITBase cleans up the database in its @BeforeClass method, so we have to create the model and documents here.
+		modelsFunctions.createModel(MODEL_PATH + DOCUMENT_PATH + PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME + ".json");
+		personAId = documentFunctions.createDocumentFromFileAndGetDocRef(PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME, RESOURCE_ROOT_DIR + PERSON_A);
+		personBId = documentFunctions.createDocumentFromFileAndGetDocRef(PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME, RESOURCE_ROOT_DIR + PERSON_B);
+		personCId = documentFunctions.createDocumentFromFileAndGetDocRef(PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME, RESOURCE_ROOT_DIR + PERSON_C);
+		personRId = documentFunctions.createDocumentFromFileAndGetDocRef(PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME, RESOURCE_ROOT_DIR + PERSON_R);
+	}
+
 	@DataProvider public Object[][] sortDataProvider() {
 		return new Object[][] {
 			new Object[] { "ASC", personAId.toString(), personBId.toString(), personCId.toString() },
 			new Object[] { "DESC", personCId.toString(), personBId.toString(), personAId.toString() }
 		};
-	}
-
-	@BeforeClass
-	public void init() throws IOException {
-		createModel(SRC_MAIN_RESOURCES_PATH + MODEL_PATH + DOCUMENT_PATH, PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME + ".json");
-		personAId = createDocument(PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME, RESOURCE_ROOT_DIR + PERSON_A);
-		personBId = createDocument(PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME, RESOURCE_ROOT_DIR + PERSON_B);
-		personCId = createDocument(PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME, RESOURCE_ROOT_DIR + PERSON_C);
-		personRId = createDocument(PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME, RESOURCE_ROOT_DIR + PERSON_R);
 	}
 
 	@Test
@@ -136,7 +140,7 @@ public class SearchCustomTypeIT extends AbstractITBase {
 						.caseSensitive(false)
 						.build())
 				.build(),
-			List.of(new Order(FIELD_NAME, Order.Direction.valueOf(order))));
+			List.of(new DirectFieldOrder(FIELD_NAME, DirectFieldOrder.Direction.valueOf(order))));
 		filterAndExpect(queryRoot, Lists.newArrayList(expectedOrder));
 	}
 

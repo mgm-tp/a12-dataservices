@@ -46,8 +46,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.attachment.AttachmentUrl;
 import com.mgmtp.a12.dataservices.attachment.TypeOfTheContent;
 import com.mgmtp.a12.dataservices.attachment.persitence.AttachmentHeaderRepository;
@@ -61,7 +59,7 @@ import com.mgmtp.a12.dataservices.export.IDocumentExporter;
 import com.mgmtp.a12.dataservices.export.internal.csv.CsvDocumentExporter;
 import com.mgmtp.a12.dataservices.internal.query.fields.AbstractProjectionTest;
 import com.mgmtp.a12.dataservices.model.document.persistence.DocumentModelReadRepository;
-import com.mgmtp.a12.dataservices.model.document.persistence.internal.DocumentModelLoader;
+import com.mgmtp.a12.dataservices.model.document.persistence.internal.DefaultDocumentModelLoader;
 import com.mgmtp.a12.dataservices.model.persistence.IModelLoader;
 import com.mgmtp.a12.dataservices.query.DocumentTreeResult;
 import com.mgmtp.a12.dataservices.query.internal.DefaultQueryContext;
@@ -71,6 +69,8 @@ import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
 import com.mgmtp.a12.dataservices.relationship.model.RelationshipModel;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelService;
+
+import tools.jackson.databind.JsonNode;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -94,7 +94,7 @@ public class ExportCddCsvProjectionImplementationTest extends AbstractProjection
 	@Mock private IModelLoader<RelationshipModel> relationshipModelLoader;
 	@Mock private DefaultQueryContext.InternalQueryAction queryMethod;
 	private List<IDocumentExporter> documentExports;
-	private DocumentModelLoader documentModelLoader;
+	private DefaultDocumentModelLoader defaultDocumentModelLoader;
 
 	private DefaultQueryContext queryContext;
 	private ExportCddCsvProjectionImplementation exportCddProjectionImplementation;
@@ -103,8 +103,8 @@ public class ExportCddCsvProjectionImplementationTest extends AbstractProjection
 	void setup() {
 		Mockito.reset(documentPermissionEvaluator, documentModelReadRepository);
 		documentExports = List.of(csvDocumentExporter);
-		documentModelLoader = new DocumentModelLoader(documentModelPermissionEvaluator, eventPublisher, documentModelReadRepository);
-		queryContext = new DefaultQueryContext(documentModelLoader, relationshipModelLoader,
+		defaultDocumentModelLoader = new DefaultDocumentModelLoader(documentModelPermissionEvaluator, eventPublisher, documentModelReadRepository);
+		queryContext = new DefaultQueryContext(defaultDocumentModelLoader, relationshipModelLoader,
 			queryMethod, documentModelServiceFactory, queryContextHelper, indexedModelFieldCache, null, null);
 		exportCddProjectionImplementation = new ExportCddCsvProjectionImplementation(
 			documentTreeHelper, documentModelService, documentExports, Optional.of(attachmentHeaderRepository),
@@ -136,7 +136,7 @@ public class ExportCddCsvProjectionImplementationTest extends AbstractProjection
 			.build(), queryContext);
 	}
 
-	@Test public void testPostprocess_success() throws JsonProcessingException {
+	@Test public void testPostprocess_success() {
 		setCurrentUser("admin");
 		Page<DocumentTreeResult> rootDocuments = getCddRootDocuments();
 		IDocumentModel documentModel = documentModelResolver.getDocumentModelById(DocumentModelConstants.CONTRACT_CDM_MODEL);
@@ -145,7 +145,7 @@ public class ExportCddCsvProjectionImplementationTest extends AbstractProjection
 		String modelName = documentModel.getHeader().getId();
 
 		InputStream inputStream = new ByteArrayInputStream(RandomStringUtils.randomAlphabetic(10).getBytes());
-		String fileName = String.format("export_%s.csv", modelName);
+		String fileName = "export_%s.csv".formatted(modelName);
 
 		AttachmentPersistenceResult attachmentPersistenceResult = mockAttachmentPersistenceResult();
 		AttachmentUrl attachmentUrl = mockAttachmentUrl();

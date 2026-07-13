@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentUtils;
@@ -52,6 +51,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.JsonNode;
 
 import static com.mgmtp.a12.dataservices.model.ModelConstants.FIELD_SEPARATOR;
 
@@ -120,7 +120,7 @@ public class ExportHelper {
 
 	private static Map<String, String> flattenJsonRecursive(String prefix, JsonNode jsonNode, Map<String, String> flattenedMap) {
 		if (jsonNode.isObject()) {
-			jsonNode.fields().forEachRemaining(field -> {
+			jsonNode.propertyStream().forEach(field -> {
 				String key = field.getKey();
 				JsonNode value = field.getValue();
 				String newPrefix = prefix.isEmpty() ? FIELD_SEPARATOR + key : prefix + FIELD_SEPARATOR + key;

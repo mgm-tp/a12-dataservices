@@ -28,4 +28,4 @@ dependencies {
 	testImplementation libs.servletApi
 }
 
-description = 'Data Services Seed Data import for modelling support and testing'
+description = 'Data Services SME Workspace import for modeling support and testing'

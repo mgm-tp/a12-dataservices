@@ -38,11 +38,9 @@ import org.springframework.context.annotation.Import;
 
 import com.mgmtp.a12.contentstore.autoconfigure.internal.ContentStoreAutoConfiguration;
 import com.mgmtp.a12.contentstore.service.ContentStoreService;
-import com.mgmtp.a12.dataservices.attachment.persitence.AttachmentHeaderRepository;
 import com.mgmtp.a12.dataservices.attachment.persitence.IAttachmentRepository;
 import com.mgmtp.a12.dataservices.attachment.persitence.internal.contentstore.ContentStoreMapper;
 import com.mgmtp.a12.dataservices.attachment.persitence.internal.contentstore.EmbeddedContentStoreAttachmentRepository;
-import com.mgmtp.a12.dataservices.common.content.ContentTypeDetector;
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.configuration.internal.validation.condition.contentstore.EmbeddedContentStoreModeCondition;
 
@@ -57,9 +55,7 @@ public class EmbeddedContentStoreConfiguration {
 	private final DataServicesCoreProperties dataServicesCoreProperties;
 
 	@ConditionalOnMissingBean(IAttachmentRepository.class)
-	@Bean public IAttachmentRepository embeddedContentStoreAttachmentRepository(ContentStoreMapper contentStoreMapper,
-		AttachmentHeaderRepository attachmentHeaderRepository, ContentTypeDetector contentTypeDetector) {
-		return new EmbeddedContentStoreAttachmentRepository(contentStoreService, dataServicesCoreProperties, contentStoreMapper,
-			attachmentHeaderRepository, contentTypeDetector);
+	@Bean public IAttachmentRepository embeddedContentStoreAttachmentRepository(ContentStoreMapper contentStoreMapper) {
+		return new EmbeddedContentStoreAttachmentRepository(contentStoreService, dataServicesCoreProperties, contentStoreMapper);
 	}
 }

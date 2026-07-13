@@ -46,10 +46,13 @@ import com.mgmtp.a12.dataservices.query.constraint.matching.SimpleSearchOperator
 import com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorContext;
 import com.mgmtp.a12.dataservices.query.generator.sql.constraint.internal.matching.RegexSearchHelper;
 
+import com.mgmtp.a12.dataservices.exception.query.QueryInvalidInputException;
+
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.FieldTypes.DATE_FIELD_TYPE;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.FieldTypes.ENUMERATION_FIELD_TYPE;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.FieldTypes.STRING_FIELD_TYPE;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertThrows;
 
 public class RegexSearchHelperTest extends AbstractSqlGeneratorTest {
 
@@ -70,7 +73,21 @@ public class RegexSearchHelperTest extends AbstractSqlGeneratorTest {
 				SimpleSearchOperator.builder().value("something^'").build(),
 				null,
 				"(st.search_data ~* :p0)",
-				Map.of("p0", "~[^~]*something\\^'[^~]*~/")
+				Map.of("p0", "(?:^|~)/[^~\\[]*~[^~]*something\\^'[^~]*~/")
+			},
+			new Object[] {
+				"Global search, no locale, matches keys/values but excludes localized labels",
+				SimpleSearchOperator.builder().value("technology").build(),
+				null,
+				"(st.search_data ~* :p0)",
+				Map.of("p0", "(?:^|~)/[^~\\[]*~[^~]*technology[^~]*~/")
+			},
+			new Object[] {
+				"Global search, with locale, also matches the matching-locale label value",
+				SimpleSearchOperator.builder().value("technology").build(),
+				"en_US",
+				"(st.search_data ~* :p0)",
+				Map.of("p0", "(?:^|~)/[^~\\[]*(?:\\[en_US\\])?~[^~]*technology[^~]*~/")
 			},
 			new Object[] {
 				"Regex escapes",
@@ -166,7 +183,14 @@ public class RegexSearchHelperTest extends AbstractSqlGeneratorTest {
 				SimpleSearchOperator.builder().value("something^'").build(),
 				null,
 				"(st.search_data ~* :p0)",
-				Map.of("p0", "(?:^|~)(?!/__meta)[^~]+~[^~]*something\\^'[^~]*~/")
+				Map.of("p0", "(?:^|~)(?!/__meta)/[^~\\[]*~[^~]*something\\^'[^~]*~/")
+			},
+			new Object[] {
+				"Global search excluding metadata, with locale, matches matching-locale label value",
+				SimpleSearchOperator.builder().value("technology").build(),
+				"en_US",
+				"(st.search_data ~* :p0)",
+				Map.of("p0", "(?:^|~)(?!/__meta)/[^~\\[]*(?:\\[en_US\\])?~[^~]*technology[^~]*~/")
 			}
 		};
 	}
@@ -184,8 +208,7 @@ public class RegexSearchHelperTest extends AbstractSqlGeneratorTest {
 				"(st.search_data ~ :p0 AND st.search_data ~ :p1)",
 				Map.of("p0", "~Technology~/",
 					"p1", "(?:^|~)/BusinessPartnerRoot/SubtypeGroup/Company~Technology~/"
-				),
-				true
+				)
 			},
 			new Object[] {
 				"Enum value match",
@@ -197,8 +220,7 @@ public class RegexSearchHelperTest extends AbstractSqlGeneratorTest {
 				"en_US",
 				"(st.search_data ~ :p0 AND st.search_data ~ :p1)",
 				Map.of("p0", "~Technology~/",
-					"p1", "(?:(?:^|~)/BusinessPartnerRoot/Industry\\[en_US\\]|(?:^|~)/BusinessPartnerRoot/Industry)~Technology~/"),
-				true
+					"p1", "(?:^|~)/BusinessPartnerRoot/Industry~Technology~/")
 			},
 			new Object[] {
 				"Date value match",
@@ -210,8 +232,7 @@ public class RegexSearchHelperTest extends AbstractSqlGeneratorTest {
 				null,
 				"(st.search_data ~ :p0 AND st.search_data ~ :p1)",
 				Map.of("p0", "~2025-01-01~/",
-					"p1", "(?:^|~)/BusinessPartnerRoot/StartOfRelationShip~2025-01-01~/"),
-				false
+					"p1", "(?:^|~)/BusinessPartnerRoot/StartOfRelationShip~2025-01-01~/")
 			},
 			new Object[] {
 				"Single character exact match",
@@ -223,8 +244,31 @@ public class RegexSearchHelperTest extends AbstractSqlGeneratorTest {
 				null,
 				"(st.search_data ~ :p0 AND st.search_data ~ :p1)",
 				Map.of("p0", "~\\*~/",
-					"p1", "(?:^|~)/BusinessPartnerRoot/Company/Name~\\*~/"),
-				false
+					"p1", "(?:^|~)/BusinessPartnerRoot/Company/Name~\\*~/")
+			},
+			new Object[] {
+				"Multiple values exact match",
+				ExactMatchOperator.builder()
+					.field("/BusinessPartnerRoot/SubtypeGroup/Company")
+					.values(List.of("Technology", "Finance"))
+					.caseSensitive(true).build(),
+				STRING_FIELD_TYPE,
+				null,
+				"(st.search_data ~ :p0 AND st.search_data ~ :p1)",
+				Map.of("p0", "~(?:Technology|Finance)~/",
+					"p1", "(?:^|~)/BusinessPartnerRoot/SubtypeGroup/Company~(?:Technology|Finance)~/")
+			},
+			new Object[] {
+				"Multiple values exact match with special chars",
+				ExactMatchOperator.builder()
+					.field("/BusinessPartnerRoot/SubtypeGroup/Company")
+					.values(List.of("foo.bar", "$baz"))
+					.caseSensitive(true).build(),
+				STRING_FIELD_TYPE,
+				null,
+				"(st.search_data ~ :p0 AND st.search_data ~ :p1)",
+				Map.of("p0", "~(?:foo\\.bar|\\$baz)~/",
+					"p1", "(?:^|~)/BusinessPartnerRoot/SubtypeGroup/Company~(?:foo\\.bar|\\$baz)~/")
 			},
 
 		};
@@ -232,13 +276,13 @@ public class RegexSearchHelperTest extends AbstractSqlGeneratorTest {
 
 	@Test(dataProvider = "exactMatchProvider")
 	public void testExactMatch(String description, ExactMatchOperator<?> operator, String fieldType, String locale, String expectedExpression,
-		Map<String, String> expectedParams, boolean matchAlsoEnumerationValue) {
+		Map<String, String> expectedParams) {
 
 		QueryGeneratorContext generatorContext = prepareContext(locale);
 		generatorContext.getEnrichments().getFieldDescriptor(operator.getField()).setFieldType(fieldType);
 
 		StringBuilder sb = new StringBuilder();
-		RegexSearchHelper.appendExactMatchCondition(sb, operator, "st", generatorContext, matchAlsoEnumerationValue);
+		RegexSearchHelper.appendExactMatchCondition(sb, operator, "st", generatorContext);
 		assertEquals(sb.toString(), expectedExpression);
 		assertEquals(generatorContext.getParamHolder(), expectedParams);
 	}
@@ -264,6 +308,32 @@ public class RegexSearchHelperTest extends AbstractSqlGeneratorTest {
 
 		assertEquals(sb.toString(), expectedExpression);
 		assertEquals(generatorContext.getParamHolder(), expectedParams);
+	}
+
+	@Test(description = "ExactMatch must throw QueryInvalidInputException when field path has no leading slash")
+	public void shouldThrowExceptionForExactMatchWhenFieldPathHasNoLeadingSlash() {
+		ExactMatchOperator<?> withoutSlash = ExactMatchOperator.builder()
+			.field(DocumentModelConstants.STATUS_FIELD_PATH)
+			.value("draft")
+			.build();
+		QueryGeneratorContext context = prepareContext(null);
+		StringBuilder sb = new StringBuilder();
+
+		assertThrows(QueryInvalidInputException.class,
+			() -> RegexSearchHelper.appendExactMatchCondition(sb, withoutSlash, "tableAlias", context));
+	}
+
+	@Test(description = "SimpleSearch must throw QueryInvalidInputException when field path has no leading slash")
+	public void shouldThrowExceptionForSimpleSearchWhenFieldPathHasNoLeadingSlash() {
+		SimpleSearchOperator withoutSlash = SimpleSearchOperator.builder()
+			.value("draft")
+			.fields(List.of(DocumentModelConstants.STATUS_FIELD_PATH))
+			.build();
+		QueryGeneratorContext context = prepareContext(null);
+		StringBuilder sb = new StringBuilder();
+
+		assertThrows(QueryInvalidInputException.class,
+			() -> RegexSearchHelper.appendSimpleSearchCondition(sb, withoutSlash, "tableAlias", false, false, false, context));
 	}
 
 	@NotNull private QueryGeneratorContext prepareContext(String locale) {

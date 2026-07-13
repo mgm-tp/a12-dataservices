@@ -1,0 +1,106 @@
+{
+  "header": {
+    "id": "PartnerAddresses",
+    "modelType": "relationship",
+    "modelVersion": "4.0.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Partner Addresses"
+      },
+      {
+        "locale": "de",
+        "text": "Partneradressen"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Partner",
+        "reference": "BusinessPartner"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Address",
+        "reference": "Address"
+      }
+    ]
+  },
+  "content": {
+    "duplicatesAllowed": false,
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Partner Addresses"
+      },
+      {
+        "locale": "de",
+        "text": "Partneradressen"
+      }
+    ],
+    "linkDocumentModel": null,
+    "entityCharacteristics": [
+      {
+        "ordered": false,
+        "linkConstraints": {
+          "multiplicity": {
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Business Partner"
+          },
+          {
+            "locale": "de",
+            "text": "Geschäftspartner"
+          }
+        ],
+        "role": "Partner",
+        "documentModel": "BusinessPartner"
+      },
+      {
+        "ordered": false,
+        "linkConstraints": {
+          "multiplicity": {
+            "unbounded": true,
+            "upperLimit": 2
+          }
+        },
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Address"
+          },
+          {
+            "locale": "de",
+            "text": "Anschrift"
+          }
+        ],
+        "role": "Address",
+        "documentModel": "Address"
+      }
+    ]
+  }
+}

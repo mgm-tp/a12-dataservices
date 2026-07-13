@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,10 +45,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.time.StopWatch;
 import org.reflections.Reflections;
 
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import com.github.victools.jsonschema.generator.OptionPreset;
 import com.github.victools.jsonschema.generator.SchemaGenerator;
 import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
@@ -66,6 +61,10 @@ import lombok.extern.slf4j.Slf4j;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.StringNode;
 
 /**
  * CLI tool that generates a JSON Schema for {@link QueryRoot}.
@@ -122,10 +121,10 @@ public class QuerySchemaGenerator implements Callable<Integer> {
 				c -> !UnknownOperator.class.isAssignableFrom(c));
 			List<Class<? extends IAggregationFunction>> functionImpls = findConcreteSubtypes(reflections, IAggregationFunction.class,
 				c -> !UnknownFunction.class.isAssignableFrom(c));
-			Set<TextNode> availableProjections = findConcreteSubtypes(reflections, IQueryProjection.class, c -> true).stream()
+			Set<StringNode> availableProjections = findConcreteSubtypes(reflections, IQueryProjection.class, c -> true).stream()
 				.map(c -> c.getDeclaredAnnotation(QueryProjection.class))
 				.map(QueryProjection::value)
-				.map(JsonNodeFactory.instance::textNode)
+				.map(JsonNodeFactory.instance::stringNode)
 				.collect(Collectors.toSet());
 
 			log.debug("Discovered: operators={}, aggregation functions={}, projections={}",
@@ -157,7 +156,7 @@ public class QuerySchemaGenerator implements Callable<Integer> {
 
 	private void saveSchema(ObjectNode schema, StopWatch sw) throws IOException {
 		JsonMapper mapper = JsonMapper.builder().build();
-		Path out1 = Paths.get(outputPath);
+		Path out1 = Path.of(outputPath);
 		Files.createDirectories(out1.getParent());
 		Files.writeString(out1, mapper.writerWithDefaultPrettyPrinter().writeValueAsString(schema));
 		Path out = out1;

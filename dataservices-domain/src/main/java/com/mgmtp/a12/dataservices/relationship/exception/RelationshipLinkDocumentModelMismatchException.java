@@ -58,7 +58,7 @@ public class RelationshipLinkDocumentModelMismatchException extends Relationship
 	public RelationshipLinkDocumentModelMismatchException(String relationshipModelName, DocumentReference docRef, Collection<String> allowedModels) {
 		super(new RelationshipValidationException.Builder(ExceptionCodes.RELATIONSHIP_LINK_DOCUMENT_MODEL_MISMATCH_EXCEPTION_CODE,
 			ExceptionKeys.RELATIONSHIP_LINK_ADD_DOCUMENT_BAD_MODEL_ERROR_KEY, "Bad Document Model",
-			String.format("Document [%s] should have been defined for models [%s], found [%s] instead", docRef, String.join(",", allowedModels),
+			"Document [%s] should have been defined for models [%s], found [%s] instead".formatted(docRef, String.join(",", allowedModels),
 				docRef.getDocumentModelName())));
 		this.relationshipModelName = relationshipModelName;
 		this.docRef = docRef;

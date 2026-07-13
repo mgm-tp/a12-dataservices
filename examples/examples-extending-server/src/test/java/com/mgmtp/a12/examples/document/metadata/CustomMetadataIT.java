@@ -31,16 +31,7 @@
  */
 package com.mgmtp.a12.examples.document.metadata;
 
-import java.io.IOException;
-import java.util.Arrays;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.TestPropertySource;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
 import com.mgmtp.a12.dataservices.constants.UserConstants;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
@@ -50,8 +41,18 @@ import com.mgmtp.a12.dataservices.relationship.spec.LinkDescriptor;
 import com.mgmtp.a12.dataservices.relationship.spec.RelationshipRoleSpec;
 import com.mgmtp.a12.examples.AbstractITBase;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
+import java.io.IOException;
+import java.util.Arrays;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.TestPropertySource;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-@TestPropertySource(locations = "classpath:config/application-dataservices-example-documents-metadata.properties")
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+
+@TestPropertySource(locations = "classpath:config/application-dataservices-example-documents_metadata.properties")
 public class CustomMetadataIT extends AbstractITBase {
 
 	@Autowired private AddLinkOperation addLinkOperation;
@@ -69,27 +70,27 @@ public class CustomMetadataIT extends AbstractITBase {
 			"/model/document/" + CONTRACT_DOCUMENT_MODEL_NAME + ".json",
 			"/model/document/" + CO_INSURER_ADDITIONAL_FIELDS_MODEL_NAME + ".json",
 			"/model/relationship/" + CO_INSURER_RELATIONSHIP_MODEL_NAME + ".json"
-
 		);
+
 		businessPartnerDocRef = documentFunctions.createDocumentFromFileAndGetDocRef(BUSINESS_PARTNER_DOCUMENT_MODEL_NAME, "link/BusinessPartnerSuper.json");
 		contractDocRef = documentFunctions.createDocumentFromFileAndGetDocRef(CONTRACT_DOCUMENT_MODEL_NAME, "link/Contract.json");
 	}
 
 
 	@Test(description = "Sets and updates metadata version on document")
-	void metadataVersionIsSetOnDocument() {
-		DocumentReference docRef = createDocument(BUSINESS_PARTNER, ATTACHMENT_UPLOAD_PATH + "/document/BusinessPartner.json");
+	void metadataVersionIsSetOnDocument() throws IOException {
+		DocumentReference docRef = documentFunctions.createDocumentFromFileAndGetDocRef(BUSINESS_PARTNER_DOCUMENT_MODEL_NAME, "link/BusinessPartnerSuper.json");
 		DocumentV2 document = documentRepository.findByDocumentReference(docRef).get().getKernelDocument();
-		DocumentV2 updated = document.withFieldValue("/BusinessPartnerRoot/Name", "Updated Name");
+		DocumentV2 updated = document.withFieldValue("/businessPartner/name", "Updated Name");
 		DocumentV2 afterUpdate = documentService.update(docRef, updated, null).getKernelDocument();
 
-		Assert.assertEquals(document.fieldValue("/__meta/extensions/metadataVersion"), ("1.0.0"));
-		Assert.assertEquals(afterUpdate.fieldValue("/__meta/extensions/metadataVersion"), ("2.0.0"));
-		Assert.assertNull(document.fieldValue("/__meta/creator"));
-		Assert.assertNull(document.fieldValue("/__meta/createdAt"));
-		Assert.assertNull(document.fieldValue("/__meta/modifier"));
-		Assert.assertNull(document.fieldValue("/__meta/modifiedAt"));
-		Assert.assertNull(document.fieldValue("/__meta/modelVersion"));
+		assertEquals(document.fieldValue("/__meta/extensions/metadataVersion"), ("1.0.0"));
+		assertEquals(afterUpdate.fieldValue("/__meta/extensions/metadataVersion"), ("2.0.0"));
+		assertNull(document.fieldValue("/__meta/creator"));
+		assertNull(document.fieldValue("/__meta/createdAt"));
+		assertNull(document.fieldValue("/__meta/modifier"));
+		assertNull(document.fieldValue("/__meta/modifiedAt"));
+		assertNull(document.fieldValue("/__meta/modelVersion"));
 	}
 
 
@@ -98,10 +99,10 @@ public class CustomMetadataIT extends AbstractITBase {
 		// Documents are already created during init
 		DataServicesDocument createdContract = documentService.load(contractDocRef).orElseThrow(() -> new NotFoundException("Contract Document Not Found"));
 		DataServicesDocument createdBusinessPartner = documentService.load(businessPartnerDocRef).orElseThrow(() -> new NotFoundException("BusinessPartner Document Not Found"));
-		Assert.assertNotNull(createdContract);
-		Assert.assertNotNull(createdBusinessPartner);
-		Assert.assertEquals(createdContract.getKernelDocument().fieldValue("/__meta/extensions/metadataVersion"), ("1.0.0"));
-		Assert.assertEquals(createdBusinessPartner.getKernelDocument().fieldValue("/__meta/extensions/metadataVersion"), ("1.0.0"));
+		assertNotNull(createdContract);
+		assertNotNull(createdBusinessPartner);
+		assertEquals(createdContract.getKernelDocument().fieldValue("/__meta/extensions/metadataVersion"), ("1.0.0"));
+		assertEquals(createdBusinessPartner.getKernelDocument().fieldValue("/__meta/extensions/metadataVersion"), ("1.0.0"));
 
 		LinkDescriptor
 			linkDescriptor = createLinkDescriptor(CO_INSURER_RELATIONSHIP_MODEL_NAME,
@@ -116,19 +117,19 @@ public class CustomMetadataIT extends AbstractITBase {
 		createdContract = documentService.load(contractDocRef).orElseThrow(() -> new NotFoundException("Contract Document Not Found"));
 		createdBusinessPartner = documentService.load(businessPartnerDocRef).orElseThrow(() -> new NotFoundException("BusinessPartner Document Not found"));
 
-		Assert.assertEquals(createdBusinessPartner.getKernelDocument().fieldValue("/__meta/extensions/linkAssignment"), ("3.0.0"));
-		Assert.assertEquals(createdContract.getKernelDocument().fieldValue("/__meta/extensions/linkAssignment"), ("3.0.0"));
-		Assert.assertNull(createdContract.getKernelDocument().fieldValue("/__meta/creator"));
-		Assert.assertNull(createdContract.getKernelDocument().fieldValue("/__meta/createdAt"));
-		Assert.assertNull(createdContract.getKernelDocument().fieldValue("/__meta/modifier"));
-		Assert.assertNull(createdContract.getKernelDocument().fieldValue("/__meta/modifiedAt"));
-		Assert.assertNull(createdContract.getKernelDocument().fieldValue("/__meta/modelVersion"));
+		assertEquals(createdBusinessPartner.getKernelDocument().fieldValue("/__meta/extensions/linkAssignment"), ("3.0.0"));
+		assertEquals(createdContract.getKernelDocument().fieldValue("/__meta/extensions/linkAssignment"), ("3.0.0"));
+		assertNull(createdContract.getKernelDocument().fieldValue("/__meta/creator"));
+		assertNull(createdContract.getKernelDocument().fieldValue("/__meta/createdAt"));
+		assertNull(createdContract.getKernelDocument().fieldValue("/__meta/modifier"));
+		assertNull(createdContract.getKernelDocument().fieldValue("/__meta/modifiedAt"));
+		assertNull(createdContract.getKernelDocument().fieldValue("/__meta/modelVersion"));
 
-		Assert.assertNull(createdBusinessPartner.getKernelDocument().fieldValue("/__meta/creator"));
-		Assert.assertNull(createdBusinessPartner.getKernelDocument().fieldValue("/__meta/createdAt"));
-		Assert.assertNull(createdBusinessPartner.getKernelDocument().fieldValue("/__meta/modifier"));
-		Assert.assertNull(createdBusinessPartner.getKernelDocument().fieldValue("/__meta/modifiedAt"));
-		Assert.assertNull(createdBusinessPartner.getKernelDocument().fieldValue("/__meta/modelVersion"));
+		assertNull(createdBusinessPartner.getKernelDocument().fieldValue("/__meta/creator"));
+		assertNull(createdBusinessPartner.getKernelDocument().fieldValue("/__meta/createdAt"));
+		assertNull(createdBusinessPartner.getKernelDocument().fieldValue("/__meta/modifier"));
+		assertNull(createdBusinessPartner.getKernelDocument().fieldValue("/__meta/modifiedAt"));
+		assertNull(createdBusinessPartner.getKernelDocument().fieldValue("/__meta/modelVersion"));
 	}
 
 
@@ -142,7 +143,7 @@ public class CustomMetadataIT extends AbstractITBase {
 	}
 
 	protected JsonNode createLinkDocument() {
-		JsonNode rootGroup = objectMapper.createObjectNode().put("since", "2025-05-12");
-		return objectMapper.createObjectNode().set("additionalFields", rootGroup);
+		JsonNode rootGroup = JACKSON_2_OBJECT_MAPPER.createObjectNode().put("since", "2025-05-12");
+		return JACKSON_2_OBJECT_MAPPER.createObjectNode().set("additionalFields", rootGroup);
 	}
 }

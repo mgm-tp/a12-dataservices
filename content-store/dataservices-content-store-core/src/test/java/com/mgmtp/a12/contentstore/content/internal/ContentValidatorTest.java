@@ -67,7 +67,7 @@ public class ContentValidatorTest extends AbstractContentStoreTest {
 			() -> initContentValidator().getSizeAndValidate(new ClassPathResource("/content/content_big.pdf").getContentAsByteArray()));
 		Assert.assertNotNull(invalidSizeException);
 		Assert.assertEquals(invalidSizeException.getMessage(),
-			String.format(Constants.CONTENT_SIZE_CANNOT_EXCEED_LIMIT_PATTERN, contentStoreProperties.getLimitSize()));
+			Constants.CONTENT_SIZE_CANNOT_EXCEED_LIMIT_PATTERN.formatted(contentStoreProperties.getLimitSize()));
 	}
 
 	@NonNull private ContentValidator initContentValidator() {

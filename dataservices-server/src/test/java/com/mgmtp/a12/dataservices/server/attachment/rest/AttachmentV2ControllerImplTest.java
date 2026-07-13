@@ -31,24 +31,27 @@
  */
 package com.mgmtp.a12.dataservices.server.attachment.rest;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.mockito.testng.MockitoTestNGListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.attachment.AttachmentAnnotation;
 import com.mgmtp.a12.dataservices.attachment.AttachmentHeaderSpec;
 import com.mgmtp.a12.dataservices.attachment.AttachmentThumbnailUrl;
@@ -62,6 +65,9 @@ import com.mgmtp.a12.dataservices.server.AbstractSpringContextServerTests;
 
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -69,25 +75,36 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
+import static com.mgmtp.a12.dataservices.constants.DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL;
+import static com.mgmtp.a12.dataservices.constants.PathConstants.BUSINESS_PARTNER_DOCUMENT_MODEL_PATH;
 
+@Slf4j
 @AutoConfigureMockMvc
-@TestExecutionListeners(MockitoTestExecutionListener.class)
+@Listeners(MockitoTestNGListener.class)
 public class AttachmentV2ControllerImplTest extends AbstractSpringContextServerTests {
+
+	protected static final Predicate<String> ATTACHMENT_URL_PATTERN =
+		Pattern.compile("^http://localhost:8080/cs/download/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\?filename=([^&]*\\.[^&]+)$")
+			.asPredicate();
+
 	private static final String ATTACHMENT_ENDPOINT_PATH = "/v2/attachment";
 	private static final String RPC_ENDPOINT_PATH = "/v2/rpc";
 	private static final String FILENAME = "image.png";
+
+	@Autowired private WebApplicationContext webApplicationContext;
+	private MockMvc mvc;
 	private static final List<AttachmentAnnotation> ANNOTATION_LIST =
 		List.of(new AttachmentAnnotation("annotation1", "value1"), new AttachmentAnnotation("annotation2", "value2"));
 
 	@Autowired private DataServicesCoreProperties dataServicesCoreProperties;
-	@Autowired private MockMvc mvc;
 
 	private DocumentReference documentReference;
 
-	@BeforeMethod public void setUp() {
+	@BeforeMethod public void setUp() throws IOException {
+		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 		super.cleanUpTestEnvironment();
 		changeUserInContext("admin");
-		createModel(loadResourceFromClasspathAsString(MODEL_PATH_FOLDER + "BusinessPartner.json"));
+		createModel(resourceFunctions.loadResource(BUSINESS_PARTNER_DOCUMENT_MODEL_PATH));
 	}
 
 	@Test public void attachmentScenario() throws Exception {
@@ -96,8 +113,8 @@ public class AttachmentV2ControllerImplTest extends AbstractSpringContextServerT
 		AttachmentHeaderSpec newAttachmentHeader = objectMapper.readValue(uploadResponse.getContentAsString(), AttachmentHeaderSpec.class);
 
 		changeUserInContext("admin");
-		documentReference = assertDocumentWithAttachment(BUSINESS_PARTNER_MODEL_NAME,
-			String.format(readFile(BUSINESS_PARTNER_DOCUMENT_FILE), newAttachmentHeader.getAttachmentId()));
+		documentReference = assertDocumentWithAttachment(BUSINESS_PARTNER_DOCUMENT_MODEL,
+			resourceFunctions.loadResource(BUSINESS_PARTNER_DOCUMENT_FILE).formatted(newAttachmentHeader.getAttachmentId()));
 		ImmutablePair<DataServicesAttachmentURL, AttachmentThumbnailUrl> attachmentUrl = assertGetUrls(newAttachmentHeader);
 		assertAttachmentContent(attachmentUrl.getLeft().getLocation(), "hello".getBytes(StandardCharsets.UTF_8));
 		assertThumbnails(attachmentUrl.getRight());
@@ -107,7 +124,7 @@ public class AttachmentV2ControllerImplTest extends AbstractSpringContextServerT
 		return mvc.perform(MockMvcRequestBuilders
 				.post(dataServicesCoreProperties.getServer().getContextPath() + ATTACHMENT_ENDPOINT_PATH)
 				.queryParam("filename", FILENAME)
-				.queryParam("documentModelName", BUSINESS_PARTNER_MODEL_NAME)
+				.queryParam("documentModelName", BUSINESS_PARTNER_DOCUMENT_MODEL)
 				.queryParam("pathToField", "")
 				.queryParam("annotations", "annotation1:value1", "annotation2:value2")
 				.content("hello".getBytes(StandardCharsets.UTF_8))
@@ -117,8 +134,8 @@ public class AttachmentV2ControllerImplTest extends AbstractSpringContextServerT
 			.andExpect(jsonPath("$.attachmentId").isNotEmpty())
 			.andExpect(jsonPath("$.filename").value(FILENAME))
 			.andExpect(jsonPath("$.size").value(5))
-			.andExpect(jsonPath("$.annotations[0].name").value(ANNOTATION_LIST.get(0).getName()))
-			.andExpect(jsonPath("$.annotations[0].value").value(ANNOTATION_LIST.get(0).getValue()))
+			.andExpect(jsonPath("$.annotations[0].name").value(ANNOTATION_LIST.getFirst().getName()))
+			.andExpect(jsonPath("$.annotations[0].value").value(ANNOTATION_LIST.getFirst().getValue()))
 			.andReturn().getResponse();
 	}
 
@@ -141,7 +158,7 @@ public class AttachmentV2ControllerImplTest extends AbstractSpringContextServerT
 			.andExpect(jsonPath("$[*].error").doesNotExist())
 			.andReturn().getResponse();
 
-		logger.info(String.format("Document Reference: %s", response.getContentAsString()));
+		log.info("Document Reference: {}", response.getContentAsString());
 		List<JsonRpc2Response> jsonRpc2Response = objectMapper.readValue(response.getContentAsString(), new TypeReference<>() {
 		});
 
@@ -172,7 +189,7 @@ public class AttachmentV2ControllerImplTest extends AbstractSpringContextServerT
 			.andExpect(jsonPath("$[*].error").doesNotExist())
 			.andReturn().getResponse();
 
-		logger.info(String.format("Attachment url: %s", response.getContentAsString()));
+		log.info("Attachment url: {}", response.getContentAsString());
 		List<JsonRpc2Response> jsonRpc2Response = objectMapper.readValue(response.getContentAsString(), new TypeReference<>() {
 		});
 

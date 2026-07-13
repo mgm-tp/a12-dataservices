@@ -42,6 +42,7 @@ import com.mgmtp.a12.dataservices.query.QueryContext;
 import com.mgmtp.a12.dataservices.query.annotation.QueryOperatorValidator;
 import com.mgmtp.a12.dataservices.query.constraint.FieldAwareOperator;
 import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
+import com.mgmtp.a12.dataservices.query.enrichement.internal.FieldPathValidator;
 import com.mgmtp.a12.dataservices.query.validation.IQueryOperatorValidator;
 import com.mgmtp.a12.dataservices.query.validation.ValidationItem;
 
@@ -56,6 +57,8 @@ import lombok.RequiredArgsConstructor;
 		if (validationEnabled && operator instanceof FieldAwareOperator fieldAwareOperator) {
 			if (StringUtils.isBlank(fieldAwareOperator.getField())) {
 				return List.of(ValidationItem.invalid(path, "Please provide field for %s operator.".formatted(context.getOperatorName(operator))));
+			} else if (!FieldPathValidator.isValidFieldPath(fieldAwareOperator.getField())) {
+				return List.of(FieldPathValidationSupport.invalidFieldPathItem(fieldAwareOperator.getField(), path));
 			} else {
 				return List.of(ValidationItem.valid(path, "Validation passed for operator %s".formatted(context.getOperatorName(operator))));
 			}

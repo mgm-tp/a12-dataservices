@@ -51,7 +51,7 @@ public class RelationshipInvalidLinkException extends RelationshipValidationExce
 	public RelationshipInvalidLinkException(int size) {
 		super(new RelationshipValidationException.Builder(ExceptionCodes.RELATIONSHIP_INVALID_LINK_EXCEPTION_CODE,
 			ExceptionKeys.RELATIONSHIP_VALIDATION_ENTITY_SIZE_ERROR_KEY, "Link Characteristics Count",
-			String.format("Defined characteristics has wrong size. [%s] instead of 2.", size)));
+			"Defined characteristics has wrong size. [%s] instead of 2.".formatted(size)));
 		this.size = size;
 	}
 

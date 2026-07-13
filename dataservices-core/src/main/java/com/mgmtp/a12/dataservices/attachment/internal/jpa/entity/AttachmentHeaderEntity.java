@@ -37,10 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -62,7 +58,6 @@ import lombok.Setter;
  * Contains all resources for attachment header definition.
  */
 @Table(name = "ATTACHMENT_HEADER")
-@Cacheable @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data @NoArgsConstructor @AllArgsConstructor(access = AccessLevel.PRIVATE) @Builder(toBuilder = true)
 @Entity public class AttachmentHeaderEntity implements Serializable {
 

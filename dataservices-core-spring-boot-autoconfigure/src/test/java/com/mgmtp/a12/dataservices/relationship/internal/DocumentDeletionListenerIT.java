@@ -84,18 +84,9 @@ public class DocumentDeletionListenerIT extends AbstractLinkIT {
 	) {
 		LinkDescriptor linkDescriptor = new LinkDescriptor();
 		linkDescriptor.setRelationshipModel(RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL);
-
-		RelationshipRoleSpec roleSpec1 = new RelationshipRoleSpec();
-		roleSpec1.setRole(RelationshipModelConstants.RoleConstants.CONTRACT_ROLE);
-		roleSpec1.setModelName(contractDocRef.getDocumentModelName());
-		roleSpec1.setDocRef(contractDocRef);
-
-		RelationshipRoleSpec roleSpec2 = new RelationshipRoleSpec();
-		roleSpec2.setRole(RelationshipModelConstants.RoleConstants.PARTNER_ROLE);
-		roleSpec2.setModelName(partnerDocRef.getDocumentModelName());
-		roleSpec2.setDocRef(partnerDocRef);
-		linkDescriptor.setEntities(List.of(roleSpec1, roleSpec2));
-
+		linkDescriptor.setEntities(List.of(
+			new RelationshipRoleSpec(RelationshipModelConstants.RoleConstants.CONTRACT_ROLE, contractDocRef),
+			new RelationshipRoleSpec(RelationshipModelConstants.RoleConstants.PARTNER_ROLE, partnerDocRef)));
 		relationshipLinkService.create(linkDescriptor, linkDocRef);
 	}
 }

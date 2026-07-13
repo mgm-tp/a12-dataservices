@@ -32,6 +32,7 @@
 package com.mgmtp.a12.dataservices.common.properties;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +47,7 @@ import lombok.Data;
 public class EmbeddedPostgresProperties {
 
 	public static final String LC_CTYPE = "lc-ctype";
+	public static final String LC_COLLATE = "lc-collate";
 	public static final String EN_US_UTF_8 = "en_US.UTF-8";
 
 	/**
@@ -75,6 +77,12 @@ public class EmbeddedPostgresProperties {
 	 * All `Postgres` `locale-ctype` option for configuring datasource locale, this option will be set in 'initdb' command.
 	 */
 	private String localeCType = EN_US_UTF_8;
+
+	/**
+	 * All `Postgres` `locale-collate` option for configuring datasource collation, this option will be set in 'initdb' command.
+	 * Must match `localeCType` on platforms where different collate and ctype values are not supported (e.g. Windows with Postgres 18+).
+	 */
+	private String localeCollate = EN_US_UTF_8;
 
 	/**
 	 * Specifies options to be passed directly to `the pg_ctl` command.
@@ -113,4 +121,16 @@ public class EmbeddedPostgresProperties {
 	 * @default `null`
 	 */
 	private File overrideWorkingDirectory = null;
+
+	/**
+	 * Maximum time to wait for the embedded PostgreSQL server to start accepting connections.
+	 * Increase this value when running in resource-constrained environments
+	 * where I/O contention may delay server readiness beyond the default.
+	 *
+	 * Configured via Spring Boot's standard duration notation (e.g. `30s`, `1m`).
+	 *
+	 * @default 30 seconds
+	 * @see java.time.Duration
+	 */
+	private Duration pgStartupWait = Duration.ofSeconds(30);
 }

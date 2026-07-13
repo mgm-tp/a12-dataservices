@@ -1,0 +1,20 @@
+{
+  "ContractRoot": {
+    "ContractName": "ContractWithChangeLog",
+    "LengthOfContract": 1,
+    "ContractValue": 100,
+    "CostToCustomer": 10,
+    "MaxDiscount": "10%",
+    "ChangeLog": [
+      {
+        "Changes": [
+          {
+            "Status": "draft",
+            "Title": "Initial Change",
+            "Details": "Test details"
+          }
+        ]
+      }
+    ]
+  }
+}

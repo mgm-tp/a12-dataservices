@@ -6,17 +6,16 @@ plugins {
 
 dependencies {
 	implementation project(':content-store:dataservices-content-store-core')
-	api libs.jacksonJaxrsJsonProvider
 
-	api libs.jaxbApi,
-			libs.jacksonDatatypeJsr310,
-			libs.jacksonDatatypeJdk8
-	implementation libs.julToSlf4j
+	api libs.jaxbApi
+	implementation libs.slf4jJul
 	implementation libs.slf4jApi
 	implementation libs.springWebmvc
 	implementation libs.commonsLang3
 	implementation libs.commonsFileupload
 	implementation libs.annotationApi
+	implementation libs.springBootHealth
+	implementation libs.springBootActuator
 	implementation libs.springBootStarterActuator
 
 	compileOnly libs.servletApi

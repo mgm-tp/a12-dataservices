@@ -34,7 +34,7 @@ package com.mgmtp.a12.dataservices.export;
 import java.io.InputStream;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 
 import lombok.NonNull;

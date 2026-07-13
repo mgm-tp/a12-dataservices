@@ -32,11 +32,12 @@
 package com.mgmtp.a12.dataservices.document;
 
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Factory bean to create instances of {@link DataServicesDocument}.
  */
-public interface DataServicesDocumentFactory {
+@OnlyForUsage public interface DataServicesDocumentFactory {
 
 	/**
 	 * Creates a new {@link DataServicesDocument} wrapper for the provided kernel document.

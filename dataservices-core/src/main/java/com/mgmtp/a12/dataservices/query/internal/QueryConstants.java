@@ -31,6 +31,6 @@
  */
 package com.mgmtp.a12.dataservices.query.internal;
 
-public class QueryConstants {
-	public static final Integer CDM_LINK_MAX_DEPTH_FOR_NO_RECURSION = 1;
+public interface QueryConstants {
+	Integer CDM_LINK_MAX_DEPTH_FOR_NO_RECURSION = 1;
 }

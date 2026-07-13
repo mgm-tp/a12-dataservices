@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @AllArgsConstructor
-@RemoteOperation(name = CoreOperationConstants.LOAD_THUMBNAIL_URL_OPERATION, group = CoreOperationConstants.ATTACHMENT_OPERATIONS_GROUP)
+@RemoteOperation(isMutation = false, name = CoreOperationConstants.LOAD_THUMBNAIL_URL_OPERATION, group = CoreOperationConstants.ATTACHMENT_OPERATIONS_GROUP)
 public class LoadThumbnailUrlOperation {
 
 	private final ThumbnailUtil thumbnailUtil;

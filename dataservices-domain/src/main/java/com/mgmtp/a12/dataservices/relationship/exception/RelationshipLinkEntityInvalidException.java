@@ -57,7 +57,7 @@ public class RelationshipLinkEntityInvalidException extends RelationshipValidati
 	public RelationshipLinkEntityInvalidException(String role) {
 		super(new RelationshipValidationException.Builder(ExceptionCodes.RELATIONSHIP_LINK_ENTITY_INVALID_EXCEPTION_CODE,
 			ExceptionKeys.RELATIONSHIP_LINK_VALIDATION_ERROR_KEY, "Invalid Link Entity DocRef",
-			String.format("Role [%s] has invalid docRef", role)));
+			"Role [%s] has invalid docRef".formatted(role)));
 	}
 
 	private RelationshipLinkEntityInvalidException(Builder builder) {

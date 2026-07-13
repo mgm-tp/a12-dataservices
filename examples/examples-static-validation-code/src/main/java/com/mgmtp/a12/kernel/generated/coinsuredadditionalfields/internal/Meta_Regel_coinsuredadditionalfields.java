@@ -39,12 +39,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.mgmtp.a12.kernel.core.rt.a12internal.validation.IIdentifier;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.formatdef.Identifier_t;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.formatdef.Identifier_t.ReferenzTyp;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.formatdef.Regel_t;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.meta.util.MapBuilder;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.Constants;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.RtIdentifierTemplate;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.formatdef.Identifier_t;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.formatdef.Identifier_t.ReferenzTyp;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.formatdef.Regel_t;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.meta.util.MapBuilder;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.Constants;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.RtIdentifierTemplate;
 
 /*
  * Enthält Metadaten über die Regeln.
@@ -109,8 +109,8 @@ public class  Meta_Regel_coinsuredadditionalfields {
 	private void initRegelFehlertexte_0(){
 	// Init Daten zur Regel '/CoInsuredRoot/AddID'
 	mehrsprachigeFehlertexte.get(0).put(Locale.US, "error text for computation of AddID");
-	mehrsprachigeFehlertexte.get(0).put(new Locale("de"), "error text for computation of AddID");
-	mehrsprachigeFehlertexte.get(0).put(new Locale("en"), "error text for computation of AddID");
+	mehrsprachigeFehlertexte.get(0).put(Locale.of("de"), "error text for computation of AddID");
+	mehrsprachigeFehlertexte.get(0).put(Locale.of("en"), "error text for computation of AddID");
 
 	}
 

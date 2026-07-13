@@ -34,36 +34,31 @@ package com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity;
 import java.io.Serializable;
 import java.time.Instant;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import com.mgmtp.a12.model.header.Header;
 
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import lombok.NonNull;
+import lombok.Getter;
+import lombok.Setter;
 
 @Table(name = "model")
-@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity public class ModelEntity implements Serializable {
 
-	@Id @Column(nullable = false, updatable = false) private String id;
+	@Id @Getter @Setter @Column(nullable = false, updatable = false) private String id;
 
-	@Column(nullable = false, updatable = false) private Instant createdAt;
+	@Getter @Setter @Column(nullable = false, updatable = false) private Instant createdAt;
 
-	@Column(updatable = false) private String createdBy;
+	@Getter @Setter @Column(updatable = false) private String createdBy;
 
-	@Column(nullable = false) private Instant updatedAt;
+	@Getter @Setter @Column(nullable = false) private Instant updatedAt;
 
-	@Column private String updatedBy;
+	@Getter @Setter @Column private String updatedBy;
 
-	@Column(nullable = false) private String content;
+	@Getter @Setter @Column(nullable = false) private String content;
 
 	public ModelEntity() {
 	}
@@ -75,61 +70,11 @@ import lombok.NonNull;
 		createdAt = Instant.now();
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(@NonNull String id) {
-		this.id = id;
-	}
-
-	public Instant getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Instant createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Instant getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(Instant updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	@PreUpdate
-	public void onUpdate() {
+	@PreUpdate public void onUpdate() {
 		updatedAt = Instant.now();
 	}
 
-	@PrePersist
-	public void onInsert() {
+	@PrePersist public void onInsert() {
 		createdAt = Instant.now();
 		updatedAt = Instant.now();
 	}

@@ -31,8 +31,8 @@
  */
 package com.mgmtp.a12.dataservices.server.attachment.rest;
 
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -46,10 +46,7 @@ import com.mgmtp.a12.dataservices.server.internal.rest.AttachmentV2ControllerImp
 import static org.testng.Assert.assertNotNull;
 
 @WithUserDetails(UserConstants.ADMIN_USER)
-@AutoConfigureMockMvc
-@SpringBootTest(
-	classes = { ServerConfiguration.class }
-)
+@AutoConfigureMockMvc @SpringBootTest(classes = ServerConfiguration.class)
 public class OnEnabledAttachmentTest extends AbstractSpringContextServerTests {
 
 	@Test

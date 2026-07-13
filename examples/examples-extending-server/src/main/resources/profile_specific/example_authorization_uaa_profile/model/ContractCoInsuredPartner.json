@@ -1,0 +1,105 @@
+{
+  "header": {
+    "id": "ContractCoInsuredPartner",
+    "modelType": "relationship",
+    "modelVersion": "4.0.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Contract and CoInsured Partner"
+      },
+      {
+        "locale": "de",
+        "text": "Vertrag und Mitversicherter"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest,ModelRead"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Contract",
+        "reference": "Contract"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "BusinessPartner",
+        "reference": "BusinessPartner"
+      }
+    ]
+  },
+  "content": {
+    "duplicatesAllowed": false,
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Contract and CoInsured Partner"
+      },
+      {
+        "locale": "de",
+        "text": "Vertrag und Mitversicherter"
+      }
+    ],
+    "entityCharacteristics": [
+      {
+        "ordered": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Contract"
+          },
+          {
+            "locale": "de",
+            "text": "Vertrag"
+          }
+        ],
+        "role": "Contract",
+        "documentModel": "Contract"
+      },
+      {
+        "ordered": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "unbounded": false,
+            "upperLimit": 5
+          }
+        },
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Co-insured Business Partners"
+          },
+          {
+            "locale": "de",
+            "text": "Mitversicherte Geschäftspartner"
+          }
+        ],
+        "role": "Partner",
+        "documentModel": "BusinessPartner"
+      }
+    ]
+  }
+}

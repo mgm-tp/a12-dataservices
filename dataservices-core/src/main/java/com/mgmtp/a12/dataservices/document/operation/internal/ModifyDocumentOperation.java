@@ -31,12 +31,11 @@
  */
 package com.mgmtp.a12.dataservices.document.operation.internal;
 
-import java.io.StringReader;
 import java.util.Locale;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.mgmtp.a12.dataservices.common.anonymizing.Anonymizer;
 import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
@@ -50,6 +49,7 @@ import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.rpc.RemoteOperation;
 import com.mgmtp.a12.dataservices.rpc.RpcExceptionSupport;
+import com.mgmtp.a12.dataservices.rpc.internal.RpcDocRefParser;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 
 import lombok.NonNull;
@@ -81,20 +81,21 @@ public class ModifyDocumentOperation extends AbstractDocumentOperation {
 	 * @event {@link DocumentAfterRepositoryLoadEvent}
 	 */
 	@Transactional
-	public void rpc(@NonNull @JsonRpcParam("docRef") DocumentReference documentReference,
+	public void rpc(@JsonRpcParam("docRef") String docRef,
 		@NonNull @JsonRpcParam("document") JsonNode documentContent, @JsonRpcParam("locale") Locale locale) {
+		DocumentReference documentReference = RpcDocRefParser.parseDocRef(docRef);
 		log.debug("{} called with parameters [docRef={}, locale={}]",
 			CoreOperationConstants.MODIFY_DOCUMENT_OPERATION,
 			anonymizer.apply(documentReference.toString()),
 			anonymizer.apply(locale != null ? locale.toString() : "")
 		);
-		try (StringReader reader = new StringReader(documentContent.toString())) {
-			DocumentV2 document = documentSupport.convertJSONToDocument(documentReference.getDocumentModelName(), reader, documentReference);
+		try {
+			DocumentV2 document = documentSupport.convertJSONToDocument(documentReference.getDocumentModelName(), documentContent, documentReference);
 
 			documentService.update(documentReference, document, locale);
 		} catch (NotFoundException notFoundEx) {
 			throw RpcExceptionSupport.createException(notFoundEx.getCode(), ExceptionKeys.MODIFY_DOCUMENT_NOT_FOUND_ERROR_KEY,
-				String.format("Document [%s] was not found", documentReference),
+				"Document [%s] was not found".formatted(documentReference),
 				notFoundEx.getMessage(), RemoteOperation.RemoteOperationHelper.getOperationId(this.getClass()), notFoundEx);
 		}
 	}

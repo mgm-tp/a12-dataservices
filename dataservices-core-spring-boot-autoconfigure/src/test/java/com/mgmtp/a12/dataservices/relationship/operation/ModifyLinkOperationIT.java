@@ -40,7 +40,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants.FieldConstants;
 import com.mgmtp.a12.dataservices.constants.RelationshipModelConstants;
@@ -51,7 +51,7 @@ import com.mgmtp.a12.dataservices.document.DocumentService;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.relationship.RelationshipLink;
 import com.mgmtp.a12.dataservices.relationship.operation.internal.ModifyLinkOperation;
-import com.mgmtp.a12.dataservices.relationship.persistence.internal.RelationshipLinkRepository;
+import com.mgmtp.a12.dataservices.relationship.persistence.RelationshipLinkRepository;
 import com.mgmtp.a12.dataservices.relationship.OffsetBasedPageRequest;
 import com.mgmtp.a12.dataservices.relationship.spec.LinkDescriptor;
 import com.mgmtp.a12.dataservices.relationship.spec.RelationshipLinkSpec;
@@ -89,7 +89,7 @@ public class ModifyLinkOperationIT extends AbstractListITBase {
 			).getContent();
 		LinkDescriptor
 			linkDescriptor = createLinkDescriptor(RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL, RoleConstants.CONTRACT_ROLE, docRef1, RoleConstants.PARTNER_ROLE, docRef2);
-		return new RelationshipLinkSpec(linkDescriptor, byEntities.get(0).getId().toString());
+		return RelationshipLinkSpec.builder().linkDescriptor(linkDescriptor).id(byEntities.getFirst().getId().toString()).build();
 	}
 
 	private void checkIfEntityWasUpdated(DocumentReference docRef1, DocumentReference docRef2, String expectedValue) {
@@ -103,8 +103,8 @@ public class ModifyLinkOperationIT extends AbstractListITBase {
 				OffsetBasedPageRequest.unpaged()
 			).getContent();
 		StringWriter sw = new StringWriter();
-		DataServicesDocument document = documentService.load(entities.get(0).getLinkDocumentDocRef())
-			.orElseThrow(() -> new NotFoundException(ExceptionKeys.DOCUMENT_NOT_FOUND_ERROR_KEY, String.format("Document [%s] not found", entities.get(0).getLinkDocumentDocRef())));
+		DataServicesDocument document = documentService.load(entities.getFirst().getLinkDocumentDocRef())
+			.orElseThrow(() -> new NotFoundException(ExceptionKeys.DOCUMENT_NOT_FOUND_ERROR_KEY, "Document [%s] not found".formatted(entities.getFirst().getLinkDocumentDocRef())));
 		documentSupport.convertDocumentToJSON(document.getKernelDocument(), sw);
 
 		JSONObject coInsuredRoot = new JSONObject(sw.toString()).getJSONObject(FieldConstants.CO_INSURED_ADDITIONAL_FIELDS_ROOT);

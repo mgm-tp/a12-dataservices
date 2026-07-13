@@ -31,15 +31,16 @@
  */
 package com.mgmtp.a12.contentstore;
 
-import com.mgmtp.a12.contentstore.configuration.ContentStoreProperties;
-import com.mgmtp.a12.contentstore.server.actuator.ContentStoreConfigurationEndpoint;
+import java.beans.IntrospectionException;
+
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 
-import java.beans.IntrospectionException;
+import com.mgmtp.a12.contentstore.configuration.ContentStoreProperties;
+import com.mgmtp.a12.contentstore.server.actuator.ContentStoreConfigurationEndpoint;
 
-@SpringBootApplication(scanBasePackages = {"com.mgmtp.a12.contentstore"})
+@SpringBootApplication(scanBasePackages = { "com.mgmtp.a12.contentstore" })
 @PropertySource("classpath:/config/test.properties")
 public class ServerConfiguration {
 
@@ -47,5 +48,4 @@ public class ServerConfiguration {
 	public ContentStoreConfigurationEndpoint getConfigurationEndpoint(ContentStoreProperties contentStoreProperties) throws IntrospectionException {
 		return new ContentStoreConfigurationEndpoint(contentStoreProperties);
 	}
-
 }

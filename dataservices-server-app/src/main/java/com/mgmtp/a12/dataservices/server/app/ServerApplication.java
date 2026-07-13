@@ -31,7 +31,6 @@
  */
 package com.mgmtp.a12.dataservices.server.app;
 
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -54,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 
 	/**
 	 * Starts the application in standalone mode.
-	 * Delegates to {@link #start(String[], Class...)} and publishes {@link ContextStartedEvent} after startup.
+	 * Delegates to {@link #start(String[], Class[])} and publishes {@link ContextStartedEvent} after startup.
 	 *
 	 * @param args command line arguments; never `null`, may be empty.
 	 */
@@ -90,9 +89,9 @@ import lombok.extern.slf4j.Slf4j;
 	 */
 	@Override protected WebApplicationContext run(SpringApplication application) {
 		WebApplicationContext webApplicationContext = super.run(application);
-		if (webApplicationContext instanceof Lifecycle) {
+		if (webApplicationContext instanceof Lifecycle lifecycle) {
 			//fire the event.
-			((Lifecycle) webApplicationContext).start();
+			lifecycle.start();
 		}
 		return webApplicationContext;
 	}

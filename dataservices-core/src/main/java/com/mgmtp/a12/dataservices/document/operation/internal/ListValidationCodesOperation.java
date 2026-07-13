@@ -54,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
  * Get map of document model names and its relevant validation codes.
  */
 @Slf4j
-@RemoteOperation(name = CoreOperationConstants.LIST_DOCUMENT_VALIDATION_CODES_INTERNAL_OPERATION, group = CoreOperationConstants.A12_INTERNAL_OPERATIONS_GROUP)
+@RemoteOperation(name = CoreOperationConstants.LIST_DOCUMENT_VALIDATION_CODES_INTERNAL_OPERATION, group = CoreOperationConstants.A12_INTERNAL_OPERATIONS_GROUP, isMutation = false)
 @RequiredArgsConstructor
 public class ListValidationCodesOperation {
 
@@ -67,9 +67,10 @@ public class ListValidationCodesOperation {
 	 * @return {@link DocumentValidationCodesResponse} which consists of a map of model name and its validation code in the field `documentValidationCodes`.
 	 */
 	public DocumentValidationCodesResponse rpc(@JsonRpcParam("documentModelNames") @NonNull Collection<String> documentModelNames) {
-		if (documentModelNames.size() > dataServicesCoreProperties.getDocuments().getValidation().getList().getHardLimit()) {
+		int limit = dataServicesCoreProperties.getDocuments().getValidation().getList().getHardLimit();
+		if (documentModelNames.size() > limit) {
 			throw new InvalidInputException(ExceptionCodes.HARD_LIMIT_EXCEEDED_EXCEPTION_CODE, ExceptionKeys.HARD_LIMIT_EXCEEDED_ERROR_KEY,
-				"Maximum result size limit reached.");
+				"Maximum result size limit reached. Requested [%d] but limit is [%d]".formatted(documentModelNames.size(), limit));
 		}
 		ListIProblemReporter pr = new ListIProblemReporter();
 		Map<String, String> validationCodes = documentModelNames.stream()

@@ -38,7 +38,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import org.springframework.context.annotation.Conditional;
-import org.springframework.core.io.AbstractResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ContentDisposition;
@@ -86,7 +85,7 @@ import lombok.RequiredArgsConstructor;
 	 * @title Get Content
 	 */
 	@GetMapping(RestConstants.ID)
-	public ResponseEntity<? extends AbstractResource> downloadContent(
+	public ResponseEntity<InputStreamResource> downloadContent(
 		@PathVariable(RestConstants.ID_PARAM) String id,
 		@RequestParam(name = RestConstants.FILENAME_PARAM, required = false) Optional<String> filename,
 		@RequestParam(name = RestConstants.CACHE_DURATION_PARAM, required = false) Integer cacheDuration

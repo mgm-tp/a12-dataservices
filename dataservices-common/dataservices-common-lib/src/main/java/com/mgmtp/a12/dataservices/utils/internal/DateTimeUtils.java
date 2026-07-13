@@ -68,7 +68,7 @@ public class DateTimeUtils {
 		} else if (v instanceof TemporalAccessor temporalAccessor) {
 			ta = temporalAccessor;
 		} else {
-			throw new InvalidInputException(ExceptionKeys.TIME_FORMAT_ERROR_KEY, String.format("%s is not supported date value", v.getClass().getName()));
+			throw new InvalidInputException(ExceptionKeys.TIME_FORMAT_ERROR_KEY, "%s is not supported date value".formatted(v.getClass().getName()));
 		}
 		return ta;
 	}
@@ -77,7 +77,7 @@ public class DateTimeUtils {
 		try {
 			return formatter.format(v);
 		} catch (Exception e) {
-			throw new InvalidInputException(ExceptionKeys.TIME_FORMAT_ERROR_KEY, String.format("Date [%s] cannot be converted to string with format [%s].", v, formatter), e);
+			throw new InvalidInputException(ExceptionKeys.TIME_FORMAT_ERROR_KEY, "Date [%s] cannot be converted to string with format [%s].".formatted(v, formatter), e);
 		}
 	}
 
@@ -139,7 +139,7 @@ public class DateTimeUtils {
 		} else if (date instanceof Instant instant) {
 			return instant;
 		} else {
-			throw new InvalidInputException(String.format("Date parsing is not supported for %s type.", date.getClass().getName()));
+			throw new InvalidInputException(ExceptionKeys.TIME_FORMAT_ERROR_KEY, "Date parsing is not supported for %s type.".formatted(date.getClass().getName()));
 		}
 	}
 
@@ -159,7 +159,7 @@ public class DateTimeUtils {
 		} else if (effectiveType instanceof IDateFragmentType iDateFragmentType) {
 			return getDateFragmentFormat(iDateFragmentType);
 		} else {
-			throw new UnexpectedException(String.format("Unsupported field type for date/time parsing: %s", effectiveType.getClass().getName()));
+			throw new UnexpectedException("Unsupported field type for date/time parsing: %s".formatted(effectiveType.getClass().getName()));
 		}
 	}
 }

@@ -60,9 +60,10 @@ import com.mgmtp.a12.dataservices.relationship.RelationshipRole;
 import com.mgmtp.a12.dataservices.relationship.events.RelationshipLinkAfterCreateEvent;
 import com.mgmtp.a12.dataservices.relationship.events.RelationshipLinkAfterDeleteEvent;
 import com.mgmtp.a12.dataservices.relationship.events.RelationshipLinkAfterUpdateEvent;
+import com.mgmtp.a12.dataservices.relationship.factory.RelationshipLinkFactory;
 import com.mgmtp.a12.dataservices.relationship.exception.RelationshipValidationException;
 import com.mgmtp.a12.dataservices.relationship.model.RelationshipModel;
-import com.mgmtp.a12.dataservices.relationship.persistence.internal.RelationshipLinkRepository;
+import com.mgmtp.a12.dataservices.relationship.persistence.RelationshipLinkRepository;
 import com.mgmtp.a12.dataservices.relationship.spec.LinkDescriptor;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 
@@ -97,7 +98,7 @@ public class DefaultRelationshipLinkService implements RelationshipLinkService {
 			RelationshipLink newLink = relationshipLinkFactory.createLink(linkDescriptor, docRef);
 			return createInRepository(newLink);
 		} else {
-			throw new AssertionError(String.format("Link document model mismatch for relationship %s and document %s. Expected model is %s.",
+			throw new AssertionError("Link document model mismatch for relationship %s and document %s. Expected model is %s.".formatted(
 				relationshipModel.getHeader().getId(), docRef, linkDocumentModelName));
 		}
 	}
@@ -202,12 +203,12 @@ public class DefaultRelationshipLinkService implements RelationshipLinkService {
 				return relationshipLink;
 			})
 			.orElseThrow(
-				() -> new NotFoundException(ExceptionKeys.RELATIONSHIP_LINK_NOT_FOUND_ERROR_KEY, String.format("Relationship link [%s] not found", id)));
+				() -> new NotFoundException(ExceptionKeys.RELATIONSHIP_LINK_NOT_FOUND_ERROR_KEY, "Relationship link [%s] not found".formatted(id)));
 	}
 
 	@Override public Page<? extends RelationshipLink> load(@NonNull RelationshipLinkSpecification specification, Pageable pageable) {
 		RelationshipModel model = modelLoader.loadModel(specification.getRelationshipModelName());
-		Pageable newPage = enforcePage(pageable, properties.getSearch().getPaging().getLinks().getPageLimit());
+		Pageable newPage = enforcePage(pageable, properties.getQuery().getMaxLinksSize());
 
 		return listLinks(specification, model, newPage);
 	}

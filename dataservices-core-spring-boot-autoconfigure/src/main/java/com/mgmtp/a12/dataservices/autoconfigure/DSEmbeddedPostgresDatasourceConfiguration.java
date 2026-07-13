@@ -102,6 +102,7 @@ import lombok.SneakyThrows;
 			});
 			dsEmbeddedPostgresProperties.getConnectConfig().forEach(postgresBuilder::setConnectConfig);
 			postgresBuilder.setLocaleConfig(EmbeddedPostgresProperties.LC_CTYPE, dsEmbeddedPostgresProperties.getLocaleCType());
+			postgresBuilder.setLocaleConfig(EmbeddedPostgresProperties.LC_COLLATE, dsEmbeddedPostgresProperties.getLocaleCollate());
 			dsEmbeddedPostgresProperties.getPostgresConfig().forEach(postgresBuilder::setServerConfig);
 			postgresBuilder.setPort(dsEmbeddedPostgresProperties.getPort());
 
@@ -109,6 +110,7 @@ import lombok.SneakyThrows;
 				postgresBuilder.setOverrideWorkingDirectory(dsEmbeddedPostgresProperties.getOverrideWorkingDirectory());
 			}
 
+			postgresBuilder.setPGStartupWait(dsEmbeddedPostgresProperties.getPgStartupWait());
 			embeddedPostgres = postgresBuilder.start();
 		}
 		return embeddedPostgres.getPostgresDatabase();

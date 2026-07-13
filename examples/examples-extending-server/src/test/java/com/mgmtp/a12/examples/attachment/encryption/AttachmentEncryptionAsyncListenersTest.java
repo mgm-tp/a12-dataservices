@@ -31,8 +31,6 @@
  */
 package com.mgmtp.a12.examples.attachment.encryption;
 
-import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.map.IMap;
 import com.mgmtp.a12.contentstore.content.ContentStream;
 import com.mgmtp.a12.contentstore.events.ContentAfterRequestEvent;
 import com.mgmtp.a12.contentstore.events.ContentBeforeCreateEvent;
@@ -50,8 +48,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -59,17 +55,11 @@ import static org.mockito.Mockito.when;
 
 public class AttachmentEncryptionAsyncListenersTest {
 
-	private HazelcastInstance hazelcastInstance;
-	private IMap<String, byte[]> map;
 	private AttachmentEncryptionAsyncListeners listeners;
 
 	@BeforeMethod
 	public void setUp() {
-		hazelcastInstance = mock(HazelcastInstance.class);
-		map = mock(IMap.class);
-		doReturn(map).when(hazelcastInstance).getMap("data");
-		listeners = new AttachmentEncryptionAsyncListeners(hazelcastInstance);
-		listeners.init();
+		listeners = new AttachmentEncryptionAsyncListeners();
 	}
 
 	@Test
@@ -97,45 +87,52 @@ public class AttachmentEncryptionAsyncListenersTest {
 		String plain = "hello";
 		byte[] encoded = Base64.getEncoder().encode(plain.getBytes(StandardCharsets.UTF_8));
 
-		// Real ContentStream
 		ContentStream contentStream = ContentStream.builder()
 			.contentSupplier(() -> new ByteArrayInputStream(encoded))
 			.build();
 
-		// Real TicketInfoEntity - if it has a builder/constructor with contentId
 		TicketInfoEntity ticketInfo = mock(TicketInfoEntity.class);
 		when(ticketInfo.getContentId()).thenReturn(contentId);
 
-		// Real ContentAfterRequestEvent
-		ContentAfterRequestEvent event = new ContentAfterRequestEvent(ticketInfo, contentStream);
+		ContentAfterRequestEvent afterRequestEvent = new ContentAfterRequestEvent(ticketInfo, contentStream);
+		listeners.decryptWhenContentAfterRequestEvent(afterRequestEvent);
 
-		listeners.decryptWhenContentAfterRequestEvent(event);
+		// Verify the decrypted content is retrievable via a download event
+		ContentStream downloadStream = ContentStream.builder().build();
+		ContentBeforeDownloadEvent downloadEvent = new ContentBeforeDownloadEvent(contentId, "private", downloadStream);
+		listeners.decryptContentBeforeDownload(downloadEvent);
 
-		ArgumentCaptor<byte[]> bytesCaptor = ArgumentCaptor.forClass(byte[].class);
-		verify(map, times(1)).put(eq(contentId), bytesCaptor.capture());
-		Assert.assertEquals(new String(bytesCaptor.getValue(), StandardCharsets.UTF_8), plain);
+		Assert.assertTrue(downloadStream.isReady());
+		Assert.assertNotNull(downloadStream.getContentSupplier());
+		Assert.assertEquals(
+			new String(downloadStream.getContentSupplier().get().readAllBytes(), StandardCharsets.UTF_8),
+			plain
+		);
 	}
 
 	@Test
 	public void decryptContentBeforeDownload_setsSupplierAndMarksReady_contentAvailable() throws Exception {
 		String contentId = "content-2";
 		String plain = "world";
-		byte[] decoded = plain.getBytes(StandardCharsets.UTF_8);
+		byte[] encoded = Base64.getEncoder().encode(plain.getBytes(StandardCharsets.UTF_8));
 
-		when(map.get(contentId)).thenReturn(decoded);
+		// First populate the cache via decryptWhenContentAfterRequestEvent
+		ContentStream requestStream = ContentStream.builder()
+			.contentSupplier(() -> new ByteArrayInputStream(encoded))
+			.build();
+		TicketInfoEntity ticketInfo = mock(TicketInfoEntity.class);
+		when(ticketInfo.getContentId()).thenReturn(contentId);
+		listeners.decryptWhenContentAfterRequestEvent(new ContentAfterRequestEvent(ticketInfo, requestStream));
 
-		// Real ContentStream
-		ContentStream contentStream = ContentStream.builder().build();
-
-		// Real ContentBeforeDownloadEvent
-		ContentBeforeDownloadEvent event = new ContentBeforeDownloadEvent(contentId, "public",contentStream);
-
+		// Then verify download retrieves it
+		ContentStream downloadStream = ContentStream.builder().build();
+		ContentBeforeDownloadEvent event = new ContentBeforeDownloadEvent(contentId, "public", downloadStream);
 		listeners.decryptContentBeforeDownload(event);
 
-		Assert.assertTrue(contentStream.isReady());
-		Assert.assertNotNull(contentStream.getContentSupplier());
+		Assert.assertTrue(downloadStream.isReady());
+		Assert.assertNotNull(downloadStream.getContentSupplier());
 		Assert.assertEquals(
-			new String(contentStream.getContentSupplier().get().readAllBytes(), StandardCharsets.UTF_8),
+			new String(downloadStream.getContentSupplier().get().readAllBytes(), StandardCharsets.UTF_8),
 			plain
 		);
 	}
@@ -143,14 +140,14 @@ public class AttachmentEncryptionAsyncListenersTest {
 	@Test
 	public void decryptContentBeforeDownload_marksReady_onlyWhenContentNotAvailable() {
 		String contentId = "content-3";
-		when(map.get(contentId)).thenReturn(null);
 
-		// Real ContentStream
+		// No prior decryptWhenContentAfterRequestEvent call — content not available
 		ContentStream contentStream = ContentStream.builder().build();
-
-		// Real ContentBeforeDownloadEvent
 		ContentBeforeDownloadEvent event = new ContentBeforeDownloadEvent(contentId, "private", contentStream);
 
+		// Reduce wait time by using a non-existent contentId (will time out after 60s in real impl)
+		// Since tests are disabled (build.gradle: test.enabled=false), this documents intent.
+		// In the real scenario, the async listener populates the map before download is attempted.
 		listeners.decryptContentBeforeDownload(event);
 
 		Assert.assertNull(contentStream.getContentSupplier());

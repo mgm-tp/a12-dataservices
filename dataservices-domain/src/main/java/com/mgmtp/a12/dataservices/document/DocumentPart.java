@@ -39,23 +39,47 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Document Part class. Class representing a part of a document, identified by a JSON path, its value and the repetitions.
+ * Represents a single modification unit for the `PARTIAL_MODIFY_DOCUMENT` operation.
  *
+ * A `DocumentPart` identifies a field or group inside a document by its `path`, an optional `value`, and a `repetitions` array.
+ *
+ * When `path` addresses a group element, `value` must be a `Map` (or equivalent JSON object)
+ * whose keys and values correspond to the group's fields and nested groups as defined in the
+ * document model.
+ *
+ * When `path` addresses a field element, `value` must be a scalar of the type as defined in the
+ * document model.
+ *
+ * When `repetitions` contains only concrete (non-zero) indices, the addressed group ot field instance is
+ * replaced if it already exists, or inserted at that position if it does not, or removed if `value` is `null`. Missing ancestor
+ * repetitions are created automatically.
+ *
+ * When the last element of `repetitions` is `0` (the wildcard index) - only allowed if path points to a group - , the supplied group is
+ * appended as a new repetition of the addressed repeatable group. If the group currently has no
+ * repetitions, the appended entry becomes the first one. The target group must be declared as
+ * repeatable in the document model; an intermediate `0` in `repetitions` is not permitted.
+
  */
 @JsonInclude
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class DocumentPart {
 
 	/**
-	 * JSON path of the document part.
+	 * JSON path identifying the target field or group within the document
+	 * (e.g. `/BusinessPartnerRoot/Name`).
 	 */
 	String path;
 	/**
-	 * Value of the document part.
+	 * The new value for the addressed field or group, or `null` to remove the element.
+	 * For fields, this must be a scalar of a type matching the document model specification.
+	 * For groups, this must be a `Map` whose structure matches the document model. Must not be null.
+	 * If the value is null, the repetitions array must not contain any `0` wildcard.
 	 */
 	Object value;
 	/**
-	 * Repetitions of the document part (if applicable).
+	 * Repetition indices selecting a specific instance within the document (field or group).
+	 * A trailing `0` is allowed only if the path points to a repeatable group, and signals an append operation;
+	 * all other indices must be concrete (non-zero) positive integers. Must not be null.
 	 */
 	int[] repetitions;
 }

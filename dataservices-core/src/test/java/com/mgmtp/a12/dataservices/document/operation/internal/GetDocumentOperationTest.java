@@ -89,7 +89,7 @@ public class GetDocumentOperationTest {
 			Mockito.when(documentService.load(documentReference)).thenReturn(Optional.of(dataServicesDocument));
 			Mockito.when(documentSupport.convertToDocumentSpec(Mockito.any())).thenReturn(new DocumentSpec());
 
-			getDocumentOperation.rpc(documentReference);
+			getDocumentOperation.rpc(documentReference.toString());
 
 			Mockito.verify(applicationEventPublisher, Mockito.times(1)).publishEvent(Mockito.any(GetDocumentBeforeEvent.class));
 			Mockito.verify(applicationEventPublisher, Mockito.times(1)).publishEvent(Mockito.any(GetDocumentAfterEvent.class));
@@ -102,7 +102,7 @@ public class GetDocumentOperationTest {
 		try (MockedStatic<LoadedDocumentReferencesContextHolder> mockedStatic = Mockito.mockStatic(LoadedDocumentReferencesContextHolder.class)) {
 			Mockito.when(documentService.load(documentReference)).thenReturn(Optional.empty());
 
-			getDocumentOperation.rpc(documentReference);
+			getDocumentOperation.rpc(documentReference.toString());
 
 			Mockito.verify(applicationEventPublisher, Mockito.times(1)).publishEvent(Mockito.any(GetDocumentBeforeEvent.class));
 			Mockito.verify(applicationEventPublisher, Mockito.times(0)).publishEvent(Mockito.any(GetDocumentAfterEvent.class));

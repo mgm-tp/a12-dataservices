@@ -31,8 +31,8 @@
  */
 package com.mgmtp.a12.dataservices;
 
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
@@ -40,27 +40,31 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.reflections.Reflections;
-import org.springframework.context.ApplicationContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
-import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.model.ModelTypeService;
 import com.mgmtp.a12.dataservices.model.internal.IndexedModelFieldCache;
-import com.mgmtp.a12.dataservices.query.annotation.QueryAggregationFunction;
 import com.mgmtp.a12.dataservices.query.annotation.QueryOperator;
 import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
+import com.mgmtp.a12.dataservices.query.enrichment.internal.AggregationEnricher;
+import com.mgmtp.a12.dataservices.query.enrichment.internal.ConstraintEnricher;
 import com.mgmtp.a12.dataservices.query.enrichment.internal.DefaultQueryEnricher;
+import com.mgmtp.a12.dataservices.query.enrichment.internal.HasOperatorEnricher;
+import com.mgmtp.a12.dataservices.query.enrichment.internal.LinkEnricher;
+import com.mgmtp.a12.dataservices.query.enrichment.internal.QueryAPIOperatorWalker;
+import com.mgmtp.a12.dataservices.query.enrichment.internal.SortEnricher;
 import com.mgmtp.a12.dataservices.query.internal.DefaultQueryContext;
 import com.mgmtp.a12.dataservices.query.internal.QueryContextHelper;
+import com.mgmtp.a12.dataservices.query.internal.marshalling.QuerySubtypeProvider;
 import com.mgmtp.a12.dataservices.query.projection.internal.CdmHelper;
 import com.mgmtp.a12.dataservices.query.security.internal.DefaultQueryAuthorizationService;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelService;
 
 import lombok.NonNull;
+import tools.jackson.databind.jsontype.NamedType;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -72,7 +76,6 @@ public abstract class AbstractQueryContextAwareTest extends AbstractDataServices
 
 	protected final IDocumentModelService documentModelService = documentModelServiceFactory.createDocumentModelService();
 	protected CdmHelper cdmHelper = new CdmHelper(documentModelService);
-	private ApplicationContext ctx;
 
 	@Mock protected final @NonNull DefaultQueryContext.InternalQueryAction queryMethod = mock(DefaultQueryContext.InternalQueryAction.class);
 	@Mock protected final QueryContextHelper queryContextHelper = mock(QueryContextHelper.class);
@@ -80,7 +83,13 @@ public abstract class AbstractQueryContextAwareTest extends AbstractDataServices
 	@Mock protected final IndexedModelFieldCache indexedModelFieldCache = mock(IndexedModelFieldCache.class);
 
 	@NotNull protected DefaultQueryContext newQueryContext() {
-		return new DefaultQueryContext(documentModelResolver, relationshipModelLoader, queryMethod, documentModelServiceFactory, queryContextHelper, indexedModelFieldCache, null, null);
+		return new DefaultQueryContext(documentModelResolver, relationshipModelLoader, queryMethod, documentModelServiceFactory, queryContextHelper,
+			indexedModelFieldCache, null, null);
+	}
+
+	@NotNull protected DefaultQueryContext newQueryContextWithLocale(String locale) {
+		return new DefaultQueryContext(documentModelResolver, relationshipModelLoader, queryMethod,
+			documentModelServiceFactory, queryContextHelper, indexedModelFieldCache, locale, null);
 	}
 
 	@Mock protected DefaultQueryAuthorizationService queryAuthorizationService;
@@ -90,14 +99,31 @@ public abstract class AbstractQueryContextAwareTest extends AbstractDataServices
 	@InjectMocks
 	@Spy protected DocumentModelUtils documentModelUtils;
 
+	protected HasOperatorEnricher hasOperatorEnricher = new HasOperatorEnricher(modelTypeService, documentModelUtils, documentModelServiceFactory,
+		queryAuthorizationService);
+	protected QueryAPIOperatorWalker queryAPIOperatorWalker = new QueryAPIOperatorWalker(List.of(hasOperatorEnricher), documentModelUtils, modelTypeService);
+	protected SortEnricher sortEnricher = new SortEnricher(modelTypeService, documentModelUtils, documentModelServiceFactory);
+	protected ConstraintEnricher constraintEnricher = new ConstraintEnricher(queryAuthorizationService, queryAPIOperatorWalker);
+	protected AggregationEnricher aggregationEnricher = new AggregationEnricher();
+	protected LinkEnricher linkEnricher = new LinkEnricher(modelTypeService, documentModelUtils, documentModelServiceFactory, dataServicesCoreProperties,
+		queryAPIOperatorWalker, constraintEnricher);
+
 	@InjectMocks
-	@Spy protected DefaultQueryEnricher queryEnricher = new DefaultQueryEnricher(modelTypeService, documentModelUtils, dataServicesCoreProperties,
-		queryAuthorizationService, documentModelServiceFactory);
+	@Spy protected DefaultQueryEnricher queryEnricher = new DefaultQueryEnricher(modelTypeService, documentModelUtils, documentModelServiceFactory,
+		sortEnricher, constraintEnricher, aggregationEnricher, linkEnricher);
 
 	@BeforeMethod
 	public void mockEnricher() {
 		reset(modelTypeService);
-		queryEnricher = new DefaultQueryEnricher(modelTypeService, documentModelUtils, dataServicesCoreProperties, queryAuthorizationService, documentModelServiceFactory);
+		hasOperatorEnricher = new HasOperatorEnricher(modelTypeService, documentModelUtils, documentModelServiceFactory, queryAuthorizationService);
+		queryAPIOperatorWalker = new QueryAPIOperatorWalker(List.of(hasOperatorEnricher), documentModelUtils, modelTypeService);
+		sortEnricher = new SortEnricher(modelTypeService, documentModelUtils, documentModelServiceFactory);
+		constraintEnricher = new ConstraintEnricher(queryAuthorizationService, queryAPIOperatorWalker);
+		aggregationEnricher = new AggregationEnricher();
+		linkEnricher = new LinkEnricher(modelTypeService, documentModelUtils, documentModelServiceFactory, dataServicesCoreProperties, queryAPIOperatorWalker,
+			constraintEnricher);
+		queryEnricher = new DefaultQueryEnricher(modelTypeService, documentModelUtils, documentModelServiceFactory, sortEnricher, constraintEnricher,
+			aggregationEnricher, linkEnricher);
 	}
 
 	@BeforeMethod
@@ -107,22 +133,16 @@ public abstract class AbstractQueryContextAwareTest extends AbstractDataServices
 
 	@BeforeClass
 	public void beforeClass() {
+		QuerySubtypeProvider subtypeProvider = new QuerySubtypeProvider(DataServicesCoreProperties.DS_PACKAGE_PREFIX);
 
 		Map<Class<? extends ILogicOperator>, String> operators = new HashMap<>();
-		Reflections reflections = new Reflections(DataServicesCoreProperties.DS_PACKAGE_PREFIX);
-
-		reflections.getTypesAnnotatedWith(QueryOperator.class).stream()
-			.filter(c -> !Modifier.isAbstract(c.getModifiers()))
-			.map(c -> new NamedType(c, c.getAnnotation(QueryOperator.class).value()))
-			.forEach(types -> {
-				objectMapper.registerSubtypes(types);
-				operators.put((Class<? extends ILogicOperator>) types.getType(), types.getName());
-			});
-
-		reflections.getTypesAnnotatedWith(QueryAggregationFunction.class).stream()
-			.filter(c -> !Modifier.isAbstract(c.getModifiers()))
-			.map(c -> new NamedType(c, c.getAnnotation(QueryAggregationFunction.class).value()))
-			.forEach(objectMapper::registerSubtypes);
+		for (NamedType namedType : subtypeProvider.getSubtypes()) {
+			objectMapper.deserializationConfig().getSubtypeResolver().registerSubtypes(namedType);
+			objectMapper.serializationConfig().getSubtypeResolver().registerSubtypes(namedType);
+			if (namedType.getType().isAnnotationPresent(QueryOperator.class)) {
+				operators.put((Class<? extends ILogicOperator>) namedType.getType(), namedType.getName());
+			}
+		}
 
 		doReturn(operators).when(queryContextHelper).getOperators();
 	}

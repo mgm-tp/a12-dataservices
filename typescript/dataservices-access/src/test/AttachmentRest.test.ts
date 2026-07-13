@@ -36,7 +36,7 @@ import {
 	AttachmentThumbnailDownloadRequest,
 	AttachmentUpload,
 	AttachmentUploadV2
-} from "../Attachment/attachment.js";
+} from "../Attachment/index.js";
 
 import { loadResource } from "./utils/ObjectUtils.js";
 

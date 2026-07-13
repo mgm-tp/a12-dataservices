@@ -132,7 +132,7 @@ public class DefaultContentStoreServiceInDatabaseModeIT extends AbstractContentS
 		Assert.assertTrue(publicContentPersistenceResult.getUrl().isPresent());
 	}
 
-	@Test()
+	@Test
 	public void testSaveSuccessfully_dataIsSaved() throws IOException {
 		String contentId = UUID.randomUUID().toString();
 
@@ -150,7 +150,7 @@ public class DefaultContentStoreServiceInDatabaseModeIT extends AbstractContentS
 		Assert.assertNotNull(contentEntity.get().getContent());
 	}
 
-	@Test()
+	@Test
 	public void testSaveContent_hasError_rollbackTicketSaved() {
 		DefaultContentStoreServiceIT.TestEventListener testEventListener = applicationContext.getBean(DefaultContentStoreServiceIT.TestEventListener.class);
 		String contentId = testEventListener.getContentIdForSavingTest();
@@ -170,7 +170,7 @@ public class DefaultContentStoreServiceInDatabaseModeIT extends AbstractContentS
 		Assert.assertEquals(notFoundException.getShortMessage().getKey(), "error.content-store.content.notFound");
 	}
 
-	@Test()
+	@Test
 	public void getPrivateContent_updateTicketSuccessfully() throws IOException {
 
 		String contentId = UUID.randomUUID().toString();
@@ -193,7 +193,7 @@ public class DefaultContentStoreServiceInDatabaseModeIT extends AbstractContentS
 		Assert.assertTrue(ticketOpt.get().isDownloaded());
 	}
 
-	@Test()
+	@Test
 	public void getPrivateContent_hasError_rollbackTicketUpdate() {
 
 		DefaultContentStoreServiceIT.TestEventListener testEventListener = applicationContext.getBean(DefaultContentStoreServiceIT.TestEventListener.class);
@@ -220,7 +220,7 @@ public class DefaultContentStoreServiceInDatabaseModeIT extends AbstractContentS
 		Assert.assertFalse(ticketOpt.get().isDownloaded());
 	}
 
-	@Test()
+	@Test
 	public void requestPrivateContentUrl_success_returnUrl() {
 		String url = contentStoreService.requestContentUrl(privateContentId, 3000);
 		String ticketId = url.substring(url.lastIndexOf("/") + 1);
@@ -228,7 +228,7 @@ public class DefaultContentStoreServiceInDatabaseModeIT extends AbstractContentS
 		Assert.assertNotNull(contentStream);
 	}
 
-	@Test()
+	@Test
 	public void requestNotFoundContentUrl_throwException() {
 		// content is not found throw error
 		String contentId = UUID.randomUUID().toString();
@@ -244,7 +244,7 @@ public class DefaultContentStoreServiceInDatabaseModeIT extends AbstractContentS
 		Assert.assertEquals(notFoundException2.getMessage(), "Cannot find content by id " + publicContentId);
 	}
 
-	@Test()
+	@Test
 	public void getPublicContentUrl_testAllCase() {
 		// with public content we can get public url
 		Assert.assertTrue(contentStoreService.findPublicContentUrl(publicContentId).isPresent());
@@ -254,7 +254,7 @@ public class DefaultContentStoreServiceInDatabaseModeIT extends AbstractContentS
 		Assert.assertFalse(contentStoreService.findPublicContentUrl("randomId").isPresent());
 	}
 
-	@Test()
+	@Test
 	public void exists_testAllCase() {
 		// assert true with exact id and persistent type.
 		Assert.assertTrue(contentStoreService.exists(publicContentId, Constants.PERSISTENT_TYPE_PUBLIC));
@@ -267,7 +267,7 @@ public class DefaultContentStoreServiceInDatabaseModeIT extends AbstractContentS
 		Assert.assertFalse(contentStoreService.exists("privateContentId", Constants.PERSISTENT_TYPE_PRIVATE));
 	}
 
-	@Test()
+	@Test
 	public void deleteById_testAllCase() {
 		Assert.assertTrue(contentService.findByContentIdAndPersistentType(privateContentId, Constants.PERSISTENT_TYPE_PRIVATE).isPresent());
 		Assert.assertTrue(contentService.findByContentIdAndPersistentType(publicContentId, Constants.PERSISTENT_TYPE_PUBLIC).isPresent());

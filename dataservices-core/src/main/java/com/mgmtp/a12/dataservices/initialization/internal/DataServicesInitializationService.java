@@ -31,22 +31,16 @@
  */
 package com.mgmtp.a12.dataservices.initialization.internal;
 
-import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.ApplicationEventPublisher;
 
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
-import com.mgmtp.a12.dataservices.initialization.BusinessModelInitializer;
 import com.mgmtp.a12.dataservices.initialization.InitializationService;
 import com.mgmtp.a12.dataservices.initialization.events.DataServicesCustomInitializationEvent;
 import com.mgmtp.a12.dataservices.query.indexing.QueryIndexManager;
 import com.mgmtp.a12.dataservices.migration.internal.MigrationRunner;
 import com.mgmtp.a12.dataservices.rpc.internal.RequestIdService;
-import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldTypeFactory;
-import com.mgmtp.a12.kernel.md.facade.DocumentRtCustomExtensionService;
-import com.mgmtp.a12.kernel.md.rt.api.ICustomConditionFactory;
 import com.mgmtp.a12.uaa.authentication.backend.BackendAuthenticationService;
 
 import lombok.NonNull;
@@ -73,9 +67,7 @@ public class DataServicesInitializationService implements InitializationService 
 	@NonNull private final BackendAuthenticationService backendAuthenticationService;
 	private final RequestIdService requestIdService;
 	private final Optional<JsonRpcInitializer> jsonRpcInitializer;
-	private final List<ICustomConditionFactory> customConditionFactories;
-	private final List<ICustomFieldTypeFactory> customFieldTypeFactories;
-	private final QueryIndexManager queryIndexManager;
+	private final Optional<QueryIndexManager> queryIndexManager;
 
 	/**
 	 * Runs all initialization steps.
@@ -84,7 +76,6 @@ public class DataServicesInitializationService implements InitializationService 
 	 * @event {@link DataServicesCustomInitializationEvent}
 	 */
 	@Override public void runInitialization() {
-		initializeKernel();
 		// This authentication is based on overriding UAA properties
 		// mgmtp.a12.uaa.authentication.backend.enabled=true
 		// mgmtp.a12.uaa.authentication.backend.grant-super-user-privileges.enabled=true
@@ -95,7 +86,7 @@ public class DataServicesInitializationService implements InitializationService 
 				importModelsConditionally();
 				runMigrationConditionally();
 
-				queryIndexManager.indexQuery();
+				queryIndexManager.ifPresent(QueryIndexManager::indexQuery);
 
 				try {
 					applicationEventPublisher.publishEvent(new DataServicesCustomInitializationEvent());
@@ -108,18 +99,6 @@ public class DataServicesInitializationService implements InitializationService 
 				return null;
 			}
 		);
-	}
-
-	private void initializeKernel() {
-		if (CollectionUtils.isNotEmpty(customConditionFactories) || CollectionUtils.isNotEmpty(customFieldTypeFactories)) {
-			DocumentRtCustomExtensionService kernelExtensionService = new DocumentRtCustomExtensionService();
-			if (customFieldTypeFactories != null) {
-				customFieldTypeFactories.forEach(kernelExtensionService::registerCustomFieldTypesV2);
-			}
-			if (customConditionFactories != null) {
-				customConditionFactories.forEach(kernelExtensionService::registerCustomConditionsV2);
-			}
-		}
 	}
 
 	private void importModelsConditionally() {

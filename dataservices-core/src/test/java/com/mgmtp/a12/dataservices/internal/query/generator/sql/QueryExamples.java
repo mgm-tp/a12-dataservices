@@ -34,21 +34,21 @@ package com.mgmtp.a12.dataservices.internal.query.generator.sql;
 import org.json.JSONObject;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mgmtp.a12.dataservices.query.topology.QueryLink;
-import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
 import com.mgmtp.a12.dataservices.query.constraint.logical.AndOperator;
 import com.mgmtp.a12.dataservices.query.constraint.logical.NotOperator;
 import com.mgmtp.a12.dataservices.query.constraint.logical.OrOperator;
 import com.mgmtp.a12.dataservices.query.constraint.matching.ExactMatchOperator;
 import com.mgmtp.a12.dataservices.query.constraint.matching.HasOperator;
 import com.mgmtp.a12.dataservices.query.constraint.range.DoubleRangeOperator;
+import com.mgmtp.a12.dataservices.query.topology.QueryLink;
+import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
+
+import tools.jackson.databind.ObjectMapper;
 
 public class QueryExamples {
 
 	@Test
-	public void listDocumentsFilter() throws JsonProcessingException {
+	public void listDocumentsFilter() {
 		// Liability == 3
 		QueryRoot oneFilter = QueryRoot.builder()
 			.targetDocumentModel("Contract")
@@ -119,7 +119,7 @@ public class QueryExamples {
 	}
 
 	@Test
-	public void listDocumentsWhereConditionsOnLinks() throws JsonProcessingException {
+	public void listDocumentsWhereConditionsOnLinks() {
 		QueryRoot contractsWithBPWithPostalAddressInBerlin = QueryRoot
 			.builder()
 			.targetDocumentModel("Contract")
@@ -190,7 +190,7 @@ public class QueryExamples {
 	}
 
 	@Test
-	public void listCandidates() throws JsonProcessingException {
+	public void listCandidates() {
 		QueryRoot policyHolderCandidatesWithoutContracts = QueryRoot
 			.builder()
 			.targetDocumentModel("BusinessPartner")
@@ -280,7 +280,7 @@ public class QueryExamples {
 	}
 
 	@Test
-	public void listLinks() throws JsonProcessingException {
+	public void listLinks() {
 		QueryRoot listBusinessPartnerLinksOfContract324 = QueryRoot
 			.builder()
 			.targetDocumentModel("BusinessPartner")
@@ -357,7 +357,7 @@ public class QueryExamples {
 	}
 
 	@Test
-	public void listCDDs() throws JsonProcessingException {
+	public void listCDDs() {
 		QueryRoot listBusinessPartnerLinksOfContract324 = QueryRoot
 			.builder()
 			.targetDocumentModel("BusinessPartner")
@@ -418,7 +418,7 @@ public class QueryExamples {
 		System.out.println(prettySerialize(listCdd324));
 	}
 
-	private String prettySerialize(QueryRoot query) throws JsonProcessingException {
+	private String prettySerialize(QueryRoot query) {
 		return new JSONObject(new ObjectMapper().writeValueAsString(query)).toString(4);
 	}
 }

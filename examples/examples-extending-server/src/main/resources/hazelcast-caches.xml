@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-License-Identifier: EUPL-1.2 OR LicenseRef-commercial
+
+  Copyright (c) 2012-2026 mgm technology partners GmbH
+
+  Dual License
+  ————————————
+  This source file is part of the mgm A12 Platform and available under
+  a choice of two different licenses:
+
+  1. Open-Source License – EUPL v1.2
+     You may redistribute and/or modify this file under the terms of the
+     European Union Public License, version 1.2 - see https://eupl.eu/.
+
+  2. Commercial License
+     Alternatively, you may obtain a commercial license from
+     mgm technology partners GmbH, that permits use of this software
+     under different terms (including support and maintenance services).
+
+     Please contact a12-license@mgm-tp.com for more information.
+
+  You must select and comply with exactly one of the above license options.
+
+  Warranty Disclaimer (applies to either option)
+  ——————————————————————————————————————————————
+  THIS SOFTWARE IS PROVIDED “AS IS” AND WITHOUT WARRANTY OF ANY KIND,
+  WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+  NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
+  LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
+-->
+<hazelcast xmlns="http://www.hazelcast.com/schema/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.hazelcast.com/schema/config https://www.hazelcast.com/schema/config/hazelcast-config-5.4.xsd">
+
+	<map name="default">
+		<statistics-enabled>true</statistics-enabled>
+		<time-to-live-seconds>1200</time-to-live-seconds>
+		<eviction size="4" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+
+	<map name="validationCache">
+		<time-to-live-seconds>3600</time-to-live-seconds>
+		<eviction size="20" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+
+	<map name="securedModelReadCache">
+		<time-to-live-seconds>36000</time-to-live-seconds>
+		<eviction size="15" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+
+	<map name="com.mgmtp.a12.dataservices.model.GenericModel">
+		<time-to-live-seconds>36000</time-to-live-seconds>
+		<eviction size="5" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+
+	<map name="com.mgmtp.a12.kernel.md.model.api.IDocumentModel">
+		<time-to-live-seconds>36000</time-to-live-seconds>
+		<eviction size="5" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+
+	<map name="com.mgmtp.a12.dataservices.relationship.model.RelationshipModel">
+		<time-to-live-seconds>36000</time-to-live-seconds>
+		<eviction size="5" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+
+	<map name="com.mgmtp.a12.dataservices.cdd.jms.internal.ComposeDocumentModel">
+		<time-to-live-seconds>36000</time-to-live-seconds>
+		<eviction size="10" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+
+	<map name="documentModelIndexedFieldsCache">
+		<time-to-live-seconds>0</time-to-live-seconds>
+		<eviction size="5" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+
+	<map name="documentModelIsIndexedFieldCache">
+		<time-to-live-seconds>0</time-to-live-seconds>
+		<eviction size="10" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+
+	<map name="modelGraphCache">
+		<time-to-live-seconds>86400</time-to-live-seconds>
+		<eviction size="5" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+	</map>
+
+	<map name="modelSubTypesMapCache">
+		<time-to-live-seconds>86400</time-to-live-seconds>
+		<eviction size="5" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+
+	<map name="userCache">
+		<time-to-live-seconds>0</time-to-live-seconds>
+		<eviction size="5" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+	</map>
+
+	<map name="tokenCache">
+		<time-to-live-seconds>86400</time-to-live-seconds>
+		<eviction size="1" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+	</map>
+
+	<map name="roleMapping">
+		<time-to-live-seconds>86400</time-to-live-seconds>
+		<eviction size="4" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+	</map>
+
+	<map name="com.mgmtp.a12.dataservices.document.internal.entity.DocumentEntity">
+		<time-to-live-seconds>3600</time-to-live-seconds>
+		<eviction size="50" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+
+	<map name="com.mgmtp.a12.dataservices.relationship.persistence.internal.jpa.entity.RelationshipLinkEntity">
+		<time-to-live-seconds>3600</time-to-live-seconds>
+		<eviction size="20" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+
+	<map name="com.mgmtp.a12.dataservices.relationship.persistence.internal.jpa.entity.RelationshipRoleEntity">
+		<time-to-live-seconds>3600</time-to-live-seconds>
+		<eviction size="20" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+
+	<map name="com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity.ModelEntity">
+		<time-to-live-seconds>0</time-to-live-seconds>
+		<eviction size="15" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+
+	<map name="com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity.ModelHeaderEntity">
+		<time-to-live-seconds>0</time-to-live-seconds>
+		<eviction size="5" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+	<map name="com.mgmtp.a12.dataservices.query.indexing.internal.persistence.entity.ModelFieldEntity">
+		<time-to-live-seconds>0</time-to-live-seconds>
+		<eviction size="20" eviction-policy="LFU" max-size-policy="USED_HEAP_SIZE"/>
+		<backup-count>0</backup-count>
+		<async-backup-count>0</async-backup-count>
+	</map>
+</hazelcast>

@@ -38,7 +38,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Generated;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -48,27 +47,6 @@ import lombok.ToString;
  */
 @Data @NoArgsConstructor @AllArgsConstructor
 public class AttachmentHeaderSpec {
-
-	/**
-	 * Deprecated convenience constructor for legacy deserialization.
-	 * Prefer using the builder.
-	 *
-	 * @param attachmentId The unique attachment identifier; may be null if not yet persisted.
-	 * @param filename Original file name; may be null.
-	 * @param mimeType MIME type of the content; may be null.
-	 * @param size Size in bytes; may be null.
-	 * @param annotations Optional application-specific annotations; may be null or empty.
-	 * @deprecated Use {@link AttachmentHeaderSpec()} and setters or the Lombok builder. This constructor will be removed in the next breaking version.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	@Generated
-	public AttachmentHeaderSpec(final String attachmentId, final String filename, final String mimeType, final Long size, final List<AttachmentAnnotation> annotations) {
-		this.attachmentId = attachmentId;
-		this.filename = filename;
-		this.mimeType = mimeType;
-		this.size = size;
-		this.annotations = annotations;
-	}
 
 	private String attachmentId;
 	private String filename;

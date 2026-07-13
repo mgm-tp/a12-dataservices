@@ -49,8 +49,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeFactory;
 import com.mgmtp.a12.dataservices.TestHeader;
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
@@ -98,7 +98,7 @@ public class OtherDefaultDocumentServiceTest extends AbstractDefaultDocumentServ
 		QueryPage<Object> queryResult = QueryPage.of(List.of(documentTreeResult), 1, 0, 10, null);
 
 		doReturn(queryResult).when(queryService).query(any(), any());
-		doReturn(kernelDocument).when(documentSupport).convertJSONToDocument(any(), any());
+		doReturn(kernelDocument).when(documentSupport).convertJSONToDocument(ArgumentMatchers.anyString(), ArgumentMatchers.any(java.io.Reader.class));
 		doReturn(dataServicesDocument).when(dataServicesDocumentFactory).newDataServicesDocument(kernelDocument);
 
 		defaultDocumentService.load(docRef);
@@ -121,6 +121,7 @@ public class OtherDefaultDocumentServiceTest extends AbstractDefaultDocumentServ
 		defaultDocumentService.delete(docRef);
 
 		verify(documentRepository, times(1)).delete(docRef);
+		verify(documentPermissionEvaluator, times(0)).checkDocumentDeletePermissionByModel(any());
 		verify(documentPermissionEvaluator, times(1)).checkDocumentDeletePermission(dataServicesDocument);
 		verify(modelPermissionEvaluator, times(1)).checkModelReadPermission(testModelName);
 		verify(attachmentHandler, times(1)).deleteAttachmentsForDocument(
@@ -148,7 +149,22 @@ public class OtherDefaultDocumentServiceTest extends AbstractDefaultDocumentServ
 		defaultDocumentService.delete(new DocumentReference("TestModel/1"));
 
 		verify(modelPermissionEvaluator, times(1)).checkModelReadPermission(any(String.class));
-		verifyNoInteractions(documentPermissionEvaluator, eventPublisher, attachmentHandler);
+		verify(documentPermissionEvaluator, times(1)).checkDocumentDeletePermissionByModel(any(String.class));
+		verifyNoInteractions(eventPublisher, attachmentHandler);
+	}
+
+	@Test
+	public void testDocumentDelete_noDocumentDeletePermissionByModel() {
+		when(documentRepository.findByDocumentReference(any())).thenReturn(Optional.empty());
+		doThrow(AccessDeniedException.class)
+			.when(documentPermissionEvaluator)
+			.checkDocumentDeletePermissionByModel(any(String.class));
+
+		assertThrows(AccessDeniedException.class, () -> defaultDocumentService.delete(new DocumentReference("TestModel/1")));
+
+		verify(modelPermissionEvaluator, times(1)).checkModelReadPermission(any(String.class));
+		verify(documentPermissionEvaluator, times(1)).checkDocumentDeletePermissionByModel(any(String.class));
+		verifyNoInteractions(eventPublisher, attachmentHandler);
 	}
 
 	@Test
@@ -180,6 +196,29 @@ public class OtherDefaultDocumentServiceTest extends AbstractDefaultDocumentServ
 		verify(modelPermissionEvaluator, times(1)).checkModelReadPermission(any(String.class));
 
 		verifyNoInteractions(eventPublisher, attachmentHandler);
+	}
+
+	@Test(description = "Should invoke uniqueConstraintValidator.deleteByDocRef with the correct docRef after a successful delete")
+	public void shouldInvokeUniqueConstraintDeleteByDocRefAfterSuccessfulDelete() {
+		DocumentReference docRef = new DocumentReference(testModelName, "1");
+		DocumentV2 kernelDocument = metadataUtils.createDocumentMetadata(DocumentV2.empty(testModelName), docRef, "admin", Instant.now(), null);
+		DataServicesDocument dataServicesDocument = createDataServicesDocument(docRef, kernelDocument);
+
+		when(documentRepository.supports(any())).thenReturn(true);
+		when(documentRepository.findByDocumentReference(any())).thenReturn(Optional.of(dataServicesDocument));
+
+		defaultDocumentService.delete(docRef);
+
+		verify(uniqueConstraintValidator, times(1)).deleteByDocRef(eq(docRef));
+	}
+
+	@Test(description = "Should not invoke uniqueConstraintValidator.deleteByDocRef when the document does not exist")
+	public void shouldNotInvokeUniqueConstraintDeleteByDocRefWhenDocumentNotFound() {
+		when(documentRepository.findByDocumentReference(any())).thenReturn(Optional.empty());
+
+		defaultDocumentService.delete(new DocumentReference(testModelName, "1"));
+
+		verifyNoInteractions(uniqueConstraintValidator);
 	}
 
 	@Test
@@ -270,6 +309,33 @@ public class OtherDefaultDocumentServiceTest extends AbstractDefaultDocumentServ
 		verifyNoInteractions(documentRepository, defaultRelationshipLinkService, documentRepository);
 
 		verify(documentRepository, times(0)).deleteAll(any(), Mockito.anyCollection());
+	}
+
+	/**
+	 * Tests that the exception message includes both the requested document count and the configured limit
+	 * when deleteAll is called with more documents than the configured limit.
+	 */
+	@Test(description = "Should include requested count and limit in exception message when deleteAll exceeds limit")
+	public void shouldIncludeRequestedCountAndLimitInMessageWhenDeleteAllExceedsLimit() {
+		// Given: multiDelete limit = 2, documentReferences with 5 entries
+		dataServicesCoreProperties.getDocuments().getMultiDelete().setLimit(2);
+		List<DocumentReference> fiveRefs = List.of(
+			new DocumentReference("Model1", "1"),
+			new DocumentReference("Model2", "2"),
+			new DocumentReference("Model3", "3"),
+			new DocumentReference("Model4", "4"),
+			new DocumentReference("Model5", "5")
+		);
+
+		// When / Then: catch InvalidInputException, assert getLongMessage() contains "5" and "2"
+		try {
+			defaultDocumentService.deleteAll(fiveRefs);
+			Assert.fail("Expected InvalidInputException to be thrown");
+		} catch (InvalidInputException e) {
+			String message = e.getLongMessage().getDefaultMessage();
+			Assert.assertTrue(message.contains("5"), "Message should contain requested count '5': " + message);
+			Assert.assertTrue(message.contains("2"), "Message should contain configured limit '2': " + message);
+		}
 	}
 
 	@Test void testLoadForModel_success() {

@@ -31,15 +31,14 @@
  */
 package com.mgmtp.a12.dataservices.relationship.spec;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
-import com.mgmtp.a12.dataservices.marshalling.DocumentReferenceToStringConverter;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -54,13 +53,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LinkDescriptor implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	@Serial private static final long serialVersionUID = 1L;
 
 	private String relationshipModel;
 	private List<RelationshipRoleSpec> entities = new ArrayList<>();
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	@JsonSerialize(converter = DocumentReferenceToStringConverter.class)
 	private DocumentReference linkDocumentDocRef;
 
 	/**
@@ -113,7 +111,7 @@ public class LinkDescriptor implements Serializable {
 	 */
 	@JsonIgnore
 	public RelationshipRoleSpec getSourceRole() {
-		return entities.get(0);
+		return entities.getFirst();
 	}
 
 	/**

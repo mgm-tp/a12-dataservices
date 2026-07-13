@@ -46,7 +46,7 @@ import static org.testng.AssertJUnit.assertTrue;
 })
 public class DocumentModelRoleBaseDisabledIT extends AbstractSpringContextIT {
 
-	@Test()
+	@Test
 	public void CRUDOnModelSuccessWithoutRole() {
 		final String withoutRoleDocumentModelString = removeRoleAnnotationFromBusinessPartnerModel();
 

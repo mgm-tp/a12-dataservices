@@ -54,7 +54,7 @@ public class RelationshipModelMismatchException extends RelationshipValidationEx
 	public RelationshipModelMismatchException(String linkId, String actual, String expected) {
 		super(new RelationshipValidationException.Builder(ExceptionCodes.RELATIONSHIP_MODEL_MISMATCH_EXCEPTION_CODE,
 			ExceptionKeys.RELATIONSHIP_LINK_VALIDATION_BAD_MODEL_ERROR_KEY, "Wrong Relationship Model",
-			String.format("Requested link [%s] is for relationship model [%s], but expected is [%s]", linkId, actual, expected)));
+			"Requested link [%s] is for relationship model [%s], but expected is [%s]".formatted(linkId, actual, expected)));
 		this.expected = expected;
 		this.actual = actual;
 	}

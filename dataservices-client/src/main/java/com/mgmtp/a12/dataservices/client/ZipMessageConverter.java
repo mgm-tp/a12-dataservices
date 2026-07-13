@@ -43,14 +43,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
 /**
  * Extract ZIP input stream into a file.
  *
  */
-@Service public class ZipMessageConverter extends AbstractHttpMessageConverter<ZipInputStream> {
+public class ZipMessageConverter extends AbstractHttpMessageConverter<ZipInputStream> {
 
 	/**
 	 * Creates a converter for the `application/zip` media type.

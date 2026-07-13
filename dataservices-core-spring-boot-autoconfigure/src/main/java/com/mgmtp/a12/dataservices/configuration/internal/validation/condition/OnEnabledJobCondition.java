@@ -32,6 +32,7 @@
 package com.mgmtp.a12.dataservices.configuration.internal.validation.condition;
 
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
+import com.mgmtp.a12.dataservices.configuration.condition.internal.AbstractDataServicesCondition;
 import com.mgmtp.a12.dataservices.configuration.validation.internal.ConfigurationMessage;
 
 public class OnEnabledJobCondition extends AbstractDataServicesCondition {

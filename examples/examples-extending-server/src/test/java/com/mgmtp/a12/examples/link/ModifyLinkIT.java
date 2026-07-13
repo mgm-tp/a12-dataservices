@@ -31,7 +31,9 @@
  */
 package com.mgmtp.a12.examples.link;
 
+import com.mgmtp.a12.dataservices.relationship.persistence.internal.jpa.repository.RelationshipLinkJpaRepository;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +43,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.constants.UserConstants;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
+import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
 import com.mgmtp.a12.dataservices.relationship.RelationshipLink;
 import com.mgmtp.a12.dataservices.relationship.operation.internal.AddLinkOperation;
 import com.mgmtp.a12.dataservices.relationship.operation.internal.ModifyLinkOperation;
@@ -53,11 +57,13 @@ import com.mgmtp.a12.dataservices.relationship.spec.RelationshipRoleSpec;
 import com.mgmtp.a12.examples.AbstractITBase;
 import com.mgmtp.a12.examples.authorization.SalesUserConfiguration;
 
-@ActiveProfiles({ SalesUserConfiguration.DATASERVICES_EXAMPLE_AUTHORIZATION_ENV, "dataservices-example-seed-data" })
+@ActiveProfiles({ SalesUserConfiguration.DATASERVICES_EXAMPLE_AUTHORIZATION_ENV, "dataservices-example-sme_workspace" })
 public class ModifyLinkIT extends AbstractITBase {
 
 	@Autowired private AddLinkOperation addLinkOperation;
 	@Autowired private ModifyLinkOperation modifyLinkOperation;
+	@Autowired private RelationshipLinkJpaRepository relationshipLinkJpaRepository;
+	@Autowired private DocumentSupport documentSupport;
 
 	protected DocumentReference contractDocRef;
 	protected DocumentReference businessPartnerDocRef;
@@ -73,8 +79,8 @@ public class ModifyLinkIT extends AbstractITBase {
 			"/model/document/" + CONTRACT_DOCUMENT_MODEL_NAME + ".json",
 			"/model/document/" + CO_INSURER_ADDITIONAL_FIELDS_MODEL_NAME + ".json",
 			"/model/relationship/" + CO_INSURER_RELATIONSHIP_MODEL_NAME + ".json"
-
 		);
+
 		contractDocRef = documentFunctions.createDocumentFromFileAndGetDocRef(CONTRACT_DOCUMENT_MODEL_NAME, "link/Contract.json");
 		businessPartnerDocRef = documentFunctions.createDocumentFromFileAndGetDocRef(BUSINESS_PARTNER_DOCUMENT_MODEL_NAME, "link/BusinessPartnerSuper.json");
 		businessPartnerDocRef2 = documentFunctions.createDocumentFromFileAndGetDocRef(BUSINESS_PARTNER_DOCUMENT_MODEL_NAME, "link/BusinessPartnerSuper.json");
@@ -105,14 +111,16 @@ public class ModifyLinkIT extends AbstractITBase {
 		JsonNode updatedLinkDoc = createLinkDocument(updatedValue);
 
 		if (withLinkDocRef) {
-			updatedLinkDoc = objectMapper.valueToTree(
-				documentService.load(link.getLinkDocumentDocRef()).get()
-					.getKernelDocument()
-					.withFieldValue("/additionalFields/since", updatedValue));
+			DocumentV2 kernelDocument = documentService.load(link.getLinkDocumentDocRef()).get()
+				.getKernelDocument()
+				.withFieldValue("/additionalFields/since", updatedValue);
+			StringWriter writer = new StringWriter();
+			documentSupport.convertDocumentToJSON(kernelDocument, writer);
+			updatedLinkDoc = JACKSON_2_OBJECT_MAPPER.readTree(writer.toString());
 		}
 
 		modifyLinkOperation.rpc(
-			new RelationshipLinkSpec(linkDescriptor, original.getId()),
+			RelationshipLinkSpec.builder().linkDescriptor(linkDescriptor).id(original.getId()).build(),
 			updatedLinkDoc
 		);
 
@@ -141,7 +149,7 @@ public class ModifyLinkIT extends AbstractITBase {
 	}
 
 	protected JsonNode createLinkDocument(String value) {
-		JsonNode rootGroup = objectMapper.createObjectNode().put("since", value);
-		return objectMapper.createObjectNode().set("additionalFields", rootGroup);
+		JsonNode rootGroup = JACKSON_2_OBJECT_MAPPER.createObjectNode().put("since", value);
+		return JACKSON_2_OBJECT_MAPPER.createObjectNode().set("additionalFields", rootGroup);
 	}
 }

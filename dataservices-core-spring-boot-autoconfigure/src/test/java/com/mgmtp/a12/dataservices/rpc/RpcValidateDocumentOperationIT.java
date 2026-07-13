@@ -45,7 +45,7 @@ import com.mgmtp.a12.dataservices.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
 import com.mgmtp.a12.dataservices.constants.PathConstants;
 import com.mgmtp.a12.dataservices.constants.UserConstants;
-import com.mgmtp.a12.dataservices.document.operation.validate.DocumentValidationError;
+import com.mgmtp.a12.dataservices.document.DocumentValidationResult;
 import com.mgmtp.a12.kernel.md.rt.api.IMessage;
 
 public class RpcValidateDocumentOperationIT extends AbstractSpringContextIT {
@@ -67,22 +67,22 @@ public class RpcValidateDocumentOperationIT extends AbstractSpringContextIT {
 	@Test
 	public void testValidFullDocument() throws IOException {
 		JSONArray jsonArray = initializeRpcRequest(false, VALIDATION_VALID_FULL_DOCUMENT);
-		List<DocumentValidationError> validationErrors = dispatchAndAssertRequest(jsonArray.toString());
+		List<DocumentValidationResult> validationErrors = dispatchAndAssertRequest(jsonArray.toString());
 		Assert.assertTrue(validationErrors.isEmpty());
 	}
 
 	@Test
 	public void testInvalidFullDocument() throws IOException {
 		JSONArray jsonArray = initializeRpcRequest(false, VALIDATION_INVALID_FULL_DOCUMENT);
-		List<DocumentValidationError> validationErrors = dispatchAndAssertRequest(jsonArray.toString());
+		List<DocumentValidationResult> validationErrors = dispatchAndAssertRequest(jsonArray.toString());
 		Assert.assertEquals(validationErrors.size(), 2);
 
-		DocumentValidationError firstMessage = validationErrors.get(0);
-		Assert.assertEquals(firstMessage.getReferencedFields().size(), 8);
+		DocumentValidationResult firstMessage = validationErrors.getFirst();
+		Assert.assertEquals(firstMessage.getReferencedFieldsPointers().size(), 8);
 		Assert.assertEquals(firstMessage.getMessageType(), IMessage.MessageType.OMISSION_ERROR.name());
 
-		DocumentValidationError secondMessage = validationErrors.get(1);
-		Assert.assertEquals(secondMessage.getReferencedFields().size(), 8);
+		DocumentValidationResult secondMessage = validationErrors.get(1);
+		Assert.assertEquals(secondMessage.getReferencedFieldsPointers().size(), 8);
 		Assert.assertEquals(secondMessage.getMessageType(), IMessage.MessageType.OMISSION_ERROR.name());
 	}
 
@@ -92,55 +92,60 @@ public class RpcValidateDocumentOperationIT extends AbstractSpringContextIT {
 		documentObject.getJSONObject("BusinessPartnerRoot").getJSONArray("Attachment").getJSONObject(0).remove("attachment_id");
 
 		JSONArray jsonArray = initializeRpcRequest(false, documentObject);
-		List<DocumentValidationError> validationErrors = dispatchAndAssertRequest(jsonArray.toString());
+		List<DocumentValidationResult> validationErrors = dispatchAndAssertRequest(jsonArray.toString());
 		Assert.assertEquals(validationErrors.size(), 2);
 
-		DocumentValidationError firstMessage = validationErrors.get(0);
-		Assert.assertEquals(firstMessage.getReferencedFields().size(), 8);
+		DocumentValidationResult firstMessage = validationErrors.getFirst();
+		Assert.assertEquals(firstMessage.getReferencedFieldsPointers().size(), 8);
 		Assert.assertEquals(firstMessage.getMessageType(), IMessage.MessageType.OMISSION_ERROR.name());
 
-		DocumentValidationError secondMessage = validationErrors.get(1);
-		Assert.assertEquals(secondMessage.getReferencedFields().size(), 8);
+		DocumentValidationResult secondMessage = validationErrors.get(1);
+		Assert.assertEquals(secondMessage.getReferencedFieldsPointers().size(), 8);
 		Assert.assertEquals(secondMessage.getMessageType(), IMessage.MessageType.OMISSION_ERROR.name());
 	}
 
 	@Test
 	public void testEmptyFullDocument() throws IOException {
 		JSONArray jsonArray = initializeRpcRequest(false, new JSONObject());
-		List<DocumentValidationError> validationErrors = dispatchAndAssertRequest(jsonArray.toString());
+		List<DocumentValidationResult> validationErrors = dispatchAndAssertRequest(jsonArray.toString());
 		Assert.assertEquals(validationErrors.size(), 3);
 
 		validationErrors.forEach(validationError -> {
-			Assert.assertEquals(validationError.getReferencedFields().size(), 1);
+			Assert.assertEquals(validationError.getReferencedFieldsPointers().size(), 1);
 			Assert.assertEquals(validationError.getMessageType(), IMessage.MessageType.OMISSION_ERROR.name());
 
-			String base = "/BusinessPartnerRoot[1]";
-			Assert.assertListContainsObject(List.of(base + "/Name[1]", base + "/Industry[1]", base + "/CustomerDiscount[1]"), validationError.getReferencedFields().get(0), "Field is not containing any of expected value");
+			Assert.assertListContainsObject(
+				List.of(
+					"/BusinessPartnerRoot/Name",
+					"/BusinessPartnerRoot/Industry",
+					"/BusinessPartnerRoot/CustomerDiscount"),
+				validationError.getReferencedFieldsPointers().getFirst(),
+				"Field is not containing any of expected value");
 		});
 	}
 
 	@Test
 	public void testEmptyPartialDocument() throws IOException {
 		JSONArray jsonArray = initializeRpcRequest(true, new JSONObject());
-		List<DocumentValidationError> validationErrors = dispatchAndAssertRequest(jsonArray.toString());
+		List<DocumentValidationResult> validationErrors = dispatchAndAssertRequest(jsonArray.toString());
 		Assert.assertTrue(validationErrors.isEmpty());
 	}
 
 	@Test
 	public void testValidPartialDocument() throws IOException {
 		JSONArray requestObject = initializeRpcRequest(true, VALIDATION_VALID_PARTIAL_DOCUMENT);
-		List<DocumentValidationError> validationErrors = dispatchAndAssertRequest(requestObject.toString());
+		List<DocumentValidationResult> validationErrors = dispatchAndAssertRequest(requestObject.toString());
 		Assert.assertTrue(validationErrors.isEmpty());
 	}
 
 	@Test
 	public void testInvalidPartialDocument() throws IOException {
 		JSONArray requestObject = initializeRpcRequest(true, VALIDATION_INVALID_PARTIAL_DOCUMENT);
-		List<DocumentValidationError> validationErrors = dispatchAndAssertRequest(requestObject.toString());
+		List<DocumentValidationResult> validationErrors = dispatchAndAssertRequest(requestObject.toString());
 		Assert.assertEquals(validationErrors.size(), 1);
 
-		DocumentValidationError firstMessage = validationErrors.get(0);
-		Assert.assertEquals(firstMessage.getReferencedFields().size(), 8);
+		DocumentValidationResult firstMessage = validationErrors.getFirst();
+		Assert.assertEquals(firstMessage.getReferencedFieldsPointers().size(), 8);
 		Assert.assertEquals(firstMessage.getMessageType(), IMessage.MessageType.OMISSION_ERROR.name());
 	}
 
@@ -166,10 +171,10 @@ public class RpcValidateDocumentOperationIT extends AbstractSpringContextIT {
 		return requestArray;
 	}
 
-	private List<DocumentValidationError> dispatchAndAssertRequest(String request) throws IOException {
+	private List<DocumentValidationResult> dispatchAndAssertRequest(String request) throws IOException {
 		List<JsonRpc2Response> results = sendRpcRequest(request);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(results.size(), 1);
-		return Arrays.asList(objectMapper.treeToValue(results.get(0).getResult(), DocumentValidationError[].class));
+		return Arrays.asList(objectMapper.treeToValue(results.getFirst().getResult(), DocumentValidationResult[].class));
 	}
 }

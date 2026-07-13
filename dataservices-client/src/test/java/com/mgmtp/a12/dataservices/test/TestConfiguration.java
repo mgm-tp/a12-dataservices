@@ -34,7 +34,8 @@ package com.mgmtp.a12.dataservices.test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.mgmtp.a12.dataservices.client.rpc.RequestBuilderFactory;
 
 @Configuration
@@ -42,7 +43,7 @@ public class TestConfiguration {
 
 	@Bean
 	public ObjectMapper objectMapper() {
-		return new ObjectMapper();
+		return JsonMapper.builder().build();
 	}
 
 	@Bean

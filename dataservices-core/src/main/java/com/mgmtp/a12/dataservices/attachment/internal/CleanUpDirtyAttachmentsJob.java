@@ -80,7 +80,7 @@ public class CleanUpDirtyAttachmentsJob implements Job {
 		} catch (BaseException e) {
 			if (e.isRecoverable()) {
 				if (dirtyAttachment.getExecCount() > dataServicesCoreProperties.getAttachments().getCleanup().getRetry().getMax()) {
-					log.error(String.format("Maximum retry-count reached for dirty attachment %s. Last error is %s", header.getAttachmentId(), e.getMessage()),
+					log.error("Maximum retry-count reached for dirty attachment %s. Last error is %s".formatted(header.getAttachmentId(), e.getMessage()),
 						e);
 					dirtyAttachmentService.removeFromDirtyList(header);
 				} else {
@@ -89,12 +89,12 @@ public class CleanUpDirtyAttachmentsJob implements Job {
 				}
 			} else {
 				log.error(
-					String.format("Unrecoverable error during processing of dirty attachment %s. The error is %s", header.getAttachmentId(), e.getMessage()),
+					"Unrecoverable error during processing of dirty attachment %s. The error is %s".formatted(header.getAttachmentId(), e.getMessage()),
 					e);
 				dirtyAttachmentService.removeFromDirtyList(header);
 			}
 		} catch (Exception e) {
-			log.error(String.format("Unknown error during processing of dirty attachment %s. The error is %s", header.getAttachmentId(), e.getMessage()),
+			log.error("Unknown error during processing of dirty attachment %s. The error is %s".formatted(header.getAttachmentId(), e.getMessage()),
 				e);
 			dirtyAttachmentService.removeFromDirtyList(header);
 		}

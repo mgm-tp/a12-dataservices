@@ -2,7 +2,7 @@
   "header": {
     "id": "ContractCDM",
     "modelType": "document",
-    "modelVersion": "28.4.0",
+    "modelVersion": "29.2.0",
     "locales": [
       {
         "code": "en"
@@ -36,25 +36,21 @@
     ],
     "modelReferences": [
       {
-        "alias": "Contract",
         "modelType": "document",
         "purpose": "include",
         "reference": "Contract"
       },
       {
-        "alias": "BusinessPartnerSuper",
         "modelType": "document",
         "purpose": "include",
         "reference": "BusinessPartnerSuper"
       },
       {
-        "alias": "CoInsuredAdditionalFields",
         "modelType": "document",
         "purpose": "include",
         "reference": "CoInsuredAdditionalFields"
       },
       {
-        "alias": "Address",
         "modelType": "document",
         "purpose": "include",
         "reference": "Address"
@@ -239,7 +235,6 @@
           "name": "ContractRoot",
           "Group": {
             "repeatability": 1,
-            "modelAlias": "Contract",
             "elements": [
               {
                 "type": "Field",
@@ -1541,7 +1536,10 @@
                   ]
                 }
               }
-            ]
+            ],
+            "includeConfig": {
+              "reference": "Contract"
+            }
           }
         },
         {
@@ -1575,7 +1573,6 @@
                 "name": "BusinessPartnerRoot",
                 "Group": {
                   "repeatability": 1,
-                  "modelAlias": "BusinessPartnerSuper",
                   "elements": [
                     {
                       "type": "Group",
@@ -2235,7 +2232,10 @@
                         ]
                       }
                     }
-                  ]
+                  ],
+                  "includeConfig": {
+                    "reference": "BusinessPartnerSuper"
+                  }
                 }
               },
               {
@@ -2279,7 +2279,6 @@
                       "name": "AddressRoot",
                       "Group": {
                         "repeatability": 1,
-                        "modelAlias": "Address",
                         "elements": [
                           {
                             "type": "Field",
@@ -2517,7 +2516,10 @@
                               ]
                             }
                           }
-                        ]
+                        ],
+                        "includeConfig": {
+                          "reference": "Address"
+                        }
                       }
                     },
                     {
@@ -2749,7 +2751,6 @@
                       "name": "AddressRoot",
                       "Group": {
                         "repeatability": 1,
-                        "modelAlias": "Address",
                         "elements": [
                           {
                             "type": "Field",
@@ -2987,7 +2988,10 @@
                               ]
                             }
                           }
-                        ]
+                        ],
+                        "includeConfig": {
+                          "reference": "Address"
+                        }
                       }
                     },
                     {
@@ -3473,7 +3477,6 @@
                 "name": "BusinessPartnerRoot",
                 "Group": {
                   "repeatability": 1,
-                  "modelAlias": "BusinessPartnerSuper",
                   "elements": [
                     {
                       "type": "Group",
@@ -4133,7 +4136,10 @@
                         ]
                       }
                     }
-                  ]
+                  ],
+                  "includeConfig": {
+                    "reference": "BusinessPartnerSuper"
+                  }
                 }
               },
               {
@@ -4149,7 +4155,6 @@
                       "name": "CoInsuredRoot",
                       "Group": {
                         "repeatability": 1,
-                        "modelAlias": "CoInsuredAdditionalFields",
                         "elements": [
                           {
                             "type": "Field",
@@ -4283,7 +4288,10 @@
                               ]
                             }
                           }
-                        ]
+                        ],
+                        "includeConfig": {
+                          "reference": "CoInsuredAdditionalFields"
+                        }
                       }
                     },
                     {

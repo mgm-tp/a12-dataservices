@@ -50,6 +50,7 @@ import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.rpc.RemoteOperation;
 import com.mgmtp.a12.dataservices.rpc.RpcExceptionSupport;
+import com.mgmtp.a12.dataservices.rpc.internal.RpcDocRefParser;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +60,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  * Possible changes are:
  *
- * * Altering the value of an existing field, including setting it to null.
+ * * Altering the value of an existing field, including setting it to null (which results in deletion).
  * * Adding a new field within an existing group.
  * * Adding a new field within a non-existent group, which implicitly creates all missing groups.
  * * Deleting a group or field.
@@ -105,8 +106,9 @@ public class PartialModifyDocumentOperation extends AbstractDocumentOperation {
 	 * @event {@link DocumentAfterRepositoryLoadEvent}
 	 */
 	@Transactional
-	public void rpc(@NonNull @JsonRpcParam("docRef") DocumentReference documentReference,
+	public void rpc(@JsonRpcParam("docRef") String docRef,
 		@NonNull @JsonRpcParam("documentPart") List<DocumentPart> documentPart, @JsonRpcParam("locale") Locale locale) {
+		DocumentReference documentReference = RpcDocRefParser.parseDocRef(docRef);
 		log.debug("{} called with parameters [docRef={}, documentPart={}, locale={}]",
 			CoreOperationConstants.PARTIAL_MODIFY_DOCUMENT_OPERATION,
 			anonymizer.apply(documentReference.toString()),
@@ -117,7 +119,7 @@ public class PartialModifyDocumentOperation extends AbstractDocumentOperation {
 			documentService.update(documentReference, documentPart, locale);
 		} catch (NotFoundException notFoundEx) {
 			throw RpcExceptionSupport.createException(notFoundEx.getCode(), ExceptionKeys.MODIFY_DOCUMENT_NOT_FOUND_ERROR_KEY,
-				String.format("Document [%s] was not found", documentReference),
+				"Document [%s] was not found".formatted(documentReference),
 				notFoundEx.getMessage(), RemoteOperation.RemoteOperationHelper.getOperationId(this.getClass()));
 		}
 	}

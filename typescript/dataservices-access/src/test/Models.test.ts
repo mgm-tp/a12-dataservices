@@ -32,9 +32,13 @@
 import { deepEqual, notStrictEqual, strictEqual } from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
-import { isModelInstance } from "@com.mgmtp.a12.base/base-model-api/lib/main/model/index.js";
-
+import type { ErrorPayload } from "../common/index.js";
 import type { DeleteModelsResponse } from "../model/index.js";
+import {
+	MODEL_UNIQUE_CONSTRAINT_VALIDATION_ERROR_CODE,
+	ModelsErrorResponse,
+	ModelsResponse
+} from "../model/index.js";
 import {
 	ModelsRequest,
 	ModelsResult,
@@ -42,7 +46,6 @@ import {
 	UpdateModelsRequest,
 	CreateModelsRequest
 } from "../model/index.js";
-import { ErrorPayload } from "../common/ErrorPayload.js";
 
 suite("Models Tests", () => {
 	const getModelResponseString = readFileSync(
@@ -60,9 +63,17 @@ suite("Models Tests", () => {
 			strictEqual(ModelsResult.isInstance(getModelResponse), true);
 		});
 
-		test("Check Model Parsing", () => {
-			const modelTest = JSON.parse(getModelResponseString);
-			strictEqual(isModelInstance(modelTest) || ErrorPayload.isInstance(modelTest), true);
+		test("Check Model Response", () => {
+			const getModelResponse = JSON.parse(getModelResponseString);
+			strictEqual(ModelsResponse.isInstance(getModelResponse), true, "Check valid model response");
+		});
+
+		test("Check Model Response - ErrorPayload", () => {
+			const errorResponse: ErrorPayload = {
+				errorType: "PRECONDITIONS_FAILED",
+				message: "Something is wrong"
+			};
+			strictEqual(ModelsResponse.isInstance(errorResponse), true, "Check error payload response");
 		});
 
 		test("Delete Models Response - OK", () => {
@@ -84,6 +95,51 @@ suite("Models Tests", () => {
 				message: "Something is wrong"
 			};
 			strictEqual(JSON.stringify(deleteModelResponse), JSON.stringify(expected));
+		});
+	});
+
+	suite("Model Unique Constraint Validation Error", () => {
+		const modelUniqueConstraintErrorResponse = {
+			level: "ERROR",
+			shortMessage: { key: "error.model.unique.short", default: "Model validation failed." },
+			longMessage: {
+				key: "error.model.unique.long",
+				default: "A unique constraint definition is invalid."
+			},
+			errorDetail: {
+				code: MODEL_UNIQUE_CONSTRAINT_VALIDATION_ERROR_CODE,
+				subsystem: "DATASERVICES",
+				time: "2024-01-01T00:00:00Z"
+			}
+		};
+
+		test("Recognizes model unique constraint validation error", () => {
+			strictEqual(
+				ModelsErrorResponse.isModelUniqueConstraintValidationError(
+					modelUniqueConstraintErrorResponse
+				),
+				true
+			);
+		});
+
+		test("Rejects a successful model response", () => {
+			strictEqual(ModelsErrorResponse.isModelUniqueConstraintValidationError(parsedModel), false);
+		});
+
+		test("Rejects an error with a different error code", () => {
+			const otherError = {
+				...modelUniqueConstraintErrorResponse,
+				errorDetail: { ...modelUniqueConstraintErrorResponse.errorDetail, code: "-32060" }
+			};
+			strictEqual(ModelsErrorResponse.isModelUniqueConstraintValidationError(otherError), false);
+		});
+
+		test("Rejects an error without errorDetail", () => {
+			const { errorDetail, ...errorWithoutDetail } = modelUniqueConstraintErrorResponse;
+			strictEqual(
+				ModelsErrorResponse.isModelUniqueConstraintValidationError(errorWithoutDetail),
+				false
+			);
 		});
 	});
 

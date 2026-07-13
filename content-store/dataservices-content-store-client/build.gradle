@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
 	api project(":content-store:dataservices-content-store-domain")
+	api libs.baseModelUtils
 	api libs.jaxbApi
 	api libs.springBootAutoconfigure
 	api libs.springBootConfigurationProcessor
@@ -13,15 +14,16 @@ dependencies {
 	implementation libs.uaaRestClient
 	implementation libs.mgmModelApi
 	implementation libs.modelMarshalling
-	implementation libs.jacksonJaxrsJsonProvider
 	implementation libs.jacksonDatabind
 	implementation libs.springCore
 	implementation libs.springContext
 	implementation libs.springWeb
-	implementation libs.julToSlf4j
+	implementation libs.slf4jJul
 	implementation libs.slf4jApi
 	implementation libs.commonsLang3
 	implementation libs.commonsCollections4
+
+	implementation libs.springBootStarterRestClient
 
 	testImplementation libs.springBootStarterWeb
 	testImplementation libs.springTest
@@ -37,6 +39,8 @@ dependencies {
 	testImplementation libs.mgmModelApi
 	testImplementation libs.mockitoCore
 	testImplementation libs.mockServer
+	// MockServer depends on commons-logging, Spring Boot 4 uses spring-jcl bridge
+	testRuntimeOnly libs.slf4jJcl
 
 }
 

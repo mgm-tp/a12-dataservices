@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
+	annotationProcessor libs.lombokMapstruct
 
 	implementation project(':dataservices-server-init-app')
 	implementation project(':dataservices-test-resources')

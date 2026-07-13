@@ -20,6 +20,7 @@ dependencies {
 	testImplementation libs.jsonassert
 	testImplementation libs.json
 	testImplementation project(':dataservices-test-resources')
+	testRuntimeOnly libs.slf4jJcl
 }
 
 springBoot {
@@ -30,41 +31,18 @@ test {
 	exclude('**/*IT.class')
 }
 
-tasks.addRule("prepare model bundles") { String taskName ->
-	def p = ~/prepareZip(.*)Bundle/
-	def m = p.matcher(taskName)
-	if (m.matches()) {
-		def name = m.group(1)
-		task "$taskName"(group: 'build', type: Zip) {
-			archiveFileName = "${name}.zip"
-			destinationDirectory = file("$projectDir/src/test/resources/bulk")
-			from "${project(':dataservices-test-resources').projectDir}/src/main/resources/models-bulkload/bulkload/$name"
-		}
-	}
-
-	p = ~/prepareJar(.*)Bundle/
-	m = p.matcher(taskName)
-	if (m.matches()) {
-		def name = m.group(1)
-		task "$taskName"(group: 'build', type: Zip) {
-			archiveFileName = "${name}.jar"
-			destinationDirectory = file("$projectDir/src/test/resources/bulk")
-			from "${project(':dataservices-test-resources').projectDir}/src/main/resources/models-bulkload/bulkload/$name"
-		}
+// Package pre-processed runtime models into jar and zip bundles for CLI integration tests.
+// Models are stored as pre-processed runtime versions (includes resolved, __meta injected).
+List<TaskProvider<Zip>> bundleTasks = ['Jar', 'Zip'].collect { type ->
+	tasks.register("prepare${type}modelsBundle", Zip) {
+		it.group = 'build'
+		it.archiveFileName = "models.${type.toLowerCase()}"
+		it.destinationDirectory = file("$projectDir/src/test/resources/bulk")
+		it.from("${project(':dataservices-test-resources').projectDir}/src/main/resources/models-bulkload/bulkload/models")
 	}
 }
 
-tasks.register("prepareModelBundles") {
-	group = "build"
-	dependsOn {
-		[
-				"prepareJarmodelsDuplicateBundle", "prepareZipmodelsDuplicateBundle",
-				"prepareJarmodelsBundle", "prepareZipmodelsBundle"
-		]
-	}
-}
-
-tasks.processTestResources.dependsOn "prepareModelBundles"
+tasks.processTestResources.dependsOn bundleTasks
 
 clean {
 	delete += fileTree(dir: "$projectDir/src/test/resources/bulk", includes: ["*.jar", "*.zip"]).files

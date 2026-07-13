@@ -41,8 +41,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.client.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.client.rpc.internal.JsonRpc2RequestBuilder;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
@@ -59,6 +57,7 @@ import com.mgmtp.a12.dataservices.relationship.spec.RelationshipRoleSpec;
 import com.mgmtp.a12.dataservices.rpc.JsonRpc2Response;
 
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.JsonNode;
 
 @Slf4j
 public class JsonRpc2ClientListIT extends AbstractSpringContextIT {
@@ -135,10 +134,10 @@ public class JsonRpc2ClientListIT extends AbstractSpringContextIT {
 		JsonRpc2RequestBuilder rpcRequestBuilder = requestBuilderFactory.newJsonRpc2RequestBuilder();
 		rpcRequestBuilder.addMethodCall(CoreOperationConstants.DELETE_LINK_OPERATION)
 			.id("removeLinkMutation")
-			.putParameter("linkRef", new RelationshipLinkSpec(linkDescriptor1, relationId1));
+			.putParameter("linkRef", RelationshipLinkSpec.builder().linkDescriptor(linkDescriptor1).id(relationId1).build());
 		rpcRequestBuilder.addMethodCall(CoreOperationConstants.DELETE_LINK_OPERATION)
 			.id("removeLinkMutation2")
-			.putParameter("linkRef", new RelationshipLinkSpec(linkDescriptor2, relationId2));
+			.putParameter("linkRef", RelationshipLinkSpec.builder().linkDescriptor(linkDescriptor2).id(relationId2).build());
 		handleError(rpcOperationsClient.invoke(rpcRequestBuilder.build()));
 
 		cleanUpByDocumentModel(CONTRACT_MODEL_NAME);
@@ -150,7 +149,7 @@ public class JsonRpc2ClientListIT extends AbstractSpringContextIT {
 	}
 
 	@Test
-	public void checkListOperation() throws JsonProcessingException {
+	public void checkListOperation() {
 		JsonRpc2RequestBuilder rpcRequest = requestBuilderFactory.newJsonRpc2RequestBuilder();
 		QueryRoot queryListLinks = QueryRoot.builder()
 			.projectionName(DOCUMENT_PROJECTION)

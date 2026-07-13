@@ -34,58 +34,42 @@ package com.mgmtp.a12.contentstore.client.exception;
 import java.io.IOException;
 import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
+import org.apache.commons.io.IOUtils;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.web.client.DefaultResponseErrorHandler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mgmtp.a12.connector.rest.ResponseErrorHandler;
 import com.mgmtp.a12.contentstore.client.localization.LocalizedEntry;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.ObjectMapper;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 /**
  * Convert exceptions from server into client exceptions. Read server-side exception message from header +exception+.
  */
-@Slf4j
-public class ContentStoreErrorHandler extends DefaultResponseErrorHandler {
+@Slf4j @RequiredArgsConstructor
+public class ContentStoreErrorHandler implements ResponseErrorHandler {
 
 	private static final String HEADER_EXCEPTION = "exception";
 
 	private final ObjectMapper objectMapper;
 
-	/**
-	 * Creates a {@link ContentStoreErrorHandler} that maps HTTP errors to typed client exceptions.
-	 *
-	 * @param objectMapper Object mapper used to parse server error payloads; must not be null.
-	 */
-	public ContentStoreErrorHandler(ObjectMapper objectMapper) {
-		this.objectMapper = objectMapper;
-	}
+	@Override public void handleError(HttpRequest request, ClientHttpResponse response) throws IOException {
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * Maps HTTP status codes to typed client exceptions and extracts optional localized messages from the response body.
-	 *
-	 * @param response HTTP response to analyze.
-	 * @throws IOException if reading the response fails.
-	 */
-	@Override public void handleError(ClientHttpResponse response) throws IOException {
-		HttpStatus statusCode = (HttpStatus) response.getStatusCode();
-		String body = new String(getResponseBody(response));
-		LocalizedEntry shortMessage = null;
-		LocalizedEntry longMessage = null;
-		ErrorLevel errorLevel = null;
-		try {
-			ServerErrorException clientException = objectMapper.readValue(body, ServerErrorException.class);
-			shortMessage = clientException.getShortMessage();
-			longMessage = clientException.getLongMessage();
-			errorLevel = clientException.getLevel();
+		HttpStatusCode statusCode = response.getStatusCode();
+		String body = IOUtils.toString(response.getBody());
 
-		} catch (IOException e) {
-			log.info("Can not read error response from server");
-		}
+		ServerErrorException clientException = objectMapper.readValue(body, ServerErrorException.class);
+		LocalizedEntry shortMessage = clientException.getShortMessage();
+		LocalizedEntry longMessage = clientException.getLongMessage();
+		ErrorLevel errorLevel = clientException.getLevel();
 
 		switch (statusCode) {
 		case NOT_FOUND:
@@ -141,5 +125,4 @@ public class ContentStoreErrorHandler extends DefaultResponseErrorHandler {
 		log.debug("Request failed: {}", restErrorDetail);
 		return restErrorDetail;
 	}
-
 }

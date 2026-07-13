@@ -33,6 +33,7 @@ package com.mgmtp.a12.dataservices.query;
 
 import com.mgmtp.a12.dataservices.internal.DocumentationDiagram;
 import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * The LinkAware interface defines the contract for objects that reference or operate on linked entities
@@ -54,7 +55,7 @@ import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
  * - Aggregation and ordering determine how linked entities are processed and structured.
  */
 @DocumentationDiagram
-public interface LinkAware {
+@OnlyForUsage public interface LinkAware {
 
 	/**
 	 * Retrieves the name of the relationship model defining the link between entities.

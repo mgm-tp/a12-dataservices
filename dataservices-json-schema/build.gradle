@@ -10,17 +10,17 @@ configurations {
 }
 
 dependencies {
+	annotationProcessor libs.lombokMapstruct
+
 	implementation project(':dataservices-core')
 	implementation libs.reflections
-	implementation libs.jacksonDatabind,
-			libs.jacksonAnnotations,
-			libs.jacksonDatatypeJdk8,
-			libs.jacksonDatatypeJsr310,
-			libs.victoolsJacksonJsonSchemaGenerator,
+	implementation libs.victoolsJacksonJsonSchemaGenerator,
 			libs.springDataCommons,
 			libs.slf4jApi,
-			libs.picocli
+			libs.springBootStarterPicocli
 	schema project(':dataservices-core')
+
+	testImplementation libs.testng
 }
 
 test {

@@ -52,7 +52,7 @@ public class RelationshipModel implements Model, Serializable {
 	/**
 	 * Semantic version of the relationship meta-model schema.
 	 */
-	public static final String VERSION = "3.0.0";
+	public static final String VERSION = "4.0.0";
 	/**
 	 * Meta-model name used to identify relationship meta definitions.
 	 */
@@ -85,11 +85,11 @@ public class RelationshipModel implements Model, Serializable {
 	 * @return the {@link EntityCharacteristics} for the opposite (target) role.
 	 */
 	public EntityCharacteristics getTargetEntityCharacteristicsFromSourceRole(String sourceRole) {
-		boolean firstEntity = getContent().getEntityCharacteristics().get(0).getRole().equalsIgnoreCase(sourceRole);
+		boolean firstEntity = getContent().getEntityCharacteristics().getFirst().getRole().equalsIgnoreCase(sourceRole);
 		if (firstEntity) {
 			return getContent().getEntityCharacteristics().get(1);
 		} else {
-			return getContent().getEntityCharacteristics().get(0);
+			return getContent().getEntityCharacteristics().getFirst();
 		}
 	}
 

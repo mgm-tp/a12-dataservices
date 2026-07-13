@@ -61,7 +61,8 @@ const loadThumbnailUrlRequest = {
 const loadThumbnailUrlsRequest = {
 	jsonrpc: "2.0",
 	method: "LOAD_THUMBNAIL_URLS_INTERNAL",
-	id: "LoadThumbnailUrlsInternal"
+	id: "LoadThumbnailUrlsInternal",
+	params: {}
 };
 
 export {

@@ -2,7 +2,7 @@
   "header": {
     "id": "ContractCDM",
     "modelType": "document",
-    "modelVersion": "28.4.0",
+    "modelVersion": "29.2.0",
     "locales": [
       {
         "code": "en"
@@ -36,25 +36,21 @@
     ],
     "modelReferences": [
       {
-        "alias": "Contract",
         "modelType": "document",
         "purpose": "include",
         "reference": "Contract"
       },
       {
-        "alias": "BusinessPartnerSuper",
         "modelType": "document",
         "purpose": "include",
         "reference": "BusinessPartnerSuper"
       },
       {
-        "alias": "CoInsuredAdditionalFields",
         "modelType": "document",
         "purpose": "include",
         "reference": "CoInsuredAdditionalFields"
       },
       {
-        "alias": "Address",
         "modelType": "document",
         "purpose": "include",
         "reference": "Address"
@@ -63,7 +59,9 @@
   },
   "content": {
     "modelInfo": {
-      "name": "ContractCDM"
+      "name": "ContractCDM",
+      "immutable": false,
+      "joinedModelsInfo": "ContractCDM-document-meta-data+Add"
     },
     "modelConfig": {
       "decimalSeparator": ".",
@@ -72,6 +70,153 @@
         "code": "en_US"
       }
     },
+    "typeDefinitions": [
+      {
+        "id": "typedef_da989e7e-fac0-49a8-8b77-e4c9dbef2ba7",
+        "name": "StatusType",
+        "fieldType": {
+          "type": "EnumerationType",
+          "EnumerationType": {
+            "values": [
+              {
+                "value": "dummy",
+                "label": [
+                  {
+                    "locale": "en",
+                    "text": "imitation"
+                  },
+                  {
+                    "locale": "en_US",
+                    "text": "imitation"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "attrape"
+                  }
+                ]
+              },
+              {
+                "value": "draft",
+                "label": [
+                  {
+                    "locale": "en",
+                    "text": "blueprint"
+                  },
+                  {
+                    "locale": "en_US",
+                    "text": "blueprint"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "entwurf"
+                  }
+                ]
+              },
+              {
+                "value": "reviewed",
+                "label": [
+                  {
+                    "locale": "en",
+                    "text": "examined"
+                  },
+                  {
+                    "locale": "en_US",
+                    "text": "examined"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "uberpruft"
+                  }
+                ]
+              },
+              {
+                "value": "reverted",
+                "label": [
+                  {
+                    "locale": "en",
+                    "text": "returned"
+                  },
+                  {
+                    "locale": "en_US",
+                    "text": "returned"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "zuruckgesetzt"
+                  }
+                ]
+              },
+              {
+                "value": "approved",
+                "label": [
+                  {
+                    "locale": "en",
+                    "text": "accepted"
+                  },
+                  {
+                    "locale": "en_US",
+                    "text": "accepted"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "genehmigt"
+                  }
+                ]
+              },
+              {
+                "value": "done",
+                "label": [
+                  {
+                    "locale": "en",
+                    "text": "finished"
+                  },
+                  {
+                    "locale": "en_US",
+                    "text": "finished"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "fertig"
+                  }
+                ]
+              },
+              {
+                "value": "deployed",
+                "label": [
+                  {
+                    "locale": "en",
+                    "text": "utilized"
+                  },
+                  {
+                    "locale": "en_US",
+                    "text": "utilized"
+                  },
+                  {
+                    "locale": "de",
+                    "text": "bereitgestelt"
+                  }
+                ]
+              }
+            ],
+            "categories": [
+              {
+                "name": "Status",
+                "values": [
+                  "Status",
+                  "Status",
+                  "Status",
+                  "Status",
+                  "Status",
+                  "Status",
+                  "Status"
+                ],
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    ],
     "modelRoot": {
       "rootGroups": [
         {
@@ -80,13 +225,1317 @@
           "name": "ContractRoot",
           "Group": {
             "repeatability": 1,
-            "modelAlias": "Contract"
+            "elements": [
+              {
+                "type": "Field",
+                "id": "include_71fc7_field_770f2",
+                "name": "ContractName",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Contract Name"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Vertragsname"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "include_71fc7_field_770f3",
+                "name": "ContractDescription",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Contract Description"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Vertragsbeschreibung"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "include_71fc7_field_828da",
+                "name": "LengthOfContract",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "zeroNotAllowed": true,
+                      "minValue": 1
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Length of contract"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Vertragsdauer"
+                    }
+                  ],
+                  "helperText": [
+                    {
+                      "locale": "en",
+                      "text": "Please enter the length of the contract in years. Please note that only whole years are allowed."
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "include_71fc7_field_29708",
+                "name": "ContractValue",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "minFractionalDigits": 2,
+                      "maxFractionalDigits": 2,
+                      "trait": "amount"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Contract Value"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Vertragswert"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "include_71fc7_field_edb7e",
+                "name": "Liability",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "minFractionalDigits": 2,
+                      "maxFractionalDigits": 2,
+                      "trait": "amount"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Amount of liability accepted"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Höhe der übernommenen Haftung"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "include_71fc7_field_502f7",
+                "name": "CostToCustomer",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "minFractionalDigits": 2,
+                      "maxFractionalDigits": 2,
+                      "trait": "amount"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Cost to Customer"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Kosten für den Kunden"
+                    }
+                  ],
+                  "helperText": [
+                    {
+                      "locale": "en",
+                      "text": "Field in Contract Document Model"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Feld im Vertragsdokumentmodell"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "include_71fc7_field_f8187",
+                "name": "NoOfCoInsuredCustomers",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Number of Co-Insured Customers"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Anzahl der mitversicherten Kunden"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "include_71fc7_field_c472d",
+                "name": "MaxDiscount",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Highest Discount amongst Co-Insured Policy Holders"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Höchster Rabatt unter den mitversicherten Versicherungsnehmern"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "include_71fc7_field_24959",
+                "name": "CostPerCoInsured",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "minFractionalDigits": 2,
+                      "maxFractionalDigits": 2,
+                      "trait": "amount"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Cost per Co-Insured Policy Holder"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Kosten pro mitversichertem Versicherungsnehmer"
+                    }
+                  ],
+                  "helperText": [
+                    {
+                      "locale": "en",
+                      "text": "Field in Contract Document Model"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Feld im Vertragsdokumentmodell"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "include_71fc7_field_a09a6",
+                "name": "Valid",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Valid"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Gültig"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "include_71fc7_field_48s48",
+                "name": "Type",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "Household",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Household Insurance"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Household Coverage"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Haushaltsversicherung"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Travel",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Travel Insurance"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Travel Coverage"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Reiseversicherung"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Health",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Health Insurance"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Health Coverage"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Krankenversicherung"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Liability",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Liability Insurance"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Liability Coverage"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Haftpflichtversicherung"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Insurance type"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Versicherungsart"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "include_71fc7_G2",
+                "name": "ContractDates",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "include_71fc7_G2F1",
+                      "name": "ContractStartDate",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateTimeType",
+                          "DateTimeType": {
+                            "format": "yyyy-MM-dd'T'HH:mm:ss"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_71fc7_G2F2",
+                      "name": "ContractEndDate",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateType",
+                          "DateType": {
+                            "format": "yyyy-MM-dd"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_71fc7_G2F3",
+                      "name": "ContractEndTime",
+                      "Field": {
+                        "fieldType": {
+                          "type": "TimeType",
+                          "TimeType": {
+                            "format": "HH:mm:ss"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_71fc7_G2F4",
+                      "name": "ContractReviewDate",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateFragmentType",
+                          "DateFragmentType": {
+                            "formatOfFragment": "yyyy"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_71fc7_G2F5",
+                      "name": "LastPremiumPaidDate",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateType",
+                          "DateType": {
+                            "format": "yyyy-MM-dd",
+                            "datePrecision": "YEAR_OPTIONAL"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_71fc7_G2F6",
+                      "name": "CoveragePeriod",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateRangeType",
+                          "DateRangeType": {
+                            "format": "yyyy-MM-dd",
+                            "rangeSeparator": "/"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "include_71fc7_group_7a5d0",
+                "name": "ChangeLog",
+                "Group": {
+                  "repeatability": 10000,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Change Log"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Change Log"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Änderungsprotokoll"
+                    }
+                  ],
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "include_71fc7_field_fbee9",
+                      "name": "ID",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType",
+                          "StringType": {
+                            "errorMessage": [
+                              {
+                                "locale": "en",
+                                "text": "Pattern is not met"
+                              },
+                              {
+                                "locale": "en_US",
+                                "text": "Pattern is not met"
+                              },
+                              {
+                                "locale": "de",
+                                "text": "Muster wird nicht erfüllt"
+                              }
+                            ],
+                            "pattern": "[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "ID"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "ID"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "ID"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_71fc7_field_f9502",
+                      "name": "Number",
+                      "Field": {
+                        "fieldType": {
+                          "type": "NumberType",
+                          "NumberType": {
+                            "zeroNotAllowed": true,
+                            "trait": "amount"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Number"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Number"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Nummer"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_71fc7_field_5b05b",
+                      "name": "ChangeTimestamp",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateType",
+                          "DateType": {
+                            "format": "yyyy-MM-dd"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Change Timestamp"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Change Timestamp"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Zeitstempel ändern"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_71fc7_field_e1113",
+                      "name": "Description",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Description"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Description"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Beschreibung"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_71fc7_field_ccb79",
+                      "name": "User",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "User"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "User"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Benutzer"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_71fc7_field_980c8",
+                      "name": "Status",
+                      "Field": {
+                        "fieldType": {
+                          "type": "TypeDefType",
+                          "TypeDefType": {
+                            "typeDefinitionId": "typedef_da989e7e-fac0-49a8-8b77-e4c9dbef2ba7"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Status"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Status"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Status"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_71fc7_field_18ea0",
+                      "name": "Priority",
+                      "Field": {
+                        "fieldType": {
+                          "type": "EnumerationType",
+                          "EnumerationType": {
+                            "values": [
+                              {
+                                "value": "trivial",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "negligible"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "lesser"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "banal"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "low",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "small"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "low"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "niedrig"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "medium",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "intermediate"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "medium"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "medium"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "high",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "large"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "high"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "hoch"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "critical",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "demanding"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "critical"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "kritisch"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Priority"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Priority"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Priorität"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "include_71fc7_group_61e6a",
+                      "name": "Changes",
+                      "Group": {
+                        "repeatability": 99,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Changes"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Changes"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Änderungen"
+                          }
+                        ],
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "include_71fc7_field_cdba0",
+                            "name": "ID",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType",
+                                "StringType": {
+                                  "errorMessage": [
+                                    {
+                                      "locale": "en",
+                                      "text": "Pattern is not met"
+                                    },
+                                    {
+                                      "locale": "en_US",
+                                      "text": "Pattern is not met"
+                                    },
+                                    {
+                                      "locale": "de",
+                                      "text": "Muster wird nicht erfüllt"
+                                    }
+                                  ],
+                                  "pattern": "[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "ID"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "ID"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "ID"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_71fc7_field_bf1d6",
+                            "name": "Title",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Title"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Title"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Titel"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_71fc7_field_7de61",
+                            "name": "Details",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Details"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Details"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Details"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_71fc7_field_69efa",
+                            "name": "Priority",
+                            "Field": {
+                              "fieldType": {
+                                "type": "EnumerationType",
+                                "EnumerationType": {
+                                  "values": [
+                                    {
+                                      "value": "trivial",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "negligible"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "lesser"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "banal"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "low",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "small"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "low"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "niedrig"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "medium",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "intermediate"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "medium"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "medium"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "high",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "large"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "high"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "hoch"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "critical",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "demanding"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "critical"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "kritisch"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Priority"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Priority"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Priorität"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_71fc7_field_1ecc4",
+                            "name": "Status",
+                            "Field": {
+                              "fieldType": {
+                                "type": "TypeDefType",
+                                "TypeDefType": {
+                                  "typeDefinitionId": "typedef_da989e7e-fac0-49a8-8b77-e4c9dbef2ba7"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Status"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Status"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Status"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_71fc7_field_3695e",
+                            "name": "LastModified",
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateType",
+                                "DateType": {
+                                  "format": "dd.MM.yyyy"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Last Modified"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Last Modified"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Zuletzt geändert"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Group",
+                            "id": "include_71fc7_group_c4a35",
+                            "name": "SubChanges",
+                            "Group": {
+                              "repeatability": 99,
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Sub Changes"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Sub Changes"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Unteränderungen"
+                                }
+                              ],
+                              "elements": [
+                                {
+                                  "type": "Field",
+                                  "id": "include_71fc7_field_26340",
+                                  "name": "ID",
+                                  "Field": {
+                                    "fieldType": {
+                                      "type": "StringType",
+                                      "StringType": {
+                                        "errorMessage": [
+                                          {
+                                            "locale": "en",
+                                            "text": "Pattern is not met"
+                                          },
+                                          {
+                                            "locale": "en_US",
+                                            "text": "Pattern is not met"
+                                          },
+                                          {
+                                            "locale": "de",
+                                            "text": "Muster wird nicht erfüllt"
+                                          }
+                                        ],
+                                        "pattern": "[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}"
+                                      }
+                                    },
+                                    "label": [
+                                      {
+                                        "locale": "en",
+                                        "text": "ID"
+                                      },
+                                      {
+                                        "locale": "en_US",
+                                        "text": "ID"
+                                      },
+                                      {
+                                        "locale": "de",
+                                        "text": "ID"
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Field",
+                                  "id": "include_71fc7_field_3c130",
+                                  "name": "TItle",
+                                  "Field": {
+                                    "fieldType": {
+                                      "type": "StringType"
+                                    },
+                                    "label": [
+                                      {
+                                        "locale": "en",
+                                        "text": "TItle"
+                                      },
+                                      {
+                                        "locale": "en_US",
+                                        "text": "TItle"
+                                      },
+                                      {
+                                        "locale": "de",
+                                        "text": "Titel"
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Field",
+                                  "id": "include_71fc7_field_89b43",
+                                  "name": "Details",
+                                  "Field": {
+                                    "fieldType": {
+                                      "type": "StringType"
+                                    },
+                                    "label": [
+                                      {
+                                        "locale": "en",
+                                        "text": "Details"
+                                      },
+                                      {
+                                        "locale": "en_US",
+                                        "text": "Details"
+                                      },
+                                      {
+                                        "locale": "de",
+                                        "text": "Details"
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Field",
+                                  "id": "include_71fc7_field_6df38",
+                                  "name": "Priority",
+                                  "Field": {
+                                    "fieldType": {
+                                      "type": "EnumerationType",
+                                      "EnumerationType": {
+                                        "values": [
+                                          {
+                                            "value": "trivial",
+                                            "label": [
+                                              {
+                                                "locale": "en",
+                                                "text": "negligible"
+                                              },
+                                              {
+                                                "locale": "en_US",
+                                                "text": "lesser"
+                                              },
+                                              {
+                                                "locale": "de",
+                                                "text": "banal"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "value": "low",
+                                            "label": [
+                                              {
+                                                "locale": "en",
+                                                "text": "small"
+                                              },
+                                              {
+                                                "locale": "en_US",
+                                                "text": "low"
+                                              },
+                                              {
+                                                "locale": "de",
+                                                "text": "niedrig"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "value": "medium",
+                                            "label": [
+                                              {
+                                                "locale": "en",
+                                                "text": "intermediate"
+                                              },
+                                              {
+                                                "locale": "en_US",
+                                                "text": "medium"
+                                              },
+                                              {
+                                                "locale": "de",
+                                                "text": "medium"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "value": "high",
+                                            "label": [
+                                              {
+                                                "locale": "en",
+                                                "text": "large"
+                                              },
+                                              {
+                                                "locale": "en_US",
+                                                "text": "high"
+                                              },
+                                              {
+                                                "locale": "de",
+                                                "text": "hoch"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "value": "critical",
+                                            "label": [
+                                              {
+                                                "locale": "en",
+                                                "text": "demanding"
+                                              },
+                                              {
+                                                "locale": "en_US",
+                                                "text": "critical"
+                                              },
+                                              {
+                                                "locale": "de",
+                                                "text": "kritisch"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "label": [
+                                      {
+                                        "locale": "en",
+                                        "text": "Priority"
+                                      },
+                                      {
+                                        "locale": "en_US",
+                                        "text": "Priority"
+                                      },
+                                      {
+                                        "locale": "de",
+                                        "text": "Priorität"
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Field",
+                                  "id": "include_71fc7_field_797cc",
+                                  "name": "Status",
+                                  "Field": {
+                                    "fieldType": {
+                                      "type": "TypeDefType",
+                                      "TypeDefType": {
+                                        "typeDefinitionId": "typedef_da989e7e-fac0-49a8-8b77-e4c9dbef2ba7"
+                                      }
+                                    },
+                                    "label": [
+                                      {
+                                        "locale": "en",
+                                        "text": "Status"
+                                      },
+                                      {
+                                        "locale": "en_US",
+                                        "text": "Status"
+                                      },
+                                      {
+                                        "locale": "de",
+                                        "text": "Status"
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Field",
+                                  "id": "include_71fc7_field_eb669",
+                                  "name": "CreatedAt",
+                                  "Field": {
+                                    "fieldType": {
+                                      "type": "DateFragmentType",
+                                      "DateFragmentType": {
+                                        "formatOfFragment": "yyyy-MM"
+                                      }
+                                    },
+                                    "label": [
+                                      {
+                                        "locale": "en",
+                                        "text": "Last Modified"
+                                      },
+                                      {
+                                        "locale": "en_US",
+                                        "text": "Last Modified"
+                                      },
+                                      {
+                                        "locale": "de",
+                                        "text": "Zuletzt geändert"
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "includeConfig": {
+              "reference": "Contract"
+            }
           }
         },
         {
           "type": "Group",
-          "name": "ContractBusinessPartner",
           "id": "group_f3eb0",
+          "name": "ContractBusinessPartner",
           "annotations": [
             {
               "name": "cdm.relationship",
@@ -110,17 +1559,679 @@
             "elements": [
               {
                 "type": "Group",
-                "name": "BusinessPartnerRoot",
                 "id": "include_c08c7",
+                "name": "BusinessPartnerRoot",
                 "Group": {
                   "repeatability": 1,
-                  "modelAlias": "BusinessPartnerSuper"
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "id": "include_c08c7_G77",
+                      "name": "Attachment",
+                      "Group": {
+                        "repeatability": 99,
+                        "usageType": "attachment",
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "include_c08c7_F21",
+                            "name": "original_filename",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_c08c7_F22",
+                            "name": "internal_filename",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_c08c7_F23",
+                            "name": "content",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType",
+                                "StringType": {
+                                  "lineBreaksPermitted": true,
+                                  "noValueValidation": true
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_c08c7_F24",
+                            "name": "attachment_id",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_c08c7_F25",
+                            "name": "size",
+                            "Field": {
+                              "fieldType": {
+                                "type": "NumberType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_c08c7_F26",
+                            "name": "mime_type",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_c08c7_F27",
+                            "name": "category",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_c08c7_F28",
+                            "name": "description",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Rule",
+                            "id": "include_c08c7_R29",
+                            "name": "AttachmentInternalFilenameRequired",
+                            "Rule": {
+                              "errorEntityRelPath": "../internal_filename",
+                              "errorCode": "ErrorR29",
+                              "errorCondition": "GroupFilled(RuleGroup) and FieldNotFilled(internal_filename)",
+                              "severity": "ERROR",
+                              "errorMessage": [
+                                {
+                                  "locale": "en",
+                                  "text": "Internal Error: Field $internal_filename$ of customType attachment is not filled."
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Internal Error: Field $internal_filename$ of customType attachment is not filled."
+                                }
+                              ],
+                              "guiPatterns": {
+                                "dynamicEnumerationRule": "false"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Rule",
+                            "id": "include_c08c7_R30",
+                            "name": "AttachmentMimeTypeRequired",
+                            "Rule": {
+                              "errorEntityRelPath": "../mime_type",
+                              "errorCode": "ErrorR30",
+                              "errorCondition": "GroupFilled(RuleGroup) and FieldNotFilled(mime_type)",
+                              "severity": "ERROR",
+                              "errorMessage": [
+                                {
+                                  "locale": "en",
+                                  "text": "Internal Error: Field $mime_type$ of customType attachment is not filled."
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Internal Error: Field $mime_type$ of customType attachment is not filled."
+                                }
+                              ],
+                              "guiPatterns": {
+                                "dynamicEnumerationRule": "false"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Rule",
+                            "id": "include_c08c7_R31",
+                            "name": "AttachmentIdOrContentFilled",
+                            "Rule": {
+                              "errorEntityRelPath": "../content",
+                              "errorCode": "ErrorR31",
+                              "errorCondition": "GroupFilled(RuleGroup) and NotExactlyOneFieldFilled(attachment_id, content)",
+                              "severity": "ERROR",
+                              "errorMessage": [
+                                {
+                                  "locale": "en",
+                                  "text": "Internal Error: Either attachment_id or content must be filled in a customType attachment, but not both."
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Internal Error: Either attachment_id or content must be filled in a customType attachment, but not both."
+                                }
+                              ],
+                              "guiPatterns": {
+                                "dynamicEnumerationRule": "false"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Rule",
+                            "id": "include_c08c7_R32",
+                            "name": "SizeOfContentFilled",
+                            "Rule": {
+                              "errorEntityRelPath": "../content",
+                              "errorCode": "ErrorR32",
+                              "errorCondition": "FieldFilled(content) and FieldNotFilled(size)",
+                              "severity": "ERROR",
+                              "errorMessage": [
+                                {
+                                  "locale": "en",
+                                  "text": "Internal Error: If the content is filled, the size must be also filled."
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Internal Error: If the content is filled, the size must be also filled."
+                                }
+                              ],
+                              "guiPatterns": {
+                                "dynamicEnumerationRule": "false"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_c08c7_field_fe6b2",
+                      "name": "Name",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Name"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_c08c7_field_d6580",
+                      "name": "Industry",
+                      "Field": {
+                        "fieldType": {
+                          "type": "EnumerationType",
+                          "EnumerationType": {
+                            "values": [
+                              {
+                                "value": "IT",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Information Technology"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Technology of Information"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Informationstechnologie"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Banking",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Banking"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Investment"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Bankwesen"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Accountancy",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Accountancy"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Bookkeeping"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Buchhaltung"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Healthcare",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Healthcare"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "HealthPrevention"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Gesundheitswesen"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Risk",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Risk"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Liability"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Versicherung"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Legal",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Legal"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Constitution"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Gesetzlich"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Commerce",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Commerce"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Business"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Handel"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Industry or business sector"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_c08c7_field_663d2",
+                      "name": "StartOfRelationship",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateType",
+                          "DateType": {
+                            "format": "yyyy-MM-dd"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Start of business relationship"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_c08c7_field_74a24",
+                      "name": "CustomerDiscount",
+                      "Field": {
+                        "fieldType": {
+                          "type": "EnumerationType",
+                          "EnumerationType": {
+                            "values": [
+                              {
+                                "value": "100%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "0%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "100%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "0%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "90%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "10%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "90%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "10%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "80%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "20%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "80%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "20%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "70%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "30%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "70%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "30%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "60%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "40%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "60%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "40%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "50%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "50%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "50%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "50%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "40%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "60%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "40%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "60%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "30%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "70%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "30%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "70%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "20%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "80%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "20%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "80%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "10%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "90%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "10%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "90%_Rabbat"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Customer Discount"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Kundenrabatt"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "include_c08c7_G2",
+                      "name": "Employment",
+                      "Group": {
+                        "repeatability": 1,
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "include_c08c7_field_3920",
+                            "name": "income",
+                            "Field": {
+                              "fieldType": {
+                                "type": "NumberType",
+                                "NumberType": {
+                                  "maxFractionalDigits": 2
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Income"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Einkommen"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_c08c7_field_1c326",
+                            "name": "tax",
+                            "Field": {
+                              "fieldType": {
+                                "type": "NumberType",
+                                "NumberType": {
+                                  "maxFractionalDigits": 2
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "tax"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Steuer"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Computation",
+                            "id": "include_c08c7_computation_8a180",
+                            "name": "TaxComputation",
+                            "Computation": {
+                              "computedFieldRelPath": "../tax",
+                              "computationAlternatives": [
+                                {
+                                  "operation": "RoundAccounting([income]*0.20,2)",
+                                  "precondition": "FieldFilled(income)"
+                                }
+                              ],
+                              "errorCodesToSuppress": [
+                                "MVK_INVALID_COMPARE_DEC_PLACES"
+                              ],
+                              "errorMessage": [
+                                {
+                                  "locale": "en",
+                                  "text": "Computation error for TaxComputation"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Berechnungsfehler für TaxComputation"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_c08c7_field_114de",
+                      "name": "PersonOrEntity",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Natural Person or Legal Entity"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "includeConfig": {
+                    "reference": "BusinessPartnerSuper"
+                  }
                 }
               },
               {
                 "type": "Field",
-                "name": "t_docRef",
                 "id": "field_53829",
+                "name": "t_docRef",
                 "Field": {
                   "fieldType": {
                     "type": "StringType"
@@ -129,8 +2240,8 @@
               },
               {
                 "type": "Group",
-                "name": "PartnerAddresses",
                 "id": "group_513ee",
+                "name": "PartnerAddresses",
                 "annotations": [
                   {
                     "name": "cdm.relationship",
@@ -158,7 +2269,251 @@
                       "name": "AddressRoot",
                       "Group": {
                         "repeatability": 1,
-                        "modelAlias": "Address"
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "include_4be24_field_a48cs",
+                            "name": "AddressType",
+                            "Field": {
+                              "fieldType": {
+                                "type": "EnumerationType",
+                                "EnumerationType": {
+                                  "values": [
+                                    {
+                                      "value": "Residential",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Residential"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Urban"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Wohnen"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "Commercial",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Commercial"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Retail"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Kommerziell"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "Other",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Other"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Another"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Andere"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Address type"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Address type"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Adresstyp"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_4be24_field_c51b9",
+                            "name": "Location",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Location"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Standort"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_4be24_field_7bc6c",
+                            "name": "Street",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Street"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Straßenadresse"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_4be24_field_38cf3",
+                            "name": "HouseNumber",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "House number"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Hausnummer"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_4be24_field_42965",
+                            "name": "City",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "City"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Stadt"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_4be24_field_623a3",
+                            "name": "PostCode",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Post Code"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Postleitzahl"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_4be24_field_804c7",
+                            "name": "Country",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Country"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Land"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_4be24_field_ce1e7",
+                            "name": "PostalAddress",
+                            "Field": {
+                              "fieldType": {
+                                "type": "ConfirmType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "This is the postal address"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Dies ist die Postanschrift"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Rule",
+                            "id": "include_4be24_rule_7c66e",
+                            "name": "MustContainCountry",
+                            "Rule": {
+                              "errorEntityRelPath": "../Country",
+                              "errorCode": "Error rule_7c66e",
+                              "errorCondition": "GroupFilled(RuleGroup) and FieldNotFilled(Country)",
+                              "severity": "ERROR",
+                              "errorMessage": [
+                                {
+                                  "locale": "en",
+                                  "text": "No country provided"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Kein Land angegeben"
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "includeConfig": {
+                          "reference": "Address"
+                        }
                       }
                     },
                     {
@@ -170,14 +2525,199 @@
                           "type": "StringType"
                         }
                       }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_513ee_group_8f4b1",
+                      "name": "__meta",
+                      "Group": {
+                        "repeatability": 1,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Meta"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Meta"
+                          }
+                        ],
+                        "usageType": "metadata",
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "group_513ee_field_1169c",
+                            "name": "docRef",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Document Reference"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Dokumentreferenz"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_513ee_field_cfb40",
+                            "name": "modelReference",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Document Model Reference"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Document Model-Referenz"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_513ee_field_17e3b",
+                            "name": "modelVersion",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Model Version"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Model-Version"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_513ee_field_cdaf9",
+                            "name": "creator",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Creator"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erstellt von"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_513ee_field_65672",
+                            "name": "createdAt",
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateTimeType",
+                                "DateTimeType": {
+                                  "format": "yyyy-MM-dd'T'HH:mm:ss"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Created At"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erstellt am"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_513ee_field_1fa32",
+                            "name": "modifier",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Modifier"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Bearbeitet von"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_513ee_field_5cd66",
+                            "name": "modifiedAt",
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateTimeType",
+                                "DateTimeType": {
+                                  "format": "yyyy-MM-dd'T'HH:mm:ss"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Modified At"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Bearbeitet am"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Group",
+                            "id": "group_513ee_group_4c9a1",
+                            "name": "extensions",
+                            "Group": {
+                              "repeatability": 1,
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Extensions"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erweiterungen"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
                     }
                   ]
                 }
               },
               {
                 "type": "Group",
-                "name": "PartnerPostalAddress",
                 "id": "group_368d1",
+                "name": "PartnerPostalAddress",
                 "annotations": [
                   {
                     "name": "cdm.relationship",
@@ -205,7 +2745,251 @@
                       "name": "AddressRoot",
                       "Group": {
                         "repeatability": 1,
-                        "modelAlias": "Address"
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "include_19e70_field_a48cs",
+                            "name": "AddressType",
+                            "Field": {
+                              "fieldType": {
+                                "type": "EnumerationType",
+                                "EnumerationType": {
+                                  "values": [
+                                    {
+                                      "value": "Residential",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Residential"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Urban"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Wohnen"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "Commercial",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Commercial"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Retail"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Kommerziell"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "Other",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Other"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Another"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Andere"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Address type"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Address type"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Adresstyp"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_19e70_field_c51b9",
+                            "name": "Location",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Location"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Standort"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_19e70_field_7bc6c",
+                            "name": "Street",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Street"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Straßenadresse"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_19e70_field_38cf3",
+                            "name": "HouseNumber",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "House number"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Hausnummer"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_19e70_field_42965",
+                            "name": "City",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "City"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Stadt"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_19e70_field_623a3",
+                            "name": "PostCode",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Post Code"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Postleitzahl"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_19e70_field_804c7",
+                            "name": "Country",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Country"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Land"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_19e70_field_ce1e7",
+                            "name": "PostalAddress",
+                            "Field": {
+                              "fieldType": {
+                                "type": "ConfirmType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "This is the postal address"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Dies ist die Postanschrift"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Rule",
+                            "id": "include_19e70_rule_7c66e",
+                            "name": "MustContainCountry",
+                            "Rule": {
+                              "errorEntityRelPath": "../Country",
+                              "errorCode": "Error rule_7c66e",
+                              "errorCondition": "GroupFilled(RuleGroup) and FieldNotFilled(Country)",
+                              "severity": "ERROR",
+                              "errorMessage": [
+                                {
+                                  "locale": "en",
+                                  "text": "No country provided"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Kein Land angegeben"
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "includeConfig": {
+                          "reference": "Address"
+                        }
                       }
                     },
                     {
@@ -220,8 +3004,8 @@
                     },
                     {
                       "type": "Computation",
-                      "name": "HasPostalAddressComp",
                       "id": "computation_d062f",
+                      "name": "HasPostalAddressComp",
                       "Computation": {
                         "computedFieldRelPath": "../HasPostalAddress",
                         "computationAlternatives": [
@@ -283,6 +3067,376 @@
                           }
                         ]
                       }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_368d1_group_8f4b1",
+                      "name": "__meta",
+                      "Group": {
+                        "repeatability": 1,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Meta"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Meta"
+                          }
+                        ],
+                        "usageType": "metadata",
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "group_368d1_field_1169c",
+                            "name": "docRef",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Document Reference"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Dokumentreferenz"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_368d1_field_cfb40",
+                            "name": "modelReference",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Document Model Reference"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Document Model-Referenz"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_368d1_field_17e3b",
+                            "name": "modelVersion",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Model Version"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Model-Version"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_368d1_field_cdaf9",
+                            "name": "creator",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Creator"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erstellt von"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_368d1_field_65672",
+                            "name": "createdAt",
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateTimeType",
+                                "DateTimeType": {
+                                  "format": "yyyy-MM-dd'T'HH:mm:ss"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Created At"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erstellt am"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_368d1_field_1fa32",
+                            "name": "modifier",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Modifier"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Bearbeitet von"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_368d1_field_5cd66",
+                            "name": "modifiedAt",
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateTimeType",
+                                "DateTimeType": {
+                                  "format": "yyyy-MM-dd'T'HH:mm:ss"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Modified At"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Bearbeitet am"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Group",
+                            "id": "group_368d1_group_4c9a1",
+                            "name": "extensions",
+                            "Group": {
+                              "repeatability": 1,
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Extensions"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erweiterungen"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_f3eb0_group_8f4b1",
+                "name": "__meta",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Meta"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Meta"
+                    }
+                  ],
+                  "usageType": "metadata",
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "group_f3eb0_field_1169c",
+                      "name": "docRef",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Document Reference"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Dokumentreferenz"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f3eb0_field_cfb40",
+                      "name": "modelReference",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Document Model Reference"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Document Model-Referenz"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f3eb0_field_17e3b",
+                      "name": "modelVersion",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Model Version"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Model-Version"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f3eb0_field_cdaf9",
+                      "name": "creator",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Creator"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erstellt von"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f3eb0_field_65672",
+                      "name": "createdAt",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateTimeType",
+                          "DateTimeType": {
+                            "format": "yyyy-MM-dd'T'HH:mm:ss"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Created At"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erstellt am"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f3eb0_field_1fa32",
+                      "name": "modifier",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Modifier"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bearbeitet von"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f3eb0_field_5cd66",
+                      "name": "modifiedAt",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateTimeType",
+                          "DateTimeType": {
+                            "format": "yyyy-MM-dd'T'HH:mm:ss"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Modified At"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bearbeitet am"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_f3eb0_group_4c9a1",
+                      "name": "extensions",
+                      "Group": {
+                        "repeatability": 1,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Extensions"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erweiterungen"
+                          }
+                        ]
+                      }
                     }
                   ]
                 }
@@ -292,8 +3446,8 @@
         },
         {
           "type": "Group",
-          "name": "ContractCoInsuredPartner",
           "id": "group_4bc78",
+          "name": "ContractCoInsuredPartner",
           "annotations": [
             {
               "name": "cdm.relationship",
@@ -317,27 +3471,1282 @@
             "elements": [
               {
                 "type": "Group",
-                "name": "BusinessPartnerRoot",
                 "id": "include_46ee3",
-                "Group": {
-                  "repeatability": 1,
-                  "modelAlias": "BusinessPartnerSuper"
-                }
-              },
-              {
-                "type": "Group",
-                "name": "relationship",
-                "id": "group_4da5e",
+                "name": "BusinessPartnerRoot",
                 "Group": {
                   "repeatability": 1,
                   "elements": [
                     {
                       "type": "Group",
-                      "name": "CoInsuredRoot",
-                      "id": "include_50c1e",
+                      "id": "include_46ee3_G77",
+                      "name": "Attachment",
+                      "Group": {
+                        "repeatability": 99,
+                        "usageType": "attachment",
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "include_46ee3_F21",
+                            "name": "original_filename",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_46ee3_F22",
+                            "name": "internal_filename",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_46ee3_F23",
+                            "name": "content",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType",
+                                "StringType": {
+                                  "lineBreaksPermitted": true,
+                                  "noValueValidation": true
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_46ee3_F24",
+                            "name": "attachment_id",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_46ee3_F25",
+                            "name": "size",
+                            "Field": {
+                              "fieldType": {
+                                "type": "NumberType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_46ee3_F26",
+                            "name": "mime_type",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_46ee3_F27",
+                            "name": "category",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_46ee3_F28",
+                            "name": "description",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Rule",
+                            "id": "include_46ee3_R29",
+                            "name": "AttachmentInternalFilenameRequired",
+                            "Rule": {
+                              "errorEntityRelPath": "../internal_filename",
+                              "errorCode": "ErrorR29",
+                              "errorCondition": "GroupFilled(RuleGroup) and FieldNotFilled(internal_filename)",
+                              "severity": "ERROR",
+                              "errorMessage": [
+                                {
+                                  "locale": "en",
+                                  "text": "Internal Error: Field $internal_filename$ of customType attachment is not filled."
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Internal Error: Field $internal_filename$ of customType attachment is not filled."
+                                }
+                              ],
+                              "guiPatterns": {
+                                "dynamicEnumerationRule": "false"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Rule",
+                            "id": "include_46ee3_R30",
+                            "name": "AttachmentMimeTypeRequired",
+                            "Rule": {
+                              "errorEntityRelPath": "../mime_type",
+                              "errorCode": "ErrorR30",
+                              "errorCondition": "GroupFilled(RuleGroup) and FieldNotFilled(mime_type)",
+                              "severity": "ERROR",
+                              "errorMessage": [
+                                {
+                                  "locale": "en",
+                                  "text": "Internal Error: Field $mime_type$ of customType attachment is not filled."
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Internal Error: Field $mime_type$ of customType attachment is not filled."
+                                }
+                              ],
+                              "guiPatterns": {
+                                "dynamicEnumerationRule": "false"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Rule",
+                            "id": "include_46ee3_R31",
+                            "name": "AttachmentIdOrContentFilled",
+                            "Rule": {
+                              "errorEntityRelPath": "../content",
+                              "errorCode": "ErrorR31",
+                              "errorCondition": "GroupFilled(RuleGroup) and NotExactlyOneFieldFilled(attachment_id, content)",
+                              "severity": "ERROR",
+                              "errorMessage": [
+                                {
+                                  "locale": "en",
+                                  "text": "Internal Error: Either attachment_id or content must be filled in a customType attachment, but not both."
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Internal Error: Either attachment_id or content must be filled in a customType attachment, but not both."
+                                }
+                              ],
+                              "guiPatterns": {
+                                "dynamicEnumerationRule": "false"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Rule",
+                            "id": "include_46ee3_R32",
+                            "name": "SizeOfContentFilled",
+                            "Rule": {
+                              "errorEntityRelPath": "../content",
+                              "errorCode": "ErrorR32",
+                              "errorCondition": "FieldFilled(content) and FieldNotFilled(size)",
+                              "severity": "ERROR",
+                              "errorMessage": [
+                                {
+                                  "locale": "en",
+                                  "text": "Internal Error: If the content is filled, the size must be also filled."
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Internal Error: If the content is filled, the size must be also filled."
+                                }
+                              ],
+                              "guiPatterns": {
+                                "dynamicEnumerationRule": "false"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_46ee3_field_fe6b2",
+                      "name": "Name",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Name"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_46ee3_field_d6580",
+                      "name": "Industry",
+                      "Field": {
+                        "fieldType": {
+                          "type": "EnumerationType",
+                          "EnumerationType": {
+                            "values": [
+                              {
+                                "value": "IT",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Information Technology"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Technology of Information"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Informationstechnologie"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Banking",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Banking"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Investment"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Bankwesen"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Accountancy",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Accountancy"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Bookkeeping"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Buchhaltung"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Healthcare",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Healthcare"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "HealthPrevention"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Gesundheitswesen"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Risk",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Risk"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Liability"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Versicherung"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Legal",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Legal"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Constitution"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Gesetzlich"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Commerce",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Commerce"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Business"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Handel"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Industry or business sector"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_46ee3_field_663d2",
+                      "name": "StartOfRelationship",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateType",
+                          "DateType": {
+                            "format": "yyyy-MM-dd"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Start of business relationship"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_46ee3_field_74a24",
+                      "name": "CustomerDiscount",
+                      "Field": {
+                        "fieldType": {
+                          "type": "EnumerationType",
+                          "EnumerationType": {
+                            "values": [
+                              {
+                                "value": "100%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "0%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "100%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "0%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "90%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "10%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "90%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "10%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "80%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "20%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "80%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "20%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "70%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "30%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "70%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "30%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "60%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "40%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "60%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "40%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "50%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "50%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "50%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "50%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "40%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "60%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "40%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "60%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "30%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "70%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "30%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "70%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "20%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "80%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "20%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "80%_Rabbat"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "10%",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "90%_Discount"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "10%"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "90%_Rabbat"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Customer Discount"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Kundenrabatt"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "include_46ee3_G2",
+                      "name": "Employment",
                       "Group": {
                         "repeatability": 1,
-                        "modelAlias": "CoInsuredAdditionalFields"
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "include_46ee3_field_3920",
+                            "name": "income",
+                            "Field": {
+                              "fieldType": {
+                                "type": "NumberType",
+                                "NumberType": {
+                                  "maxFractionalDigits": 2
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Income"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Einkommen"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_46ee3_field_1c326",
+                            "name": "tax",
+                            "Field": {
+                              "fieldType": {
+                                "type": "NumberType",
+                                "NumberType": {
+                                  "maxFractionalDigits": 2
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "tax"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Steuer"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Computation",
+                            "id": "include_46ee3_computation_8a180",
+                            "name": "TaxComputation",
+                            "Computation": {
+                              "computedFieldRelPath": "../tax",
+                              "computationAlternatives": [
+                                {
+                                  "operation": "RoundAccounting([income]*0.20,2)",
+                                  "precondition": "FieldFilled(income)"
+                                }
+                              ],
+                              "errorCodesToSuppress": [
+                                "MVK_INVALID_COMPARE_DEC_PLACES"
+                              ],
+                              "errorMessage": [
+                                {
+                                  "locale": "en",
+                                  "text": "Computation error for TaxComputation"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Berechnungsfehler für TaxComputation"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_46ee3_field_114de",
+                      "name": "PersonOrEntity",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Natural Person or Legal Entity"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "includeConfig": {
+                    "reference": "BusinessPartnerSuper"
+                  }
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_4da5e",
+                "name": "relationship",
+                "Group": {
+                  "repeatability": 1,
+                  "elements": [
+                    {
+                      "type": "Group",
+                      "id": "include_50c1e",
+                      "name": "CoInsuredRoot",
+                      "Group": {
+                        "repeatability": 1,
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "include_50c1e_field_aa07e",
+                            "name": "Name",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Name of Policy Holder"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Name of Policy Holder"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Name des Versicherungsnehmers"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_50c1e_field_d5f5f",
+                            "name": "ID",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              }
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_50c1e_field_d6580",
+                            "name": "Role",
+                            "Field": {
+                              "fieldType": {
+                                "type": "EnumerationType",
+                                "EnumerationType": {
+                                  "values": [
+                                    {
+                                      "value": "EXP",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Expert"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Third Party Expert"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Experte"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "CON",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Consultant"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Chief Consultant Officer"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Berater"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "LAW",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Barrister"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Attorney"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Anwalt"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "CUS",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Customer"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Client"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Kunde"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Role of co-insured partner"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Role of co-insured partner"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Rolle des mitversicherten Partners"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_50c1e_field_142e3",
+                            "name": "Percentage",
+                            "Field": {
+                              "fieldType": {
+                                "type": "NumberType",
+                                "NumberType": {
+                                  "minValue": 0,
+                                  "maxValue": 100,
+                                  "trait": "percent"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Percentage"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Percentage"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Prozentsatz"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "include_50c1e_field_2e8e0",
+                            "name": "SigningDate",
+                            "annotations": [
+                              {
+                                "name": "indexed",
+                                "value": "true"
+                              }
+                            ],
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateType",
+                                "DateType": {
+                                  "format": "yyyy-MM-dd"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Signing Date"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Signing Date"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Datum der Unterzeichnung"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Computation",
+                            "id": "include_50c1e_computation_65146",
+                            "name": "AddID",
+                            "Computation": {
+                              "computedFieldRelPath": "../ID",
+                              "computationAlternatives": [
+                                {
+                                  "operation": "\"0000-0000-0000-0000\""
+                                }
+                              ],
+                              "errorMessage": [
+                                {
+                                  "locale": "en",
+                                  "text": "error text for computation of AddID"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "error text for computation of AddID"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "error text for computation of AddID"
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "includeConfig": {
+                          "reference": "CoInsuredAdditionalFields"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_4da5e_group_8f4b1",
+                      "name": "__meta",
+                      "Group": {
+                        "repeatability": 1,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Meta"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Meta"
+                          }
+                        ],
+                        "usageType": "metadata",
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "group_4da5e_field_1169c",
+                            "name": "docRef",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Document Reference"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Dokumentreferenz"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_4da5e_field_cfb40",
+                            "name": "modelReference",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Document Model Reference"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Document Model-Referenz"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_4da5e_field_17e3b",
+                            "name": "modelVersion",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Model Version"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Model-Version"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_4da5e_field_cdaf9",
+                            "name": "creator",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Creator"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erstellt von"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_4da5e_field_65672",
+                            "name": "createdAt",
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateTimeType",
+                                "DateTimeType": {
+                                  "format": "yyyy-MM-dd'T'HH:mm:ss"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Created At"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erstellt am"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_4da5e_field_1fa32",
+                            "name": "modifier",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Modifier"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Bearbeitet von"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "group_4da5e_field_5cd66",
+                            "name": "modifiedAt",
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateTimeType",
+                                "DateTimeType": {
+                                  "format": "yyyy-MM-dd'T'HH:mm:ss"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Modified At"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Bearbeitet am"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Group",
+                            "id": "group_4da5e_group_4c9a1",
+                            "name": "extensions",
+                            "Group": {
+                              "repeatability": 1,
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Extensions"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Erweiterungen"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_4bc78_group_8f4b1",
+                "name": "__meta",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Meta"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Meta"
+                    }
+                  ],
+                  "usageType": "metadata",
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "group_4bc78_field_1169c",
+                      "name": "docRef",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Document Reference"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Dokumentreferenz"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_4bc78_field_cfb40",
+                      "name": "modelReference",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Document Model Reference"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Document Model-Referenz"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_4bc78_field_17e3b",
+                      "name": "modelVersion",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Model Version"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Model-Version"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_4bc78_field_cdaf9",
+                      "name": "creator",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Creator"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erstellt von"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_4bc78_field_65672",
+                      "name": "createdAt",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateTimeType",
+                          "DateTimeType": {
+                            "format": "yyyy-MM-dd'T'HH:mm:ss"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Created At"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erstellt am"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_4bc78_field_1fa32",
+                      "name": "modifier",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Modifier"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bearbeitet von"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_4bc78_field_5cd66",
+                      "name": "modifiedAt",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateTimeType",
+                          "DateTimeType": {
+                            "format": "yyyy-MM-dd'T'HH:mm:ss"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Modified At"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bearbeitet am"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_4bc78_group_4c9a1",
+                      "name": "extensions",
+                      "Group": {
+                        "repeatability": 1,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Extensions"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erweiterungen"
+                          }
+                        ]
                       }
                     }
                   ]
@@ -376,6 +4785,191 @@
                     {
                       "locale": "en",
                       "text": "Field on CDM"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "id": "abc6a6767a60488754aace2accb73824_group_8f4b1",
+          "name": "__meta",
+          "Group": {
+            "repeatability": 1,
+            "label": [
+              {
+                "locale": "en",
+                "text": "Meta"
+              },
+              {
+                "locale": "de",
+                "text": "Meta"
+              }
+            ],
+            "usageType": "metadata",
+            "elements": [
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_1169c",
+                "name": "docRef",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Document Reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Dokumentreferenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_cfb40",
+                "name": "modelReference",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Document Model Reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Document Model-Referenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_17e3b",
+                "name": "modelVersion",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Model Version"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Model-Version"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_cdaf9",
+                "name": "creator",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Creator"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erstellt von"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_65672",
+                "name": "createdAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Created At"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erstellt am"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_1fa32",
+                "name": "modifier",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Modifier"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Bearbeitet von"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_5cd66",
+                "name": "modifiedAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Modified At"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Bearbeitet am"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "abc6a6767a60488754aace2accb73824_group_4c9a1",
+                "name": "extensions",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Extensions"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erweiterungen"
                     }
                   ]
                 }

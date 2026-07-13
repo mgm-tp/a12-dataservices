@@ -1,0 +1,12 @@
+{
+	"BusinessPartnerRoot": {
+		"Name": "Typed Partner A",
+		"Industry": "IT",
+		"StartOfRelationship": "2020-03-01",
+		"EndOfRelationship": "2020-06-15T08:00:00",
+		"CustomerDiscount": "20%",
+		"PersonOrEntity": "Legal Entity",
+		"SubtypeGroup": {},
+		"accountNumber": "1"
+	}
+}

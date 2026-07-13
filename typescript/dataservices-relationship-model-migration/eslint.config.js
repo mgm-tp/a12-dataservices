@@ -32,10 +32,10 @@
 import notice from "eslint-plugin-notice";
 import unusedImports from "eslint-plugin-unused-imports";
 
-import { strict } from "@com.mgmtp.a12.devtools/eslint-config";
+import * as devtoolsConfigs from "@com.mgmtp.a12.devtools/eslint-config";
 
 export default [
-	...strict,
+	...devtoolsConfigs.strict,
 	{
 		ignores: [
 			"prettier.config.js",
@@ -51,9 +51,8 @@ export default [
 	{
 		languageOptions: {
 			parserOptions: {
-				projectService: {
-					allowDefaultProject: ["test/*.ts"]
-				}
+				projectService: true,
+				project: ["./tsconfig.json"]
 			}
 		},
 		plugins: {

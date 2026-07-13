@@ -38,10 +38,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.contentstore.autoconfigure.internal.listener.DefaultContentDownloadEventListener;
 import com.mgmtp.a12.contentstore.autoconfigure.internal.validation.condition.ContentStoreBaseUrlPropertyCondition;
 import com.mgmtp.a12.contentstore.autoconfigure.internal.validation.condition.OnEnabledDatabaseStorageCondition;
@@ -58,11 +56,11 @@ import com.mgmtp.a12.dataservices.common.content.internal.MsWordContentTypeListe
 import com.mgmtp.a12.dataservices.common.content.internal.TikaContentTypeDetector;
 
 import lombok.RequiredArgsConstructor;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Spring application context auto-configuration for Content Store server.
  */
-@Import({ ContentStoreRepositoryConfiguration.class })
 @ComponentScan(basePackages = { "com.mgmtp.a12.contentstore" })
 @PropertySource({ "classpath:contentstore-common.properties" })
 @RequiredArgsConstructor

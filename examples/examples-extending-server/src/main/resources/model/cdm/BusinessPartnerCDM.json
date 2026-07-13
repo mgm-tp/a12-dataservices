@@ -2,7 +2,7 @@
   "header": {
     "id": "BusinessPartnerCDM",
     "modelType": "document",
-    "modelVersion": "28.4.0",
+    "modelVersion": "29.2.0",
     "locales": [
       {
         "code": "en"
@@ -27,24 +27,11 @@
         "value": "admin,sysadmin,cdm"
       }
     ],
-    "modelReferences": [
-      {
-        "alias": "BusinessPartner-document.json",
-        "modelType": "document",
-        "purpose": "include",
-        "reference": "BusinessPartner-document"
-      },
-      {
-        "alias": "Address-document.json",
-        "modelType": "document",
-        "purpose": "include",
-        "reference": "Address-document"
-      }
-    ]
+    "modelReferences": []
   },
   "content": {
     "modelInfo": {
-      "name": "NewDocumentModel",
+      "name": "CM_BusinessPartnerCDM",
       "immutable": false
     },
     "modelConfig": {
@@ -62,7 +49,283 @@
           "name": "businessPartner",
           "Group": {
             "repeatability": 1,
-            "modelAlias": "BusinessPartner-document.json"
+            "elements": [
+              {
+                "type": "Field",
+                "id": "include_6ab0d_field_6268b",
+                "name": "id",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Id"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Id"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "include_6ab0d_field_4e3fe",
+                "name": "name",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Name"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Name"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "include_6ab0d_group_d1772",
+                "name": "logo",
+                "Group": {
+                  "repeatability": 1,
+                  "usageType": "attachment",
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "include_6ab0d_field_2a16f",
+                      "name": "original_filename",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_6ab0d_field_b233e",
+                      "name": "internal_filename",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_6ab0d_field_d37d2",
+                      "name": "content",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType",
+                          "StringType": {
+                            "lineBreaksPermitted": true,
+                            "noValueValidation": true
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_6ab0d_field_4eff3",
+                      "name": "attachment_id",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_6ab0d_field_00dcf",
+                      "name": "size",
+                      "Field": {
+                        "fieldType": {
+                          "type": "NumberType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_6ab0d_field_dd7ff",
+                      "name": "mime_type",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_6ab0d_field_7ab68",
+                      "name": "category",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_6ab0d_field_91424",
+                      "name": "description",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "include_6ab0d_rule_586c8",
+                      "name": "AttachmentInternalFilenameRequired",
+                      "Rule": {
+                        "errorEntityRelPath": "../internal_filename",
+                        "errorCode": "Errorrule_586c8",
+                        "errorCondition": "GroupFilled(RuleGroup) and FieldNotFilled(internal_filename)",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "Internal Error: Field $internal_filename$ of customType attachment is not filled."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Internal Error: Field $internal_filename$ of customType attachment is not filled."
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "include_6ab0d_rule_2d951",
+                      "name": "AttachmentMimeTypeRequired",
+                      "Rule": {
+                        "errorEntityRelPath": "../mime_type",
+                        "errorCode": "Errorrule_2d951",
+                        "errorCondition": "GroupFilled(RuleGroup) and FieldNotFilled(mime_type)",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "Internal Error: Field $mime_type$ of customType attachment is not filled."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Internal Error: Field $mime_type$ of customType attachment is not filled."
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "include_6ab0d_rule_16ad9",
+                      "name": "AttachmentIdOrContentFilled",
+                      "Rule": {
+                        "errorEntityRelPath": "../content",
+                        "errorCode": "Errorrule_16ad9",
+                        "errorCondition": "GroupFilled(RuleGroup) and NotExactlyOneFieldFilled(attachment_id, content)",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "Internal Error: Either attachment_id or content must be filled in a customType attachment, but not both."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Internal Error: Either attachment_id or content must be filled in a customType attachment, but not both."
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Rule",
+                      "id": "include_6ab0d_rule_b0ccd",
+                      "name": "SizeOfContentFilled",
+                      "Rule": {
+                        "errorEntityRelPath": "../content",
+                        "errorCode": "Errorrule_b0ccd",
+                        "errorCondition": "FieldFilled(content) and FieldNotFilled(size)",
+                        "severity": "ERROR",
+                        "errorMessage": [
+                          {
+                            "locale": "en",
+                            "text": "Internal Error: If the content is filled, the size must be also filled."
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Internal Error: If the content is filled, the size must be also filled."
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "include_6ab0d_group_f46c7",
+                "name": "notes",
+                "Group": {
+                  "repeatability": 99,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "include_6ab0d_field_37c52",
+                      "name": "day",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateType",
+                          "DateType": {
+                            "format": "yyyy-MM-dd"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Day of note"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Notiz erstellt am"
+                          }
+                        ],
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_6ab0d_field_998c7",
+                      "name": "note",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Note"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Notiz"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -96,7 +359,273 @@
                 "name": "address",
                 "Group": {
                   "repeatability": 1,
-                  "modelAlias": "Address-document.json"
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "include_bfc66_field_dbbc9",
+                      "name": "country",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Country"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Land"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_bfc66_field_90cd2",
+                      "name": "city",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "City"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Stadt"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_bfc66_field_2fc9a",
+                      "name": "street",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Street"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Straße"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_bfc66_field_e9abb",
+                      "name": "number",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Number"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Hausnummer"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_f7a8d_group_8f4b1",
+                "name": "__meta",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Meta"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Meta"
+                    }
+                  ],
+                  "usageType": "metadata",
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "group_f7a8d_field_1169c",
+                      "name": "docRef",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Document Reference"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Dokumentreferenz"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f7a8d_field_cfb40",
+                      "name": "modelReference",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Document Model Reference"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Document Model-Referenz"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f7a8d_field_17e3b",
+                      "name": "modelVersion",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Model Version"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Model-Version"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f7a8d_field_cdaf9",
+                      "name": "creator",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Creator"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erstellt von"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f7a8d_field_65672",
+                      "name": "createdAt",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateTimeType",
+                          "DateTimeType": {
+                            "format": "yyyy-MM-dd'T'HH:mm:ss"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Created At"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erstellt am"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f7a8d_field_1fa32",
+                      "name": "modifier",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Modifier"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bearbeitet von"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_f7a8d_field_5cd66",
+                      "name": "modifiedAt",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateTimeType",
+                          "DateTimeType": {
+                            "format": "yyyy-MM-dd'T'HH:mm:ss"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Modified At"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bearbeitet am"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_f7a8d_group_4c9a1",
+                      "name": "extensions",
+                      "Group": {
+                        "repeatability": 1,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Extensions"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erweiterungen"
+                          }
+                        ]
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -133,7 +662,88 @@
                 "name": "address",
                 "Group": {
                   "repeatability": 1,
-                  "modelAlias": "Address-document.json"
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "include_2e0af_field_dbbc9",
+                      "name": "country",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Country"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Land"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_2e0af_field_90cd2",
+                      "name": "city",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "City"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Stadt"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_2e0af_field_2fc9a",
+                      "name": "street",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Street"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Straße"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "include_2e0af_field_e9abb",
+                      "name": "number",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Number"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Hausnummer"
+                          }
+                        ]
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -181,6 +791,376 @@
                     {
                       "locale": "de",
                       "text": "error text for computation of computeHasPostalAddress"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_0548e_group_8f4b1",
+                "name": "__meta",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Meta"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Meta"
+                    }
+                  ],
+                  "usageType": "metadata",
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "group_0548e_field_1169c",
+                      "name": "docRef",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Document Reference"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Dokumentreferenz"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_0548e_field_cfb40",
+                      "name": "modelReference",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Document Model Reference"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Document Model-Referenz"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_0548e_field_17e3b",
+                      "name": "modelVersion",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Model Version"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Model-Version"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_0548e_field_cdaf9",
+                      "name": "creator",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Creator"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erstellt von"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_0548e_field_65672",
+                      "name": "createdAt",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateTimeType",
+                          "DateTimeType": {
+                            "format": "yyyy-MM-dd'T'HH:mm:ss"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Created At"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erstellt am"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_0548e_field_1fa32",
+                      "name": "modifier",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Modifier"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bearbeitet von"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "group_0548e_field_5cd66",
+                      "name": "modifiedAt",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateTimeType",
+                          "DateTimeType": {
+                            "format": "yyyy-MM-dd'T'HH:mm:ss"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Modified At"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bearbeitet am"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_0548e_group_4c9a1",
+                      "name": "extensions",
+                      "Group": {
+                        "repeatability": 1,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Extensions"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Erweiterungen"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "id": "abc6a6767a60488754aace2accb73824_group_8f4b1",
+          "name": "__meta",
+          "Group": {
+            "repeatability": 1,
+            "label": [
+              {
+                "locale": "en",
+                "text": "Meta"
+              },
+              {
+                "locale": "de",
+                "text": "Meta"
+              }
+            ],
+            "usageType": "metadata",
+            "elements": [
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_1169c",
+                "name": "docRef",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Document Reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Dokumentreferenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_cfb40",
+                "name": "modelReference",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Document Model Reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Document Model-Referenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_17e3b",
+                "name": "modelVersion",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Model Version"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Model-Version"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_cdaf9",
+                "name": "creator",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Creator"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erstellt von"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_65672",
+                "name": "createdAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Created At"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erstellt am"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_1fa32",
+                "name": "modifier",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Modifier"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Bearbeitet von"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_5cd66",
+                "name": "modifiedAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Modified At"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Bearbeitet am"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "abc6a6767a60488754aace2accb73824_group_4c9a1",
+                "name": "extensions",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Extensions"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erweiterungen"
                     }
                   ]
                 }

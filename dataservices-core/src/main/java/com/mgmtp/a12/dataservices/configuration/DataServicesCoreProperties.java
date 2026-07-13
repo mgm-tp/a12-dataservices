@@ -56,17 +56,18 @@ public class DataServicesCoreProperties {
 
 	public static final String PROPERTIES_PREFIX = "mgmtp.a12.dataservices";
 	public static final String USER_HOME = "user.home";
-	public static final String CLEANUP_JOB_DEFAULT_SCHEDULE = "0 */5 * * * ?";
+	public static final String CLEANUP_DIRTY_ATTACHMENTS_DEFAULT_SCHEDULE = "0 0 1 * * ?";
+	public static final String CLEANUP_STALE_ATTACHMENTS_DEFAULT_SCHEDULE = "0 15 1 * * ?";
+	public static final String CLEANUP_REQUEST_ID_DEFAULT_SCHEDULE = "0 30 1 * * ?";
+	public static final String RANK_RECALCULATION_DEFAULT_SCHEDULE = "0 45 1 ? * SUN";
 	public static final String DS_PACKAGE_PREFIX = "com.mgmtp.a12.dataservices";
 	public static final String MATCH_ALL = "*";
 	private Initialization initialization = new Initialization();
-	private Filesystem filesystem = new Filesystem();
 	private Jobs jobs = new Jobs();
 	private JsonRpc jsonRpc = new JsonRpc();
 	private Attachments attachments = new Attachments();
 	private Document documents = new Document();
 	private Model models = new Model();
-	private Search search = new Search();
 	private Query query = new Query();
 
 	private Cache cache = new Cache();
@@ -131,7 +132,8 @@ public class DataServicesCoreProperties {
 		public static class PreCompile {
 
 			/**
-			 * Allows whitelisting specific models while disabling all others.
+			 * Allows whitelisting specific models for cache preloading while disabling all others.
+			 * This controls pre-compilation, validation code generation, and indexed field cache preloading.
 			 * Setting the value to "\*" permits all existing models. Note: If "*" isn't the only string in the list, no special meaning will be applied.
 			 *
 			 * @default `*`
@@ -197,24 +199,24 @@ public class DataServicesCoreProperties {
 				 */
 				@Data
 				public static class Overwrite {
-					/**
-					 * Enables overwriting of document models on application initialization and bulk import. Applies on importing business models by
-					 * `mgmtp.a12.dataservices.initialization.import.models.path`.
+				/**
+				 * Enables overwriting of document models on application initialization. Applies on importing business models by
+				 * `mgmtp.a12.dataservices.initialization.import.models.path`.
 					 *
 					 * @default `null`
 					 */
 					private DocumentModel documentModels = new DocumentModel();
 
-					/**
-					 * Configures default for model overwriting on application initialization and bulk import. Applies on importing business models by
-					 * `mgmtp.a12.dataservices.initialization.import.models.path`.
+				/**
+				 * Configures default for model overwriting on application initialization. Applies on importing business models by
+				 * `mgmtp.a12.dataservices.initialization.import.models.path`.
 					 *
 					 * @default `true`
 					 */
 					private boolean enabled = true;
 
-					/**
-					 * Enables model overwriting by particular type of model on application initialization and bulk import. When not provided, value `mgmtp.a12.dataservices.initialization.import.models.overwrite.enabled` will be used. For example: `mgmtp.a12.dataservices.initialization.import.models.overwrite.models.my-custom-model-type=false` will deny overwriting models of type "my-custom-model-type" on application initialization.
+				/**
+				 * Enables model overwriting by particular type of model on application initialization. When not provided, value `mgmtp.a12.dataservices.initialization.import.models.overwrite.enabled` will be used. For example: `mgmtp.a12.dataservices.initialization.import.models.overwrite.models.my-custom-model-type=false` will deny overwriting models of type "my-custom-model-type" on application initialization.
 					 * Applies on importing user models by `mgmtp.a12.dataservices.initialization.import.models.path`.
 					 *
 					 * @default `null`
@@ -298,28 +300,6 @@ public class DataServicesCoreProperties {
 	}
 
 	/**
-	 * @topic attachment
-	 */
-	@Data
-	public static class Filesystem {
-
-		private Write write = new Write();
-
-		@Data
-		public static class Write {
-
-			/**
-			 * Enable/disable writes to the File system. Disabling file system writes will disable the file based attachment persister, loader, and document import functionality.
-			 *
-			 * @deprecated The switch is not used anywhere since the introduction of the content store. It will be dropped without replacement.
-			 * @default `true`
-			 */
-			@Deprecated(since = "38.2.0", forRemoval = true)
-			private boolean enabled = true;
-		}
-	}
-
-	/**
 	 * @topic query
 	 */
 	@Data
@@ -331,6 +311,8 @@ public class DataServicesCoreProperties {
 		private ExactMatch exactMatch = new ExactMatch();
 		private Validation validation = new Validation();
 		private Aggregation aggregation = new Aggregation();
+		private SearchIndexing searchIndexing = new SearchIndexing();
+		private RelationshipOrder relationshipOrder = new RelationshipOrder();
 
 		/**
 		 * Hard limit for query depth. If this limit is exceeded, an `InvalidInputException` is thrown.
@@ -509,6 +491,8 @@ public class DataServicesCoreProperties {
 			 * negatively impact PostgreSQL regular expression search.
 			 * Any input value exceeding this configured length will result in an error
 			 * response from the API.
+			 *
+			 * @default `100`
 			 */
 			private int maxInputValueLength = 100;
 
@@ -535,25 +519,21 @@ public class DataServicesCoreProperties {
 			 * negatively impact PostgreSQL regular expression search.
 			 * Any input value exceeding this configured length will result in an error
 			 * response from the API.
+			 *
+			 * @default `100`
 			 */
 			private int maxInputValueLength = 100;
 
-			EnumerationValueMatch enumerationValueMatch = new EnumerationValueMatch();
-
-			@Data
-			public static class EnumerationValueMatch {
-
-				/**
-				 * Enumeration value matching is only performed if the Accept-Language header is absent in the request.
-				 * If the header is present, exact matching for enumeration values is disabled by default.
-				 * This property enables additional matching for enumeration values when the header is provided.
-				 * If enabled, matching will occur on both the provided language and the enumeration value.
-				 *
-				 * Note: Enabling this will negatively impact performance for all queries using the `exact_match` operator on enumeration fields.
-				 * @default `false`
-				 */
-				private boolean enabled = false;
-			}
+			/**
+			 * The maximum number of values allowed in the `values` list of an `exact_match` operation.
+			 * This limit helps to prevent excessively large value lists that could
+			 * negatively impact query performance.
+			 * Any `values` list exceeding this configured count will result in an error
+			 * response from the API.
+			 *
+			 * @default `100`
+			 */
+			private int maxValuesCount = 100;
 
 		}
 
@@ -586,39 +566,57 @@ public class DataServicesCoreProperties {
 			 */
 			private int defaultPrecision = 2;
 		}
-	}
 
-	/**
-	 * This is no longer used anywhere. It is kept here because of tests so far.
-	 */
-	@Data
-	@Deprecated(since = "38.0.0", forRemoval = true)
-	public static class Search {
-
-		private Paging paging = new Paging();
-
+		/**
+		 * Configuration for search indexing into `document_fields` and `document_search` tables.
+		 * When relational persistence component is used, these tables are not needed as queries are created natively. Other projects might want to create queries also natively thus skipping Query API implementation.
+		 *
+		 * @topic query
+		 */
 		@Data
-		public static class Paging {
+		public static class SearchIndexing {
 
-			private LinkPaging links = new LinkPaging();
+			/**
+			 * Controls whether documents are indexed into `document_fields` and `document_search` tables.
+			 * When disabled, the beans responsible for populating these tables are not created,
+			 * and document CRUD operations will not populate the search index tables.
+			 * Note: Disabling this will make document querying via the Query API unavailable.
+			 *
+			 * NOTE: When disabled, this property overwrites functionality of `mgmtp.a12.dataservices.query.reindexing.mode`. No index update will
+			 * be performed during init or during document CRUD operations.
+			 *
+			 * @default `true`
+			 */
+			private boolean enabled = true;
+		}
 
-			@Data
-			public static class LinkPaging {
+		/**
+		 * Configuration for relationship-based sorting in queries.
+		 * Allows limiting the complexity of sorting by fields on related documents.
+		 *
+		 * @topic query
+		 */
+		@Data
+		public static class RelationshipOrder {
 
-				/**
-				 * Hard limit for query offset for list of links. If query contains offset bigger than this value, the query offset is reduced to this.
-				 *
-				 * @default `5_000`
-				 */
-				private int offsetLimit = 5_000;
+			/**
+			 * Maximum nesting depth for relationship-based sorting.
+			 * This limits how many relationship hops can be traversed in a single sort specification.
+			 * For example, sorting by `Contract → BusinessPartner → Address.city` has depth 2.
+			 * Prevents excessive JOINs and protects against circular reference issues.
+			 *
+			 * @default `5`
+			 */
+			private int maxNestingDepth = 5;
 
-				/**
-				 * Hard limit for query page size for list of links. If query contains page size bigger than this value, the query page size is reduced to this.
-				 *
-				 * @default `100`
-				 */
-				private int pageLimit = 100;
-			}
+			/**
+			 * Maximum number of relationship-based sort orders allowed in a single query.
+			 * This limits the total number of relationship sorts to prevent complex queries with too many JOINs.
+			 * Direct field sorts are not counted against this limit.
+			 *
+			 * @default `5`
+			 */
+			private int maxCount = 5;
 		}
 	}
 
@@ -807,12 +805,12 @@ public class DataServicesCoreProperties {
 
 				/**
 				 * Path to the document metadata JSON file within the classpath resources folder.
-				 * The file must be located in the resources directory of the project (e.g., `src/main/resources`).
+				 * By default, the file is loaded from the rmc conversion artifact.
 				 * Use absolute paths starting with `/` for files in the root of the resources folder.
 				 *
-				 * @default `/com/mgmtp/a12/platform/model/document-meta-data.json`
+				 * @default `/com/mgmtp/a12/rmc/metadata/document-meta-data.json`
 				 */
-				private String path = "/com/mgmtp/a12/platform/model/document-meta-data.json";
+				private String path = "/com/mgmtp/a12/rmc/metadata/document-meta-data.json";
 			}
 		}
 	}
@@ -909,14 +907,13 @@ public class DataServicesCoreProperties {
 
 			@Data
 			public static class Optimization {
+				private Url url = new Url();
+				private Performance performance = new Performance();
+
 				/**
 				 * Base url for thumbnail for optimization
 				 */
 				private String baseUrl;
-
-				private Url url = new Url();
-
-				private Performance performance = new Performance();
 
 				@Data
 				public static class Url {
@@ -1057,7 +1054,7 @@ public class DataServicesCoreProperties {
 				/**
 				 * List of Document Models which attachments will be public.
 				 *
-				 * @default empty list
+				 * @default `empty list`
 				 */
 				private List<String> models = new ArrayList<>();
 			}
@@ -1080,7 +1077,7 @@ public class DataServicesCoreProperties {
 		/**
 		 * Limit for maximum number of method calls per single RPC request
 		 *
-		 * @default 100
+		 * @default `100`
 		 */
 		private int maxMethodCallsPerRequest = 100;
 
@@ -1134,21 +1131,10 @@ public class DataServicesCoreProperties {
 		@Data
 		public static class AttachmentJobs {
 
-			private Cleanup cleanup = new Cleanup();
 			private CleanUpDirtyAttachments cleanUpDirtyAttachments = new CleanUpDirtyAttachments();
 			private CleanUpStaleAttachments cleanUpStaleAttachments = new CleanUpStaleAttachments();
 			private Temporary temporary = new Temporary();
 
-			@Data
-			public static class Cleanup {
-
-				/**
-				 * Cron expression to plan attachment cleanup job. See the link:https://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html[Quartz Trigger tutorial,window=_blank].
-				 *
-				 * @default "0 *&#47;5 * * * ?"
-				 */
-				private String schedule = CLEANUP_JOB_DEFAULT_SCHEDULE;
-			}
 
 			@Data
 			public static class CleanUpDirtyAttachments {
@@ -1156,9 +1142,9 @@ public class DataServicesCoreProperties {
 				/**
 				 * Cron expression to plan attachment cleanup job. See the link:https://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html[Quartz Trigger tutorial,window=_blank].
 				 *
-				 * @default "0 *&#47;5 * * * ?"
+				 * @default `"0 0 1 * * ?"`
 				 */
-				private String schedule = CLEANUP_JOB_DEFAULT_SCHEDULE;
+				private String schedule = CLEANUP_DIRTY_ATTACHMENTS_DEFAULT_SCHEDULE;
 			}
 
 			@Data
@@ -1167,9 +1153,9 @@ public class DataServicesCoreProperties {
 				/**
 				 * Cron expression to plan attachment cleanup job. See the link:https://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html[Quartz Trigger tutorial,window=_blank].
 				 *
-				 * @default "0 *&#47;5 * * * ?"
+				 * @default `"0 15 1 * * ?"`
 				 */
-				private String schedule = CLEANUP_JOB_DEFAULT_SCHEDULE;
+				private String schedule = CLEANUP_STALE_ATTACHMENTS_DEFAULT_SCHEDULE;
 			}
 
 			@Data
@@ -1200,16 +1186,16 @@ public class DataServicesCoreProperties {
 				/**
 				 * Enables/disables the rank reorder scheduler job.
 				 *
-				 * @default false
+				 * @default `false`
 				 */
 				private boolean enabled = false;
 
 				/**
 				 * Cron schedule to trigger recalculation of all assigned link ranks.
 				 *
-				 * @default `null`
+				 * @default `"0 45 1 ? * SUN"`
 				 */
-				private String schedule;
+				private String schedule = RANK_RECALCULATION_DEFAULT_SCHEDULE;
 
 				/**
 				 * List of relationship model names whose document's ranks should be reordered by the job.
@@ -1231,9 +1217,9 @@ public class DataServicesCoreProperties {
 				/**
 				 * Cron expression to plan request_id cleanup job. See the link:https://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html[Quartz Trigger tutorial,window=_blank].
 				 *
-				 * @default "0 *&#47;5 * * * ?"
+				 * @default `"0 30 1 * * ?"`
 				 */
-				private String schedule = CLEANUP_JOB_DEFAULT_SCHEDULE;
+				private String schedule = CLEANUP_REQUEST_ID_DEFAULT_SCHEDULE;
 
 				/**
 				 * The amount of time in hours after which an idempotence id (entry in table request_id) will be deleted.

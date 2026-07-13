@@ -40,7 +40,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.constants.UserConstants;
 import com.mgmtp.a12.dataservices.model.AbstractModelServiceIT;
 import com.mgmtp.a12.dataservices.model.ModelService;

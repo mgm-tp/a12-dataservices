@@ -136,7 +136,7 @@ import lombok.RequiredArgsConstructor;
 			if (value != null) {
 				return String.valueOf(value);
 			} else {
-				throw new IllegalStateException(String.format("There is no value for %s", path));
+				throw new IllegalStateException("There is no value for %s".formatted(path));
 			}
 		}
 

@@ -52,8 +52,6 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.common.LocalizedEntry;
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants.FieldConstants;
@@ -78,14 +76,17 @@ import com.mgmtp.a12.dataservices.relationship.internal.DataServicesRelationship
 import com.mgmtp.a12.dataservices.relationship.internal.RelationshipSortConstants;
 import com.mgmtp.a12.dataservices.relationship.internal.ranks.NoAvailableRanksException;
 import com.mgmtp.a12.dataservices.relationship.internal.ranks.RelationshipRankService;
-import com.mgmtp.a12.dataservices.relationship.persistence.internal.RelationshipLinkRepository;
+import com.mgmtp.a12.dataservices.relationship.persistence.RelationshipLinkRepository;
 import com.mgmtp.a12.dataservices.relationship.spec.LinkDescriptor;
 import com.mgmtp.a12.dataservices.relationship.spec.LinkPosition;
+import com.mgmtp.a12.dataservices.relationship.spec.RelationshipLinkSpec;
+import com.mgmtp.a12.dataservices.relationship.spec.RelationshipRoleSpec;
 import com.mgmtp.a12.dataservices.rpc.RpcException;
 import com.mgmtp.a12.dataservices.rpc.query.PagedResultSet;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.JsonNode;
 
 import static com.mgmtp.a12.dataservices.relationship.Order.ASC;
 import static com.mgmtp.a12.dataservices.relationship.Order.DESC;
@@ -122,29 +123,89 @@ public class AddLinkOperationIT extends AbstractListITBase {
 			Assert.assertEquals(shortMessage.getKey(), "error.link.document.validation.title");
 			Assert.assertEquals(shortMessage.getDefaultMessage(), "Invalid document references in relationship model");
 			Assert.assertEquals(longMessage.getKey(), "error.link.document.validation.description");
-			Assert.assertEquals(longMessage.getDefaultMessage(), String.format("Relationship model [%s] contains invalid document references", relationship));
+			Assert.assertEquals(longMessage.getDefaultMessage(), "Relationship model [%s] contains invalid document references".formatted(relationship));
 		}
 	}
 
 	@Test
 	@Transactional
-	public void testAddLink() throws JsonProcessingException {
-		String linkID = executeAddLinkOperation(contractDocRef5, partnerDocRef4, LinkPosition.TOP).getId();
+	public void testAddLink() {
+		RelationshipLinkSpec linkSpec = executeAddLinkOperation(contractDocRef5, partnerDocRef4, LinkPosition.TOP);
+		String linkID = linkSpec.getId();
+
+		// Verify that linkDocumentDocRef is set in the response
+		Assert.assertNotNull(linkSpec.getLinkDescriptor(), "LinkDescriptor should not be null");
+		Assert.assertNotNull(linkSpec.getLinkDescriptor().getLinkDocumentDocRef(), "linkDocumentDocRef should be set in the response");
+
 		QueryRoot queryLink = constructQueryLink(contractDocRef5);
 		PagedResultSet<DocumentTreeResult> result = queryOperation.rpc(queryLink);
 		JsonNode link = result.getLinks().stream().filter(e -> e.getType() == DocumentTreeNodeType.LINK && linkID.equals(e.getLinkId()))
 			.map(documentTreeResult -> {
-				try {
-					return objectMapper.readTree(documentTreeResult.getDocument().toString());
-				} catch (JsonProcessingException e) {
-					throw new RuntimeException(e);
-				}
+				return objectMapper.readTree(documentTreeResult.getDocument().toString());
 			})
 			.findFirst().orElse(null);
 		Assert.assertNotNull(link);
 		JsonNode coInsuredRoot = link.get(FieldConstants.CO_INSURED_ADDITIONAL_FIELDS_ROOT);
 		Assert.assertEquals(coInsuredRoot.get("Name").asText(), "Karel");
 		Assert.assertEquals(coInsuredRoot.get("ID").asText(), "0000-0000-0000-0000");
+	}
+
+	@Test(description = "Should return linkDocumentDocRef in the response after creating a link")
+	@Transactional("dsTransactionManager")
+	public void shouldReturnLinkDocumentDocRefWhenLinkCreated() {
+		// Given - prepare link with link document
+		RelationshipRoleSpec partnerRole = new RelationshipRoleSpec(RoleConstants.PARTNER_ROLE, partnerDocRef1);
+		RelationshipRoleSpec contractRole = new RelationshipRoleSpec(RoleConstants.CONTRACT_ROLE, contractDocRef1);
+		LinkDescriptor linkDescriptor = new LinkDescriptor(
+			RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL,
+			Arrays.asList(contractRole, partnerRole),
+			LinkPosition.TOP
+		);
+		JsonNode linkDocument = createLinkDocument("TestPartner");
+
+		// When - create link
+		RelationshipLinkSpec result = addLinkOperation.rpc(linkDescriptor, linkDocument);
+
+		// Then - verify linkDocumentDocRef is present
+		Assert.assertNotNull(result, "RelationshipLinkSpec should not be null");
+		Assert.assertNotNull(result.getId(), "Link ID should not be null");
+		Assert.assertNotNull(result.getLinkDescriptor(), "LinkDescriptor should not be null");
+		Assert.assertNotNull(result.getLinkDescriptor().getLinkDocumentDocRef(),
+			"linkDocumentDocRef should be populated in the response");
+
+		// Verify the linkDocumentDocRef is valid
+		DocumentReference linkDocRef = result.getLinkDescriptor().getLinkDocumentDocRef();
+		Assert.assertNotNull(linkDocRef.getDocumentModelName(), "Document model name should be set");
+		Assert.assertNotNull(linkDocRef.getDocumentId(), "Document ID should be set");
+	}
+
+	@Test(description = "Should populate modelName on each RelationshipRoleSpec returned from ADD_LINK")
+	@Transactional("dsTransactionManager")
+	public void shouldPopulateModelNameOnReturnedRolesWhenLinkCreated() {
+		// Given - role specs constructed without modelName (mimicking JSON-RPC deserialization via no-arg constructor + setters)
+		RelationshipRoleSpec partnerRole = new RelationshipRoleSpec();
+		partnerRole.setRole(RoleConstants.PARTNER_ROLE);
+		partnerRole.setDocRef(partnerDocRef1);
+		RelationshipRoleSpec contractRole = new RelationshipRoleSpec();
+		contractRole.setRole(RoleConstants.CONTRACT_ROLE);
+		contractRole.setDocRef(contractDocRef1);
+		LinkDescriptor linkDescriptor = new LinkDescriptor(
+			RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL,
+			Arrays.asList(contractRole, partnerRole),
+			LinkPosition.TOP
+		);
+
+		// When - create link
+		RelationshipLinkSpec result = addLinkOperation.rpc(linkDescriptor, createLinkDocument("TestPartner"));
+
+		// Then - modelName should be populated on every returned role spec
+		Assert.assertNotNull(result.getLinkDescriptor(), "LinkDescriptor should not be null");
+		for (RelationshipRoleSpec entity : result.getLinkDescriptor().getEntities()) {
+			Assert.assertNotNull(entity.getModelName(),
+				"modelName should be set on returned RelationshipRoleSpec for role=" + entity.getRole());
+			Assert.assertEquals(entity.getModelName(), entity.getDocRef().getDocumentModelName(),
+				"modelName should match the docRef's document model name for role=" + entity.getRole());
+		}
 	}
 
 	@Transactional
@@ -206,7 +267,7 @@ public class AddLinkOperationIT extends AbstractListITBase {
 	}
 
 	private void assertEntitiesOrdered(DocumentReference contractDocRef, String expectedOrder, boolean equals, String roleOrderValue,
-		List<DocumentReference> partnerDocRefs) throws JsonProcessingException {
+		List<DocumentReference> partnerDocRefs) {
 		assertTerminatingOrder(contractDocRef, ASC, expectedOrder, equals);
 		assertTerminatingOrder(contractDocRef, DESC, roleOrderValue, equals);
 		assertLinksOrder(contractDocRef, partnerDocRefs);
@@ -230,10 +291,10 @@ public class AddLinkOperationIT extends AbstractListITBase {
 			.map(RelationshipRole::getOrder)
 			.orElse(null);
 		Assert.assertEquals(Objects.equals(order, expectedOrder), equals,
-			String.format("%s should %s to %s but it is not true.", order, equals ? "equal" : "not equal", expectedOrder));
+			"%s should %s to %s but it is not true.".formatted(order, equals ? "equal" : "not equal", expectedOrder));
 	}
 
-	private void assertLinksOrder(DocumentReference contractDocRef, List<DocumentReference> businessPartnerDocRefs) throws JsonProcessingException {
+	private void assertLinksOrder(DocumentReference contractDocRef, List<DocumentReference> businessPartnerDocRefs) {
 		QueryRoot queryLink = constructQueryLink(contractDocRef);
 
 		PagedResultSet<DocumentTreeResult> result = queryOperation.rpc(queryLink);
@@ -246,7 +307,7 @@ public class AddLinkOperationIT extends AbstractListITBase {
 		List<DocumentReference> actual = result.getLinks().stream()
 			.filter(l -> l.getType() == DocumentTreeNodeType.CHILD)
 			.map(DocumentTreeResult::getDocRef)
-			.collect(Collectors.toList());
+			.toList();
 
 		Assert.assertEquals(actual, businessPartnerDocRefs);
 	}

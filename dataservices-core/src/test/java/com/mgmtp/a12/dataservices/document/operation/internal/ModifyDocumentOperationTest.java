@@ -39,8 +39,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import com.mgmtp.a12.dataservices.common.anonymizing.Anonymizer;
 import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
@@ -52,7 +52,6 @@ import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
-
 
 @Listeners(MockitoTestNGListener.class)
 public class ModifyDocumentOperationTest {
@@ -67,7 +66,6 @@ public class ModifyDocumentOperationTest {
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	private ObjectNode jsonDocument;
 
-
 	@BeforeMethod
 	public void setUp() {
 		jsonDocument = objectMapper.createObjectNode();
@@ -75,24 +73,24 @@ public class ModifyDocumentOperationTest {
 	}
 
 	@Test public void modifyDocument_success() {
-		Mockito.when(documentSupport.convertJSONToDocument(Mockito.any(), Mockito.any(), Mockito.any()))
-				.thenReturn(DocumentV2.empty("model"));
+		Mockito.when(documentSupport.convertJSONToDocument(Mockito.anyString(), Mockito.any(tools.jackson.databind.JsonNode.class), Mockito.any(DocumentReference.class)))
+			.thenReturn(DocumentV2.empty("model"));
 
-		modifyDocumentOperation.rpc(documentReference, jsonDocument, null);
+		modifyDocumentOperation.rpc(documentReference.toString(), jsonDocument, null);
 
-		Mockito.verify(documentSupport, Mockito.times(1)).convertJSONToDocument(Mockito.any(), Mockito.any(), Mockito.any());
+		Mockito.verify(documentSupport, Mockito.times(1)).convertJSONToDocument(Mockito.anyString(), Mockito.any(tools.jackson.databind.JsonNode.class), Mockito.any(DocumentReference.class));
 		Mockito.verify(documentService, Mockito.times(1)).update(Mockito.any(), Mockito.any(DocumentV2.class), Mockito.any());
 	}
 
 	@Test public void modifyDocument_documentNotFound() {
-		Mockito.when(documentSupport.convertJSONToDocument(Mockito.any(), Mockito.any(), Mockito.any()))
+		Mockito.when(documentSupport.convertJSONToDocument(Mockito.anyString(), Mockito.any(tools.jackson.databind.JsonNode.class), Mockito.any(DocumentReference.class)))
 			.thenReturn(DocumentV2.empty("model"));
 		Mockito.doThrow(NotFoundException.class)
 			.when(documentService)
 			.update(Mockito.any(), Mockito.any(DocumentV2.class), Mockito.any());
 
 		try {
-			modifyDocumentOperation.rpc(documentReference, jsonDocument, null);
+			modifyDocumentOperation.rpc(documentReference.toString(), jsonDocument, null);
 			fail("Expected RpcException");
 		} catch (RpcException e) {
 			assertEquals(e.getOperationError().getOperationId(), RemoteOperation.RemoteOperationHelper.getOperationId(ModifyDocumentOperation.class));

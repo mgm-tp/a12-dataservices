@@ -109,5 +109,26 @@ package "ContractAutomotive" as ContractAutomotive <<Frame>> {
 
 	ContractAutomotiveDocumentRoot ||--o| "0..1" group_a9838
 
+	group('"__meta" as abc6a6767a60488754aace2accb73824_group_8f4b1')
+	field('"docRef" as abc6a6767a60488754aace2accb73824_field_1169c <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_1169c
+	field('"modelReference" as abc6a6767a60488754aace2accb73824_field_cfb40 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_cfb40
+	field('"modelVersion" as abc6a6767a60488754aace2accb73824_field_17e3b <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_17e3b
+	field('"creator" as abc6a6767a60488754aace2accb73824_field_cdaf9 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_cdaf9
+	field('"createdAt" as abc6a6767a60488754aace2accb73824_field_65672 <<DateTimeType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_65672
+	field('"modifier" as abc6a6767a60488754aace2accb73824_field_1fa32 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_1fa32
+	field('"modifiedAt" as abc6a6767a60488754aace2accb73824_field_5cd66 <<DateTimeType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_5cd66
+	group('"extensions" as abc6a6767a60488754aace2accb73824_group_4c9a1')
+
+	abc6a6767a60488754aace2accb73824_group_8f4b1 ||--o| "0..1" abc6a6767a60488754aace2accb73824_group_4c9a1
+
+	ContractAutomotiveDocumentRoot ||--o| "0..1" abc6a6767a60488754aace2accb73824_group_8f4b1
+
 }
 @enduml

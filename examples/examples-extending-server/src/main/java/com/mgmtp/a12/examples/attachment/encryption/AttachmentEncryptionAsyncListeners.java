@@ -36,13 +36,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.map.IMap;
 import com.mgmtp.a12.contentstore.content.ContentStream;
 import com.mgmtp.a12.contentstore.events.ContentAfterRequestEvent;
 import com.mgmtp.a12.contentstore.events.ContentBeforeCreateEvent;
@@ -50,31 +50,22 @@ import com.mgmtp.a12.contentstore.events.ContentBeforeDownloadEvent;
 import com.mgmtp.a12.dataservices.common.events.CommonDataServicesEventListener;
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * Example demonstrating how to encrypt and decrypt attachment content using asynchronous event listeners.
  *
  * * Before persisting an attachment with persistent type 'private', the content is Base64 encoded (simulating encryption).
- * * After the content is requested, it is Base64 decoded (simulating decryption) and stored in a Hazelcast map for later retrieval.
- * * Before downloading an attachment with persistent type 'private', the decrypted content is retrieved from the Hazelcast map and set as the content supplier.
-
+ * * After the content is requested, it is Base64 decoded (simulating decryption) and stored in an in-memory map for later retrieval.
+ * * Before downloading an attachment with persistent type 'private', the decrypted content is retrieved from the map and set as the content supplier.
+ *
  * Note: This example uses Base64 encoding/decoding for demonstration purposes only. In a real-world scenario, proper encryption/decryption algorithms should be used.
  */
 @ConditionalOnProperty(prefix = "com.mgmtp.a12.examples.attachments.encryption.async", name = "enabled", havingValue = "true")
 @Slf4j
-@RequiredArgsConstructor
 @Component public class AttachmentEncryptionAsyncListeners {
 
-	private final HazelcastInstance hazelcastInstance;
-	private IMap<String, byte[]> contentStreamDataMap;
-
-	@PostConstruct
-	void init() {
-		contentStreamDataMap = hazelcastInstance.getMap("data");
-	}
+	private final ConcurrentMap<String, byte[]> contentStreamDataMap = new ConcurrentHashMap<>();
 
 	/**
 	 * Encodes attachment content using Base64 prior to persistence for attachments with persistent type `private`.
@@ -98,19 +89,16 @@ import lombok.extern.slf4j.Slf4j;
 	}
 
 	/**
-	 * Asynchronously decodes content after it has been requested and stores decrypted bytes in a Hazelcast map.
+	 * Asynchronously decodes content after it has been requested and stores decrypted bytes in the in-memory map.
 	 *
 	 * @param contentAfterRequestEvent event providing the content stream and identifiers; never null.
 	 */
 	@Async
-	@CommonDataServicesEventListener()
+	@CommonDataServicesEventListener
 	public void decryptWhenContentAfterRequestEvent(ContentAfterRequestEvent contentAfterRequestEvent) {
 		String contentId = contentAfterRequestEvent.getTicketInfoEntity().getContentId();
-		try (InputStream is = contentAfterRequestEvent.getContentStream().getContentSupplier().get()){
-			storeDecryptedContent(
-				contentId,
-				Base64.getDecoder().decode(is.readAllBytes())
-			);
+		try (InputStream is = contentAfterRequestEvent.getContentStream().getContentSupplier().get()) {
+			contentStreamDataMap.put(contentId, Base64.getDecoder().decode(is.readAllBytes()));
 		} catch (IOException e) {
 			throw new InvalidInputException("Could not decode attachment content", e);
 		}
@@ -132,7 +120,7 @@ import lombok.extern.slf4j.Slf4j;
 		long endWaitTime = System.currentTimeMillis() + secondsToWait * 1000;
 		boolean isConditionMet = false;
 		while (System.currentTimeMillis() < endWaitTime) {
-			isConditionMet = getDecryptedContent(contentId) != null;
+			isConditionMet = contentStreamDataMap.get(contentId) != null;
 			if (isConditionMet) {
 				break;
 			} else {
@@ -145,17 +133,8 @@ import lombok.extern.slf4j.Slf4j;
 			}
 		}
 		if (isConditionMet) {
-			contentStream.setContentSupplier(() -> new ByteArrayInputStream(getDecryptedContent(contentId)));
+			contentStream.setContentSupplier(() -> new ByteArrayInputStream(contentStreamDataMap.get(contentId)));
 		}
 		contentStream.setReady();
 	}
-
-	private void storeDecryptedContent(String contentId, byte[] arrays) {
-		contentStreamDataMap.put(contentId, arrays);
-	}
-
-	private byte[] getDecryptedContent(String contentId) {
-		return contentStreamDataMap.get(contentId);
-	}
-
 }

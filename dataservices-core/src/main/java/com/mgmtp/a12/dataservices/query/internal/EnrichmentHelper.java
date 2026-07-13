@@ -50,6 +50,8 @@ import com.mgmtp.a12.kernel.md.model.api.fieldtypes.IDateRangeType;
 import com.mgmtp.a12.kernel.md.model.api.fieldtypes.IDateType;
 import com.mgmtp.a12.kernel.md.model.api.fieldtypes.IFieldType;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.QUERY_INVALID_INPUT_ERROR_KEY;
@@ -57,21 +59,22 @@ import static com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper.getE
 import static com.mgmtp.a12.dataservices.utils.internal.DateTimeUtils.transformToIsoFormat;
 
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EnrichmentHelper {
 
 	public static void enrichDateRangeOperator(DateRangeOperator dateRangeOperator, IField field, IDocumentModel documentModel, QueryContext context, ExceptionKeys.ExecutionPhase executionPhase) {
 		IFieldType effectiveFieldType = getEffectiveFieldType(field, executionPhase);
 		if (effectiveFieldType instanceof IDateFragmentType dateFragmentType) {
-			enrichDateRangeOperator(documentModel, dateRangeOperator, field, dateFragmentType.getFormatOfFragment(), false, true, context, executionPhase);
+			enrichDateRangeOperator(documentModel, dateRangeOperator, field, dateFragmentType.getFormatOfFragment(), false, true, false, context, executionPhase);
 			dateRangeOperator.setRangeType(false);
 		} else if (effectiveFieldType instanceof IDateRangeType dateRangeType) {
-			enrichDateRangeOperator(documentModel, dateRangeOperator, field, dateRangeType.getFormat(), false, false, context, executionPhase);
+			enrichDateRangeOperator(documentModel, dateRangeOperator, field, dateRangeType.getFormat(), false, false, true, context, executionPhase);
 			dateRangeOperator.setRangeType(true);
 		} else if (effectiveFieldType instanceof IDateType dateType) {
 			if (dateType.arePartiallyKnownDatesAllowed()) {
-				enrichDateRangeOperator(documentModel, dateRangeOperator, null, dateType.getFormat(), true, false, context, executionPhase);
+				enrichDateRangeOperator(documentModel, dateRangeOperator, null, dateType.getFormat(), true, false, false, context, executionPhase);
 			} else {
-				enrichDateRangeOperator(documentModel, dateRangeOperator, field, dateType.getFormat(), false, false, context, executionPhase);
+				enrichDateRangeOperator(documentModel, dateRangeOperator, field, dateType.getFormat(), false, false, false, context, executionPhase);
 			}
 			dateRangeOperator.setRangeType(false);
 		} else {
@@ -83,16 +86,30 @@ public class EnrichmentHelper {
 	}
 
 	private static void enrichDateRangeOperator(IDocumentModel documentModel, DateRangeOperator rangeOperator, IField field, String format,
-		boolean isPartialDate, boolean isDateFragment, QueryContext context, ExceptionKeys.ExecutionPhase executionPhase) {
+		boolean isPartialDate, boolean isDateFragment, boolean isDateRangeType, QueryContext context, ExceptionKeys.ExecutionPhase executionPhase) {
 		String timeZone = documentModel.getContent().getDocumentModelConfig().getTimeZone();
-		enrichDate(Enrichments.VALUE_PROPERTY, documentModel, rangeOperator, field, rangeOperator.getValue(), format, isPartialDate, isDateFragment, timeZone,
-			context, executionPhase
-		);
-		enrichDate(Enrichments.FROM_PROPERTY, documentModel, rangeOperator, field, rangeOperator.getFrom(), format, isPartialDate, isDateFragment, timeZone,
-			context, executionPhase
-		);
-		enrichDate(Enrichments.TO_PROPERTY, documentModel, rangeOperator, field, rangeOperator.getTo(), format, isPartialDate, isDateFragment, timeZone, context, executionPhase
-		);
+
+		String value = rangeOperator.getValue();
+		// Handle ISO 8601 interval format (e.g., "2015-01-01/2020-12-31") only for IDateRangeType fields
+		if (isDateRangeType && value != null && value.contains(DateTimeUtils.DATE_RANGE_SEPARATOR)) {
+			// Split into from/to components. Using limit=2 guarantees exactly 2 parts when separator is present.
+			String[] parts = value.split(DateTimeUtils.DATE_RANGE_SEPARATOR, 2);
+			enrichDate(Enrichments.FROM_PROPERTY, documentModel, rangeOperator, field,
+				parts[0].isEmpty() ? null : parts[0], format, isPartialDate, isDateFragment, timeZone, context, executionPhase);
+			enrichDate(Enrichments.TO_PROPERTY, documentModel, rangeOperator, field,
+				parts[1].isEmpty() ? null : parts[1], format, isPartialDate, isDateFragment, timeZone, context, executionPhase);
+		} else {
+			// Original behavior for non-interval values or non-DateRangeType fields
+			enrichDate(Enrichments.VALUE_PROPERTY, documentModel, rangeOperator, field, value, format,
+				isPartialDate, isDateFragment, timeZone, context, executionPhase);
+		}
+
+		// Enrich from/to from explicit properties if not already set from interval parsing above.
+		// The enrichDate method uses computeIfAbsent, so interval-derived values take precedence.
+		enrichDate(Enrichments.FROM_PROPERTY, documentModel, rangeOperator, field, rangeOperator.getFrom(), format,
+			isPartialDate, isDateFragment, timeZone, context, executionPhase);
+		enrichDate(Enrichments.TO_PROPERTY, documentModel, rangeOperator, field, rangeOperator.getTo(), format,
+			isPartialDate, isDateFragment, timeZone, context, executionPhase);
 	}
 
 	public static void enrichDate(String propertyName, IDocumentModel documentModel, ILogicOperator rangeOperator, IField field, String value, String format,

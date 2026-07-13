@@ -43,7 +43,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.converter.HttpMessageConverter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.connector.rest.RestDeleteConnector;
 import com.mgmtp.a12.connector.rest.RestGetConnector;
 import com.mgmtp.a12.connector.rest.RestPostConnector;
@@ -55,7 +55,6 @@ import com.mgmtp.a12.contentstore.client.content.ContentStorePrivateClient;
 import com.mgmtp.a12.contentstore.client.content.ContentStorePublicClient;
 import com.mgmtp.a12.contentstore.client.content.ContentStoreTicketClient;
 import com.mgmtp.a12.contentstore.client.exception.ContentStoreErrorHandler;
-import com.mgmtp.a12.dataservices.attachment.header.AttachmentHeaderService;
 import com.mgmtp.a12.dataservices.attachment.persitence.IAttachmentRepository;
 import com.mgmtp.a12.dataservices.attachment.persitence.internal.contentstore.ContentStoreMapper;
 import com.mgmtp.a12.dataservices.attachment.persitence.internal.contentstore.StandaloneContentStoreAttachmentRepository;
@@ -82,12 +81,9 @@ public class StandaloneContentStoreConfiguration {
 	@Bean public IAttachmentRepository standaloneContentStoreAttachmentRepository(
 		ContentStorePrivateClient privateClient,
 		ContentStoreTicketClient ticketClient,
-		ContentStoreMapper contentStoreMapper,
-		AttachmentHeaderService attachmentHeaderService,
-		ContentTypeDetector contentTypeDetector
+		ContentStoreMapper contentStoreMapper
 	) {
-		return new StandaloneContentStoreAttachmentRepository(ticketClient, privateClient, contentStoreMapper,
-			attachmentHeaderService, contentTypeDetector, dataServicesCoreProperties);
+		return new StandaloneContentStoreAttachmentRepository(ticketClient, privateClient, contentStoreMapper);
 	}
 
 	@ConditionalOnMissingBean(ContentTypeDetector.class)

@@ -60,7 +60,7 @@ public class ExtendedServerConfigurationProperties {
 	private Properties properties = new Properties();
 
 
-	private BlackBoxAuthorizationExample blackBoxAuthorizationExample = new BlackBoxAuthorizationExample();
+	private AuthorizationBlackBoxExample authorizationBlackBoxExample = new AuthorizationBlackBoxExample();
 
 	private BusinessPartnerTaxAuthorityRegistrationStatusProjection businessPartnerTaxAuthorityRegistrationStatusProjection =
 		new BusinessPartnerTaxAuthorityRegistrationStatusProjection();
@@ -276,7 +276,7 @@ public class ExtendedServerConfigurationProperties {
 	 * Example switch for black-box authorization.
 	 */
 	@Data
-	public static class BlackBoxAuthorizationExample {
+	public static class AuthorizationBlackBoxExample {
 		private boolean enabled = false;
 	}
 

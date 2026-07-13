@@ -2,4 +2,7 @@ plugins {
 	id 'base'
 }
 
-description 'Migration tool for relationship models'
+apply plugin: 'com.mgmtp.a12.dataservices.typescript-conventions'
+
+
+description = 'Migration tool for relationship models'

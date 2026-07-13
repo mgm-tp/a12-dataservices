@@ -65,7 +65,8 @@ public class MigrationRunnerIT extends AbstractMigrationIT {
 		makeMigrationStepEntity("com.mgmtp.a12.dataservices.migration.internal.DataMigrationTask", "customName", "test", null, "description", "23.3.0", "test"),
 		makeMigrationStepEntity("com.mgmtp.a12.dataservices.migration.internal.DataMigrationTask", "migrateDataTx", "test", null, "description", "23.3.0",
 			"test"),
-		makeMigrationStepEntity("com.mgmtp.a12.dataservices.migration.internal.DataMigrationTask", "migrateData", "test", null, "description", "23.3.0", "test")
+		makeMigrationStepEntity("com.mgmtp.a12.dataservices.migration.internal.DataMigrationTask", "migrateData", "test", null, "description", "23.3.0", "test"),
+		makeMigrationStepEntity("com.mgmtp.a12.dataservices.migration.internal.ErrorMigrationMarkRunTask", "Error migration mark run task", "Error migration mark run task", "ErrorAuthor", "error migration task", "36.0.0", "test")
 	);
 
 	@BeforeMethod void setUp() {
@@ -100,7 +101,7 @@ public class MigrationRunnerIT extends AbstractMigrationIT {
 		assertTrue(actual.getExecutionDate().isAfter(timestampBefore), "The time of the migration step is before the migration was executed");
 		assertTrue(actual.getExecutionDate().isBefore(timestampAfter), "The time of the migration step is after the migration was finished");
 		assertTrue(EXPECTED.stream().anyMatch(expected -> migrationStepEqual(actual, expected)),
-			String.format("Migration step %s was not found among the expected steps:%n  %s", actual, EXPECTED.stream()
+			"Migration step %s was not found among the expected steps:%n  %s".formatted(actual, EXPECTED.stream()
 				.map(MigrationStepEntity::toString)
 				.collect(Collectors.joining("%n  "))));
 	}

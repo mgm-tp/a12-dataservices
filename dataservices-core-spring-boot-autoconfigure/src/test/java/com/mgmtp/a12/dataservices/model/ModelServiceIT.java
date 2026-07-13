@@ -37,12 +37,14 @@ import java.util.Optional;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.mockito.testng.MockitoTestNGListener;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.testng.Assert;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.mgmtp.a12.dataservices.AbstractSpringContextIT;
@@ -64,7 +66,8 @@ import static com.mgmtp.a12.dataservices.constants.PathConstants.CONTRACT_BUSINE
 import static com.mgmtp.a12.dataservices.constants.PathConstants.MODELS_WITH_METADATA_ROOT_DIR;
 import static com.mgmtp.a12.dataservices.constants.PathConstants.PARTNER_ADDRESSES_RELATIONSHIP_MODEL_PATH;
 
-@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, MockitoTestExecutionListener.class })
+@Listeners(MockitoTestNGListener.class)
+@TestExecutionListeners(DependencyInjectionTestExecutionListener.class)
 public class ModelServiceIT extends AbstractSpringContextIT {
 
 	private static final String TEST_ROLES = "admin,guest,tester";
@@ -103,7 +106,7 @@ public class ModelServiceIT extends AbstractSpringContextIT {
 		modelService.create(removeFromHeader(model, "modelType"));
 	}
 
-	@Test(expectedExceptions = InvalidInputException.class, expectedExceptionsMessageRegExp = "Model \\[.*] does not have roles defined")
+	@Test(expectedExceptions = AccessDeniedException.class, expectedExceptionsMessageRegExp = "Access Denied")
 	public void createModelWithoutRolesTest() {
 		String model = loadResourceFromClasspathAsString(ADDRESS_DOCUMENT_MODEL_PATH);
 		model = removeRoles(model);
@@ -119,17 +122,19 @@ public class ModelServiceIT extends AbstractSpringContextIT {
 		}
 	}
 
-	@Test(expectedExceptions = InvalidInputException.class, expectedExceptionsMessageRegExp = "Relationship model \\[PartnerAddresses] is not valid:\n" +
-	                                                                                          "\\[Entity: /content\\[1]/associationType\\[1] Type: OMISSION_ERROR Message: This field is required. ErrorCode: mandatoryField Rule: formalePruefung]")
+	@Test(expectedExceptions = InvalidInputException.class, expectedExceptionsMessageRegExp = """
+		Relationship model \\[PartnerAddresses] is not valid:
+		\\[Entity: PartiallyKnownDocumentMultiPointerImpl\\[/content/duplicatesAllowed, \\[1, 1\\]\\] Type: OMISSION_ERROR Message: This field is required. ErrorCode: mandatoryField Rule: formalePruefung]""")
 	public void createInvalidRelationshipModel() throws HeaderParseException {
 		String relationshipModel =
-			loadResourceFromClasspathAsString(PARTNER_ADDRESSES_RELATIONSHIP_MODEL_PATH).replace("\"associationType\": \"SHARED\",", "");
+			loadResourceFromClasspathAsString(PARTNER_ADDRESSES_RELATIONSHIP_MODEL_PATH).replace("\"duplicatesAllowed\": false,", "");
 		modelService.create(relationshipModel);
 		Assert.assertFalse(modelService.exists(headerParser.parseJson(relationshipModel)));
 	}
 
-	@Test(expectedExceptions = InvalidInputException.class, expectedExceptionsMessageRegExp = "Relationship model \\[PartnerAddresses] is not valid:\n" +
-	                                                                                          "\\[Entity: /content\\[1]/entityCharacteristics\\[1]/linkConstraints\\[1]/multiplicity\\[1]/upperLimit\\[1] Type: OMISSION_ERROR Message: When not unbounded, upperLimit must have a value .*]")
+	@Test(expectedExceptions = InvalidInputException.class, expectedExceptionsMessageRegExp = """
+		Relationship model \\[PartnerAddresses] is not valid:
+		\\[Entity: PartiallyKnownDocumentMultiPointerImpl\\[/content/entityCharacteristics/linkConstraints/multiplicity/upperLimit, \\[1, 1, 1, 1, 1\\]\\] Type: OMISSION_ERROR Message: When not unbounded, upperLimit must have a value .*]""")
 	public void createRelationshipModelBoundedWithoutUpperLimit() throws HeaderParseException {
 		String relationshipModel = loadResourceFromClasspathAsString(PARTNER_ADDRESSES_RELATIONSHIP_MODEL_PATH)
 			.replace("\"unbounded\": true", "\"unbounded\": false");

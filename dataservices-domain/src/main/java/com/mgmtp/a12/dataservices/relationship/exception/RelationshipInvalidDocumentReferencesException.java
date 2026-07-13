@@ -47,7 +47,7 @@ public class RelationshipInvalidDocumentReferencesException extends Relationship
 	public RelationshipInvalidDocumentReferencesException(String relationshipModel) {
 		super(new RelationshipValidationException.Builder(ExceptionCodes.RELATIONSHIP_INVALID_DOCUMENT_REFERENCES_EXCEPTION_CODE,
 			ExceptionKeys.RELATIONSHIP_LINK_DOCUMENT_VALIDATION_ERROR_KEY, "Invalid document references in relationship model",
-			String.format("Relationship model [%s] contains invalid document references", relationshipModel)));
+			"Relationship model [%s] contains invalid document references".formatted(relationshipModel)));
 	}
 
 	private RelationshipInvalidDocumentReferencesException(Builder builder) {

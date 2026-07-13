@@ -40,6 +40,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.util.Assert;
@@ -49,7 +50,7 @@ import com.mgmtp.a12.dataservices.document.exception.DocumentComputationExceptio
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.internal.DocumentationDiagram;
 import com.mgmtp.a12.dataservices.utils.internal.GenericUtils;
-import com.mgmtp.a12.dataservices.utils.internal.KernelUtils;
+import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldTypeFactory;
 import com.mgmtp.a12.kernel.md.document.apiV2.DocumentMultiPointer;
 import com.mgmtp.a12.kernel.md.document.apiV2.DocumentPointer;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
@@ -57,7 +58,10 @@ import com.mgmtp.a12.kernel.md.document.apiV2.immutable.FieldInstanceV2;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.utils.IDocumentV2Visitor;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelResolver;
+import com.mgmtp.a12.kernel.md.rt.api.DocumentProcessingConfig;
+import com.mgmtp.a12.kernel.md.rt.api.DocumentProcessingConfigBuilder;
 import com.mgmtp.a12.kernel.md.rt.api.IComputedFieldInstance;
+import com.mgmtp.a12.kernel.md.rt.api.ICustomConditionFactory;
 import com.mgmtp.a12.kernel.md.rt.api.IDocumentComputationResult;
 import com.mgmtp.a12.kernel.md.rt.api.IDocumentRtService;
 import com.mgmtp.a12.kernel.md.rt.api.IDocumentValidationResult;
@@ -67,6 +71,11 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Service provides an integration layer for kernel API. Configuration is also applied.
+ *
+ * This service supports custom condition factories and custom field type factories which are
+ * applied during document computation and validation operations via {@link DocumentProcessingConfig}.
+ * These factories allow extending the kernel's validation and computation capabilities with
+ * custom logic.
  */
 @DocumentationDiagram
 @Slf4j
@@ -74,13 +83,17 @@ public class KernelDocumentService {
 
 	private final IDocumentRtService rtService;
 	private final IDocumentModelResolver documentModelResolver;
+	private final List<ICustomConditionFactory> customConditionFactories;
+	private final List<ICustomFieldTypeFactory> customFieldTypeFactories;
 	private final List<String> partialValidationForModels;
 	private final List<String> skipValidationForModels;
 	private final List<String> computationEnabledForModels;
 	private final boolean validationEnabledByDefault;
 	private final boolean enabledCleanupErrorAndNotComputedValue;
 
-	public KernelDocumentService(boolean validationEnabledByDefault, List<String> partialValidationForModels, List<String> skipValidationForModels,
+	public KernelDocumentService(boolean validationEnabledByDefault, List<String> partialValidationForModels,
+		List<ICustomConditionFactory> customConditionFactories, List<ICustomFieldTypeFactory> customFieldTypeFactories,
+		List<String> skipValidationForModels,
 		List<String> computationEnabledForModels, IDocumentRtService rtService, IDocumentModelResolver documentModelResolver,
 		boolean enabledCleanupErrorAndNotComputedValue) {
 
@@ -90,10 +103,12 @@ public class KernelDocumentService {
 				.filter(skipValidationForModels::contains)
 				.findAny()
 				.ifPresent(c -> {
-					throw new InvalidInputException(String.format("Model %s present in both: partialValidationForModels and skipValidationForModels.", c));
+					throw new InvalidInputException(ExceptionKeys.MISCONFIGURATION_ERROR_KEY, "Model %s present in both: partialValidationForModels and skipValidationForModels.".formatted(c));
 				});
 		}
 
+		this.customConditionFactories = customConditionFactories;
+		this.customFieldTypeFactories = customFieldTypeFactories;
 		this.validationEnabledByDefault = validationEnabledByDefault;
 		this.partialValidationForModels = partialValidationForModels;
 		this.skipValidationForModels = skipValidationForModels;
@@ -133,28 +148,31 @@ public class KernelDocumentService {
 	}
 
 	/**
-	 * Kernel computation is executed for the document and its linked document model and locale. The computation result is then used to enriched document that
-	 * is passed as parameter
+	 * Kernel computation is executed for the document and its linked document model and locale. The computation result is then used to enrich the document that
+	 * is passed as parameter.
+	 *
+	 * Custom condition factories and custom field type factories configured in this service are applied
+	 * via {@link DocumentProcessingConfig} during computation.
 	 *
 	 * @param document will be enriched by computed values
-	 * @param locale is a mandatory field
+	 * @param locale the locale for computation, can be `null` (will be resolved from document model)
+	 * @return the document enriched with computed field values
+	 * @throws DocumentComputationException if computation errors occur
 	 */
 	public DocumentV2 compute(DocumentV2 document, Locale locale) {
 		List<String> errors = new ArrayList<>();
-		IDocumentComputationResult computationResult = rtService.compute(document, resolveLocale(document, locale, true));
+
+		IDocumentComputationResult computationResult = rtService.compute(document, createDocumentProcessingConfig(document, locale, true));
 
 		if (enabledCleanupErrorAndNotComputedValue) {
 			document = computationResult.applyTo(document);
 		} else {
 			for (IComputedFieldInstance field : computationResult.getComputedFieldInstancesWithChanges()) {
-				document = document.withFieldValue(
-					KernelUtils.fromPathAndRepetitions(field.getPath(), field.getRepetitions()),
-					field.getValueV2()
-				);
+				document = document.withFieldValue(field.pointer(), field.getValueV2());
 			}
 		}
 		computationResult.getComputedFieldInstancesWithErrors()
-			.forEach(field -> errors.add(String.format("Computation for field %s failed: %s", field.getPath(), field.getErrorMessage())));
+			.forEach(field -> errors.add("Computation for field %s failed: %s".formatted(field.pointer().fullName(), field.getErrorMessage())));
 
 		if (!errors.isEmpty()) {
 			log.warn("Errors occurred while computation for document [{}]", document.getId());
@@ -164,25 +182,31 @@ public class KernelDocumentService {
 	}
 
 	/**
-	 * Validation of full document with a specific locale
+	 * Validation of full document with a specific locale.
+	 *
+	 * Custom condition factories and custom field type factories configured in this service are applied
+	 * via {@link DocumentProcessingConfig} during validation.
 	 *
 	 * @param document document to be validated
-	 * @param locale for which validation should be performed can be `+null+`
+	 * @param locale for which validation should be performed, can be `null` (will be resolved from document model)
 	 * @return validation result
 	 */
 	public IDocumentValidationResult validateFull(DocumentV2 document, Locale locale) {
 		StopWatch stopWatch = StopWatch.createStarted();
 		Assert.notNull(document, "Document must not be NULL.");
-		IDocumentValidationResult documentValidationResult = rtService.validateFull(document, resolveLocale(document, locale, false));
+		IDocumentValidationResult documentValidationResult = rtService.validateFull(document, createDocumentProcessingConfig(document, locale, false));
 		log.debug("Full document validation for document [{}] and locale [{}] finished in [{} ms]", document.getDocumentModelId(), locale, stopWatch.getTime());
 		return documentValidationResult;
 	}
 
 	/**
-	 * Validation of provided instances of document with a specific locale
+	 * Validation of provided instances of document with a specific locale.
+	 *
+	 * Custom condition factories and custom field type factories configured in this service are applied
+	 * via {@link DocumentProcessingConfig} during validation.
 	 *
 	 * @param document document to be validated
-	 * @param locale for which validation should be performed can be `+null+`
+	 * @param locale for which validation should be performed, can be `null` (will be resolved from document model)
 	 * @return validation result
 	 */
 	public IDocumentValidationResult validatePartially(DocumentV2 document, Locale locale) {
@@ -195,7 +219,8 @@ public class KernelDocumentService {
 			}
 		});
 
-		IDocumentValidationResult documentValidationResult = rtService.validatePart(document, documentPointers, resolveLocale(document, locale, false));
+		IDocumentValidationResult documentValidationResult =
+			rtService.validatePart(document, documentPointers, createDocumentProcessingConfig(document, locale, false));
 		log.debug("Partial document validation for document [{}] and locale [{}] finished in [{}] ms", document.getDocumentModelId(), locale,
 			stopWatch.getTime());
 		return documentValidationResult;
@@ -224,5 +249,17 @@ public class KernelDocumentService {
 			.filter(language -> Strings.CS.equals(language.getLanguage(), localeToFind.getLanguage()))
 			.findFirst()
 			.orElse(skipNonExisting ? firstLocaleFromMetadata : localeToFind);
+	}
+
+	private DocumentProcessingConfig createDocumentProcessingConfig(DocumentV2 document, Locale locale, boolean skipNonExisting) {
+		Locale resolvedLocale = resolveLocale(document, locale, skipNonExisting);
+		DocumentProcessingConfigBuilder builder = DocumentProcessingConfig.builder(resolvedLocale);
+		if (CollectionUtils.isNotEmpty(customFieldTypeFactories)) {
+			customFieldTypeFactories.forEach(builder::customFieldTypeFactory);
+		}
+		if (CollectionUtils.isNotEmpty(customConditionFactories)) {
+			customConditionFactories.forEach(builder::customConditionFactory);
+		}
+		return builder.build();
 	}
 }

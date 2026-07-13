@@ -31,10 +31,12 @@
  */
 package com.mgmtp.a12.dataservices.authorization;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * All authorization related constants are defined here.
  */
-public interface AuthConstants {
+@OnlyForUsage public interface AuthConstants {
 
 	/**
 	 * Prefix of the SpEL expression used by {@link org.springframework.security.access.prepost.PreAuthorize}

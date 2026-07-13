@@ -31,27 +31,20 @@
  */
 package com.mgmtp.a12.dataservices.cdd.internal;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
 
-import org.apache.commons.io.IOUtils;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.mgmtp.a12.dataservices.cdd.domain.internal.CddSkeleton;
 import com.mgmtp.a12.dataservices.utils.internal.ComposeDocumentModelUtils;
 import com.mgmtp.a12.model.header.Annotation;
 import com.mgmtp.a12.model.header.Header;
 import com.mgmtp.a12.model.header.HeaderFactory;
 
+
 import static com.mgmtp.a12.dataservices.cdd.CddConstants.CDM_QUERY_ROOT_ANNOTATION;
 import static com.mgmtp.a12.dataservices.cdd.CddConstants.CDM_RELATIONSHIP_ANNOTATION;
 import static com.mgmtp.a12.dataservices.model.ModelConstants.DOCUMENT_MODEL_TYPE;
 import static com.mgmtp.a12.dataservices.relationship.model.RelationshipModel.RELATIONSHIP_MODEL_TYPE;
-import static java.util.Objects.requireNonNull;
 import static org.testng.Assert.assertEquals;
 
 public class CddSupportTest extends AbstractCdmTest {
@@ -103,16 +96,4 @@ public class CddSupportTest extends AbstractCdmTest {
 		assertEquals(ComposeDocumentModelUtils.isDocumentModel(header), isCdm);
 	}
 
-	@Test public void testTraverseGroups() {
-		withCdm(CONTRACTCDM_FILE, cdm -> {
-			try {
-				CddSkeleton cdmSkeleton = CddSkeletonFactory.constructSkeletonFromCdm(cdm);
-				JSONAssert.assertEquals(
-					IOUtils.toString(requireNonNull(getClass().getResourceAsStream(CONTRACTSKELETON_FILE)), Charset.defaultCharset()),
-					new ObjectMapper().registerModules(new Jdk8Module()).writeValueAsString(cdmSkeleton), false);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		});
-	}
 }

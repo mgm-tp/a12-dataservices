@@ -74,24 +74,13 @@
         ],
         "ordered": false,
         "role": "ContractRole",
-        "navigable": true,
         "linkConstraints": {
           "multiplicity": {
             "upperLimit": 1,
-            "lowerLimit": 1,
             "unbounded": true
           }
         },
-        "documentModel": "Contract",
-        "candidateConstraints": {
-          "populationParameters": [
-            {
-              "name": "requiredField",
-              "value": "requiredField"
-            }
-          ],
-          "population": ""
-        }
+        "documentModel": "Contract"
       },
       {
         "labels": [
@@ -106,29 +95,15 @@
         ],
         "ordered": false,
         "role": "PartnerRole",
-        "navigable": true,
         "linkConstraints": {
           "multiplicity": {
             "upperLimit": null,
-            "lowerLimit": 0,
             "unbounded": true
           }
         },
-        "documentModel": "BusinessPartnerSuper",
-        "candidateConstraints": {
-          "populationParameters": [
-            {
-              "name": "requiredField",
-              "value": "requiredField"
-            }
-          ],
-          "population": ""
-        }
+        "documentModel": "BusinessPartnerSuper"
       }
     ],
-    "embeddedGroupPath": "",
-    "associationType": "SHARED",
-    "storage": "EXTERNAL",
     "linkDocumentModel": "CoInsuredAdditionalFields"
   }
 }

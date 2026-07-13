@@ -68,7 +68,7 @@ public class TestAttachmentWithRelativePathIT extends AbstractSpringContextIT {
 	}
 
 	@Test public void testLoadAttachmentHeader() throws IOException {
-		AttachmentHeaderSpec header = loadAttachmentHeaderOperation.rpc(attachmentId, docRef);
+		AttachmentHeaderSpec header = loadAttachmentHeaderOperation.rpc(attachmentId, docRef.toString());
 		assertEquals(header.getAttachmentId(), attachmentId);
 		assertEquals(header.getSize(), FileUtils.sizeOf(attachmentTestFunctions.createTestImage()));
 		assertEquals(header.getMimeType(), MimeTypeUtils.IMAGE_PNG_VALUE);
@@ -77,12 +77,12 @@ public class TestAttachmentWithRelativePathIT extends AbstractSpringContextIT {
 	}
 
 	@Test public void testLoadAttachmentUrl() {
-		DataServicesAttachmentURL attachmentURL = loadAttachmentUrlOperation.rpc(attachmentId, docRef);
+		DataServicesAttachmentURL attachmentURL = loadAttachmentUrlOperation.rpc(attachmentId, docRef.toString());
 		assertTrue(RELATIVE_ATTACHMENT_URL_PATTERN.test(attachmentURL.getLocation()));
 	}
 
 	@Test(expectedExceptions = NotFoundException.class, expectedExceptionsMessageRegExp = "Attachment \\[.*] not found")
 	public void attachmentNotFound_ShouldThrowException() {
-		loadAttachmentHeaderOperation.rpc("notExistedAttachmentId", docRef);
+		loadAttachmentHeaderOperation.rpc("notExistedAttachmentId", docRef.toString());
 	}
 }

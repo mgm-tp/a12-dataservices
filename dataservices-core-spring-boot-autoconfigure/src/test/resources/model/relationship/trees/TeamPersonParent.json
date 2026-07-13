@@ -2,7 +2,7 @@
   "header": {
     "id": "TeamPersonParent",
     "modelType": "relationship",
-    "modelVersion": "3.0.0",
+    "modelVersion": "4.0.0",
     "locales": [
       {
         "code": "en"
@@ -43,7 +43,6 @@
   },
   "content": {
     "labels": [],
-    "associationType": "SHARED",
     "linkDocumentModel": "DomainTeamPerson_AdditionalFieldsModel",
     "duplicatesAllowed": false,
     "entityCharacteristics": [
@@ -61,15 +60,12 @@
         ],
         "documentModel": "DomainTeamParent",
         "ordered": false,
-        "navigable": true,
         "linkConstraints": {
           "multiplicity": {
-            "lowerLimit": 0,
             "unbounded": true,
             "upperLimit": null
           }
-        },
-        "candidateConstraints": null
+        }
       },
       {
         "role": "Person",
@@ -85,18 +81,13 @@
         ],
         "documentModel": "DomainPersonParent",
         "ordered": false,
-        "navigable": true,
         "linkConstraints": {
           "multiplicity": {
-            "lowerLimit": 0,
             "unbounded": true,
             "upperLimit": null
           }
-        },
-        "candidateConstraints": null
+        }
       }
-    ],
-    "storage": "EXTERNAL",
-    "embeddedGroupPath": null
+    ]
   }
 }

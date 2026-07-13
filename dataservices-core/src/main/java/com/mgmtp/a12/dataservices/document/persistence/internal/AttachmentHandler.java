@@ -65,7 +65,6 @@ public class AttachmentHandler {
 			attachmentSupport.collectAttachmentIDs(document).forEach(attachmentId -> unAssignAttachment(docRefToAttRef(docRef), attachmentId));
 			log.debug("Attachments deleted for document [{}] in [{}] ms", docRef, stopWatch.getTime());
 		} catch (Exception ex) {
-			// A12S-800 will introduce clean up job that would remove orphan files instead triggering rollback that would make synchronization issues betweed DB and index
 			log.warn("Exception occurred during deletion of attachments for document [{}/{}]", document.getDocumentModelId(), docRef, ex);
 		}
 	}
@@ -101,7 +100,7 @@ public class AttachmentHandler {
 
 	private void assignAttachment(AttachmentReference<GenericReference> attachmentReference, String attachmentId) {
 		AttachmentHeader attachmentHeader = attachmentHeaderService.load(attachmentId).orElseThrow(
-			() -> new NotFoundException(ExceptionKeys.ATTACHMENT_GENERAL_ERROR_KEY, String.format("Unable to assign attachment %s to final destination.", attachmentId)));
+			() -> new NotFoundException(ExceptionKeys.ATTACHMENT_GENERAL_ERROR_KEY, "Unable to assign attachment %s to final destination.".formatted(attachmentId)));
 		attachmentHeaderService.assignAttachment(attachmentHeader, attachmentReference);
 	}
 }

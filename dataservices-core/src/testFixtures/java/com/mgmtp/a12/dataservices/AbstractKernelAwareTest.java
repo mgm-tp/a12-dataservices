@@ -36,10 +36,7 @@ import java.util.List;
 import org.mockito.Spy;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.mgmtp.a12.dataservices.document.IDocumentIdGenerator;
 import com.mgmtp.a12.dataservices.document.internal.DefaultDataServicesDocumentFactory;
 import com.mgmtp.a12.dataservices.document.internal.DefaultDataServicesDocumentMetadataExtractor;
@@ -49,18 +46,19 @@ import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentUtils;
 import com.mgmtp.a12.kernel.md.document.api.services.DocumentDeserializationConfig;
 import com.mgmtp.a12.kernel.md.document.api.services.DocumentSerializationConfig;
-import com.mgmtp.a12.kernel.md.document.api.services.IDocumentFactory;
-import com.mgmtp.a12.kernel.md.document.api.services.IDocumentSerializer;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 import com.mgmtp.a12.kernel.md.document.apiV2.services.IDocumentV2Serializer;
 import com.mgmtp.a12.kernel.md.facade.DocumentModelServiceFactory;
 import com.mgmtp.a12.kernel.md.facade.DocumentServiceFactory;
 import com.mgmtp.a12.kernel.md.model.a12internal.services.DocumentModelService;
-import com.mgmtp.a12.kernel.md.model.a12internal.services.join.DocumentModelJoiningService;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelSerializer;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelService;
 import com.mgmtp.a12.model.header.DefaultHeaderParser;
 import com.mgmtp.a12.model.header.HeaderParser;
+
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
 
 import static org.mockito.Mockito.spy;
 
@@ -81,15 +79,16 @@ public abstract class AbstractKernelAwareTest {
 	protected final DocumentModelService documentModelService = kernelTestSupport.getDocumentModelService();
 	protected final IDocumentModelService iDocumentModelService = kernelTestSupport.getIDocumentModelService();
 	protected final IDocumentModelSerializer documentModelSerializer = kernelTestSupport.getDocumentModelSerializer();
-	protected final IDocumentFactory documentFactory = kernelTestSupport.getDocumentFactory();
-	protected final DocumentModelJoiningService documentModelJoiningService = kernelTestSupport.getDocumentModelJoiningService();
-	protected final IDocumentSerializer documentSerializer = kernelTestSupport.getDocumentSerializer();
 	protected final IDocumentV2Serializer documentV2Serializer = kernelTestSupport.getDocumentV2Serializer();
 	protected final DocumentSerializationConfig documentJsonSerializationConfig = kernelTestSupport.getDocumentSerializationConfig();
 	protected final DocumentDeserializationConfig documentJsonDeserializationConfig = kernelTestSupport.getDocumentDeserializationConfig();
 	protected final JsonMapper jsonMapper = spy(JsonMapper.builder()
-		.addModule(new JavaTimeModule())
-		.addModule(new Jdk8Module())
+		.enable(MapperFeature.PROPAGATE_TRANSIENT_MARKER)
+		.changeDefaultVisibility(vc -> vc
+			.withFieldVisibility(JsonAutoDetect.Visibility.PUBLIC_ONLY)
+			.withGetterVisibility(JsonAutoDetect.Visibility.PUBLIC_ONLY)
+			.withSetterVisibility(JsonAutoDetect.Visibility.PUBLIC_ONLY)
+			.withCreatorVisibility(JsonAutoDetect.Visibility.NONE))
 		.addModule(new SimpleModule().addSerializer(DocumentV2.class, kernelTestSupport.getKernelDocumentSerializer()))
 	).build();
 	protected final DocumentServiceFactory documentServiceFactory = spy(new DocumentServiceFactory(documentModelResolver));

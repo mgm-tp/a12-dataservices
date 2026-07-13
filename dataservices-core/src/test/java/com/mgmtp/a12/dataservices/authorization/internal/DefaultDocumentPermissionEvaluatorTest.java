@@ -121,7 +121,7 @@ public class DefaultDocumentPermissionEvaluatorTest extends AbstractCorePermissi
 		Mockito.verify(authorizationService, Mockito.times(1)).checkPermissions(
 			Mockito.argThat(((List<Header> args) -> {
 				Assert.assertEquals(args.size(), 3);
-				Assert.assertEquals(args.get(0), headers.get(0));
+				Assert.assertEquals(args.getFirst(), headers.getFirst());
 				Assert.assertEquals(args.get(1), headers.get(1));
 				Assert.assertEquals(args.get(2), headers.get(2));
 				return true;
@@ -174,5 +174,44 @@ public class DefaultDocumentPermissionEvaluatorTest extends AbstractCorePermissi
 			AuthConstants.ACCESS_DENIED
 		);
 		Mockito.verify(authorizationService, Mockito.times(1)).checkPermissions("someModel", AuthConstants.DOCUMENT_QUERY_PERMISSION);
+	}
+
+	@Test(dataProvider = "permissionResultCheck")
+	void testCheckDocumentDeletePermissionByModel_success(boolean result) {
+		callCheckPermission(
+			() -> {
+				documentPermissionEvaluator.checkDocumentDeletePermissionByModel("someModel");
+				return null;
+			},
+			result,
+			AuthConstants.ACCESS_DENIED
+		);
+		Mockito.verify(authorizationService, Mockito.times(1)).checkPermissions("someModel", AuthConstants.DOCUMENT_DELETE_PERMISSION);
+	}
+
+	@Test(dataProvider = "permissionResultCheck")
+	void testCheckDocumentUpdatePermissionByModel_success(boolean result) {
+		callCheckPermission(
+			() -> {
+				documentPermissionEvaluator.checkDocumentUpdatePermissionByModel("someModel");
+				return null;
+			},
+			result,
+			AuthConstants.ACCESS_DENIED
+		);
+		Mockito.verify(authorizationService, Mockito.times(1)).checkPermissions("someModel", AuthConstants.DOCUMENT_UPDATE_PERMISSION);
+	}
+
+	@Test(dataProvider = "permissionResultCheck")
+	void testCheckDocumentCreatePermissionByModel_success(boolean result) {
+		callCheckPermission(
+			() -> {
+				documentPermissionEvaluator.checkDocumentCreatePermissionByModel("someModel");
+				return null;
+			},
+			result,
+			AuthConstants.ACCESS_DENIED
+		);
+		Mockito.verify(authorizationService, Mockito.times(1)).checkPermissions("someModel", AuthConstants.DOCUMENT_CREATE_PERMISSION);
 	}
 }

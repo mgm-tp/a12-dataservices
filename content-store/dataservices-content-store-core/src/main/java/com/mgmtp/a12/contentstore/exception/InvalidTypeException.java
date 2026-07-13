@@ -39,15 +39,6 @@ import com.mgmtp.a12.dataservices.common.exception.BaseException;
 public class InvalidTypeException extends BaseException  {
 
 	/**
-	 * Creates an exception with a non-localized message.
-	 *
-	 * @param message English message explaining the invalid type condition; may be null.
-	 */
-	public InvalidTypeException(String message) {
-		super(message);
-	}
-
-	/**
 	 * Creates an exception with a localization key and default English message.
 	 *
 	 * @param key localization key used for resolving a user-facing message; must not be null.
@@ -55,15 +46,5 @@ public class InvalidTypeException extends BaseException  {
 	 */
 	public InvalidTypeException(String key, String message) {
 		super(key, message);
-	}
-
-	/**
-	 * Creates an exception with a message and a cause.
-	 *
-	 * @param message English message explaining the invalid type condition; may be null.
-	 * @param ex originating cause; may be null.
-	 */
-	public InvalidTypeException(String message, Exception ex) {
-		super(message, ex);
 	}
 }

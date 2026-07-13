@@ -56,7 +56,7 @@ public class CopyDocumentOperationIT extends AbstractSpringContextIT {
 	private AttachmentTestFunctions.PreparedDocument preparedDocument;
 	private String preparedImageAttachmentId;
 
-	protected void initializeWithSecurityBypass() throws Exception {
+	@Override protected void initializeWithSecurityBypass() throws Exception {
 		attachmentTestFunctions.prepareDocumentModel();
 		preparedDocument = attachmentTestFunctions.prepareDocumentWith2AttachmentsV2();
 		preparedImageAttachmentId = preparedDocument.getImageAttachment().getAttachmentId();
@@ -64,14 +64,14 @@ public class CopyDocumentOperationIT extends AbstractSpringContextIT {
 
 	@Test public void testCopyDocumentOperation() {
 
-		DocumentReference resultDocumentReference = copyDocumentOperation.rpc(preparedDocument.getDataServicesDocument().getMetadata().getDocRef(), null);
+		DocumentReference resultDocumentReference = copyDocumentOperation.rpc(preparedDocument.getDataServicesDocument().getMetadata().getDocRef().toString(), null).docRef();
 
 		assertNotNull(resultDocumentReference);
 		assertNotEquals(resultDocumentReference, preparedDocument.getDataServicesDocument().getMetadata().getDocRef());
 
 		DataServicesDocument resultDocument = documentService.load(resultDocumentReference)
 			.orElseThrow(
-				() -> new NotFoundException(ExceptionKeys.DOCUMENT_NOT_FOUND_ERROR_KEY, String.format("Document [%s] not found", resultDocumentReference)));
+				() -> new NotFoundException(ExceptionKeys.DOCUMENT_NOT_FOUND_ERROR_KEY, "Document [%s] not found".formatted(resultDocumentReference)));
 
 		assertNotNull(resultDocument);
 		assertNotNull(resultDocument.getMetadata().getDocRef());

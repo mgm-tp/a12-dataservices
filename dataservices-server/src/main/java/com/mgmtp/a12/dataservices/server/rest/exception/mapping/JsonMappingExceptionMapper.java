@@ -32,8 +32,8 @@
 package com.mgmtp.a12.dataservices.server.rest.exception.mapping;
 
 import org.springframework.http.HttpStatus;
+import tools.jackson.databind.DatabindException;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.mgmtp.a12.dataservices.common.LocalizedEntry;
 import com.mgmtp.a12.dataservices.common.exception.BaseError;
 import com.mgmtp.a12.dataservices.common.exception.ErrorDetail;
@@ -42,9 +42,8 @@ import com.mgmtp.a12.dataservices.common.exception.mapping.GenericThrowableMappe
 /**
  * Mapper provides default error messages for the failed deserialization from JSON to the objects. These exceptions are thrown when there is either corrupted
  * JSON on the REST layer or completely different input is passed to the REST endpoint.
- * @param <E> the concrete {@link JsonMappingException} type handled by this mapper.
  */
-public class JsonMappingExceptionMapper<E extends JsonMappingException> extends GenericThrowableMapper<E> {
+public class JsonMappingExceptionMapper<E extends DatabindException> extends GenericThrowableMapper<E> {
 
 	/**
 	 * Localization key representing a generic invalid request.
@@ -60,7 +59,7 @@ public class JsonMappingExceptionMapper<E extends JsonMappingException> extends 
 	 *
 	 * Builds a localized {@link BaseError} payload describing the invalid request.
 	 *
-	 * @param exception the thrown {@link JsonMappingException}; never null.
+	 * @param exception the thrown {@link DatabindException}; never null.
 	 */
 	@Override public Object getEntity(E exception) {
 		return new BaseError() {
@@ -83,7 +82,7 @@ public class JsonMappingExceptionMapper<E extends JsonMappingException> extends 
 	 *
 	 * Suppresses stack trace logging for invalid request payloads.
 	 *
-	 * @param exception the thrown {@link JsonMappingException}; never null.
+	 * @param exception the thrown {@link DatabindException}; never null.
 	 * @return `false` to keep logs clean for client errors.
 	 */
 	@Override public boolean shouldLogStackTrace(E exception) {
@@ -95,7 +94,7 @@ public class JsonMappingExceptionMapper<E extends JsonMappingException> extends 
 	 *
 	 * Maps JSON mapping failures to {@link HttpStatus#BAD_REQUEST}.
 	 *
-	 * @param exception the thrown {@link JsonMappingException}; never null.
+	 * @param exception the thrown {@link DatabindException}; never null.
 	 * @return client error status indicating invalid request content.
 	 */
 	@Override public HttpStatus getHttpStatus(E exception) {

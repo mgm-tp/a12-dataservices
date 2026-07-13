@@ -51,7 +51,7 @@ import static com.mgmtp.a12.dataservices.client.cli.internal.commands.HelpComman
 import static com.mgmtp.a12.dataservices.client.cli.internal.commands.HelpCommand.USAGE_MSG;
 
 @Slf4j
-@SpringBootTest(properties = "spring.main.banner-mode=off" )
+@SpringBootTest(properties = "spring.main.banner-mode=off")
 public abstract class AbstractCliIT extends AbstractTestNGSpringContextTests {
 
 	public static final String CLASSPATH_MODELS_DOCUMENT_CONTRACT_JSON = "classpath:models/document/Contract.json";
@@ -62,8 +62,7 @@ public abstract class AbstractCliIT extends AbstractTestNGSpringContextTests {
 	static PrintWriter dialogOutputPrintWriter = new PrintWriter(stderr);
 
 	protected static final List<String> LIST_INSURANCE_BULK_MODELS =
-		Arrays.asList("Address", "AddressOther", "BusinessPartnerSuper", "BusinessPartnerSuperInclude1", "BusinessPartnerSuperInclude2",
-			"BusinessPartnerSuperInclude3", "BusinessPartnerSuperInclude4", "BusinessPartnerSuperInclude5", "BusinessPartnerSuperOther",
+		Arrays.asList("Address", "AddressOther", "BusinessPartnerSuper", "BusinessPartnerSuperOther",
 			"Contract", "DemoModelBare", "DemoModelWithAllFields");
 
 	public static final String RPC_HELP_OUTPUT = """

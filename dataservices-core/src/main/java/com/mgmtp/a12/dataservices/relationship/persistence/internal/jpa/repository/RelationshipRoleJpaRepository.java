@@ -45,7 +45,7 @@ public interface RelationshipRoleJpaRepository extends JpaRepository<Relationshi
 
 
 	/**
-	 * This is an internal method used by {@link DefaultRelationshipLinkRepository#findComplementaryBoundaryOrder(String, String, String, DocumentReference)}
+	 * This is an internal method used by {@link DefaultRelationshipLinkRepository#findComplementaryBoundaryOrder(String, String, DocumentReference)}
 	 * to find complementary boundary order.
 	 * Since the follow-up ranking is calculated in ascending order, we have to sort descending here to get the largest one on top.
 	 */
@@ -54,13 +54,8 @@ public interface RelationshipRoleJpaRepository extends JpaRepository<Relationshi
 		+ "JOIN e2.relationship r "
 		+ "WHERE r.relationshipModel = :relationshipModelName"
 		+ "  AND e2.name = :targetRole"
-		+ "  AND exists ("
-		+ "   SELECT 1"
-		+ "   FROM RelationshipRoleEntity e1"
-		+ "   WHERE e1.name = :primaryRole"
-		+ "     AND e1.relationship = r"
-		+ "     AND e1.docRef = :docRef)"
+		+ "  AND e2.docRef = :docRef "
 		+ "ORDER BY e2.order DESC")
 	List<String> findComplementaryRoleOrder(@Param(value = "relationshipModelName") String relationshipModelName,
-		@Param(value = "primaryRole") String primaryRole, @Param(value = "targetRole") String targetRole, @Param(value = "docRef") DocumentReference docRef);
+		@Param(value = "targetRole") String targetRole, @Param(value = "docRef") DocumentReference docRef);
 }

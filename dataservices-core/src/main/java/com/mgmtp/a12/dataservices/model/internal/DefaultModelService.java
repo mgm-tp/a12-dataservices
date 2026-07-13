@@ -93,14 +93,17 @@ import static java.util.stream.Collectors.toList;
 	private final ModelPermissionEvaluator<GenericModel> modelPermissionEvaluator;
 	private final DataServicesCoreProperties dataServicesCoreProperties;
 	private final DocumentModelFieldsIndexer documentModelFieldsIndexer;
+	private final UniqueConstraintModelValidator uniqueConstraintModelValidator;
 
 	@Transactional
 	@Override public GenericModel create(@NonNull String modelContent) {
 		StopWatch stopWatch = StopWatch.createStarted();
-		Header header = getValidHeader(modelContent);
+		Header header = parseHeader(modelContent);
 		modelPermissionEvaluator.checkModelCreatePermission(header);
+		ModelUtils.validateHeader(header, dataServicesCoreProperties.getAuthorization().getRoleBased().isEnabled());
 		// We need to allow client projects to change model content and header structure with synchronous events
 		GenericModel modelFromEvent = publishBeforeCreateEvent(GenericModel.of(header, modelContent));
+		uniqueConstraintModelValidator.validateModel(modelFromEvent);
 		Header headerFromEvent = modelFromEvent.getHeader();
 		checkDataIntegrity(headerFromEvent);
 		documentModelFieldsIndexer.indexDocumentModelFieldsOnCreate(modelFromEvent);
@@ -115,20 +118,22 @@ import static java.util.stream.Collectors.toList;
 	@Transactional
 	@Override public GenericModel update(@NonNull String modelContent) {
 		StopWatch stopWatch = StopWatch.createStarted();
-		Header newHeader = getValidHeader(modelContent);
+		Header newHeader = parseHeader(modelContent);
+		ModelUtils.validateHeader(newHeader, dataServicesCoreProperties.getAuthorization().getRoleBased().isEnabled());
 		ModelHeaderEntity oldHeader = modelHeaderJpaRepository.findById(newHeader.getId())
 			.orElseThrow(() -> new NotFoundException(ExceptionKeys.MODEL_NOT_FOUND_ERROR_KEY,
-				String.format("Model header [%s] not found in the persistent store", newHeader.getId())));
+			"Model header [%s] not found in the persistent store".formatted(newHeader.getId())));
 		modelPermissionEvaluator.checkModelUpdatePermission(oldHeader);
 		checkModelTypeIntegrity(newHeader, oldHeader);
 		GenericModel oldModel = getSupportingRepository(newHeader)
 			.load(newHeader)
 			.orElseThrow(() -> {
-				log.warn(String.format("Model [%s] cannot be updated because it does not exist", ((Header) oldHeader).getId()));
+				log.warn("Model [%s] cannot be updated because it does not exist".formatted(((Header) oldHeader).getId()));
 				return new NotFoundException(ExceptionKeys.MODEL_NOT_FOUND_ERROR_KEY,
-					String.format("Model [%s] could not be loaded", ((Header) oldHeader).getId()));
+					"Model [%s] could not be loaded".formatted(oldHeader.getId()));
 			});
 		GenericModel model = publishBeforeUpdateEvent(modelContent, newHeader, oldModel);
+		uniqueConstraintModelValidator.validateModel(model);
 		Header headerFromEvent = model.getHeader();
 		documentModelFieldsIndexer.indexDocumentModelFieldsOnUpdate(model);
 		GenericModel updatedModel = getSupportingRepository(headerFromEvent)
@@ -232,16 +237,10 @@ import static java.util.stream.Collectors.toList;
 		modelHeaderJpaRepository.save(new ModelHeaderEntity(headerFromEvent));
 	}
 
-	private Header getValidHeader(String modelContent) {
-		Header newHeader = parseHeader(modelContent);
-		ModelUtils.validateHeader(newHeader, dataServicesCoreProperties.getAuthorization().getRoleBased().isEnabled());
-		return newHeader;
-	}
-
 	private static void checkModelTypeIntegrity(Header newHeader, Header oldHeader) {
 		if (!Objects.equals(oldHeader.getModelType(), newHeader.getModelType())) {
 			throw new IntegrityException(ExceptionKeys.MODEL_MISMATCH_ERROR_KEY,
-				String.format("Changing of model type is not permitted for [%s]", oldHeader.getId()));
+				"Changing of model type is not permitted for [%s]".formatted(oldHeader.getId()));
 		}
 	}
 
@@ -249,7 +248,7 @@ import static java.util.stream.Collectors.toList;
 		if (exists(headerFromEvent)) {
 			log.warn("Model [{}] cannot be created because it already exists", headerFromEvent.getId());
 			throw new IntegrityException(ExceptionKeys.MODEL_UNIQUENESS_ERROR_KEY,
-				String.format("Model entity with ID [%s] already exists.", headerFromEvent.getId()));
+				"Model entity with ID [%s] already exists.".formatted(headerFromEvent.getId()));
 		}
 	}
 
@@ -259,7 +258,7 @@ import static java.util.stream.Collectors.toList;
 		} catch (HeaderParseException ex) {
 			log.error("Model header deserialization failed");
 			throw new SerializationException(ExceptionKeys.MODEL_DESERIALIZATION_ERROR_KEY,
-				String.format("Model validation failed. Model is not acceptable:%n:%s", modelContent), BaseException.MessagePriority.HIGH, ex)
+					"Model validation failed. Model is not acceptable:%n:%s".formatted(modelContent), BaseException.MessagePriority.HIGH, ex)
 				.withAnonymityMessage("Model is not acceptable.");
 		}
 	}

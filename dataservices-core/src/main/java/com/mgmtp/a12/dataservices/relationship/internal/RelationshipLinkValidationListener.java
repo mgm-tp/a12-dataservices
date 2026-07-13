@@ -114,10 +114,11 @@ import lombok.extern.slf4j.Slf4j;
 
 		if (BooleanUtils.isNotTrue(characteristicsByRole.getLinkConstraints().getMultiplicity().getUnbounded())) {
 			Integer upperLimit = characteristicsByRole.getLinkConstraints().getMultiplicity().getUpperLimit();
-			if ((upperLimit != null) && getNumberOfLinksPerRole(role, relationshipModelName) > upperLimit) {
+			long currentCount = getNumberOfLinksPerRole(role, relationshipModelName);
+			if ((upperLimit != null) && currentCount > upperLimit) {
 				throw RpcExceptionSupport.createException(ExceptionCodes.RELATIONSHIP_INVALID_LINK_EXCEPTION_CODE, ExceptionKeys.RELATIONSHIP_LINK_VALIDATION_ERROR_KEY, "Upper Limit Reached",
-					String.format("Upper limit reached for role [%s] in relationship model [%s]",
-						characteristicsByRole.getRole(), linkModelName));
+					"Upper limit reached for role [%s] in relationship model [%s]. Document [%s] already has [%d] links; maximum is [%d]".formatted(
+						characteristicsByRole.getRole(), linkModelName, role.getDocRef(), currentCount, upperLimit));
 			}
 		}
 	}
@@ -129,7 +130,7 @@ import lombok.extern.slf4j.Slf4j;
 		return entityCharacteristics.orElseThrow(() -> RpcExceptionSupport.createException(ExceptionCodes.RELATIONSHIP_LINK_ROLE_MISSING_EXCEPTION_CODE,
 			ExceptionKeys.RELATIONSHIP_LINK_VALIDATION_ROLE_MISSING_ERROR_KEY,
 			"Role Characteristic",
-			String.format("Unable to find entity characteristics for role [%s]", sourceRole)));
+			"Unable to find entity characteristics for role [%s]".formatted(sourceRole)));
 	}
 
 	private long getNumberOfLinksPerRole(RelationshipRole role, String relationshipModelName) {
@@ -144,16 +145,16 @@ import lombok.extern.slf4j.Slf4j;
 				.map(r -> link.getRoles().get(r))
 				.toList();
 
-			if (relationshipLinkService.countByRoles(link.getRelationshipModel(), roleList.get(0), roleList.get(1)) > 1) {
+			if (relationshipLinkService.countByRoles(link.getRelationshipModel(), roleList.getFirst(), roleList.get(1)) > 1) {
 				throw RpcExceptionSupport.createException(ExceptionCodes.RELATIONSHIP_INVALID_LINK_EXCEPTION_CODE, ExceptionKeys.RELATIONSHIP_LINK_VALIDATION_ERROR_KEY,
 					"Duplicated link constraint violated",
-					String.format("Creation of the link of model [%s] between [%s] and [%s] violates duplication constraint",
-						relationshipModel.getHeader().getId(), roleToString(roleList.get(0)), roleToString(roleList.get(1))));
+					"Creation of the link of model [%s] between [%s] and [%s] violates duplication constraint".formatted(
+						relationshipModel.getHeader().getId(), roleToString(roleList.getFirst()), roleToString(roleList.get(1))));
 			}
 		}));
 	}
 
 	private static String roleToString(RelationshipRole role) {
-		return String.format("%s/%s", role.getName(), role.getDocRef());
+		return "%s/%s".formatted(role.getName(), role.getDocRef());
 	}
 }

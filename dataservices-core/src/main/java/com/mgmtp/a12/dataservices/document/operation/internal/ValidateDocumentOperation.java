@@ -37,19 +37,19 @@ import java.util.Locale;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.mgmtp.a12.dataservices.common.anonymizing.Anonymizer;
 import com.mgmtp.a12.dataservices.document.DocumentService;
+import com.mgmtp.a12.dataservices.document.DocumentValidationResult;
 import com.mgmtp.a12.dataservices.document.internal.kernel.KernelDocumentService;
 import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
-import com.mgmtp.a12.dataservices.document.operation.validate.DocumentValidationError;
 import com.mgmtp.a12.dataservices.document.operation.validate.ValidateDocumentResult;
 import com.mgmtp.a12.dataservices.exception.ExceptionCodes;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
+import com.mgmtp.a12.dataservices.experimental.ListIProblemReporter;
 import com.mgmtp.a12.dataservices.rpc.RemoteOperation;
 import com.mgmtp.a12.dataservices.utils.OperationContextHolder;
-import com.mgmtp.a12.dataservices.experimental.ListIProblemReporter;
 import com.mgmtp.a12.kernel.md.document.api.services.DocumentDeserializationConfig;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 import com.mgmtp.a12.kernel.md.document.apiV2.services.IDocumentV2Serializer;
@@ -72,7 +72,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Slf4j
-@RemoteOperation(name = CoreOperationConstants.VALIDATE_DOCUMENT_OPERATION, group = CoreOperationConstants.DOCUMENT_OPERATIONS_GROUP)
+@RemoteOperation(name = CoreOperationConstants.VALIDATE_DOCUMENT_OPERATION, group = CoreOperationConstants.DOCUMENT_OPERATIONS_GROUP, isMutation = false)
 public class ValidateDocumentOperation extends AbstractDocumentOperation {
 
 	private final KernelDocumentService kernelDocumentService;
@@ -104,7 +104,7 @@ public class ValidateDocumentOperation extends AbstractDocumentOperation {
 	 * `referencedFields`:: a list of referenced field.
 	 */
 	@Transactional(readOnly = true)
-	public List<DocumentValidationError> rpc(@NonNull @JsonRpcParam("documentModelName") String documentModelName,
+	public List<DocumentValidationResult> rpc(@NonNull @JsonRpcParam("documentModelName") String documentModelName,
 		@NonNull @JsonRpcParam("document") JsonNode documentContent, @JsonRpcParam("partial") Boolean partial,
 		@JsonRpcParam("locale") Locale locale) {
 		log.debug("{} called with parameters [documentModelName={}, locale={}, partial={}]",

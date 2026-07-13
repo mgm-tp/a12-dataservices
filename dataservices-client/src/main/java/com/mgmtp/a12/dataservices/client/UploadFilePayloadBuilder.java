@@ -104,7 +104,7 @@ public class UploadFilePayloadBuilder {
 		if (contentType != null) {
 			body.add(HttpHeaders.CONTENT_TYPE, contentType);
 		}
-		body.add(HttpHeaders.CONTENT_DISPOSITION, String.format(HEADER_ATTACHMENT_FILE, resourceFileName, Optional.ofNullable(resource.getFilename()).orElse(resource.getDescription())));
+		body.add(HttpHeaders.CONTENT_DISPOSITION, HEADER_ATTACHMENT_FILE.formatted(resourceFileName, Optional.ofNullable(resource.getFilename()).orElse(resource.getDescription())));
 		body.add(HEADER_CONTENT_ID, resourceFileName);
 
 		return RestServerRequest.withPayload(body)

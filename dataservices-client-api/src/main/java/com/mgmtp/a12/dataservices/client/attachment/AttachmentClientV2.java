@@ -37,13 +37,14 @@ import java.util.Collection;
 
 import com.mgmtp.a12.dataservices.attachment.AttachmentAnnotation;
 import com.mgmtp.a12.dataservices.attachment.AttachmentHeaderSpec;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 import lombok.NonNull;
 
 /**
  * Client interface for attachment upload V2.
  */
-public interface AttachmentClientV2 {
+@OnlyForUsage public interface AttachmentClientV2 {
 
 	/**
 	 * Uploads an attachment.

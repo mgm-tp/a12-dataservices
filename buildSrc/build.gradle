@@ -14,7 +14,7 @@ gradlePlugin {
 	plugins {
 		dependencyManagementPlugin {
 			id = "com.mgmtp.a12.dataservices.dependency-management"
-			implementationClass = "com.mgmtp.a12.dataservices.gradle.dependency.DependencyManagementPlugin"
+			implementationClass = 'com.mgmtp.a12.dataservices.gradle.dependency.DependencyManagementPlugin'
 		}
 		javaConventionsPlugin {
 			id = 'com.mgmtp.a12.dataservices.java-conventions'

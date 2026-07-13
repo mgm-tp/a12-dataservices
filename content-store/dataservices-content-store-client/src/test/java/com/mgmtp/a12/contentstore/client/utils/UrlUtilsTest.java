@@ -55,12 +55,14 @@ public class UrlUtilsTest {
 		};
 	}
 
-	@Test(dataProvider = "downloadUrlDataProvider")
-	public void testRequestTicket_shouldReturnExpectedDownloadUrl(String downloadUrl, String contentBaseUrl, String expectedDownloadUrl) {
+	@Test(dataProvider = "downloadUrlDataProvider",
+		description = "Should return expected download URL when base prefix and download URL are provided")
+	public void testRequestTicket_shouldReturnExpectedDownloadUrl(
+			String downloadUrl, String contentBasePrefix, String expectedDownloadUrl) {
 		DownloadUrlResponse downloadUrlResponse = new DownloadUrlResponse();
 		downloadUrlResponse.setUrl(downloadUrl);
 		ContentStoreClientProperties contentStoreClientProperties = new ContentStoreClientProperties();
-		contentStoreClientProperties.getContent().setBaseUrl(contentBaseUrl);
+		contentStoreClientProperties.getContent().setBasePrefix(contentBasePrefix);
 
 		UrlUtils.computeDownloadUrl(downloadUrlResponse, contentStoreClientProperties);
 

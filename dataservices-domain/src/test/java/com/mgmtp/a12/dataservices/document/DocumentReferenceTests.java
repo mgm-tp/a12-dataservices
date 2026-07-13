@@ -113,7 +113,7 @@ public class DocumentReferenceTests extends AbstractSerializationTest {
 	@SneakyThrows
 	@Test public void testSerialization() {
 		String result = objectMapper.writeValueAsString(new DocumentReference("Contract/14"));
-		assertEquals(result, "{\"docRef\":\"Contract/14\"}");
+		assertEquals(result, "\"Contract/14\"");
 	}
 
 	@DataProvider public static Object[][] deserializationDataProvider() {
@@ -127,7 +127,7 @@ public class DocumentReferenceTests extends AbstractSerializationTest {
 	@Test(dataProvider = "deserializationDataProvider")
 	public void testDeserialization(String json, String model, String id) {
 		DocumentReference result = objectMapper.readValue(json, DocumentReference.class);
-		String stringValue = String.format("%s/%s", model, id);
+		String stringValue = "%s/%s".formatted(model, id);
 		assertEquals(result.toString(), stringValue);
 		assertEquals(result, new DocumentReference(stringValue));
 		assertEquals(result, DocumentReference.builder().documentModelName(model).documentId(id).build());

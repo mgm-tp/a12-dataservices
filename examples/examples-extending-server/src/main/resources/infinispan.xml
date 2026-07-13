@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-License-Identifier: EUPL-1.2 OR LicenseRef-commercial
+
+  Copyright (c) 2012-2026 mgm technology partners GmbH
+
+  Dual License
+  ————————————
+  This source file is part of the mgm A12 Platform and available under
+  a choice of two different licenses:
+
+  1. Open-Source License – EUPL v1.2
+     You may redistribute and/or modify this file under the terms of the
+     European Union Public License, version 1.2 - see https://eupl.eu/.
+
+  2. Commercial License
+     Alternatively, you may obtain a commercial license from
+     mgm technology partners GmbH, that permits use of this software
+     under different terms (including support and maintenance services).
+
+     Please contact a12-license@mgm-tp.com for more information.
+
+  You must select and comply with exactly one of the above license options.
+
+  Warranty Disclaimer (applies to either option)
+  ——————————————————————————————————————————————
+  THIS SOFTWARE IS PROVIDED “AS IS” AND WITHOUT WARRANTY OF ANY KIND,
+  WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+  NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
+  LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
+-->
+<!--
+  Sample Infinispan deployment configuration for applications extending Data Services.
+
+  Defines only the JGroups transport stack. Cache definitions (names, TTL, maxCount)
+  are maintained in infinispan-caches.xml (provided by the dataservices-core module)
+  and applied automatically by InfinispanCacheConfiguration at startup.
+
+  To add application-specific caches, override infinispan-caches.xml by placing a
+  custom version in src/main/resources/ that extends the standard cache definitions.
+
+  JGroups transport uses TCP with DNS_PING for peer discovery in Kubernetes.
+  Before deploying to Kubernetes, replace the dns_query value with the headless
+  Service name that matches your namespace:
+    <namespace> is the Kubernetes namespace where Data Services pods are running.
+    Example: dataservices-jgroups.my-namespace.svc.cluster.local
+
+  The default value uses the system property jgroups.dns.query so that the
+  query can be overridden at runtime without rebuilding the image:
+    -Djgroups.dns.query=dataservices-jgroups.my-namespace.svc.cluster.local
+
+  In single-pod or local-dev mode DNS_PING returns no peers and the node forms
+  a cluster of size 1 without errors — no additional configuration is required.
+-->
+<infinispan xmlns="urn:infinispan:config:15.0">
+
+	<jgroups>
+		<stack name="tcp-dns">
+			<TCP bind_addr="SITE_LOCAL" bind_port="7800"/>
+			<org.jgroups.protocols.dns.DNS_PING dns_query="${jgroups.dns.query:dataservices-jgroups.default.svc.cluster.local}" dns_record_type="A"/>
+			<MERGE3/>
+			<FD_SOCK2/>
+			<FD_ALL3/>
+			<VERIFY_SUSPECT2/>
+			<pbcast.NAKACK2/>
+			<UNICAST3/>
+			<pbcast.STABLE/>
+			<pbcast.GMS/>
+			<MFC/>
+			<FRAG4/>
+		</stack>
+	</jgroups>
+
+	<cache-container>
+		<transport cluster="dataservices-cluster" stack="tcp-dns"/>
+	</cache-container>
+
+</infinispan>

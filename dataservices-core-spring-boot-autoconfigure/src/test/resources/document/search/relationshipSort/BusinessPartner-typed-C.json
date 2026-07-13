@@ -1,0 +1,12 @@
+{
+	"BusinessPartnerRoot": {
+		"Name": "Typed Partner C",
+		"Industry": "Healthcare",
+		"StartOfRelationship": "2024-01-10",
+		"EndOfRelationship": "2023-04-05T22:15:00",
+		"CustomerDiscount": "100%",
+		"PersonOrEntity": "Legal Entity",
+		"SubtypeGroup": {},
+		"accountNumber": "10"
+	}
+}

@@ -28,28 +28,6 @@
 					"text": "Business Partner Super"
 				}
 			],
-			"modelReferences": [
-				{
-					"modelType": "document",
-					"reference": "BusinessPartnerSuperInclude2"
-				},
-				{
-					"modelType": "document",
-					"reference": "BusinessPartnerSuperInclude5"
-				},
-				{
-					"modelType": "document",
-					"reference": "BusinessPartnerSuperInclude4"
-				},
-				{
-					"modelType": "document",
-					"reference": "BusinessPartnerSuperInclude1"
-				},
-				{
-					"modelType": "document",
-					"reference": "BusinessPartnerSuperInclude3"
-				}
-			],
 			"relations": [],
 			"subTypes": [],
 			"abstractModel": true
@@ -64,66 +42,6 @@
 				{
 					"locale": "en",
 					"text": "Business Partner Super"
-				}
-			],
-			"relations": [],
-			"subTypes": [],
-			"abstractModel": true
-		},
-		{
-			"modelId": "BusinessPartnerSuperInclude4",
-			"displayLabels": [
-				{
-					"locale": "de",
-					"text": "Geschäftspartner Super"
-				},
-				{
-					"locale": "en",
-					"text": "Business Partner Super"
-				}
-			],
-			"relations": [],
-			"subTypes": [],
-			"abstractModel": true
-		},
-		{
-			"modelId": "BusinessPartnerSuperInclude2",
-			"displayLabels": [
-				{
-					"locale": "de",
-					"text": "Geschäftspartner Super"
-				},
-				{
-					"locale": "en",
-					"text": "Business Partner Super"
-				}
-			],
-			"modelReferences": [
-				{
-					"modelType": "document",
-					"reference": "BusinessPartnerSuperInclude4"
-				}
-			],
-			"relations": [],
-			"subTypes": [],
-			"abstractModel": true
-		},
-		{
-			"modelId": "BusinessPartnerSuperInclude3",
-			"displayLabels": [
-				{
-					"locale": "de",
-					"text": "Geschäftspartner Super"
-				},
-				{
-					"locale": "en",
-					"text": "Business Partner Super"
-				}
-			],
-			"modelReferences": [
-				{
-					"modelType": "document",
-					"reference": "BusinessPartnerSuperInclude5"
 				}
 			],
 			"relations": [],
@@ -161,48 +79,6 @@
 			"relations": [],
 			"subTypes": [],
 			"abstractModel": false
-		},
-		{
-			"modelId": "BusinessPartnerSuperInclude1",
-			"displayLabels": [
-				{
-					"locale": "de",
-					"text": "Geschäftspartner Super"
-				},
-				{
-					"locale": "en",
-					"text": "Business Partner Super"
-				}
-			],
-			"modelReferences": [
-				{
-					"modelType": "document",
-					"reference": "BusinessPartnerSuperInclude5"
-				},
-				{
-					"modelType": "document",
-					"reference": "BusinessPartnerSuperInclude3"
-				}
-			],
-			"relations": [],
-			"subTypes": [],
-			"abstractModel": true
-		},
-		{
-			"modelId": "BusinessPartnerSuperInclude5",
-			"displayLabels": [
-				{
-					"locale": "de",
-					"text": "Geschäftspartner Super"
-				},
-				{
-					"locale": "en",
-					"text": "Business Partner Super"
-				}
-			],
-			"relations": [],
-			"subTypes": [],
-			"abstractModel": true
 		}
 	],
 	"composeDocumentModels": [],

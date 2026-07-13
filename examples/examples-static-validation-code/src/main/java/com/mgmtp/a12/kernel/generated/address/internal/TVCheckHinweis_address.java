@@ -31,8 +31,8 @@
  */
 package com.mgmtp.a12.kernel.generated.address.internal;
 
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.core.ITeilValidierungChecker;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.core.MainValidatorController;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.core.ITeilValidierungChecker;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.core.MainValidatorController;
 
 /**
  * Diese Klasse dient der Ausführung von Teilvalidierungen.

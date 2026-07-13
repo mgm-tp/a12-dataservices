@@ -33,9 +33,10 @@ package com.mgmtp.a12.dataservices.internal.query.generator.sql.constraint;
 
 import org.springframework.context.ApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.AbstractQueryContextAwareTest;
 import com.mgmtp.a12.dataservices.query.generator.sql.internal.DefaultQueryGeneratorContext;
+import com.mgmtp.a12.dataservices.query.internal.marshalling.QuerySubtypeProvider;
 
 import jakarta.persistence.EntityManager;
 
@@ -43,7 +44,7 @@ import static org.mockito.Mockito.mock;
 
 public abstract class AbstractSqlGeneratorTest  extends AbstractQueryContextAwareTest {
 	protected final DefaultQueryGeneratorContext.QueryGeneratorContextFactory queryGeneratorContextFactory =
-		new DefaultQueryGeneratorContext.QueryGeneratorContextFactory(new ObjectMapper(), mock(ApplicationContext.class));
+		new DefaultQueryGeneratorContext.QueryGeneratorContextFactory(new ObjectMapper(), mock(ApplicationContext.class), mock(QuerySubtypeProvider.class));
 
 	protected final EntityManager entityManager = mock(EntityManager.class);
 

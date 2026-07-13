@@ -4,9 +4,15 @@ plugins {
 
 dependencies {
 
+	api libs.baseModelUtils,
+			libs.jacksonDatabind,
+			libs.jacksonAnnotations,
+			platform(libs.jacksonBom),
+			platform(libs.springFrameworkBom)
+
 	implementation libs.lombok,
-			libs.springContext,
-			libs.jacksonDatabind
+			libs.springContext
+
 
 	testImplementation libs.testng
 }

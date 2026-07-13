@@ -37,9 +37,9 @@ import java.util.Set;
 
 import com.mgmtp.a12.kernel.core.rt.a12internal.ValidatorException;
 import com.mgmtp.a12.kernel.core.rt.a12internal.validation.IIdentifier;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.core.*;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.core.CalculationCache.CalculationFieldException;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.*;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.core.*;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.core.CalculationCache.CalculationFieldException;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.*;
 
 public class C_contractcdm implements ICalculatorIntern {
 	private static final C_contractcdm checkObject = new C_contractcdm();

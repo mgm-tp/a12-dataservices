@@ -43,6 +43,7 @@ import com.mgmtp.a12.dataservices.cdd.internal.CddSupport;
 import com.mgmtp.a12.dataservices.cdd.jms.internal.ComposeDocumentModel;
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
+import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.kernel.md.facade.DocumentModelServiceFactory;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 import com.mgmtp.a12.kernel.md.model.api.IGroup;
@@ -92,7 +93,7 @@ public class ComposeDocumentModelUtils {
 			.filter(ComposeDocumentModelUtils::hasCrdAnnotation)
 			.map(Annotation::getValue)
 			.findAny()
-			.orElseThrow(() -> new InvalidInputException("Model: " + header.getId() + " isn't a CDM"));
+			.orElseThrow(() -> new InvalidInputException(ExceptionKeys.INVALID_INPUT_ERROR_KEY, "Model: " + header.getId() + " isn't a CDM"));
 	}
 
 	/**
@@ -132,6 +133,6 @@ public class ComposeDocumentModelUtils {
 			: documentModelServiceFactory.createDocumentModelSearchService(cdm).getByPath(path)
 			.filter(IGroup.class::isInstance)
 			.map(IGroup.class::cast)
-			.orElseThrow(() -> new NotFoundException(String.format("No group at path %s in the document model %s", path, cdm.getHeader().getId())).withAnonymityMessage("No group at path in document model."));
+			.orElseThrow(() -> new NotFoundException(ExceptionKeys.QUERY_INVALID_INPUT_ERROR_KEY, "No group at path %s in the document model %s".formatted(path, cdm.getHeader().getId())).withAnonymityMessage("No group at path in document model."));
 	}
 }

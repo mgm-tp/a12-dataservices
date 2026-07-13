@@ -42,7 +42,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.attachment.DataServicesAttachmentURL;
 import com.mgmtp.a12.dataservices.client.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.client.attachment.AttachmentClientV2;
@@ -78,7 +78,7 @@ public class LoadAttachmentUrlOperationIT extends AbstractSpringContextIT {
 		attachmentId = attachmentClientV2.uploadAttachment(file, FILENAME,
 			BUSINESS_PARTNER_MODEL_NAME, "", List.of()).getAttachmentId();
 		assertNotNull(attachmentId);
-		documentReference = createDocumentFromJson(BUSINESS_PARTNER_MODEL_NAME, String.format(readFile(BUSINESS_PARTNER_DOCUMENT), attachmentId));
+		documentReference = createDocumentFromJson(BUSINESS_PARTNER_MODEL_NAME, readFile(BUSINESS_PARTNER_DOCUMENT).formatted(attachmentId));
 	}
 
 	@AfterClass public void cleanUp() {
@@ -90,12 +90,12 @@ public class LoadAttachmentUrlOperationIT extends AbstractSpringContextIT {
 		rpcRequest1.addMethodCall(CoreOperationConstants.LOAD_ATTACHMENT_URL_OPERATION)
 			.id(operationId)
 			.putParameter("attachmentId", attachmentId)
-			.putParameter("docRef", documentReference);
+			.putParameter("docRef", documentReference.toString());
 
 		List<JsonRpc2Response> responseList = rpcOperationsClient.invoke(rpcRequest1.build());
 		responseList.forEach(res -> {
-			assertNull(res.getError(), String.format("Response [%s] should not contain error", res.getId()));
-			assertNotNull(res.getResult(), String.format("Response [%s] should contain result", res.getId()));
+			assertNull(res.getError(), "Response [%s] should not contain error".formatted(res.getId()));
+			assertNotNull(res.getResult(), "Response [%s] should contain result".formatted(res.getId()));
 		});
 
 		responseList.stream()

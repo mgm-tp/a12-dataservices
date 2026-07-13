@@ -184,9 +184,9 @@ public class DsResourceUtilsTest {
 	@Test
 	public void testFilesInsideJar() throws IOException {
 		Resource jarFile = getResource("models.jar");
-		Resource[] resources = RESOURCE_PATTERN_RESOLVER.getResources(String.format(JSON_FILES_INSIDE_JAR_PATTERN, jarFile.getURI()));
+		Resource[] resources = RESOURCE_PATTERN_RESOLVER.getResources(JSON_FILES_INSIDE_JAR_PATTERN.formatted(jarFile.getURI()));
 		DsResourceUtils.sortByURI(resources);
-		assertOrderIsCorrect(resources, String.format(INSIDE_JAR_PATTERN, jarFile.getURI()),
+		assertOrderIsCorrect(resources, INSIDE_JAR_PATTERN.formatted(jarFile.getURI()),
 			"jarmodels/brand/DomainBrand.json",
 			"jarmodels/brand-rels/DomainBrandRels.json",
 			"jarmodels/campaign/DomainCampaign.json",

@@ -31,15 +31,16 @@
  */
 package com.mgmtp.a12.dataservices.model.metadata.internal;
 
-
 import org.springframework.stereotype.Component;
 
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.model.internal.AbstractInternalModelProvider;
-import com.mgmtp.a12.dataservices.model.metadata.DocumentModelMetadataInjectorFactory;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 
 @Component public class DocumentMetadataMetaModelProvider extends AbstractInternalModelProvider {
+
+	public static final String DOCUMENT_META_DATA_MODEL_NAME = "document-meta-data";
+
 
 	private final DataServicesCoreProperties dataServicesCoreProperties;
 
@@ -49,7 +50,7 @@ import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 	}
 
 	@Override protected String getModelName() {
-		return DocumentModelMetadataInjectorFactory.DOCUMENT_META_DATA_MODEL_NAME;
+		return DOCUMENT_META_DATA_MODEL_NAME;
 	}
 
 	@Override protected String getModelPath() {

@@ -55,12 +55,12 @@ public class RpcRelinkDocumentOperationIT extends AbstractLinkIT {
 
 	@BeforeMethod
 	@Transactional
-	public void setUp() throws Exception {
+	@Override public void setUp() throws Exception {
 		super.setUp();
-		String TEMPLATE = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "add/add_link_head.json");
+		String template = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "add/add_link_head.json");
 		// no predecessor init request
 		String request =
-			String.format(TEMPLATE, RoleConstants.PARTNER_ROLE, partner1DocRef, RoleConstants.CONTRACT_ROLE, contract1DocRef, "");
+			template.formatted(RoleConstants.PARTNER_ROLE, partner1DocRef, RoleConstants.CONTRACT_ROLE, contract1DocRef, "");
 		handleErrors(sendRpcRequest(request));
 
 		QueryRoot queryLink = constructQueryLink(DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL, partner1DocRef, RoleConstants.CONTRACT_ROLE);
@@ -78,7 +78,7 @@ public class RpcRelinkDocumentOperationIT extends AbstractLinkIT {
 		String template = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "templates/relink_document_template.json");
 
 		String request =
-			String.format(template, RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL, RelationshipModelConstants.RoleConstants.PARTNER_ROLE,
+			template.formatted(RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL, RelationshipModelConstants.RoleConstants.PARTNER_ROLE,
 				partner1DocRef,
 				RelationshipModelConstants.RoleConstants.CONTRACT_ROLE, contract2DocRef, "", firstLink);
 		sendRpcRequest(request);
@@ -101,11 +101,11 @@ public class RpcRelinkDocumentOperationIT extends AbstractLinkIT {
 
 	@Test
 	public void relinkNonExisting() throws IOException {
-		String TEMPLATE = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "templates/relink_document_template.json");
+		String template = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "templates/relink_document_template.json");
 		String request =
-			String.format(TEMPLATE, RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL, RelationshipModelConstants.RoleConstants.PARTNER_ROLE,
+			template.formatted(RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL, RelationshipModelConstants.RoleConstants.PARTNER_ROLE,
 				partner1DocRef,
 				RelationshipModelConstants.RoleConstants.CONTRACT_ROLE, contract2DocRef, "", "999999999");
-		Assert.assertFalse(sendRpcRequest(request).get(0).isSuccess());
+		Assert.assertFalse(sendRpcRequest(request).getFirst().isSuccess());
 	}
 }

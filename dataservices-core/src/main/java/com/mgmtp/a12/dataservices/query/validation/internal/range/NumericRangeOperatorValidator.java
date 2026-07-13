@@ -55,6 +55,11 @@ import lombok.RequiredArgsConstructor;
 
 	@Override public @NonNull Collection<ValidationItem> validate(ILogicOperator operator, String parentDocumentModel, String[] path, QueryContext context, boolean validationEnabled) {
 		if (validationEnabled && operator instanceof NumericRangeOperator<?> numericRangeOperator) {
+			// Skip validation if parentDocumentModel is null (e.g., due to invalid role in link constraint)
+			// The LinkAwareValidator will report the specific role validation error
+			if (parentDocumentModel == null) {
+				return Collections.emptyList();
+			}
 			List<ValidationItem> issues = new ArrayList<>();
 			if (numericRangeOperator.getFrom() == null && numericRangeOperator.getTo() == null) {
 				issues.add(ValidationItem.invalid(path, "Please provide `from` or `to` or both in %s operator.".formatted(context.getOperatorName(operator))));

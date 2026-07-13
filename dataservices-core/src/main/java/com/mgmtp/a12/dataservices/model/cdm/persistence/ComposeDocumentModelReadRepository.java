@@ -34,6 +34,7 @@ package com.mgmtp.a12.dataservices.model.cdm.persistence;
 import java.util.List;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import com.mgmtp.a12.dataservices.cdd.jms.internal.ComposeDocumentModel;
@@ -42,12 +43,12 @@ import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.model.document.persistence.AbstractDocumentModelReadRepository;
 import com.mgmtp.a12.dataservices.model.internal.ModelCacheManager;
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.repository.ModelHeaderJpaRepository;
+import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.repository.ModelJpaRepository;
 import com.mgmtp.a12.dataservices.utils.internal.ComposeDocumentModelUtils;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 import com.mgmtp.a12.model.header.Header;
 
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 import static com.mgmtp.a12.dataservices.model.ModelConstants.DOCUMENT_MODEL_TYPE;
 
@@ -56,11 +57,12 @@ import static com.mgmtp.a12.dataservices.model.ModelConstants.DOCUMENT_MODEL_TYP
  * Adds transparent caching via {@link ModelCacheManager} and throws {@link NotFoundException}
  * if the model is not a composed document model.
  */
-@RequiredArgsConstructor
 @Component public class ComposeDocumentModelReadRepository extends AbstractDocumentModelReadRepository<ComposeDocumentModel> {
 
-	private final ModelHeaderJpaRepository headerJpaRepository;
-	private final DocumentModelUtils documentModelUtils;
+	public ComposeDocumentModelReadRepository(ModelJpaRepository modelJpaRepository,
+		ModelHeaderJpaRepository modelHeaderJpaRepository, ApplicationEventPublisher eventPublisher, DocumentModelUtils documentModelUtils) {
+		super(modelJpaRepository, modelHeaderJpaRepository, eventPublisher, documentModelUtils);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -73,7 +75,7 @@ import static com.mgmtp.a12.dataservices.model.ModelConstants.DOCUMENT_MODEL_TYP
 		ComposeDocumentModel model = new ComposeDocumentModel(super.readModel(modelId));
 		if (!ComposeDocumentModelUtils.isComposeDocumentModel(model.getHeader())) {
 			throw new NotFoundException(ExceptionKeys.MODEL_NOT_FOUND_ERROR_KEY,
-				String.format("%s %s is not available.", getModelTypeForMessage(), modelId));
+				"%s %s is not available.".formatted(getModelTypeForMessage(), modelId));
 		}
 		return model;
 	}
@@ -92,7 +94,7 @@ import static com.mgmtp.a12.dataservices.model.ModelConstants.DOCUMENT_MODEL_TYP
 	 * @return A list of composed document model headers.
 	 */
 	public List<Header> readAllModelHeaders() {
-		return headerJpaRepository.findByModelType(DOCUMENT_MODEL_TYPE).stream()
+		return modelHeaderJpaRepository.findByModelType(DOCUMENT_MODEL_TYPE).stream()
 			.filter(ComposeDocumentModelUtils::isComposeDocumentModel)
 			.toList();
 	}

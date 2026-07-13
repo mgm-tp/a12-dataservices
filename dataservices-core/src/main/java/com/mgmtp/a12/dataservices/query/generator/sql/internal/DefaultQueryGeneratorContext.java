@@ -31,7 +31,6 @@
  */
 package com.mgmtp.a12.dataservices.query.generator.sql.internal;
 
-import java.lang.reflect.Modifier;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
@@ -40,16 +39,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.reflections.Reflections;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.exception.query.QueryInvalidInputException;
 import com.mgmtp.a12.dataservices.query.QueryContext;
 import com.mgmtp.a12.dataservices.query.annotation.QueryAggregationFunction;
+import com.mgmtp.a12.dataservices.query.internal.marshalling.QuerySubtypeProvider;
+import com.mgmtp.a12.dataservices.rpc.internal.marshalling.DataServicesJacksonModule;
 import com.mgmtp.a12.dataservices.query.annotation.QueryAggregationFunctionGenerator;
 import com.mgmtp.a12.dataservices.query.annotation.QueryOperator;
 import com.mgmtp.a12.dataservices.query.annotation.QueryOperatorGenerator;
@@ -60,13 +58,13 @@ import com.mgmtp.a12.dataservices.query.generator.sql.IAggregationFunctionGenera
 import com.mgmtp.a12.dataservices.query.generator.sql.ILogicOperatorGenerator;
 import com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants;
 import com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorContext;
-import com.mgmtp.a12.dataservices.utils.internal.GenericUtils;
 
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import tools.jackson.databind.ObjectMapper;
 
 import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.ExecutionPhase.QUERY_SQL_GENERATION;
 
@@ -174,8 +172,9 @@ public abstract class DefaultQueryGeneratorContext implements QueryGeneratorCont
 	@RequiredArgsConstructor
 	@Component public static class QueryGeneratorContextFactory {
 
-		private final ObjectMapper objectMapper;
+		private final ObjectMapper injectedObjectMapper;
 		private final ApplicationContext ctx;
+		private final QuerySubtypeProvider querySubtypeProvider;
 		private final Map<Class<? extends ILogicOperator>, ILogicOperatorGenerator<? extends ILogicOperator>> sqlConstraintGenerators = new HashMap<>();
 		private final Map<Class<? extends IAggregationFunction>, IAggregationFunctionGenerator<? extends IAggregationFunction>> sqlFunctionGenerators =
 			new HashMap<>();
@@ -183,19 +182,21 @@ public abstract class DefaultQueryGeneratorContext implements QueryGeneratorCont
 		@Setter private String jsonColumnName;
 		@Setter private String modelNameColumnName;
 
-		@PostConstruct public void init() {
+		@Getter private ObjectMapper objectMapper;
 
-			Reflections reflections = GenericUtils.getApplicationReflections(ctx);
+		@PostConstruct
+		public void init() {
 
-			reflections.getTypesAnnotatedWith(QueryOperator.class).stream()
-				.filter(c -> !Modifier.isAbstract(c.getModifiers()))
-				.map(c -> new NamedType(c, c.getAnnotation(QueryOperator.class).value()))
-				.forEach(objectMapper::registerSubtypes);
-
-			reflections.getTypesAnnotatedWith(QueryAggregationFunction.class).stream()
-				.filter(c -> !Modifier.isAbstract(c.getModifiers()))
-				.map(c -> new NamedType(c, c.getAnnotation(QueryAggregationFunction.class).value()))
-				.forEach(objectMapper::registerSubtypes);
+			// The injected ObjectMapper may not have DataServicesJacksonModule registered when
+			// the shared ObjectMapper is customized externally. Add the module when absent to
+			// guarantee query operator subtypes are always available for deserialization.
+			if (isDataServicesJacksonModuleRegistered(injectedObjectMapper)) {
+				this.objectMapper = injectedObjectMapper.rebuild().build();
+			} else {
+				this.objectMapper = injectedObjectMapper.rebuild()
+					.addModule(new DataServicesJacksonModule(querySubtypeProvider.getSubtypes()))
+					.build();
+			}
 
 			ctx.getBeansOfType(ILogicOperatorGenerator.class)
 				.forEach((name, bean) -> Optional.ofNullable(ctx.findAnnotationOnBean(name, QueryOperatorGenerator.class))
@@ -218,8 +219,9 @@ public abstract class DefaultQueryGeneratorContext implements QueryGeneratorCont
 				@Override public <T extends ILogicOperator> ILogicOperatorGenerator<T> getConstraintGenerator(Class<T> operator) {
 					ILogicOperatorGenerator<? extends ILogicOperator> generator = sqlConstraintGenerators.computeIfAbsent(operator,
 						o -> {
-							throw new QueryInvalidInputException(QUERY_SQL_GENERATION, ExceptionKeys.RPC_OPERATION_ERROR_KEY, null)
-								.withAnonymityMessage("No SQL generator registered for operator %s.".formatted(o.getName()));
+							throw new QueryInvalidInputException(QUERY_SQL_GENERATION, ExceptionKeys.INVALID_QUERY_ERROR_KEY, null)
+								.withAnonymityMessage("No SQL generator registered for operator %s.".formatted(
+									Optional.ofNullable(o.getAnnotation(QueryOperator.class)).map(QueryOperator::value).orElse("unknown")));
 						});
 					return (ILogicOperatorGenerator<T>) generator;
 				}
@@ -227,8 +229,9 @@ public abstract class DefaultQueryGeneratorContext implements QueryGeneratorCont
 				@Override public <T extends IAggregationFunction> IAggregationFunctionGenerator<T> getFunctionGenerator(Class<T> function) {
 					IAggregationFunctionGenerator<? extends IAggregationFunction> generator = sqlFunctionGenerators.computeIfAbsent(function,
 						o -> {
-							throw new QueryInvalidInputException(QUERY_SQL_GENERATION, ExceptionKeys.RPC_OPERATION_ERROR_KEY, null)
-								.withAnonymityMessage("No SQL generator registered for function %s.".formatted(o.getName()));
+							throw new QueryInvalidInputException(QUERY_SQL_GENERATION, ExceptionKeys.INVALID_QUERY_ERROR_KEY, null)
+								.withAnonymityMessage("No SQL generator registered for function %s.".formatted(
+									Optional.ofNullable(o.getAnnotation(QueryAggregationFunction.class)).map(QueryAggregationFunction::value).orElse("unknown")));
 						});
 					return (IAggregationFunctionGenerator<T>) generator;
 				}
@@ -266,5 +269,10 @@ public abstract class DefaultQueryGeneratorContext implements QueryGeneratorCont
 				}
 			};
 		}
+	}
+
+	private static boolean isDataServicesJacksonModuleRegistered(ObjectMapper objectMapper) {
+		return objectMapper.registeredModules().stream()
+			.anyMatch(m -> DataServicesJacksonModule.MODULE_NAME.equals(m.getModuleName()));
 	}
 }

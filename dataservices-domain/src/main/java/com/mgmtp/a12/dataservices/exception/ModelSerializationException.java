@@ -85,7 +85,7 @@ public class ModelSerializationException extends BaseException {
 	 * @param message human-readable description; may be null.
 	 * @param e underlying cause; may be null.
 	 */
-	protected ModelSerializationException(int code, String key, String message, Throwable e) {
+	public ModelSerializationException(int code, String key, String message, Throwable e) {
 		super(code, key, message, null, e);
 	}
 }

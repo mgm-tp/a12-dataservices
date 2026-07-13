@@ -88,7 +88,7 @@ public class RestAttachmentV2Client implements AttachmentClientV2 {
 
 		Optional.ofNullable(annotations).stream()
 			.flatMap(Collection::stream)
-			.map(a -> String.format("%s:%s", a.getName(), a.getValue()))
+			.map(a -> "%s:%s".formatted(a.getName(), a.getValue()))
 			.forEach(a -> uriComponentsBuilder.queryParam("annotations", a));
 		return postConnector.callServer(uriComponentsBuilder.build().encode().toUri(),
 				RestServerRequest.withPayload(new InputStreamResource(content)).withContentType(MediaType.APPLICATION_OCTET_STREAM), AttachmentHeaderSpec.class)

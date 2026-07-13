@@ -31,10 +31,51 @@
  */
 /** @module common */
 
+/** Checks if value is a plain object (not null, not array). */
 export function isObject(value: unknown): value is Record<string, unknown> {
 	return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-export function isNullableType(value: unknown): boolean {
-	return value === undefined || value === null;
+/** Checks if value is a string. */
+export function isString(value: unknown): value is string {
+	return typeof value === "string";
+}
+
+/** Checks if value is a finite number (excludes NaN and Infinity). */
+export function isNumber(value: unknown): value is number {
+	return typeof value === "number" && !Number.isNaN(value) && Number.isFinite(value);
+}
+
+/** Checks if value a boolean. */
+export function isBoolean(value: unknown): value is boolean {
+	return typeof value === "boolean";
+}
+
+/** Checks if value is null. */
+export function isNull(value: unknown): value is null {
+	return value === null;
+}
+
+/** Checks if value is an array and all its elements satisfy the given type check. */
+export function isArray<T>(
+	value: unknown,
+	typeCheck: (value: unknown) => value is T
+): value is T[] {
+	return Array.isArray(value) && value.every(typeCheck);
+}
+
+/**
+ * Checks if field is not present in value or satisfies the given type check.
+ *
+ * Note: a field that is present but explicitly set to `undefined` (e.g. `{ field: undefined }`)
+ * is treated differently from an absent field — it will be passed to `typeCheck`, which typically
+ * returns `false` for `undefined`. Use this intentionally; spreading objects that may carry
+ * `undefined` values will cause `isInstance` checks to fail.
+ */
+export function isOptionalFieldOfType<T>(
+	value: Record<string, unknown>,
+	field: string,
+	typeCheck: (value: unknown) => value is T
+): boolean {
+	return !(field in value) || typeCheck(value[field]);
 }

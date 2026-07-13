@@ -80,7 +80,7 @@ public class RpcDeleteDocumentOperationIT extends AbstractSpringContextIT {
 	@Test
 	public void deleteDocumentWithoutLinks() throws IOException {
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "delete/delete_document_request.json");
-		request = String.format(request, businessPartner3DocRef);
+		request = request.formatted(businessPartner3DocRef);
 		Assert.assertTrue(sendRpcRequest(request).getFirst().isSuccess());
 		Optional<DataServicesDocument> deletedDocument = documentRepository.findByDocumentReference(businessPartner3DocRef);
 		Assert.assertFalse(deletedDocument.isPresent());
@@ -89,7 +89,7 @@ public class RpcDeleteDocumentOperationIT extends AbstractSpringContextIT {
 	@Test
 	public void deleteDocumentWithLinks() throws IOException {
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "delete/delete_document_request.json");
-		request = String.format(request, businessPartner2DocRef);
+		request = request.formatted(businessPartner2DocRef);
 		Assert.assertTrue(sendRpcRequest(request).getFirst().isSuccess());
 		Optional<DataServicesDocument> deletedDocument = documentRepository.findByDocumentReference(businessPartner2DocRef);
 		Assert.assertFalse(deletedDocument.isPresent());
@@ -99,8 +99,7 @@ public class RpcDeleteDocumentOperationIT extends AbstractSpringContextIT {
 	public void deleteAllDocumentsInOneRequest() throws IOException {
 		//multiple_deletes_request.json
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "delete/delete_3_documents_request.json");
-		request = String.format(
-			request,
+		request = request.formatted(
 			businessPartner1DocRef,
 			businessPartner2DocRef,
 			businessPartner3DocRef
@@ -115,8 +114,7 @@ public class RpcDeleteDocumentOperationIT extends AbstractSpringContextIT {
 
 	private void createPartnerAddressLink(DocumentReference partner, DocumentReference address) throws IOException {
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "deferred_constraints/add_link_PartnerAddress_1-address.json");
-		request = String.format(
-			request,
+		request = request.formatted(
 			RelationshipModelConstants.PRODUCT_CAMPAIGN_RM, partner, address
 		);
 		sendRpcRequest(request);

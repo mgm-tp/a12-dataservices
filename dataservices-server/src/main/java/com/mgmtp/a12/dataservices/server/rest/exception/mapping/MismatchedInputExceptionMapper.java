@@ -33,7 +33,7 @@ package com.mgmtp.a12.dataservices.server.rest.exception.mapping;
 
 import org.springframework.http.HttpStatus;
 
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import tools.jackson.databind.exc.MismatchedInputException;
 import com.mgmtp.a12.dataservices.common.LocalizedEntry;
 import com.mgmtp.a12.dataservices.common.exception.BaseError;
 import com.mgmtp.a12.dataservices.common.exception.ErrorDetail;

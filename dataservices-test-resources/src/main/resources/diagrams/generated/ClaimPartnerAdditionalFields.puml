@@ -1,0 +1,187 @@
+@startuml
+
+!procedure group(x)
+class x << (G,#DDAAFF) >>
+!endprocedure
+
+!procedure cdmGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure field(x)
+class x << (F,#DDFFAA) >> #White
+!endprocedure
+
+!procedure embeddedField(name, type, fieldType)
+name <<type>>: fieldType
+!endprocedure
+
+!procedure rule(x)
+class x << (R,#DDBBAA) >> #FFDDEE
+!endprocedure
+
+!procedure embeddedRule(name, type)
+<back:FFDDEE>name() <<type>></back>
+!endprocedure
+
+!procedure embeddedRule(name, type, $errorCondition)
+.. <back:FFDDEE> name <<type>> </back> ..
+<back:FFDDEE>errorCondition:</back> $errorCondition
+!endprocedure
+
+!procedure computation(x)
+class x << (C,#DDBBAA) >> #FFEEDD
+!endprocedure
+
+!procedure computationAlternative($operation, $precondition)
+.. alternative ..
+operation: $operation
+precondition: $precondition
+!endprocedure
+
+!procedure embeddedComputation(name, type, $operation, $precondition)
+.. <back:FFEEDD> name <<type>> </back> ..
+<back:FFEEDD>operation:</back> $operation
+<back:FFEEDD>precondition:</back> $precondition
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure embeddedComputation(name, type )
+<back:FFEEDD>name() <<type>></back>
+!endprocedure
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure linkGroup(x)
+group(x) #PeachPuff
+!endprocedure
+
+!procedure relLink($name,$rmId,$link1,$link2,$ld="")
+circle $name as $rmId #PeachPuff
+$rmId $link1
+$rmId $link2
+!if $ld!=""
+$rmId -[#IndianRed]right $ld: <<linkDocument>>
+linkDocument($ld)
+!endif
+!endprocedure
+
+skinparam linetype polyline
+left to right direction
+
+title Document Model ClaimPartnerAdditionalFields
+
+package "ClaimPartnerAdditionalFields" as ClaimPartnerAdditionalFields <<Frame>> {
+	() "documentRoot" as ClaimPartnerAdditionalFieldsDocumentRoot
+	group('"ClaimPartnerRoot" as group_cpaf01')
+	field('"PartnerRole" as field_cpaf01 <<EnumerationType>>')
+	group_cpaf01 -- field_cpaf01
+	field('"InvolvementDate" as field_cpaf02 <<DateType>>')
+	group_cpaf01 -- field_cpaf02
+	field('"Notes" as field_cpaf03 <<StringType>>')
+	group_cpaf01 -- field_cpaf03
+	field('"Verified" as field_cpaf04 <<BooleanType>>')
+	group_cpaf01 -- field_cpaf04
+	field('"InvolvementEndDate" as field_cpaf05 <<DateType>>')
+	group_cpaf01 -- field_cpaf05
+	field('"InvolvementType" as field_cpaf06 <<EnumerationType>>')
+	group_cpaf01 -- field_cpaf06
+	field('"CompensationAmount" as field_cpaf07 <<NumberType>>')
+	group_cpaf01 -- field_cpaf07
+	field('"CompensationCurrency" as field_cpaf08 <<EnumerationType>>')
+	group_cpaf01 -- field_cpaf08
+	group('"ContactInformation" as group_cpaf02')
+	field('"PhoneNumber" as field_cpaf09 <<StringType>>')
+	group_cpaf02 -- field_cpaf09
+	field('"AlternativePhone" as field_cpaf22 <<StringType>>')
+	group_cpaf02 -- field_cpaf22
+	field('"EmailAddress" as field_cpaf10 <<StringType>>')
+	group_cpaf02 -- field_cpaf10
+	field('"PreferredContactMethod" as field_cpaf11 <<EnumerationType>>')
+	group_cpaf02 -- field_cpaf11
+	group('"PostalAddress" as group_cpaf03')
+	field('"Street" as field_cpaf12 <<StringType>>')
+	group_cpaf03 -- field_cpaf12
+	field('"City" as field_cpaf13 <<StringType>>')
+	group_cpaf03 -- field_cpaf13
+	field('"PostalCode" as field_cpaf14 <<StringType>>')
+	group_cpaf03 -- field_cpaf14
+	field('"Country" as field_cpaf15 <<EnumerationType>>')
+	group_cpaf03 -- field_cpaf15
+
+	group_cpaf02 ||--o| "0..1" group_cpaf03
+
+	group_cpaf01 ||--o| "0..1" group_cpaf02
+	group('"CommunicationLog" as group_cpaf04')
+	field('"PreferredLanguage" as field_cpaf16 <<EnumerationType>>')
+	group_cpaf04 -- field_cpaf16
+	field('"RequiresTranslator" as field_cpaf17 <<BooleanType>>')
+	group_cpaf04 -- field_cpaf17
+	group('"Interactions" as group_cpaf05')
+	field('"InteractionDate" as field_cpaf18 <<DateType>>')
+	group_cpaf05 -- field_cpaf18
+	field('"Channel" as field_cpaf19 <<EnumerationType>>')
+	group_cpaf05 -- field_cpaf19
+	field('"Summary" as field_cpaf20 <<StringType>>')
+	group_cpaf05 -- field_cpaf20
+	field('"FollowUpRequired" as field_cpaf21 <<BooleanType>>')
+	group_cpaf05 -- field_cpaf21
+	field('"Duration" as field_cpaf23 <<NumberType>>')
+	group_cpaf05 -- field_cpaf23
+	field('"HandledBy" as field_cpaf24 <<StringType>>')
+	group_cpaf05 -- field_cpaf24
+	field('"Outcome" as field_cpaf25 <<EnumerationType>>')
+	group_cpaf05 -- field_cpaf25
+
+	group_cpaf04 ||--o{ "0..15" group_cpaf05
+
+	group_cpaf01 ||--o| "0..1" group_cpaf04
+	group('"ClaimImpact" as group_cpaf06')
+	field('"InjurySeverity" as field_cpaf26 <<EnumerationType>>')
+	group_cpaf06 -- field_cpaf26
+	field('"MedicalTreatmentRequired" as field_cpaf27 <<BooleanType>>')
+	group_cpaf06 -- field_cpaf27
+	field('"TreatmentPeriod" as field_cpaf28 <<DateRangeType>>')
+	group_cpaf06 -- field_cpaf28
+	group('"InjuredBodyParts" as group_cpaf07')
+	field('"BodyPart" as field_cpaf29 <<EnumerationType>>')
+	group_cpaf07 -- field_cpaf29
+	field('"Description" as field_cpaf30 <<StringType>>')
+	group_cpaf07 -- field_cpaf30
+	field('"TreatmentCost" as field_cpaf31 <<NumberType>>')
+	group_cpaf07 -- field_cpaf31
+
+	group_cpaf06 ||--o{ "0..10" group_cpaf07
+
+	group_cpaf01 ||--o| "0..1" group_cpaf06
+
+	ClaimPartnerAdditionalFieldsDocumentRoot ||--o| "0..1" group_cpaf01
+
+	group('"__meta" as abc6a6767a60488754aace2accb73824_group_8f4b1')
+	field('"docRef" as abc6a6767a60488754aace2accb73824_field_1169c <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_1169c
+	field('"modelReference" as abc6a6767a60488754aace2accb73824_field_cfb40 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_cfb40
+	field('"modelVersion" as abc6a6767a60488754aace2accb73824_field_17e3b <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_17e3b
+	field('"creator" as abc6a6767a60488754aace2accb73824_field_cdaf9 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_cdaf9
+	field('"createdAt" as abc6a6767a60488754aace2accb73824_field_65672 <<DateTimeType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_65672
+	field('"modifier" as abc6a6767a60488754aace2accb73824_field_1fa32 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_1fa32
+	field('"modifiedAt" as abc6a6767a60488754aace2accb73824_field_5cd66 <<DateTimeType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_5cd66
+	group('"extensions" as abc6a6767a60488754aace2accb73824_group_4c9a1')
+
+	abc6a6767a60488754aace2accb73824_group_8f4b1 ||--o| "0..1" abc6a6767a60488754aace2accb73824_group_4c9a1
+
+	ClaimPartnerAdditionalFieldsDocumentRoot ||--o| "0..1" abc6a6767a60488754aace2accb73824_group_8f4b1
+
+}
+@enduml

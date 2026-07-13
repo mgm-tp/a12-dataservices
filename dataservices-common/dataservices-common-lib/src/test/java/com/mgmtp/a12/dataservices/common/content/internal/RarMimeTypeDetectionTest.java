@@ -51,7 +51,6 @@ import org.testng.annotations.Test;
  * <p>The junrar library can be re-added to the classpath if the project accepts the GPL-3.0 license.
  * See migration notes for 2025.06-ext5 for details.
  *
- * @see <a href="https://jira.2bcloud.io/browse/A12S-6706">A12S-6706</a>
  */
 public class RarMimeTypeDetectionTest {
 
@@ -91,15 +90,11 @@ public class RarMimeTypeDetectionTest {
 	/**
 	 * Tests MIME type detection for RAR 4.x format files.
 	 *
-	 * <p>Without the junrar library, Tika can still detect RAR archives via signature detection.
-	 * The MIME type returned is {@code application/x-rar-compressed; version=4}.
+	 * Without the junrar library, Tika can still detect RAR archives via signature detection.
+	 * The MIME type returned is `application/x-rar-compressed; version=4`.
 	 *
-	 * <p>This demonstrates that junrar exclusion does not prevent RAR file identification,
+	 * This demonstrates that junrar exclusion does not prevent RAR file identification,
 	 * as Tika's signature-based detection still works correctly.
-	 *
-	 * <p>Enabled in Stage 3 after junrar exclusion was implemented.
-	 *
-	 * @see <a href="https://jira.2bcloud.io/browse/A12S-6706">A12S-6706</a>
 	 */
 	@Test(description = "Should detect RAR 4.x file MIME type without junrar library")
 	public void shouldDetectRar4MimeTypeWithoutJunrar() throws IOException {
@@ -126,15 +121,11 @@ public class RarMimeTypeDetectionTest {
 	/**
 	 * Tests MIME type detection for RAR 5.0 format files.
 	 *
-	 * <p>Without the junrar library, Tika can still detect RAR 5.0 archives via signature detection.
-	 * The MIME type returned is {@code application/x-rar-compressed; version=5}.
+	 * Without the junrar library, Tika can still detect RAR 5.0 archives via signature detection.
+	 * The MIME type returned is `application/x-rar-compressed; version=5`.
 	 *
-	 * <p>This demonstrates that junrar exclusion does not prevent RAR 5.0 file identification,
+	 * This demonstrates that junrar exclusion does not prevent RAR 5.0 file identification,
 	 * as Tika's signature-based detection still works correctly.
-	 *
-	 * <p>Enabled in Stage 3 after junrar exclusion was implemented.
-	 *
-	 * @see <a href="https://jira.2bcloud.io/browse/A12S-6706">A12S-6706</a>
 	 */
 	@Test(description = "Should detect RAR 5.0 file MIME type without junrar library")
 	public void shouldDetectRar5MimeTypeWithoutJunrar() throws IOException {

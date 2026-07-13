@@ -31,11 +31,13 @@
  */
 package com.mgmtp.a12.dataservices.cdd;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * All CDM-relevant constants.
  *
  */
-public interface CddConstants {
+@OnlyForUsage public interface CddConstants {
 	/** Annotation key marking a query root in the CDM. */
 	String CDM_QUERY_ROOT_ANNOTATION = "cdm.queryRoot";
 	/** Annotation key marking a relationship in the CDM. */

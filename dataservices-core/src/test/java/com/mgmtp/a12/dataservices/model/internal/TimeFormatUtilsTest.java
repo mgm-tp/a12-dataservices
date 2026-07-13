@@ -53,6 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import static com.mgmtp.a12.dataservices.model.internal.TimeFormatUtils.BASE_YEAR;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 @Slf4j
 public class TimeFormatUtilsTest {
@@ -69,9 +70,10 @@ public class TimeFormatUtilsTest {
 	@DataProvider
 	public static Object[][] partiallyKnownDateProvider() {
 		return new Object[][] {
-			{ "2021-02-00", "2021-02-01", dateType() },
-			{ "2021-00-00", "2021-01-01", dateType() },
-			{ "0000-00-00", "1970-01-01", dateType() },
+			{ "2021-02-00", "2021-02-01", dateType(), "Text '2021-02-00' could not be parsed: Invalid value for DayOfMonth (valid values 1 - 28/31): 0" },
+			{ "2021-00-00", "2021-01-01", dateType(), "Text '2021-00-00' could not be parsed: Invalid value for MonthOfYear (valid values 1 - 12): 0" },
+			{ "0000-00-00", "1970-01-01", dateType(),
+				"Text '0000-00-00' could not be parsed: Invalid value for YearOfEra (valid values 1 - 999999999/1000000000): 0" },
 		};
 	}
 
@@ -97,14 +99,19 @@ public class TimeFormatUtilsTest {
 			parse(type, expected).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 	}
 
-	@Test(dataProvider = "partiallyKnownDateProvider", expectedExceptions = RuntimeException.class, expectedExceptionsMessageRegExp = "java.text.ParseException: Unparseable date: \"[0-9]{4}-[0-9]{2}-00\"")
-	public void testParseIncompleteFail(String actual, String expected, IFieldType type) {
-		assertEquals(TimeFormatUtils.parse(actual, type, BASE_YEAR, false, TimeZone.getTimeZone(ZoneId.systemDefault())).toEpochMilli(),
-			parse(type, expected).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+	@Test(dataProvider = "partiallyKnownDateProvider")
+	public void testParseIncompleteFail(String actual, String expected, IFieldType type, String expectedErrorMessage) {
+		try {
+			assertEquals(TimeFormatUtils.parse(actual, type, BASE_YEAR, false, TimeZone.getTimeZone(ZoneId.systemDefault())).toEpochMilli(),
+				parse(type, expected).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(e.getMessage(), expectedErrorMessage);
+		}
 	}
 
 	@Test(dataProvider = "partiallyKnownDateProvider")
-	public void testParsePartiallyKnown(String actual, String expected, IFieldType type) {
+	public void testParsePartiallyKnown(String actual, String expected, IFieldType type, String ignored) {
 		assertEquals(TimeFormatUtils.parse(actual, type, BASE_YEAR, true, TimeZone.getTimeZone(ZoneId.systemDefault())).toEpochMilli(),
 			parse(type, expected).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
 	}
@@ -122,13 +129,11 @@ public class TimeFormatUtilsTest {
 	private static IFieldType dateType() {
 		return new IDateType() {
 
-			@Override
 			public List<Annotation> getAnnotations() {
 				return null;
 			}
 
 			// needed only to satisfy interface, not used in tests
-			@Override
 			public void setAnnotations(List<Annotation> annotations) {
 			}
 
@@ -155,13 +160,12 @@ public class TimeFormatUtilsTest {
 
 	private static IFieldType dateTimeType() {
 		return new IDateTimeType() {
-			@Override
+
 			public List<Annotation> getAnnotations() {
 				return null;
 			}
 
 			// needed only to satisfy interface, not used in tests
-			@Override
 			public void setAnnotations(List<Annotation> annotations) {
 
 			}
@@ -215,15 +219,12 @@ public class TimeFormatUtilsTest {
 				return Optional.empty();
 			}
 
-			@Override
 			public List<Annotation> getAnnotations() {
 				return null;
 			}
 
 			// needed only to satisfy interface, not used in tests
-			@Override
 			public void setAnnotations(List<Annotation> annotations) {
-
 			}
 		};
 	}

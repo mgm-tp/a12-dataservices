@@ -64,7 +64,7 @@ public class ComposeDataDocumentModelIT extends AbstractSpringContextIT {
 	@Autowired private ComposeDocumentModelLoader composeDocumentModelLoader;
 	@Autowired ModelService modelService;
 
-	protected void initializeWithSecurityBypass() throws Exception {
+	@Override protected void initializeWithSecurityBypass() throws Exception {
 		cleanUpTestEnvironment();
 		modelsFunctions.saveCdm(CDM_TEMPLATE_PATH, NATURAL_PERSON_CDM);
 		modelsFunctions.saveCdm(CDM_TEMPLATE_WRONG_CRD_PATH, NATURAL_PERSON_CDM_WRONG_CRD);

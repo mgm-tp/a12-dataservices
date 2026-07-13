@@ -1,0 +1,112 @@
+{
+  "header": {
+    "id": "ClaimInvolvedPartner",
+    "modelType": "relationship",
+    "modelVersion": "4.0.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Insurance Claim and Involved Partner"
+      },
+      {
+        "locale": "de",
+        "text": "Versicherungsanspruch und beteiligter Partner"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest,ModelRead"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "InsuranceClaimSuper",
+        "reference": "InsuranceClaimSuper"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "BusinessPartnerSuper",
+        "reference": "BusinessPartnerSuper"
+      },
+      {
+        "purpose": "Link Document model",
+        "modelType": "document",
+        "alias": "Link Model",
+        "reference": "ClaimPartnerAdditionalFields"
+      }
+    ]
+  },
+  "content": {
+    "duplicatesAllowed": false,
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Insurance Claim and Involved Partner"
+      },
+      {
+        "locale": "de",
+        "text": "Versicherungsanspruch und beteiligter Partner"
+      }
+    ],
+    "linkDocumentModel": "ClaimPartnerAdditionalFields",
+    "entityCharacteristics": [
+      {
+        "ordered": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Insurance Claim"
+          },
+          {
+            "locale": "de",
+            "text": "Versicherungsanspruch"
+          }
+        ],
+        "role": "Claim",
+        "documentModel": "InsuranceClaimSuper"
+      },
+      {
+        "ordered": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "unbounded": false,
+            "upperLimit": 10
+          }
+        },
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Involved Business Partners"
+          },
+          {
+            "locale": "de",
+            "text": "Beteiligte Geschäftspartner"
+          }
+        ],
+        "role": "Partner",
+        "documentModel": "BusinessPartnerSuper"
+      }
+    ]
+  }
+}

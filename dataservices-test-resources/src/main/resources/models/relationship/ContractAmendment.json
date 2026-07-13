@@ -2,7 +2,7 @@
   "header": {
     "id": "ContractAmendment",
     "modelType": "relationship",
-    "modelVersion": "3.0.0",
+    "modelVersion": "4.0.0",
     "locales": [
       {
         "code": "en"
@@ -41,8 +41,6 @@
   },
   "content": {
     "duplicatesAllowed": false,
-    "associationType": "SHARED",
-    "storage": "EXTERNAL",
     "labels": [
       {
         "locale": "en",
@@ -56,15 +54,12 @@
     "entityCharacteristics": [
       {
         "ordered": true,
-        "navigable": true,
         "linkConstraints": {
           "multiplicity": {
-            "lowerLimit": 0,
             "unbounded": true,
             "upperLimit": null
           }
         },
-        "candidateConstraints": {},
         "labels": [
           {
             "locale": "en",
@@ -80,15 +75,12 @@
       },
       {
         "ordered": true,
-        "navigable": true,
         "linkConstraints": {
           "multiplicity": {
-            "lowerLimit": 0,
             "unbounded": true,
             "upperLimit": 0
           }
         },
-        "candidateConstraints": {},
         "labels": [
           {
             "locale": "en",

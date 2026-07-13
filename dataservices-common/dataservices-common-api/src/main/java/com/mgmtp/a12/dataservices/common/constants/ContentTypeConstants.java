@@ -31,10 +31,12 @@
  */
 package com.mgmtp.a12.dataservices.common.constants;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Contains String constants related to Content-Type.
  */
-public interface ContentTypeConstants {
+@OnlyForUsage public interface ContentTypeConstants {
 
 	/**
 	 * MIME type for legacy Microsoft Word documents (*.doc).

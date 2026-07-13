@@ -41,6 +41,7 @@ import com.mgmtp.a12.dataservices.attachment.AttachmentReference;
 import com.mgmtp.a12.dataservices.attachment.internal.jpa.entity.AttachmentReferenceEntity;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.reference.GenericReference;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 import lombok.NonNull;
 /**
@@ -48,7 +49,7 @@ import lombok.NonNull;
  *
  * Implementations persist headers, query by id, and manage {@link AttachmentReference} relations.
  */
-public interface AttachmentHeaderRepository {
+@OnlyForUsage public interface AttachmentHeaderRepository {
 
 	/**
 	 * Creates a new attachment header.

@@ -56,9 +56,13 @@ import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity.ModelHea
 import com.mgmtp.a12.model.header.Header;
 import com.mgmtp.a12.model.header.ModelReference;
 
+import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 public class ListModelsOperationTest extends AbstractSpringContextIT {
 
@@ -134,6 +138,52 @@ public class ListModelsOperationTest extends AbstractSpringContextIT {
 
 	private static <T, U> void assertList(Collection<T> actualList, Collection<T> expectedList, Function<Collection<T>, Collection<U>> transformer) {
 		assertThat(transformer.apply(actualList)).hasSameElementsAs(transformer.apply(expectedList));
+	}
+
+	/**
+	 * Tests that the exception message includes the number of requested model names when the hard limit is exceeded.
+	 */
+	@Test(description = "Should include requested count in exception message when hard limit is exceeded")
+	public void shouldIncludeRequestedCountInMessageWhenHardLimitExceeded() {
+		// Given: hardLimit = 2, modelNames with 5 entries
+		int originalLimit = dataServicesCoreProperties.getModels().getList().getHardLimit();
+		try {
+			dataServicesCoreProperties.getModels().getList().setHardLimit(2);
+
+			// When / Then: catch InvalidInputException, assert getLongMessage() contains "5"
+			try {
+				listModelsOperation.rpc(List.of("m1", "m2", "m3", "m4", "m5"));
+				fail("Expected InvalidInputException to be thrown");
+			} catch (InvalidInputException e) {
+				String message = e.getLongMessage().getDefaultMessage();
+				assertTrue(message.contains("5"), "Message should contain requested count '5': " + message);
+			}
+		} finally {
+			dataServicesCoreProperties.getModels().getList().setHardLimit(originalLimit);
+		}
+	}
+
+	/**
+	 * Tests that the exception message includes the configured hard limit value when the hard limit is exceeded.
+	 */
+	@Test(description = "Should include configured limit in exception message when hard limit is exceeded")
+	public void shouldIncludeConfiguredLimitInMessageWhenHardLimitExceeded() {
+		// Given: hardLimit = 2, modelNames with 5 entries
+		int originalLimit = dataServicesCoreProperties.getModels().getList().getHardLimit();
+		try {
+			dataServicesCoreProperties.getModels().getList().setHardLimit(2);
+
+			// When / Then: catch InvalidInputException, assert getLongMessage() contains "2"
+			try {
+				listModelsOperation.rpc(List.of("m1", "m2", "m3", "m4", "m5"));
+				fail("Expected InvalidInputException to be thrown");
+			} catch (InvalidInputException e) {
+				String message = e.getLongMessage().getDefaultMessage();
+				assertTrue(message.contains("2"), "Message should contain configured limit '2': " + message);
+			}
+		} finally {
+			dataServicesCoreProperties.getModels().getList().setHardLimit(originalLimit);
+		}
 	}
 
 	@Override protected GenericModel createModel(String modelContent) {

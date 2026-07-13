@@ -1,0 +1,66 @@
+/*
+ * SPDX-License-Identifier: EUPL-1.2 OR LicenseRef-commercial
+ *
+ * Copyright (c) 2012-2026 mgm technology partners GmbH
+ *
+ * Dual License
+ * ------------
+ * This source file is part of the mgm A12 Platform and available under
+ * a choice of two different licenses:
+ *
+ * 1. Open-Source License – EUPL v1.2
+ *    You may redistribute and/or modify this file under the terms of the
+ *    European Union Public License, version 1.2 - see https://eupl.eu/.
+ *
+ * 2. Commercial License
+ *    Alternatively, you may obtain a commercial license from
+ *    mgm technology partners GmbH, that permits use of this software
+ *    under different terms (including support and maintenance services).
+ *
+ *    Please contact a12-license@mgm-tp.com for more information.
+ *
+ * You must select and comply with exactly one of the above license options.
+ *
+ * Warranty Disclaimer (applies to either option)
+ * ----------------------------------------------
+ * THIS SOFTWARE IS PROVIDED “AS IS” AND WITHOUT WARRANTY OF ANY KIND,
+ * WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
+ * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
+ */
+package com.mgmtp.a12.dataservices.internal.autoconfigure;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+
+import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
+import com.mgmtp.a12.dataservices.configuration.ExposePropertiesToActuator;
+import com.mgmtp.a12.dataservices.constants.SmeWorkspaceConstants;
+import com.mgmtp.a12.dataservices.initialization.InitializationService;
+import com.mgmtp.a12.dataservices.internal.condition.SmeWorkspaceInitializationEnabledCondition;
+import com.mgmtp.a12.dataservices.internal.configuration.SmeWorkspaceProperties;
+import com.mgmtp.a12.dataservices.internal.init.SmeWorkspaceInitializationService;
+import com.mgmtp.a12.dataservices.internal.service.SmeWorkspaceImportService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Configuration public class SmeWorkspaceAutoconfiguration {
+
+	@ExposePropertiesToActuator
+	@ConfigurationProperties(DataServicesCoreProperties.PROPERTIES_PREFIX + SmeWorkspaceConstants.SME_WORKSPACE_PROPERTY_PATH)
+	@Bean SmeWorkspaceProperties workspaceProperties() {
+		return new SmeWorkspaceProperties();
+	}
+
+	@Conditional(SmeWorkspaceInitializationEnabledCondition.class)
+	@Bean @Primary InitializationService workspaceInitializationService(SmeWorkspaceImportService workspaceImportService,
+		SmeWorkspaceProperties workspaceProperties) {
+		log.warn("The default dataServicesInitializationService bean is disabled. The current implementation will be used for initialization");
+		return new SmeWorkspaceInitializationService(workspaceImportService, workspaceProperties);
+	}
+}

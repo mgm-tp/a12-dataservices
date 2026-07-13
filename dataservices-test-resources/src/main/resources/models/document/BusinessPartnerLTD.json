@@ -2,7 +2,7 @@
   "header": {
     "id": "BusinessPartnerLTD",
     "modelType": "document",
-    "modelVersion": "28.4.0",
+    "modelVersion": "29.2.0",
     "locales": [
       {
         "code": "en"
@@ -34,7 +34,9 @@
   },
   "content": {
     "modelInfo": {
-      "name": "BusinessPartnerLTD"
+      "name": "BusinessPartnerLTD",
+      "immutable": false,
+      "joinedModelsInfo": "BusinessPartnerLTD-document-meta-data+Add"
     },
     "modelConfig": {
       "decimalSeparator": ".",
@@ -481,7 +483,6 @@
                         "fieldType": {
                           "type": "NumberType",
                           "NumberType": {
-                            "minFractionalDigits": 0,
                             "maxFractionalDigits": 2
                           }
                         },
@@ -505,7 +506,6 @@
                         "fieldType": {
                           "type": "NumberType",
                           "NumberType": {
-                            "minFractionalDigits": 0,
                             "maxFractionalDigits": 2
                           }
                         },
@@ -529,8 +529,8 @@
                         "computedFieldRelPath": "../tax",
                         "computationAlternatives": [
                           {
-                            "precondition": "FieldFilled(income)",
-                            "operation": "RoundAccounting([income]*0.20,2)"
+                            "operation": "RoundAccounting([income]*0.20,2)",
+                            "precondition": "FieldFilled(income)"
                           }
                         ],
                         "errorCodesToSuppress": [
@@ -730,8 +730,7 @@
                             }
                           ]
                         }
-                      ],
-                      "categories": []
+                      ]
                     }
                   },
                   "label": [
@@ -888,8 +887,7 @@
                                   }
                                 ]
                               }
-                            ],
-                            "categories": []
+                            ]
                           }
                         },
                         "label": [
@@ -923,6 +921,191 @@
                           }
                         ]
                       }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "id": "abc6a6767a60488754aace2accb73824_group_8f4b1",
+          "name": "__meta",
+          "Group": {
+            "repeatability": 1,
+            "label": [
+              {
+                "locale": "en",
+                "text": "Meta"
+              },
+              {
+                "locale": "de",
+                "text": "Meta"
+              }
+            ],
+            "usageType": "metadata",
+            "elements": [
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_1169c",
+                "name": "docRef",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Document Reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Dokumentreferenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_cfb40",
+                "name": "modelReference",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Document Model Reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Document Model-Referenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_17e3b",
+                "name": "modelVersion",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Model Version"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Model-Version"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_cdaf9",
+                "name": "creator",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Creator"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erstellt von"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_65672",
+                "name": "createdAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Created At"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erstellt am"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_1fa32",
+                "name": "modifier",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Modifier"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Bearbeitet von"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_5cd66",
+                "name": "modifiedAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Modified At"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Bearbeitet am"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "abc6a6767a60488754aace2accb73824_group_4c9a1",
+                "name": "extensions",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Extensions"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erweiterungen"
                     }
                   ]
                 }

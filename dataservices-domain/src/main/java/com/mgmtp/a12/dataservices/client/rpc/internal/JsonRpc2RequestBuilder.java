@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.client.rpc.RequestBuilderFactory;
 import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
 import com.mgmtp.a12.dataservices.rpc.JsonRpc2Request;
@@ -80,7 +80,7 @@ public class JsonRpc2RequestBuilder {
 	 * @return {@link RpcMethodCallBuilder} for newly added method call.
 	 */
 	public RpcMethodCallBuilder addMethodCall(String methodName) {
-		RpcMethodCallBuilder methodCall = new RpcMethodCallBuilder(methodName);
+		RpcMethodCallBuilder methodCall = new RpcMethodCallBuilder(methodName, this);
 		builders.add(methodCall);
 		return methodCall;
 	}
@@ -91,10 +91,12 @@ public class JsonRpc2RequestBuilder {
 	public class RpcMethodCallBuilder implements CoreOperationConstants {
 
 		protected final JsonRpc2Request operationRequest = new JsonRpc2Request();
+		private final JsonRpc2RequestBuilder upstream;
 		private Map<String, Object> namedParams;
 		private List<Object> positionalParams;
 
-		public RpcMethodCallBuilder(String methodName) {
+		public RpcMethodCallBuilder(String methodName, JsonRpc2RequestBuilder jsonRpc2RequestBuilder) {
+			this.upstream = jsonRpc2RequestBuilder;
 			operationRequest.setMethod(methodName);
 		}
 
@@ -158,6 +160,10 @@ public class JsonRpc2RequestBuilder {
 				operationRequest.setParams(objectMapper.valueToTree(positionalParams));
 			}
 			return operationRequest;
+		}
+
+		public JsonRpc2RequestBuilder back() {
+			return upstream;
 		}
 	}
 }

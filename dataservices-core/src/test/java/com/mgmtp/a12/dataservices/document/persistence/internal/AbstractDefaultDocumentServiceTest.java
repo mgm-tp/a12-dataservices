@@ -57,18 +57,17 @@ import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.document.internal.attachment.AttachmentSupport;
 import com.mgmtp.a12.dataservices.document.internal.kernel.KernelDocumentService;
 import com.mgmtp.a12.dataservices.document.persistence.IDocumentRepository;
-import com.mgmtp.a12.dataservices.model.document.persistence.internal.DocumentModelLoader;
+import com.mgmtp.a12.dataservices.document.uniqueconstraint.internal.UniqueConstraintValidator;
+import com.mgmtp.a12.dataservices.model.document.persistence.DocumentModelLoader;
 import com.mgmtp.a12.dataservices.model.metadata.DocumentMetadataConstants;
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity.ModelHeaderEntity;
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.repository.ModelHeaderJpaRepository;
 import com.mgmtp.a12.dataservices.query.QueryService;
 import com.mgmtp.a12.dataservices.query.indexing.internal.DocumentSearchIndexBehaviour;
 import com.mgmtp.a12.dataservices.relationship.internal.DefaultRelationshipLinkService;
-import com.mgmtp.a12.dataservices.relationship.persistence.internal.RelationshipLinkRepository;
+import com.mgmtp.a12.dataservices.relationship.persistence.RelationshipLinkRepository;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentUtils;
-import com.mgmtp.a12.kernel.md.document.api.services.IDocumentFactory;
-import com.mgmtp.a12.kernel.md.document.api.services.IDocumentService;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 import com.mgmtp.a12.kernel.md.facade.DocumentModelServiceFactory;
 import com.mgmtp.a12.kernel.md.facade.DocumentServiceFactory;
@@ -95,14 +94,14 @@ public abstract class AbstractDefaultDocumentServiceTest extends AbstractDataSer
 	@Mock protected DocumentModelUtils documentModelUtils;
 	@Mock protected KernelDocumentService kernelDocumentService;
 	@Mock protected DocumentUtils documentUtils;
-	@Mock protected IDocumentService documentService;
 	@Mock protected DocumentServiceFactory documentServiceFactory;
 	@Mock protected ModelHeaderJpaRepository modelHeaderRepository;
 	@Spy protected DataServicesCoreProperties dataServicesCoreProperties = Mockito.spy(new DataServicesCoreProperties());
 
-	@Mock protected IDocumentFactory documentFactory;
 	@Mock protected SecurityContext securityContext;
-	@Mock protected DocumentSearchIndexBehaviour indexBehavior;
+	@Mock protected UniqueConstraintValidator uniqueConstraintValidator;
+	@Mock protected DocumentSearchIndexBehaviour documentSearchIndexBehaviour;
+	protected Optional<DocumentSearchIndexBehaviour> indexBehavior;
 	@Mock protected QueryService queryService;
 
 	protected final List<DocumentReference> documentReferences =
@@ -119,6 +118,7 @@ public abstract class AbstractDefaultDocumentServiceTest extends AbstractDataSer
 	@BeforeMethod public void before() throws IllegalAccessException {
 		super.setCurrentUser(userName);
 		documentRepositories.add(documentRepository);
+		indexBehavior = Optional.of(documentSearchIndexBehaviour);
 		FieldUtils.writeField(defaultDocumentService, "dataServicesDocumentFactory", dataServicesDocumentFactory, true);
 		FieldUtils.writeField(defaultDocumentService, "documentUtils", documentUtils, true);
 		FieldUtils.writeField(defaultDocumentService, "attachmentHandler", Optional.of(attachmentHandler), true);
@@ -128,14 +128,15 @@ public abstract class AbstractDefaultDocumentServiceTest extends AbstractDataSer
 		FieldUtils.writeField(defaultDocumentService, "indexBehavior", indexBehavior, true);
 		FieldUtils.writeField(defaultDocumentService, "documentModelServiceFactory", documentModelServiceFactory, true);
 		FieldUtils.writeField(defaultDocumentService, "documentModelLoader", documentModelResolver, true);
+		FieldUtils.writeField(defaultDocumentService, "documentV2Serializer", documentV2Serializer, true);
 		headerEntity = new ModelHeaderEntity(kernelTestSupport.getDocumentModelResolver().getDocumentModelById(testModelName).getHeader());
 	}
 
 	@AfterMethod public void after() {
 		documentRepositories.clear();
 		Mockito.reset(documentRepository, eventPublisher,
-			modelPermissionEvaluator, documentUtils, documentModelUtils, modelHeaderRepository, dataServicesDocumentFactory, indexBehavior,
-			documentModelServiceFactory);
+			modelPermissionEvaluator, documentUtils, documentModelUtils, modelHeaderRepository, dataServicesDocumentFactory, documentSearchIndexBehaviour,
+			documentModelServiceFactory, uniqueConstraintValidator);
 	}
 
 	protected void compareDocumentV2(DocumentV2 oldDoc, DocumentV2 updatedDoc) {

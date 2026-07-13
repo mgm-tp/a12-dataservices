@@ -42,11 +42,6 @@ public class QueryGeneratorConstants {
 	public static final String TEXT_TYPE = "TEXT";
 	public static final String BOOLEAN_TYPE = "BOOLEAN";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String DECIMAL_TYPE = "DECIMAL";
 	public static final String JSON_TYPE = "JSON";
 	public static final String JSONB_TYPE = "JSONB";
 	public static final String NUMERIC_TYPE = "NUMERIC";
@@ -54,11 +49,6 @@ public class QueryGeneratorConstants {
 	public static final String OR_OPERATOR = " OR ";
 	public static final String NULL_VALUE = "NULL";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String NULLIF = "NULLIF";
 	public static final String EMPTY_VALUE = "''";
 	public static final String EMPTY_STRING = "";
 	public static final String SPACE = " ";
@@ -66,35 +56,6 @@ public class QueryGeneratorConstants {
 	public static final String EXISTS_OPERATOR = "EXISTS ";
 	public static final String SELECT_KEYWORD = "SELECT ";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String ROW_KEYWORD = " ROW";
-
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String CASE_KEYWORD = " CASE ";
-
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String WHEN_KEYWORD = "WHEN ";
-
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String THEN_KEYWORD = " THEN ";
-
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String END_KEYWORD = " END ";
 	public static final String NULLS_FIRST_KEYWORD = " NULLS FIRST ";
 	public static final String NULLS_LAST_KEYWORD = " NULLS LAST ";
 	public static final String FROM_KEYWORD = " FROM ";
@@ -102,53 +63,24 @@ public class QueryGeneratorConstants {
 	public static final String WITH_KEYWORD = "WITH ";
 	public static final String RECURSIVE_KEYWORD = "RECURSIVE ";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String UNION_KEYWORD = " UNION ";
 	public static final String UNION_ALL_KEYWORD = " UNION ALL ";
 	public static final String JOIN_KEYWORD = " JOIN ";
+	public static final String LEFT_JOIN_KEYWORD = " LEFT JOIN ";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String LEFT_KEYWORD = " LEFT ";
 	public static final String ON_KEYWORD = " ON ";
 	public static final String OFFSET_KEYWORD = " OFFSET ";
 	public static final String LIMIT_KEYWORD = " LIMIT ";
 	public static final String COUNT_ALL_OVER_OPERATOR = " COUNT(*) OVER()";
 	public static final String GROUP_BY_KEYWORD = " GROUP BY ";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String SPLIT_PART_KEYWORD = "SPLIT_PART";
-
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String LIKE_REGEX_KEYWORD = " LIKE_REGEX ";
 	public static final String REGEX_CASE_SENSITIVE_SEARCH_OPERATOR = " ~ ";
 	public static final String REGEX_CASE_INSENSITIVE_SEARCH_OPERATOR = " ~* ";
 	public static final String TIMESTAMP_TYPE = "timestamp";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String JSON_PATH_KEYWORD = "jsonpath";
 	public static final String TS_RANGE_FUNCTION = "tsrange";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String TERNARY_FUNCTION = " ? ";
 	public static final String ROW_NUMBER_FUNCTION = " ROW_NUMBER () OVER () ";
+	public static final String ROW_NUMBER_FUNCTION_PREFIX = " ROW_NUMBER() OVER (ORDER BY ";
 	public static final String LOWER_FUNCTION = " LOWER";
 	public static final String ROUND_FUNCTION = " ROUND";
 	public static final String COALESCE_FUNCTION = " COALESCE";
@@ -158,11 +90,6 @@ public class QueryGeneratorConstants {
 	public static final String EQUALS_OPERATOR = " = ";
 	public static final String GREATER_THAN_OR_EQUAL_OPERATOR = " >= ";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String NOT_EQUALS_OPERATOR = " != ";
 	public static final String FORWARD_SLASH = "/";
 	public static final String DOT_JOINER = ".";
 	public static final String OPENING_BRACKET = "(";
@@ -175,89 +102,31 @@ public class QueryGeneratorConstants {
 	public static final String CONTAINS_OPERATOR = " @> ";
 	public static final String IS_CONTAINED_OPERATOR = " <@ ";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String NUMRANGE_TYPE = "NUMRANGE";
 	public static final String TEXT_QUOTE = "'";
 	public static final String TEXT_DOUBLE_QUOTE = "\"";
 	public static final String ZERO_VALUE = "0";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String MINUS_ONE_VALUE = "-1";
 	public static final String ONE_VALUE = "1";
 	public static final String ASTERISK = "*";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String REGEX_BEGIN_WITH = "^";
 	public static final String ORDER_BY_KEYWORD = " ORDER BY ";
 	public static final String COMMA = ", ";
 	public static final String COLON = ":";
 	public static final String DESC_KEYWORD = " DESC ";
 	public static final String CONCAT_OPERATOR = " || ";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String BYTEA_TYPE = "BYTEA";
 	public static final String JSON_FIELD_TEXT_VALUE_SELECTION_OPERATOR = " ->> ";
 	public static final String JSON_FIELD_PATH_OPERATOR = " -> ";
 	public static final String JSONB_EXTRACT_OBJECT_OPERATOR = " #> ";
 	public static final String JSONB_AGGREGATE_FUNCTION = "JSONB_AGG";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String JSON_OBJECT_AGGREGATE_FUNCTION = "JSON_OBJECT_AGG";
 	public static final String JSONB_ARRAY_ELEMENTS_FUNCTION = "JSONB_ARRAY_ELEMENTS";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String JSONB_LEFT_CONTAINS_OPERATOR = " @> ";
 	public static final String JSONB_EXTRACT_TEXT_FOR_PATH_OPERATOR = " #>> ";
 	public static final String JSONB_BUILD_ARRAY_FUNCTION = "JSONB_BUILD_ARRAY";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String JSONB_BUILD_OBJECT_FUNCTION = "JSONB_BUILD_OBJECT";
 	public static final String JSON_BUILD_ARRAY_FUNCTION = "JSON_BUILD_ARRAY";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String JSON_ROOT_KEYWORD = "$";
-
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String JSON_FIELD_KEYWORD = "@";
-
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String JSON_FIELD_TYPE_NAME = "fieldType";
-
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public static final String JSONB_PATH_QUERY_FIRST_FUNCTION = "JSONB_PATH_QUERY_FIRST";
 	public static final String FALSE_VALUE = "FALSE";
 	public static final String TRUE_VALUE = "TRUE";
 	public static final String COLLATE_CASE_SENSIITVE = " COLLATE \"C\" ";
@@ -267,18 +136,6 @@ public class QueryGeneratorConstants {
 	 */
 	public static final String SEARCH_DATA_VALUE_DELIMITER = "~";
 
-	/**
-	 * @deprecated Not used anymore, will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public interface Model {
-
-		/**
-		 * @deprecated Not used anymore, will be removed in the next breaking release.
-		 */
-		@Deprecated(since = "38.1.0", forRemoval = true)
-		String PATH_ELEMENT_LABEL = "label";
-	}
 
 	public interface FieldTypes {
 		String NUMBER_FIELD_TYPE = "INumberType";
@@ -293,6 +150,7 @@ public class QueryGeneratorConstants {
 	}
 
 	public interface ColumnNames {
+		String SORT_RANK_COLUMN = "_sort_rank";
 		String BACKREFERENCE_COLUMN_ALIAS = "back_reference";
 		String INTERNAL_ID_COLUMN_ALIAS = "internal_id";
 		String CONTENT_COLUMN_ALIAS = "content";
@@ -332,29 +190,12 @@ public class QueryGeneratorConstants {
 		String TS_RANGE_VALUE_COLUMN_NAME = "ts_range_value";
 		String SOURCE_COLUMN_NAME = "source";
 
-		/**
-		 * @deprecated Not used anymore, will be removed in the next breaking release.
-		 */
-		@Deprecated(since = "38.1.0", forRemoval = true)
-		String VALUES_COLUMN_NAME = "values";
 		String ORIGINAL_VALUE_COLUMN_NAME = "original_value";
-		String LOCALIZED_VALUE_COLUMN_NAME = "localized_value";
 		String DATA_COLUMN_NAME = "data";
 		String REPETITIONS_COLUMN_NAME = "repetitions";
 
-		/**
-		 * @deprecated Not used anymore, will be removed in the next breaking release.
-		 */
-		@Deprecated(since = "38.1.0", forRemoval = true)
-		String DOC_COUNT_COLUMN_ALIAS = "doc_count";
 		String LINK_COUNT_COLUMN_ALIS = "link_count";
 
-		/**
-		 * @deprecated Not used anymore, will be removed in the next breaking release.
-		 */
-		@Deprecated(since = "38.1.0", forRemoval = true)
-		String FULLTEXT_STRING_COLUMN_NAME = "fulltext_string";
-		String LOCALIZED_FULLTEXT_STRING_COLUMN_NAME = "localized_fulltext_string";
 		String ROW_NUM_COLUMN_ALIAS = "row_num";
 		String FIELDS_PROJECTION = "fields_projection";
 		String LINK_SOURCE_ORDER_ALIAS = "link_source_order";
@@ -370,14 +211,8 @@ public class QueryGeneratorConstants {
 		String DOCUMENT_FIELDS_TABLE_NAME = "document_fields";
 		String DOCUMENT_FIELDS_TABLE_ALIAS = "document_fields";
 		String DOCUMENT_SEARCH_TABLE_NAME = "document_search";
-		String LOCALIZED_FIELDS_TABLE_NAME = "localized_fields";
 		String MODEL_FIELDS_TABLE_NAME = "model_fields";
 
-		/**
-		 * @deprecated Not used anymore, will be removed in the next breaking release.
-		 */
-		@Deprecated(since = "38.1.0", forRemoval = true)
-		String MODEL_FIELDS_TABLE_ALIAS = "model_fields";
 		String LINK_TABLE_ALIAS = "link";
 		String TARGET_ROLE_TABLE_ALIAS = "target_role";
 		String SOURCE_ROLE_TABLE_ALIAS = "source_role";

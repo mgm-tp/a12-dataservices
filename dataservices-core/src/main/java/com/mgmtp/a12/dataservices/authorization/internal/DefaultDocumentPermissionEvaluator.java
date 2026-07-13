@@ -116,6 +116,34 @@ import static com.mgmtp.a12.dataservices.authorization.AuthConstants.EXPORT_LIST
 		}
 	}
 
+	@Override public void checkDocumentDeletePermissionByModel(String documentModel) {
+		log.debug("Check [{}] permission for model [{}]", DOCUMENT_DELETE_PERMISSION, documentModel);
+		if (authorizationService.checkPermissions(documentModel, DOCUMENT_DELETE_PERMISSION).isNotPassed()) {
+			throw new AccessDeniedException(ACCESS_DENIED);
+		}
+	}
+
+	@Override public void checkDocumentUpdatePermissionByModel(String documentModel) {
+		log.debug("Check [{}] permission for model [{}]", DOCUMENT_UPDATE_PERMISSION, documentModel);
+		if (authorizationService.checkPermissions(documentModel, DOCUMENT_UPDATE_PERMISSION).isNotPassed()) {
+			throw new AccessDeniedException(ACCESS_DENIED);
+		}
+	}
+
+	@Override public void checkDocumentCreatePermissionByModel(String documentModel) {
+		log.debug("Check [{}] permission for model [{}]", DOCUMENT_CREATE_PERMISSION, documentModel);
+		if (authorizationService.checkPermissions(documentModel, DOCUMENT_CREATE_PERMISSION).isNotPassed()) {
+			throw new AccessDeniedException(ACCESS_DENIED);
+		}
+	}
+
+	@Override public void checkDocumentPartialUpdatePermissionByModel(String documentModel) {
+		log.debug("Check [{}] permission for model [{}]", DOCUMENT_PARTIAL_UPDATE_PERMISSION, documentModel);
+		if (authorizationService.checkPermissions(documentModel, DOCUMENT_PARTIAL_UPDATE_PERMISSION).isNotPassed()) {
+			throw new AccessDeniedException(ACCESS_DENIED);
+		}
+	}
+
 	private void checkPermission(Object resource, String scopeName, DocumentReference docRef) {
 		log.debug("Check [{}] permission for document [{}]", scopeName, docRef.toString());
 		if (authorizationService.checkPermissions(resource, scopeName, Map.of("docRef", docRef)).isNotPassed()) {

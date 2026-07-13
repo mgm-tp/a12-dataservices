@@ -33,6 +33,7 @@ package com.mgmtp.a12.dataservices.server.internal.condition;
 
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.configuration.validation.internal.ConfigurationMessage;
+import com.mgmtp.a12.dataservices.configuration.condition.internal.AbstractDataServicesCondition;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -35,18 +35,20 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
+import org.mockito.testng.MockitoTestNGListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
@@ -63,14 +65,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-@TestExecutionListeners(MockitoTestExecutionListener.class)
+@Listeners(MockitoTestNGListener.class)
 @Test public class RelationshipControllerImplTest extends AbstractSpringContextServerTests {
 
 	@Autowired private DataServicesCoreProperties dataServicesCoreProperties;
-	@Autowired private MockMvc mvc;
+	@Autowired private WebApplicationContext webApplicationContext;
+	private MockMvc mvc;
 	@Autowired private ResourcePatternResolver resourcePatternResolver;
 
 	@BeforeClass void setUp() throws IOException {
+		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 		changeUserInContext(UserConstants.ADMIN_USER);
 		for (Resource r : resourcePatternResolver.getResources(PathConstants.DOCUMENT_MODELS_PATH_PATTERN)) {
 			createModel(r.getContentAsString(StandardCharsets.UTF_8));

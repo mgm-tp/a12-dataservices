@@ -33,21 +33,16 @@ package com.mgmtp.a12.contentstore;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 
 import com.mgmtp.a12.contentstore.autoconfigure.internal.ContentStoreAutoConfiguration;
 import com.mgmtp.a12.contentstore.autoconfigure.internal.ContentStoreRepositoryConfiguration;
-import com.mgmtp.a12.contentstore.autoconfigure.internal.validation.condition.AbstractContentStoreCondition;
 import com.mgmtp.a12.contentstore.content.internal.ContentService;
 import com.mgmtp.a12.contentstore.content.internal.jpa.repository.ContentJpaRepository;
 import com.mgmtp.a12.contentstore.service.ContentStoreService;
@@ -80,11 +75,6 @@ public abstract class AbstractContentStoreTest extends AbstractTestNGSpringConte
 	@Autowired
 	public ContentJpaRepository contentJpaRepository;
 
-	@Order(0)
-	@BeforeClass protected void initialize() {
-		reboundContentStoreCoreProperties();
-	}
-
 	@DataProvider
 	public Object[][] mimeTypeContentCases() {
 
@@ -94,7 +84,7 @@ public abstract class AbstractContentStoreTest extends AbstractTestNGSpringConte
 			new Object[] { "Attachment.doc", "application/msword" },
 			new Object[] { "Attachment.docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
 			new Object[] { "Attachment.html", "text/html" },
-			new Object[] { "Attachment.js", "application/javascript" },
+			new Object[] { "Attachment.js", "text/javascript" },
 			new Object[] { "Attachment.pdf", "application/pdf" },
 			new Object[] { "Attachment.pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation" },
 			new Object[] { "Attachment.webp", "image/webp" },
@@ -112,13 +102,5 @@ public abstract class AbstractContentStoreTest extends AbstractTestNGSpringConte
 	public ContentPersistenceResult persistContent(String contentId, String persistentType, byte[] contentBytes, String filename) {
 		InputStream contentInputStream = new ByteArrayInputStream(contentBytes);
 		return contentStoreService.saveContent(contentId, persistentType, contentInputStream, filename);
-	}
-
-	/**
-	 * Since we have the "boundProperties" in {@link AbstractContentStoreCondition} as static dependency, which makes
-	 * running test with multiple instances fails because the static dependency won't reset its default value.
-	 */
-	private void reboundContentStoreCoreProperties() {
-		ReflectionTestUtils.setField(AbstractContentStoreCondition.class, "boundProperties", Optional.empty());
 	}
 }

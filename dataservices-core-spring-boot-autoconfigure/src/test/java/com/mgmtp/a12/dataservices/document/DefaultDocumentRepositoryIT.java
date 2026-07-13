@@ -64,8 +64,7 @@ public class DefaultDocumentRepositoryIT extends AbstractSpringContextIT {
 	@Autowired private DefaultDataServicesDocumentFactory dataServicesDocumentFactory;
 	@Autowired private MetadataUtils metadataUtils;
 
-	@BeforeMethod
-	public void init() throws Exception {
+	@BeforeMethod public void init() throws Exception {
 		super.cleanUpTestEnvironment();
 
 		modelsFunctions.createModel(PathConstants.BUSINESS_PARTNER_DOCUMENT_MODEL_PATH);

@@ -31,12 +31,14 @@
  */
 package com.mgmtp.a12.dataservices.client.exception;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Marker interface for implementation-specific details.
  *
  * Implementations carry additional context attached to {@link A12ClientException} instances.
  *
  */
-public interface ErrorDetail {
+@OnlyForUsage public interface ErrorDetail {
 
 }

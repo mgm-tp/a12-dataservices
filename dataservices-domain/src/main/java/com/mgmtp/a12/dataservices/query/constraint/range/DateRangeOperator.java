@@ -71,7 +71,6 @@ import lombok.experimental.SuperBuilder;
 	 *
 	 * @return true if reverse evaluation is enabled; false otherwise.
 	 */
-	@JsonIgnore
 	public boolean isReverse() {
 		return getReverse() != null && getReverse();
 	}

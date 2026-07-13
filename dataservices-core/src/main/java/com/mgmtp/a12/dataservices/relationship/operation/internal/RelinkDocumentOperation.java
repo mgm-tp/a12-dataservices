@@ -81,7 +81,14 @@ public class RelinkDocumentOperation {
 
 			RelationshipLink newLink = relationshipLinkService.relink(linkDescriptor, linkRef);
 
-			RelationshipLinkSpec result = new RelationshipLinkSpec(linkDescriptor, String.valueOf(newLink.getId()));
+			String sourceRoleName = linkDescriptor.getSourceRole().getRole();
+			String targetRoleName = linkDescriptor.getTargetRole().getRole();
+			RelationshipLinkSpec result = RelationshipLinkSpec.builder()
+				.linkDescriptor(linkDescriptor)
+				.id(String.valueOf(newLink.getId()))
+				.sourceRank(newLink.getRoles().get(sourceRoleName).getOrder())
+				.targetRank(newLink.getRoles().get(targetRoleName).getOrder())
+				.build();
 			OperationContextHolder.put(result);
 			return result;
 		}, CoreOperationConstants.RELINK_DOCUMENT_OPERATION);

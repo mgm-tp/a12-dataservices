@@ -43,9 +43,9 @@ import com.mgmtp.a12.kernel.core.rt.a12internal.validation.IData;
 import com.mgmtp.a12.kernel.core.rt.a12internal.validation.IIdentifier;
 import com.mgmtp.a12.kernel.core.rt.a12internal.validation.IResult;
 import com.mgmtp.a12.kernel.core.rt.a12internal.validation.IValidator;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.core.CalculationCommand;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.core.ValidationCommand;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.core.IMetaDataValidierung;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.core.CalculationCommand;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.core.ValidationCommand;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.core.IMetaDataValidierung;
 
 public class ERValidator_businesspartnersuper
 	implements IValidator, ICalculator {
@@ -75,22 +75,6 @@ public class ERValidator_businesspartnersuper
 		}
 	} 
 
-    /**
-     * @deprecated since version 30.6.0. Will be removed with A12K-3589.
-     */
-    @Deprecated(since = "30.6.0")
-    @SuppressWarnings("removal")
-	public void validatePartlyWith3ValueLogic(
-			IData daten, 
-			Set<IIdentifier> relevantEntities,
-			Map<String, ICustomCondition> applBedingungen,
-			IResult ergebnis,
-			ValidationMode modus) throws ValidatorException {
-		pruefeParams(daten, ergebnis, modus);
-		ValidationCommand c = new ValidationCommand(R_businesspartnersuper.getInstance(), modus, metaData, daten);
-		c.processPartlyValidation(daten, relevantEntities, applBedingungen, ergebnis);
-	}
-
 	public void validatePartlyWith3ValueLogic(
 			IData daten,
 			Set<IIdentifier> relevantEntities,
@@ -101,40 +85,12 @@ public class ERValidator_businesspartnersuper
 		c.processPartlyValidation(daten, relevantEntities, ergebnis);
 	}
 
-
-    /**
-     * @deprecated since version 30.6.0. Will be removed with A12K-3589.
-     */
-    @Deprecated(since = "30.6.0")
-    @SuppressWarnings("removal")
-	public void validateAll(IData daten,
-			Map<String, ICustomCondition> applBedingungen,
-			IResult ergebnis,
-			ValidationMode modus) throws ValidatorException {
-		validateAllWithDefaults(daten, applBedingungen, ergebnis, modus, null);
-	}
-
 	public void validateAll(IData daten,
 			IResult ergebnis,
 			ValidationMode modus) throws ValidatorException {
 		pruefeParams(daten, ergebnis, modus);
 		ValidationCommand c = new ValidationCommand(R_businesspartnersuper.getInstance(), modus, metaData, daten);
-		c.processFullValidation(daten, ergebnis, null);
-	}
-
-	/**
-	 * This method is not contained in any interface, because it is not supposed to be used by applications. 
-	 * It is used internally for 'on-the-fly testing and by validateAll.
-     * Will be removed with A12K-3593.
- 	 */
-	public void validateAllWithDefaults(IData daten,
-			Map<String, ICustomCondition> applBedingungen,
-			IResult ergebnis,
-			ValidationMode modus, 
-			Set<IIdentifier> defaultValues) throws ValidatorException {
-		pruefeParams(daten, ergebnis, modus);
-		ValidationCommand c = new ValidationCommand(R_businesspartnersuper.getInstance(), modus, metaData, daten);
-		c.processFullValidation(daten, applBedingungen, ergebnis, defaultValues);
+		c.processFullValidation(daten, ergebnis);
 	}
 
 	public ICalculationResult calculateAll(IData daten, ValidationMode modus, IResult ergebnis) {

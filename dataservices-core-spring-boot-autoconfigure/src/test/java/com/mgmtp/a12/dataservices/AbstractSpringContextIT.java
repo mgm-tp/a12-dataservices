@@ -49,13 +49,14 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
+import jakarta.persistence.EntityManagerFactory;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.mockito.testng.MockitoTestNGListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener;
 import org.springframework.cache.CacheManager;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -74,14 +75,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.mgmtp.a12.contentstore.autoconfigure.internal.validation.condition.AbstractContentStoreCondition;
 import com.mgmtp.a12.dataservices.attachment.AttachmentService;
 import com.mgmtp.a12.dataservices.attachment.header.AttachmentHeaderService;
 import com.mgmtp.a12.dataservices.attachment.internal.CleanUpDirtyAttachmentsJob;
@@ -90,11 +85,9 @@ import com.mgmtp.a12.dataservices.attachment.internal.operation.LoadAttachmentUr
 import com.mgmtp.a12.dataservices.attachment.internal.operation.LoadThumbnailUrlOperation;
 import com.mgmtp.a12.dataservices.attachment.persitence.IAttachmentRepository;
 import com.mgmtp.a12.dataservices.authorization.ModelPermissionEvaluator;
-import com.mgmtp.a12.dataservices.common.exception.ErrorDetail;
 import com.mgmtp.a12.dataservices.common.exception.ErrorLevel;
 import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
-import com.mgmtp.a12.dataservices.configuration.internal.validation.condition.AbstractDataServicesCondition;
 import com.mgmtp.a12.dataservices.constants.UserConstants;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
@@ -104,7 +97,6 @@ import com.mgmtp.a12.dataservices.document.persistence.internal.DocumentJpaRepos
 import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
 import com.mgmtp.a12.dataservices.model.GenericModel;
 import com.mgmtp.a12.dataservices.model.ModelService;
-import com.mgmtp.a12.dataservices.model.bulkload.internal.CollapsingDocumentModelReferenceResolver;
 import com.mgmtp.a12.dataservices.model.internal.ModelCacheManager;
 import com.mgmtp.a12.dataservices.model.persistence.IModelLoader;
 import com.mgmtp.a12.dataservices.model.persistence.internal.DefaultModelRepository;
@@ -145,6 +137,9 @@ import com.mgmtp.a12.uaa.authentication.backend.BackendAuthenticationService;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Base test class with all necessary configurations to run repository/service tests
@@ -156,13 +151,12 @@ import lombok.extern.slf4j.Slf4j;
 	properties = {
 		"spring.datasources.dataservices.embedded-postgres.enabled=true",
 		"spring.quartz.properties.org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.PostgreSQLDelegate",
-		"spring.datasources.contentstore.embedded-postgres.enabled=true",
-		"spring.main.allow-bean-definition-overriding=true"
+		"spring.datasources.contentstore.embedded-postgres.enabled=true"
 	})
+@Listeners(MockitoTestNGListener.class)
 @TestExecutionListeners(
 	listeners = {
 		WithSecurityContextTestExecutionListener.class,
-		MockitoTestExecutionListener.class,
 		TransactionalTestExecutionListener.class,
 	},
 	mergeMode = MergeMode.MERGE_WITH_DEFAULTS
@@ -170,7 +164,6 @@ import lombok.extern.slf4j.Slf4j;
 @ContextConfiguration(initializers = EmbeddedPostgresInitializer.class)
 @SpringBootTest(classes = { InitialITConfiguration.class })
 public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContextTests {
-
 
 	public static final String TEST_USER_WITH_NO_ACCESS_RIGHTS = "testUserWithNoAccessRights";
 
@@ -189,6 +182,13 @@ public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContex
 		Pattern.compile("^/cs/download/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$").asPredicate();
 	protected static final Predicate<String> RELATIVE_ATTACHMENT_URL_PATTERN =
 		Pattern.compile("^/cs/download/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\?filename=.*\\.png$").asPredicate();
+
+	/**
+	 * Jackson 2.x ObjectMapper for creating JsonNode instances for RPC operations.
+	 * RPC operations use Jackson 2.x (jsonrpc4j dependency), while Spring Boot 4.x uses Jackson 3.x.
+	 */
+	protected static final tools.jackson.databind.ObjectMapper JACKSON_2_OBJECT_MAPPER =
+		new tools.jackson.databind.json.JsonMapper();
 
 	private final TestEnvironmentCleaner testEnvironmentCleaner = new TestEnvironmentCleaner();
 
@@ -218,7 +218,8 @@ public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContex
 	@Autowired protected ObjectMapper objectMapper;
 	@Autowired protected AddLinkOperation addLinkOperation;
 	@Autowired @Qualifier("dsDataSource") protected DataSource dataSource;
-	@Autowired @Qualifier("contentstoreDataSource") protected Optional<DataSource> contentStoreDataSource;
+	@Autowired @Qualifier("csDataSource") protected Optional<DataSource> contentStoreDataSource;
+	@Autowired @Qualifier("dsEntityManagerFactory") private EntityManagerFactory dsEntityManagerFactory;
 	@Autowired private CacheManager cacheManager;
 	@Autowired private RelationshipLinkValidationListener linkValidator;
 	@Autowired protected UserDetailsService userDetailsService;
@@ -227,8 +228,6 @@ public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContex
 	@Autowired protected RequestIdRepository requestIdRepository;
 	@Autowired protected BackendAuthenticationService backendAuthenticationService;
 	@Autowired protected Locale defaultLocale;
-	@Autowired protected CollapsingDocumentModelReferenceResolver.CollapsingDocumentModelReferenceResolverFactory
-		collapsingDocumentModelReferenceResolverFactory;
 	@Autowired protected QueryService queryService;
 	@Autowired protected QueryOperation queryOperation;
 
@@ -271,31 +270,18 @@ public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContex
 
 	@Order(Ordered.HIGHEST_PRECEDENCE)
 	@BeforeClass public void cleanUpTestEnvironment() {
+		dsEntityManagerFactory.getCache().evictAll();
 		testEnvironmentCleaner.cleanUpTestEnvironment(dataSource, cacheManager, contentStoreDataSource);
 	}
 
 	@Order(0)
 	@BeforeClass protected void initialize() {
-		reboundDataServicesCoreProperties();
-		reboundContentStoreCoreProperties();
 		backendAuthenticationService.executeWithBackendAuthentication(UserConstants.ADMIN_USER, this::initializeWithSecurityBypassWrapper);
 	}
 
 	@SneakyThrows private Void initializeWithSecurityBypassWrapper() {
 		initializeWithSecurityBypass();
 		return null;
-	}
-
-	/**
-	 * Since we have the "boundProperties" in {@link AbstractDataServicesCondition} as static dependency, which makes
-	 * running test with multiple instances fails because the static dependency won't reset its default value.
-	 */
-	private void reboundDataServicesCoreProperties() {
-		ReflectionTestUtils.setField(AbstractDataServicesCondition.class, "boundProperties", Optional.empty());
-	}
-
-	private void reboundContentStoreCoreProperties() {
-		ReflectionTestUtils.setField(AbstractContentStoreCondition.class, "boundProperties", Optional.empty());
 	}
 
 	protected void initializeWithSecurityBypass() throws Exception {
@@ -314,13 +300,7 @@ public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContex
 		LinkDescriptor linkDescriptor = new LinkDescriptor();
 		linkDescriptor.setRelationshipModel(relationshipModelName);
 		List<RelationshipRoleSpec> roleSpecs = roles.stream()
-			.map(role -> {
-				RelationshipRoleSpec roleSpec = new RelationshipRoleSpec();
-				roleSpec.setRole(role.getName());
-				roleSpec.setDocRef(role.getDocRef());
-				roleSpec.setModelName(role.getDocRef().getDocumentModelName());
-				return roleSpec;
-			}).toList();
+			.map(role -> new RelationshipRoleSpec(role.getName(), role.getDocRef())).toList();
 		linkDescriptor.setEntities(roleSpecs);
 		return Objects.isNull(linkDocumentDocRef) ?
 			relationshipLinkService.create(linkDescriptor) :
@@ -329,7 +309,7 @@ public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContex
 
 	@SneakyThrows
 	protected String loadResourceFromClasspathAsString(final String relativePath) {
-		final Resource resource = resourcePatternResolver.getResource(String.format("classpath:%s", relativePath));
+		final Resource resource = resourcePatternResolver.getResource("classpath:%s".formatted(relativePath));
 		final Writer stringWriter = new StringWriter();
 		IOUtils.copy(resource.getInputStream(), stringWriter, StandardCharsets.UTF_8);
 
@@ -346,7 +326,7 @@ public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContex
 	}
 
 	protected Reader loadResourceAsReader(final String relativePath) throws IOException {
-		final Resource resource = resourcePatternResolver.getResource(String.format("classpath:%s", relativePath));
+		final Resource resource = resourcePatternResolver.getResource("classpath:%s".formatted(relativePath));
 		return new InputStreamReader(resource.getInputStream());
 	}
 
@@ -393,25 +373,13 @@ public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContex
 					JsonRpc2ResponseError e = m.getError();
 					try (JsonParser jsonParser = objectMapper.treeAsTokens(e.getData())) {
 						log.error("Unable to cleanup links:\n{}", objectMapper.writeValueAsString(e));
-						try {
-							ExceptionDetail exceptionDetail = jsonParser.readValueAs(ExceptionDetail.class);
-							throw new RpcException(e.getMessage(), OperationError.builder()
-								.operationId(m.getId())
-								.level(ErrorLevel.ERROR)
-								.genericMessage()
-								.errorDetail(exceptionDetail.getDetails())
-								.build());
-						} catch (JsonMappingException jsonMappingException) {
-							ErrorDetail errorDetail = jsonParser.readValueAs(ErrorDetail.class);
-							throw new RpcException(e.getMessage(), OperationError.builder()
-								.operationId(m.getId())
-								.level(ErrorLevel.ERROR)
-								.genericMessage()
-								.errorDetail(errorDetail)
-								.build());
-						}
-					} catch (IOException ex) {
-						throw new RuntimeException(ex);
+						ExceptionDetail exceptionDetail = jsonParser.readValueAs(ExceptionDetail.class);
+						throw new RpcException(e.getMessage(), OperationError.builder()
+							.operationId(m.getId())
+							.level(ErrorLevel.ERROR)
+							.genericMessage()
+							.errorDetail(exceptionDetail.getDetails())
+							.build());
 					}
 				}
 			);
@@ -435,18 +403,6 @@ public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContex
 		return linkDescriptor;
 	}
 
-	@SneakyThrows protected String addJoinInfo(String modelStringContent) {
-		JsonNode jsonTree = objectMapper.readTree(modelStringContent);
-		String modelName = jsonTree.at("/header/id").textValue();
-		ObjectNode content = (ObjectNode) jsonTree.get("content");
-		if (!content.has("modelInfo")) {
-			content.set("modelInfo", objectMapper.createObjectNode());
-		}
-		ObjectNode modelInfo = (ObjectNode) content.get("modelInfo");
-		modelInfo.put("joinedModelsInfo", "%s-SelectionModel_V1+Sel".formatted(modelName));
-		return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonTree);
-	}
-
 	protected interface ThrowingRunnable<E extends Throwable> {
 		void run() throws E;
 	}
@@ -458,7 +414,7 @@ public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContex
 	protected void assertUserReadPermissionToModel(ModelPermissionEvaluator modelPermissionEvaluator, String user, String modelId,
 		boolean expectedAccess) {
 		setUserTo(user);
-		String message = String.format("Expected user [%s] to have permission [%s] to read model [%s] but it was [%s]", user, expectedAccess, modelId,
+		String message = "Expected user [%s] to have permission [%s] to read model [%s] but it was [%s]".formatted(user, expectedAccess, modelId,
 			!expectedAccess);
 		Assert.assertEquals(modelPermissionEvaluator.hasModelReadPermission(findHeaderByModelName(modelId)), expectedAccess, message);
 	}

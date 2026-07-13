@@ -43,29 +43,36 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
-import com.mgmtp.a12.dataservices.query.fields.aggregation.function.Count;
-import com.mgmtp.a12.dataservices.query.generator.sql.internal.DefaultQueryGeneratorContext.QueryGeneratorContextFactory;
-import com.mgmtp.a12.dataservices.query.fields.aggregation.AggregationProjector;
-import com.mgmtp.a12.dataservices.query.fields.ProjectionField;
-import com.mgmtp.a12.dataservices.query.topology.QueryLink;
+import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.query.constraint.logical.AndOperator;
 import com.mgmtp.a12.dataservices.query.constraint.matching.ExactMatchOperator;
 import com.mgmtp.a12.dataservices.query.constraint.range.DateRangeOperator;
+import com.mgmtp.a12.dataservices.query.fields.ProjectionField;
+import com.mgmtp.a12.dataservices.query.fields.aggregation.AggregationProjector;
+import com.mgmtp.a12.dataservices.query.fields.aggregation.function.Count;
+import com.mgmtp.a12.dataservices.query.generator.sql.internal.DefaultQueryGeneratorContext.QueryGeneratorContextFactory;
+import com.mgmtp.a12.dataservices.query.internal.marshalling.QuerySubtypeProvider;
+import com.mgmtp.a12.dataservices.query.topology.QueryLink;
+import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
+import com.mgmtp.a12.dataservices.rpc.internal.marshalling.DataServicesJacksonModule;
 
 import lombok.SneakyThrows;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.mockito.Mockito.mock;
 
 public class TopologySerializationTest {
 
-	protected ObjectMapper objectMapper = new ObjectMapper().registerModules(new JavaTimeModule());
+	protected ObjectMapper objectMapper;
 
 	@BeforeMethod
 	public void setUp() {
-		new QueryGeneratorContextFactory(objectMapper, mock(ApplicationContext.class)).init();
+		var provider = new QuerySubtypeProvider(DataServicesCoreProperties.DS_PACKAGE_PREFIX);
+		var mapper = JsonMapper.builder().addModule(new DataServicesJacksonModule(provider.getSubtypes())).build();
+		var factory = new QueryGeneratorContextFactory(mapper, mock(ApplicationContext.class), provider);
+		factory.init();
+		objectMapper = factory.getObjectMapper();
 	}
 
 	@DataProvider

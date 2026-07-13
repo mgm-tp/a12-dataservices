@@ -33,9 +33,9 @@ package com.mgmtp.a12.kernel.generated.contractcdm.internal;
 
 import java.util.Set;
 
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.core.IMetaDataValidierung;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.meta.MetaIdentifier;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.meta.MetaLokalePflichtInfo;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.core.IMetaDataValidierung;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.meta.MetaIdentifier;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.meta.MetaLokalePflichtInfo;
 
 /*
  * Enthält Metadaten über die Pflichtfeldinformationen.

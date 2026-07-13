@@ -594,7 +594,7 @@ public class DocumentServiceCreatingWithStrategyTest extends AbstractDefaultDocu
 		} catch (DocumentValidationException e) {
 			Assert.assertNotNull(e.getErrorDetail());
 			Assert.assertEquals(e.getCode(), INVALID_INPUT_EXCEPTION_CODE);
-			Assert.assertEquals(e.getMessage(), String.format("Document is not valid:%n[%s]", mockedMessage));
+			Assert.assertEquals(e.getMessage(), "Document is not valid:%n[%s]".formatted(mockedMessage));
 		}
 	}
 

@@ -36,13 +36,15 @@ import java.io.StringWriter;
 
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.mgmtp.a12.dataservices.internal.DocumentationDiagram;
 import com.mgmtp.a12.kernel.md.document.api.services.DocumentSerializationConfig;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 import com.mgmtp.a12.kernel.md.document.apiV2.services.IDocumentV2Serializer;
+
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.exc.StreamWriteException;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ser.std.StdSerializer;
 
 @DocumentationDiagram
 @Component public class KernelDocumentSerializer extends StdSerializer<DocumentV2> {
@@ -56,10 +58,12 @@ import com.mgmtp.a12.kernel.md.document.apiV2.services.IDocumentV2Serializer;
 		this.documentJsonSerializationConfig = documentJsonSerializationConfig;
 	}
 
-	@Override public void serialize(DocumentV2 value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	@Override public void serialize(DocumentV2 value, JsonGenerator gen, SerializationContext provider) {
 		try (StringWriter w = new StringWriter()) {
 			documentSerializer.serializeV2(value, w, documentJsonSerializationConfig);
 			gen.writeRawValue(w.toString());
+		} catch (IOException e) {
+			throw new StreamWriteException(gen, e);
 		}
 	}
 }

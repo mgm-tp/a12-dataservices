@@ -84,10 +84,10 @@ public @interface DataServicesApplication {
 	 * for a type-safe alternative to String-based package names.
 	 *
 	 * NOTE: this setting is an alias for
-	 * {@link ComponentScan @ComponentScan} only. It has no effect on `{@literal @}Entity`
+	 * {@link ComponentScan @ComponentScan} only. It has no effect on `@Entity`
 	 * scanning or Spring Data {@link Repository} scanning. For those you should add
 	 * {@link org.springframework.boot.autoconfigure.domain.EntityScan @EntityScan} and
-	 * `{@literal @}Enable...Repositories` annotations.
+	 * `@Enable...Repositories` annotations.
 	 *
 	 * @return base packages to scan
 	 * @since 1.3.0
@@ -103,7 +103,7 @@ public @interface DataServicesApplication {
 	 * serves no purpose other than being referenced by this attribute.
 	 *
 	 * NOTE: this setting is an alias for
-	 * {@link ComponentScan @ComponentScan} only. It has no effect on `{@literal @}Entity`
+	 * {@link ComponentScan @ComponentScan} only. It has no effect on `@Entity`
 	 * scanning or Spring Data {@link Repository} scanning. For those you should add
 	 * {@link org.springframework.boot.autoconfigure.domain.EntityScan @EntityScan} and
 	 * `@Enable...Repositories` annotations.

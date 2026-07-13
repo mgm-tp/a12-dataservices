@@ -3,11 +3,10 @@ plugins {
 }
 
 dependencies {
+	annotationProcessor libs.lombokMapstruct
+
 	api project(':dataservices-core')
-	api(project(':dataservices-core-spring-boot-autoconfigure')) {
-		exclude group: 'com.mgmtp.a12.uaa', module: 'uaa-authentication-principal-extension'
-		exclude group: 'com.mgmtp.a12.uaa', module: 'uaa-authentication-principal-extension-spring-boot-autoconfigure'
-	}
+	api project(':dataservices-core-spring-boot-autoconfigure')
 	implementation libs.springBootStarterDataJpa
 	implementation libs.uaaAuthorizationSpringBootAutoconfigure
 }

@@ -31,37 +31,51 @@
  */
 import { strictEqual } from "node:assert/strict";
 
-import { ErrorResponse } from "../common/ErrorPayload.js";
-
-import { loadResource } from "./utils/ObjectUtils.js";
+import { ErrorPayload, ErrorResponse } from "../common/index.js";
 
 suite("Error Response Tests", () => {
-	suite("Assert Type Guard", () => {
-		const errorResponse = {
-			longMessage: {
-				key: "error.message.long",
-				default: "Error Long Message"
-			},
-			shortMessage: {
-				key: "error.message.short",
-				default: "Error Short Message"
-			},
-			operationId: "12345",
-			level: "ERROR"
-		};
+	const errorResponse = {
+		longMessage: {
+			key: "error.message.long",
+			default: "Error Long Message"
+		},
+		shortMessage: {
+			key: "error.message.short",
+			default: "Error Short Message"
+		},
+		operationId: "12345",
+		level: "ERROR",
+		errorDetail: {
+			code: "ERROR_CODE",
+			subsystem: "DataService",
+			time: "2024-01-01T00:00:00Z"
+		}
+	};
 
+	suite("Assert Type Guard", () => {
 		test("Assert instance", () => {
 			strictEqual(ErrorResponse.isInstance(errorResponse), true);
 		});
 
-		test("Assert omitted fields", () => {
+		test("Assert Error Response - Missing level", () => {
 			const { level, ...responseWithoutLevel } = errorResponse;
 			strictEqual(
 				ErrorResponse.isInstance(responseWithoutLevel),
 				false,
 				"Without level should be invalid"
 			);
+		});
 
+		test("Assert Error Response - Invalid level", () => {
+			const invalidLevelResponse = { ...errorResponse, level: "INVALID_LEVEL" };
+			strictEqual(
+				ErrorResponse.isInstance(invalidLevelResponse),
+				false,
+				"With invalid level should be invalid"
+			);
+		});
+
+		test("Assert Error Response - Optional fields", () => {
 			const { operationId, ...responseWithoutOperationId } = errorResponse;
 			strictEqual(
 				ErrorResponse.isInstance(responseWithoutOperationId),
@@ -76,28 +90,153 @@ suite("Error Response Tests", () => {
 				"Without shortMessage should be valid"
 			);
 
+			const invalidShortMessageResponse = { ...errorResponse, shortMessage: "Message" };
+			strictEqual(
+				ErrorResponse.isInstance(invalidShortMessageResponse),
+				false,
+				"Invalid shortMessage should be invalid"
+			);
+
 			const { longMessage, ...responseWithoutLongMessage } = errorResponse;
 			strictEqual(
 				ErrorResponse.isInstance(responseWithoutLongMessage),
 				true,
 				"Without longMessage should be valid"
 			);
+
+			const invalidLongMessageResponse = { ...errorResponse, longMessage: "Message" };
+			strictEqual(
+				ErrorResponse.isInstance(invalidLongMessageResponse),
+				false,
+				"Invalid longMessage should be invalid"
+			);
+
+			const { errorDetail, ...responseWithoutErrorDetail } = errorResponse;
+			strictEqual(
+				ErrorResponse.isInstance(responseWithoutErrorDetail),
+				true,
+				"Without errorDetail should be valid"
+			);
 		});
 	});
 
-	suite("Assert Messages", () => {
-		const errorResponse = loadResource("./src/test/resources/error/errorResponse.json");
-
-		strictEqual(ErrorResponse.isInstance(errorResponse), true);
-
-		test("Short Message", () => {
-			strictEqual(errorResponse.shortMessage?.key, "error.message.short");
-			strictEqual(errorResponse.shortMessage?.default, "Error Short Message");
+	suite("Assert Localized Entry", () => {
+		test("Localized Entry", () => {
+			strictEqual(ErrorResponse.LocalizedEntry.isInstance(errorResponse.shortMessage), true);
 		});
 
-		test("Long Message", () => {
-			strictEqual(errorResponse.longMessage?.key, "error.message.long");
-			strictEqual(errorResponse.longMessage?.default, "Error Long Message");
+		test("Localized Entry - Missing key", () => {
+			const { key, ...response } = errorResponse.shortMessage;
+			strictEqual(ErrorResponse.LocalizedEntry.isInstance(response), false);
+		});
+
+		test("Localized Entry - Invalid key", () => {
+			const invalidKeyResponse = { ...errorResponse.shortMessage, key: 123 };
+			strictEqual(ErrorResponse.LocalizedEntry.isInstance(invalidKeyResponse), false);
+		});
+
+		test("Localized Entry - Missing default", () => {
+			const { default: defaultValue, ...response } = errorResponse.shortMessage;
+			strictEqual(ErrorResponse.LocalizedEntry.isInstance(response), false);
+		});
+
+		test("Localized Entry - Invalid default", () => {
+			const invalidDefaultResponse = { ...errorResponse.shortMessage, default: 123 };
+			strictEqual(ErrorResponse.LocalizedEntry.isInstance(invalidDefaultResponse), false);
+		});
+	});
+
+	suite("Assert Error Detail", () => {
+		test("Error Detail", () => {
+			strictEqual(ErrorResponse.ErrorDetail.isInstance(errorResponse.errorDetail), true);
+		});
+
+		test("Error Detail - Missing code", () => {
+			const { code, ...errorDetail } = errorResponse.errorDetail;
+			strictEqual(
+				ErrorResponse.ErrorDetail.isInstance(errorDetail),
+				false,
+				"Without code should be invalid"
+			);
+		});
+
+		test("Error Detail - Missing Subsystem", () => {
+			const { subsystem, ...errorDetailWithoutSubsystem } = errorResponse.errorDetail;
+			strictEqual(
+				ErrorResponse.ErrorDetail.isInstance(errorDetailWithoutSubsystem),
+				false,
+				"Without subsystem should be invalid"
+			);
+		});
+
+		test("Error Detail - Missing Time", () => {
+			const { time, ...errorDetailWithoutTime } = errorResponse.errorDetail;
+			strictEqual(
+				ErrorResponse.ErrorDetail.isInstance(errorDetailWithoutTime),
+				false,
+				"Without time should be invalid"
+			);
+		});
+
+		test("Error Detail - Invalid Time", () => {
+			strictEqual(
+				ErrorResponse.ErrorDetail.isInstance({
+					...errorResponse.errorDetail,
+					time: {
+						epochSecond: 1690000000,
+						nano: 0
+					}
+				}),
+				false,
+				"With non-string time should be invalid"
+			);
+		});
+	});
+
+	suite("Error Payload Tests", () => {
+		const errorPayload = {
+			errorType: "ERROR_TYPE",
+			message: "Error message"
+		};
+
+		test("Error Payload - Valid", () => {
+			strictEqual(ErrorPayload.isInstance(errorPayload), true);
+		});
+
+		test("Error Payload - Missing errorType", () => {
+			const { errorType, ...payloadWithoutErrorType } = errorPayload;
+			strictEqual(
+				ErrorPayload.isInstance(payloadWithoutErrorType),
+				false,
+				"Without errorType should be invalid"
+			);
+		});
+
+		test("Error Payload - Missing message", () => {
+			const { message, ...payloadWithoutMessage } = errorPayload;
+			strictEqual(
+				ErrorPayload.isInstance(payloadWithoutMessage),
+				false,
+				"Without message should be invalid"
+			);
+		});
+
+		test("Error Payload - Invalid errorType", () => {
+			const invalidErrorTypePayload = { ...errorPayload, errorType: 123 };
+			strictEqual(
+				ErrorPayload.isInstance(invalidErrorTypePayload),
+				false,
+				"With invalid errorType should be invalid"
+			);
+		});
+
+		test("Error Payload - Invalid message", () => {
+			const invalidMessagePayload = { ...errorPayload, message: 123 };
+			strictEqual(
+				ErrorPayload.isInstance(invalidMessagePayload),
+				false,
+				"With invalid message should be invalid"
+			);
 		});
 	});
 });

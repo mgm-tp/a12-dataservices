@@ -38,11 +38,10 @@ import java.math.BigDecimal;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
-import com.mgmtp.a12.dataservices.utils.internal.JsonUtils;
 import com.mgmtp.a12.dataservices.utils.OperationContextHolder;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
@@ -54,7 +53,6 @@ public class JsonNodeSpelProcessorTest {
 	public static final double TEST_NUMBER = 5345.23452;
 	public static final double TEST_INT = 2134345;
 	final ObjectMapper objectMapper = new ObjectMapper();
-	private final JsonUtils jsonUtils = new JsonUtils(objectMapper);
 
 	@BeforeMethod public void setUp() {
 		OperationContextHolder.clear();
@@ -68,7 +66,7 @@ public class JsonNodeSpelProcessorTest {
 	}
 
 	@Test public void testEvaluateSpel() throws IOException {
-		JsonNodeSpelProcessor spelProcessor = new JsonNodeSpelProcessor(jsonUtils);
+		JsonNodeSpelProcessor spelProcessor = new JsonNodeSpelProcessor(objectMapper);
 		InputStream is = getClass().getResourceAsStream("/spelTest.json");
 		JsonNode rootNode = spelProcessor.evaluateSpel(objectMapper.readTree(is));
 
@@ -103,7 +101,7 @@ public class JsonNodeSpelProcessorTest {
 
 	@Test(expectedExceptions = InvalidInputException.class, expectedExceptionsMessageRegExp = "Parameter deserialization error occurred!")
 	public void testEvaluateInvalidSpel() throws IOException {
-		JsonNodeSpelProcessor spelProcessor = new JsonNodeSpelProcessor(jsonUtils);
+		JsonNodeSpelProcessor spelProcessor = new JsonNodeSpelProcessor(objectMapper);
 		InputStream is = getClass().getResourceAsStream("/spelTestInvalid.json");
 		JsonNode rootNode = objectMapper.readTree(is);
 		spelProcessor.evaluateSpel(rootNode);

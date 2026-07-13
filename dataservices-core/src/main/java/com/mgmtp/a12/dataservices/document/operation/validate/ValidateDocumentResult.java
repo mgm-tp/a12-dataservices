@@ -33,8 +33,9 @@ package com.mgmtp.a12.dataservices.document.operation.validate;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import com.mgmtp.a12.dataservices.document.DocumentValidationResult;
+import com.mgmtp.a12.dataservices.document.internal.DocumentValidationResultMapper;
 import com.mgmtp.a12.kernel.md.rt.api.IDocumentValidationResult;
 
 import lombok.Getter;
@@ -46,7 +47,7 @@ import lombok.Getter;
 @Getter
 public class ValidateDocumentResult implements Serializable {
 
-	private final List<DocumentValidationError> validationErrors;
+	private final List<DocumentValidationResult> validationErrors;
 
 	/**
 	 * Creates a wrapper from a kernel {@link IDocumentValidationResult} by mapping messages to {@link DocumentValidationError}.
@@ -55,19 +56,8 @@ public class ValidateDocumentResult implements Serializable {
 	 */
 	public ValidateDocumentResult(IDocumentValidationResult documentValidationResult) {
 		validationErrors = documentValidationResult.getMessages()
-				.stream()
-				.map(error -> {
-					final List<String> referencedFields = error.getReferencedFields().stream()
-						.map(Object::toString)
-						.toList();
-					return new DocumentValidationError(
-							error.getErrorText(),
-							error.getErrorCode(),
-							error.getMessageType().name(),
-							error.getRulePath().orElse(null),
-							referencedFields,
-							error.getSeverity().name());
-				})
-				.collect(Collectors.toList());
+			.stream()
+			.map(DocumentValidationResultMapper::toDocumentValidationResult)
+			.toList();
 	}
 }

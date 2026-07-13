@@ -35,12 +35,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.mgmtp.a12.dataservices.query.internal.page.QueryPageImpl;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Query page interface. Used in Query Services to return paged results.
  *
  */
-public interface QueryPage<T> {
+@OnlyForUsage public interface QueryPage<T> {
 
 	/**
 	 * Returns additional result data that accompanies the page content.

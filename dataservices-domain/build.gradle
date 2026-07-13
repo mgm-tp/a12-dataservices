@@ -6,15 +6,11 @@ dependencies {
 	api project(":content-store:dataservices-content-store-domain")
 	api project(":dataservices-common:dataservices-common-api")
 	api libs.jaxbApi,
-			libs.kernelDocumentApi,
+			libs.baseModelUtils,
 			libs.kernelMdDocumentV2,
-			libs.kernelMdModelApi,
-			libs.kernelCoreToolApi,
-			platform(libs.jacksonBom),
+			libs.kernelMdFacade,
 			libs.jaxbImpl
-	implementation libs.jacksonDatabind,
-			libs.jacksonAnnotations,
-			libs.commonsLang3,
+	implementation libs.commonsLang3,
 			libs.commonsCollections4,
 			libs.annotationApi,
 			libs.mgmModelApi,
@@ -23,10 +19,7 @@ dependencies {
 			libs.jsonassert,
 			libs.json,
 			libs.jacksonDataformatYaml,
-			libs.commonsIo,
-			libs.jacksonDatatypeJsr310,
-			libs.jacksonDatatypeJdk8,
-			libs.jacksonSchema
+			libs.commonsIo
 }
 
 description = 'Domain models and common APIs for Data Services modules'

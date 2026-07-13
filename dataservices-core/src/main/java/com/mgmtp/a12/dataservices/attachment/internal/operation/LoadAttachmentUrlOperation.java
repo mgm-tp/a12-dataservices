@@ -42,6 +42,7 @@ import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.rpc.RemoteOperation;
+import com.mgmtp.a12.dataservices.rpc.internal.RpcDocRefParser;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RequiredArgsConstructor
-@RemoteOperation(name = CoreOperationConstants.LOAD_ATTACHMENT_URL_OPERATION, group = CoreOperationConstants.ATTACHMENT_OPERATIONS_GROUP)
+@RemoteOperation(isMutation = false, name = CoreOperationConstants.LOAD_ATTACHMENT_URL_OPERATION, group = CoreOperationConstants.ATTACHMENT_OPERATIONS_GROUP)
 public class LoadAttachmentUrlOperation {
 
 	private final AttachmentService attachmentService;
@@ -64,12 +65,13 @@ public class LoadAttachmentUrlOperation {
 	 * @return Object of type {@link DataServicesAttachmentURL}.
 	 */
 	@Transactional(readOnly = true)
-	public DataServicesAttachmentURL rpc(@NonNull @JsonRpcParam("attachmentId") String attachmentId, @NonNull @JsonRpcParam("docRef") DocumentReference docRef) {
-		log.debug("{} called with parameters attachmentId=[{}], docRef=[{}]", CoreOperationConstants.LOAD_ATTACHMENT_URL_OPERATION, attachmentId, docRef);
+	public DataServicesAttachmentURL rpc(@NonNull @JsonRpcParam("attachmentId") String attachmentId, @JsonRpcParam("docRef") String docRef) {
+		DocumentReference documentReference = RpcDocRefParser.parseDocRef(docRef);
+		log.debug("{} called with parameters attachmentId=[{}], docRef=[{}]", CoreOperationConstants.LOAD_ATTACHMENT_URL_OPERATION, attachmentId, documentReference);
 
-		return attachmentService.findAttachmentUrl(attachmentId, docRef)
+		return attachmentService.findAttachmentUrl(attachmentId, documentReference)
 			.map(attachmentMapper::toDataServicesAttachmentURL)
 			.orElseThrow(() -> new NotFoundException(ExceptionKeys.ATTACHMENT_NOT_FOUND_ERROR_KEY,
-				String.format("No URL from attachmentId %s could be found.", attachmentId)));
+			"No URL from attachmentId %s could be found.".formatted(attachmentId)));
 	}
 }

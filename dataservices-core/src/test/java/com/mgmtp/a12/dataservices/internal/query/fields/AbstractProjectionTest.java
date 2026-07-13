@@ -38,8 +38,6 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.mgmtp.a12.dataservices.AbstractQueryContextAwareTest;
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
@@ -56,6 +54,7 @@ import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelSerializer;
 
 import lombok.SneakyThrows;
+import tools.jackson.databind.json.JsonMapper;
 
 import static com.mgmtp.a12.dataservices.constants.PathConstants.DOCUMENT_MODEL_ROOT_DIR;
 import static com.mgmtp.a12.dataservices.constants.PathConstants.DOCUMENT_TREE_RESULT_PATH;
@@ -67,7 +66,7 @@ public abstract class AbstractProjectionTest extends AbstractQueryContextAwareTe
 
 	protected final DocumentModelUtils documentModelUtils = new DocumentModelUtils(documentModelServiceFactory, documentModelSerializer, headerParser);
 	protected final DocumentTreeHelper documentTreeHelper =
-		new DocumentTreeHelper(documentFactory, jsonMapper, documentModelUtils, documentModelServiceFactory);
+		new DocumentTreeHelper(jsonMapper);
 
 	protected QueryRoot constructQueryRootWithFields(List<String> fields, ILogicOperator operator) {
 		return QueryRoot.builder()
@@ -96,7 +95,7 @@ public abstract class AbstractProjectionTest extends AbstractQueryContextAwareTe
 		}
 	}
 
-	public Page<DocumentTreeResult> getCddRootDocuments() throws JsonProcessingException {
+	public Page<DocumentTreeResult> getCddRootDocuments() {
 		return new PageImpl<>(List.of(DocumentTreeResult.builder()
 			.docRef(new DocumentReference("Contract/1"))
 			.type(DocumentTreeNodeType.ROOT)

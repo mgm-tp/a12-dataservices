@@ -34,12 +34,15 @@ package com.mgmtp.a12.dataservices.model.persistence;
 import java.util.function.Predicate;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.model.GenericModel;
 import com.mgmtp.a12.dataservices.model.internal.ModelCacheManager;
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity.ModelHeaderEntity;
+import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.repository.ModelHeaderJpaRepository;
+import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.repository.ModelJpaRepository;
 import com.mgmtp.a12.model.header.Header;
 
 import lombok.NonNull;
@@ -49,6 +52,12 @@ import lombok.NonNull;
  * Adds transparent caching via {@link ModelCacheManager}.
  */
 @Component public class GenericModelReadRepository extends AbstractModelReadRepository<GenericModel> {
+
+	public GenericModelReadRepository(ModelJpaRepository modelJpaRepository,
+		ModelHeaderJpaRepository modelHeaderJpaRepository,
+		ApplicationEventPublisher eventPublisher) {
+		super(modelJpaRepository, modelHeaderJpaRepository, eventPublisher);
+	}
 
 	@Cacheable(value = ModelCacheManager.GENERIC_MODEL_READ_CACHE)
 	@Override public GenericModel readModel(@NonNull String modelId) {

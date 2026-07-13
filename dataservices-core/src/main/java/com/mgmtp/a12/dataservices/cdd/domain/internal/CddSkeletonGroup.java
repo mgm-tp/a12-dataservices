@@ -40,9 +40,7 @@ import java.util.stream.Stream;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
-import com.mgmtp.a12.dataservices.marshalling.DocumentReferenceToStringConverter;
 import com.mgmtp.a12.dataservices.relationship.RelationshipLink;
 import com.mgmtp.a12.dataservices.relationship.RelationshipRole;
 import com.mgmtp.a12.dataservices.utils.internal.ModelUtils;
@@ -91,7 +89,6 @@ public class CddSkeletonGroup implements ICddSkeletonNode {
 		return getRelationshipModelName() != null;
 	}
 
-	@JsonSerialize(converter = DocumentReferenceToStringConverter.class)
 	public DocumentReference getSourceDocRef() {
 		return getRoleDocRef(getSourceRole());
 	}
@@ -120,7 +117,6 @@ public class CddSkeletonGroup implements ICddSkeletonNode {
 			.orElse(null);
 	}
 
-	@JsonSerialize(converter = DocumentReferenceToStringConverter.class)
 	public DocumentReference getRoleDocRef(String role) {
 		return Optional.ofNullable(getLink())
 			.map(RelationshipLink::getRoles)

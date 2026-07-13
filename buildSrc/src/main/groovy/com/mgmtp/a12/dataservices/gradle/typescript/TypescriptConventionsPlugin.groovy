@@ -62,7 +62,7 @@ class TypescriptConventionsPlugin implements Plugin<Project> {
 	@Override
 	void apply(final Project project) {
 
-		VersionCatalogsExtension versionCatalogsExtension = project.extensions.getByType(VersionCatalogsExtension)
+		VersionCatalog libs = project.extensions.getByType(VersionCatalogsExtension).named('libs')
 		project.pluginManager.apply(libs.findPlugin('nodePlugin').map { it.get() }.map { it.pluginId }.orElseThrow())
 
 		TypescriptConventionsExtension ext = project.extensions.create(TypescriptConventionsExtension.NAME, TypescriptConventionsExtension)

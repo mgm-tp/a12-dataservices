@@ -33,12 +33,8 @@ package com.mgmtp.a12.dataservices.document.internal.entity;
 
 import java.io.Serializable;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -55,7 +51,6 @@ import lombok.NoArgsConstructor;
  * Contains all resources for document definition.
  */
 @Table(name = "DOCUMENT")
-@Cacheable @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data @NoArgsConstructor @AllArgsConstructor(access = AccessLevel.PRIVATE) @Builder(toBuilder = true)
 @Entity public class DocumentEntity implements Serializable {
 

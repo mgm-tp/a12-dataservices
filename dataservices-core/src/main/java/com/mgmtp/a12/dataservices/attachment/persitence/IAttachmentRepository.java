@@ -34,9 +34,7 @@ package com.mgmtp.a12.dataservices.attachment.persitence;
 import java.io.InputStream;
 import java.util.Optional;
 
-import com.mgmtp.a12.dataservices.attachment.AttachmentHeader;
 import com.mgmtp.a12.dataservices.attachment.AttachmentUrl;
-import com.mgmtp.a12.dataservices.attachment.ThumbnailType;
 import com.mgmtp.a12.dataservices.attachment.TypeOfTheContent;
 
 import lombok.NonNull;
@@ -55,50 +53,12 @@ public interface IAttachmentRepository {
 	 * @param is The binary stream to persist; must not be null.
 	 * @param filename The file name suggested for download; must not be null.
 	 * @param type The content type discriminator; determines persistence behavior ({@link TypeOfTheContent}); must not be null.
+	 * @param mimeType The MIME type of the content. If non-null, the MIME type has already been probed by Data Services
+	 *   and the Content Store must use it as-is. If null, Data Services did not probe and the Content Store is responsible
+	 *   for probing the MIME type itself.
 	 * @return The result describing the persisted content.
-	 * @deprecated Use {@link #create(String, InputStream, String, TypeOfTheContent, String)} instead.
 	 */
-	@Deprecated(since = "37.1.0")
-	AttachmentPersistenceResult create(@NonNull String id, @NonNull InputStream is, @NonNull String filename, @NonNull TypeOfTheContent type);
-
-	/**
-	 * Implementation will persist attachment or thumbnail to content store.
-	 *
-	 * @param id id of attachment or thumbnail to be persisted.
-	 * @param is Binary stream to be persisted.
-	 * @param filename is for setting the name of downloaded file.
-	 * @param type is type of the content, decides how the attachment will be persisted {@link TypeOfTheContent}.
-	 * @param mimeType The mime type of the content (including the used charset).
-	 * @return {@link AttachmentPersistenceResult} result of successful or fail persisting attachment or thumbnail.
-	 */
-	default AttachmentPersistenceResult create(@NonNull String id, @NonNull InputStream is, @NonNull String filename, @NonNull TypeOfTheContent type,
-		@NonNull String mimeType) {
-		return create(id, is, filename, type);
-	}
-
-	/**
-	 * @deprecated Use {@link IAttachmentRepository#create(String, InputStream, String, TypeOfTheContent)} instead
-	 */
-	@Deprecated(since = "36.2.0")
-	AttachmentPersistenceResult createAttachment(@NonNull AttachmentHeader attachmentHeader, @NonNull InputStream is);
-
-	/**
-	 * Persists content to the content store.
-	 *
-	 * @param attachmentHeader The header of the attachment for which to generate the thumbnail; must not be null.
-	 * @param is The binary stream to persist; must not be null.
-	 * @param filename The file name suggested for download; must not be null.
-	 * @return A generated thumbnail URL without invoking the content store's generator.
-	 * @deprecated Use {@link IAttachmentRepository#create(String, InputStream, String, TypeOfTheContent)} instead.
-	 */
-	@Deprecated(since = "37.1.0")
-	AttachmentPersistenceResult createAttachment(@NonNull AttachmentHeader attachmentHeader, @NonNull InputStream is, @NonNull String filename);
-
-	/**
-	 * @deprecated Use {@link IAttachmentRepository#create(String, InputStream, String, TypeOfTheContent)} instead
-	 */
-	@Deprecated(since = "37.1.0")
-	AttachmentPersistenceResult createThumbnail(@NonNull AttachmentHeader attachmentHeader, @NonNull InputStream is);
+	AttachmentPersistenceResult create(@NonNull String id, @NonNull InputStream is, @NonNull String filename, @NonNull TypeOfTheContent type, String mimeType);
 
 	/**
 	 * Finds a download URL by id based on {@link TypeOfTheContent}.
@@ -111,33 +71,9 @@ public interface IAttachmentRepository {
 	Optional<AttachmentUrl> findUrl(@NonNull String id, @NonNull String filename, @NonNull TypeOfTheContent type);
 
 	/**
-	 * @deprecated Use {@link IAttachmentRepository#findUrl(String, String, TypeOfTheContent)} instead
-	 */
-	@Deprecated(since = "37.1.0")
-	Optional<AttachmentUrl> findAttachmentUrl(@NonNull String attachmentId, @NonNull String filename);
-
-	/**
-	 * @deprecated Use {@link IAttachmentRepository#findUrl(String, String, TypeOfTheContent)} instead
-	 */
-	@Deprecated(since = "36.0.1")
-	Optional<AttachmentUrl> findThumbnailUrl(@NonNull String attachmentId, @NonNull ThumbnailType type);
-
-	/**
-	 * @deprecated Use {@link IAttachmentRepository#findUrl(String, String, TypeOfTheContent)} instead
-	 */
-	@Deprecated(since = "37.1.0")
-	Optional<AttachmentUrl> findThumbnailUrl(@NonNull AttachmentHeader attachmentHeader, @NonNull ThumbnailType type);
-
-	/**
 	 * Deletes an attachment or thumbnail by its identifier.
 	 *
 	 * @param id The identifier of the content to delete; must not be null.
 	 */
 	void delete(@NonNull String id);
-
-	/**
-	 * @deprecated Use {@link IAttachmentRepository#delete} instead
-	 */
-	@Deprecated(since = "36.0.1")
-	void deleteThumbnail(@NonNull String attachmentId);
 }

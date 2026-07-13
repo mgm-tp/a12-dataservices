@@ -82,4 +82,46 @@ public class ListValidationCodesOperationTest {
 
 		Mockito.verify(securedValidationCodeGenerator, Mockito.times(0)).generateValidationCode(Mockito.any(), Mockito.any());
 	}
+
+	/**
+	 * Tests that the exception message includes the number of requested model names when the hard limit is exceeded.
+	 */
+	@Test(description = "Should include requested count in exception message when hard limit is exceeded")
+	public void shouldIncludeRequestedCountInMessageWhenHardLimitExceeded() {
+		// Given: hardLimit = 2, request with 5 model names
+		Mockito.when(dataServicesCoreProperties.getDocuments()).thenReturn(documentProperties);
+		Mockito.when(documentProperties.getValidation()).thenReturn(validationProperties);
+		Mockito.when(validationProperties.getList()).thenReturn(validationCodeListProperties);
+		Mockito.when(validationCodeListProperties.getHardLimit()).thenReturn(2);
+
+		// When / Then: catch InvalidInputException, assert getLongMessage() contains "5"
+		try {
+			listValidationCodesOperation.rpc(List.of("m1", "m2", "m3", "m4", "m5"));
+			org.testng.Assert.fail("Expected InvalidInputException to be thrown");
+		} catch (InvalidInputException e) {
+			String message = e.getLongMessage().getDefaultMessage();
+			org.testng.Assert.assertTrue(message.contains("5"), "Message should contain requested count '5': " + message);
+		}
+	}
+
+	/**
+	 * Tests that the exception message includes the configured hard limit value when the hard limit is exceeded.
+	 */
+	@Test(description = "Should include configured limit in exception message when hard limit is exceeded")
+	public void shouldIncludeConfiguredLimitInMessageWhenHardLimitExceeded() {
+		// Given: hardLimit = 2, request with 5 model names
+		Mockito.when(dataServicesCoreProperties.getDocuments()).thenReturn(documentProperties);
+		Mockito.when(documentProperties.getValidation()).thenReturn(validationProperties);
+		Mockito.when(validationProperties.getList()).thenReturn(validationCodeListProperties);
+		Mockito.when(validationCodeListProperties.getHardLimit()).thenReturn(2);
+
+		// When / Then: catch InvalidInputException, assert getLongMessage() contains "2"
+		try {
+			listValidationCodesOperation.rpc(List.of("m1", "m2", "m3", "m4", "m5"));
+			org.testng.Assert.fail("Expected InvalidInputException to be thrown");
+		} catch (InvalidInputException e) {
+			String message = e.getLongMessage().getDefaultMessage();
+			org.testng.Assert.assertTrue(message.contains("2"), "Message should contain configured limit '2': " + message);
+		}
+	}
 }

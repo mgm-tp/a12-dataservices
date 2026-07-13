@@ -47,7 +47,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Session;
 import org.jetbrains.annotations.NotNull;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.PersistenceContext;
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.document.persistence.internal.AggregatedDocumentRepository;
@@ -91,7 +92,7 @@ public class DocumentSearchIndexBehaviour extends AbstractIndexBehavior {
 	protected final IDocumentV2Serializer documentV2Serializer;
 	protected final SearchCustomizerRegistry searchCustomizerRegistry;
 
-	private final EntityManager entityManager;
+	@PersistenceContext(unitName = "dsPersistenceUnit") private EntityManager entityManager;
 
 	public static final String DOCUMENTS_TARGET = "documents";
 	public static final String FIELDS_TARGET = "fields";
@@ -112,7 +113,7 @@ public class DocumentSearchIndexBehaviour extends AbstractIndexBehavior {
 	@Override protected String getCopySql(String target) {
 		String columns = String.join(",", DocumentSearchIndexHelper.getColumnNames(target));
 		String tableName = FIELDS_TARGET.equals(target) ? TableNames.DOCUMENT_FIELDS_TABLE_NAME : TableNames.DOCUMENT_SEARCH_TABLE_NAME;
-		return String.format("COPY %s (%s) FROM STDIN WITH (FORMAT CSV)", tableName, columns);
+		return "COPY %s (%s) FROM STDIN WITH (FORMAT CSV)".formatted(tableName, columns);
 
 	}
 

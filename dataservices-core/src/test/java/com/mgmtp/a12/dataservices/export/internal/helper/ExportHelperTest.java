@@ -40,7 +40,7 @@ import org.mockito.InjectMocks;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.AbstractDataServicesCoreTest;
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
@@ -60,7 +60,7 @@ public class ExportHelperTest extends AbstractDataServicesCoreTest {
 		List<Header> headers = new ExportHelper(kernelTestSupport.getIDocumentModelService())
 			.collectHeaders(documentModel);
 		Assert.assertEquals(headers.size(), 10);
-		Assert.assertEquals(headers.get(0).getName(), "/BusinessPartnerRoot/Industry");
+		Assert.assertEquals(headers.getFirst().getName(), "/BusinessPartnerRoot/Industry");
 		Assert.assertEquals(headers.get(1).getName(), "/BusinessPartnerRoot/StartOfRelationship");
 		Assert.assertEquals(headers.get(2).getName(), "/BusinessPartnerRoot/CustomerDiscount");
 		Assert.assertEquals(headers.get(3).getName(), "/__meta/docRef");
@@ -94,10 +94,10 @@ public class ExportHelperTest extends AbstractDataServicesCoreTest {
 		Assert.assertFalse(results.isEmpty(), null);
 
 		Assert.assertEquals(results.size(), 1);
-		Assert.assertEquals(results.get(0).size(), headers.size());
+		Assert.assertEquals(results.getFirst().size(), headers.size());
 		Map<String, String> resultMap = new HashMap<>();
 		for (int i = 0; i < headers.size(); i++) {
-			resultMap.put(headers.get(i).getName(), String.valueOf(results.get(0).get(i)));
+			resultMap.put(headers.get(i).getName(), String.valueOf(results.getFirst().get(i)));
 		}
 
 		Assert.assertTrue(resultMap.containsKey("/BusinessPartnerRoot/Industry"));

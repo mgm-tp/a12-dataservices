@@ -29,24 +29,27 @@
  * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
  * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
  */
-import {
-	isModelInstance,
-	type Model
-} from "@com.mgmtp.a12.base/base-model-api/lib/main/model/index.js";
-import type { RestRequestPayload } from "@com.mgmtp.a12.utils/utils-connector/lib/main/index.js";
+import { isModelInstance, type Model } from "@com.mgmtp.a12.base/base-model-api";
+import type { RestRequestPayload } from "@com.mgmtp.a12.utils/utils-connector";
 
-import type { ErrorPayload } from "../common/ErrorPayload.js";
+import { ErrorPayload, ErrorResponse } from "../common/index.js";
 import { JsonRpc2Response, JsonRpc2Request } from "../json-rpc/index.js";
 
 /** @module models/api */
 
 export namespace ModelsResult {
-	export function isInstance(obj: Model | object): obj is Model {
+	export function isInstance(obj: unknown): obj is Model {
 		return isModelInstance(obj);
 	}
 }
 
 export type ModelsResponse = Model | ErrorPayload;
+
+export namespace ModelsResponse {
+	export function isInstance(obj: unknown): obj is Model | ErrorPayload {
+		return isModelInstance(obj) || ErrorPayload.isInstance(obj);
+	}
+}
 
 export interface ModelsRequest {
 	id: string;
@@ -175,7 +178,7 @@ export interface ListModelsJsonRpc2Response extends JsonRpc2Response {
 
 export namespace ListModelsJsonRpc2Response {
 	export function isInstance(obj: unknown): obj is ListModelsJsonRpc2Response {
-		return JsonRpc2Response.ok.isInstance(obj) && "result" in obj && "models" in obj.result;
+		return JsonRpc2Response.ok.isInstance(obj) && "models" in obj.result;
 	}
 }
 
@@ -185,10 +188,37 @@ export interface ListValidationsJsonRpc2Response extends JsonRpc2Response {
 
 export namespace ListValidationsJsonRpc2Response {
 	export function isInstance(obj: unknown): obj is ListValidationsJsonRpc2Response {
+		return JsonRpc2Response.ok.isInstance(obj) && "documentValidationCodes" in obj.result;
+	}
+}
+
+/**
+ * Error code returned by the model REST API (POST/PUT `/v2/models`) when a unique constraint
+ * definition in a Document Model is invalid — for example, when a field path referenced by a
+ * constraint does not exist in the model.
+ * Appears as the string value of {@link ErrorResponse.ErrorDetail.code} in the error response body.
+ */
+export const MODEL_UNIQUE_CONSTRAINT_VALIDATION_ERROR_CODE = "-32061";
+
+export namespace ModelsErrorResponse {
+	/**
+	 * Type guard that narrows an unknown value to {@link ErrorResponse} and confirms it is a
+	 * model unique-constraint validation error (error code `-32061`).
+	 * Use this to distinguish this specific failure from other model save errors.
+	 *
+	 * @example
+	 * ```typescript
+	 * const response = await dispatcher.send(UpdateModelsRequest.build(model));
+	 * if (ModelsErrorResponse.isModelUniqueConstraintValidationError(response)) {
+	 *     // response.errorDetail.code === "-32061"
+	 *     // response.shortMessage / response.longMessage carry the localized error details
+	 * }
+	 * ```
+	 */
+	export function isModelUniqueConstraintValidationError(obj: unknown): obj is ErrorResponse {
 		return (
-			JsonRpc2Response.ok.isInstance(obj) &&
-			"result" in obj &&
-			"documentValidationCodes" in obj.result
+			ErrorResponse.isInstance(obj) &&
+			obj.errorDetail?.code === MODEL_UNIQUE_CONSTRAINT_VALIDATION_ERROR_CODE
 		);
 	}
 }

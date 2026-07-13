@@ -31,10 +31,13 @@
  */
 package com.mgmtp.a12.dataservices.client.config;
 
+import java.nio.file.Files;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -54,43 +57,40 @@ import com.mgmtp.a12.uaa.client.rest.config.common.UrlProperty;
 import com.mgmtp.a12.uaa.client.rest.config.properties.UAARestClientAuthenticationProperties;
 import com.mgmtp.a12.uaa.client.rest.config.properties.UAARestClientProperties;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Test
-public class RestMultiConfigurationIT extends AbstractSpringContextIT {
+@Test public class RestMultiConfigurationIT extends AbstractSpringContextIT {
 
 	public static final String RELATIVE_LOGIN_URL = "user/local/login";
 	@Value("http://localhost:${config.port:8080}")
 	private String host;
 
-	@BeforeClass
-	public void init() {
+	@BeforeClass public void init() {
 		createModelFromFile(CONTRACT_MODEL_FILE);
 	}
 
-	@AfterClass
-	public void cleanUp() {
+	@SneakyThrows
+	@AfterClass public void cleanUp() {
 		cleanUpByDocumentModel(CONTRACT_MODEL_NAME);
 	}
 
 	@Test(expectedExceptions = MissingDataException.class)
 	public void checkManualProperConfigurationWithException() {
-		ClientFactory clientFactory = createProperlyConfiguedfactory().build();
+		ClientFactory clientFactory = createProperlyConfiguredFactory().build();
 		RestModelsClient modelsClient = clientFactory.getRestModelsClient();
 		modelsClient.loadModel("unknown");
 	}
 
-	@Test
-	public void getUserInfoGuest() {
+	@Test public void getUserInfoGuest() {
 		ClientFactory clientFactory = createFactory(getAPIUrl(), RELATIVE_LOGIN_URL, getAPIUrl(), "guest", "guest").build();
 		AuthenticationRestClient authClient = clientFactory.getAuthenticationRestClient();
 		CurrentUser currentUser = authClient.currentUser();
 		Assert.assertEquals(currentUser.getUsername(), "guest");
 	}
 
-	@Test
-	public void checkCustomHeadersIsSet() {
+	@Test public void checkCustomHeadersIsSet() {
 		Map<String, String> headers = Map.of(
 			"Header1", "Value1",
 			"Header2", "Value2"
@@ -106,8 +106,8 @@ public class RestMultiConfigurationIT extends AbstractSpringContextIT {
 			}, (request, body, execution) -> {
 				count.increment();
 				headers.forEach((k, v) -> {
-					Assert.assertTrue(request.getHeaders().containsKey(k), "Request must have key " + k);
-					Assert.assertEquals(request.getHeaders().get(k).get(0), v, "Header " + k + " must have value " + v);
+					Assert.assertTrue(request.getHeaders().containsHeader(k), "Request must have key " + k);
+					Assert.assertEquals(Objects.requireNonNull(request.getHeaders().get(k)).getFirst(), v, "Header " + k + " must have value " + v);
 				});
 				return execution.execute(request, body);
 			})
@@ -116,19 +116,17 @@ public class RestMultiConfigurationIT extends AbstractSpringContextIT {
 		Assert.assertEquals(count.intValue(), 2, "Two interceptors must be executed");
 	}
 
-	@Test
-	public void checkManualProperConfiguration() {
-		ClientFactory clientFactory = createProperlyConfiguedfactory().build();
+	@Test public void checkManualProperConfiguration() {
+		ClientFactory clientFactory = createProperlyConfiguredFactory().build();
 
 		AuthenticationRestClient authClient = clientFactory.getAuthenticationRestClient();
 		CurrentUser currentUser = authClient.currentUser();
 		Assert.assertNotNull(currentUser);
 	}
 
-	@Test
-	public void checkSelfConfiguration() {
+	@Test public void checkSelfConfiguration() {
 		ClientFactory clientFactory =
-			createFactory(getAPIUrl(), RELATIVE_LOGIN_URL, getAPIUrl(),  "admin", "admin").build();
+			createFactory(getAPIUrl(), RELATIVE_LOGIN_URL, getAPIUrl(), "admin", "admin").build();
 
 		AuthenticationRestClient authClient = clientFactory.getAuthenticationRestClient();
 		CurrentUser currentUser = authClient.currentUser();
@@ -162,11 +160,11 @@ public class RestMultiConfigurationIT extends AbstractSpringContextIT {
 		return host + "/api";
 	}
 
-	private ClientFactoryBuilder createProperlyConfiguedfactory() {
+	private ClientFactoryBuilder createProperlyConfiguredFactory() {
 		return createFactory(getAPIUrl(), RELATIVE_LOGIN_URL, getAPIUrl(), "admin", "admin");
 	}
 
-	private ClientFactoryBuilder createFactory(String uaaBaseUrl, String relativeLoginUrl, String dataServicesBaseUrl, String user,
+	@SneakyThrows private ClientFactoryBuilder createFactory(String uaaBaseUrl, String relativeLoginUrl, String dataServicesBaseUrl, String user,
 		String password) {
 		//init UAA REST connector
 
@@ -179,9 +177,9 @@ public class RestMultiConfigurationIT extends AbstractSpringContextIT {
 		uaaProperties.setUaaBase(new UrlProperty(getAPIUrl()));
 		uaaProperties.setAuthorizationHeaderName("Authorization");
 		uaaProperties.setGeneratedTokenHeaderName("access_token");
-		uaaProperties.setGeneratedTokenExpirationHeaderName("access_token_expiration");
 		uaaProperties.setAuthenticationConfiguration(authProperties);
+		uaaProperties.setAuthorizationDataStore(new FileSystemResource(Files.createTempFile(".a12cli", ".uaa_token")));
 
-		return ClientFactory.builder(uaaProperties, new ClientConfiguration(dataServicesBaseUrl));
+		return ClientFactory.builder(uaaProperties, new ClientConfiguration(dataServicesBaseUrl), objectMapper);
 	}
 }

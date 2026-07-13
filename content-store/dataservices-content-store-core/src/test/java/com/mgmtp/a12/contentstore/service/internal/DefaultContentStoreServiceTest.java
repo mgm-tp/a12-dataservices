@@ -119,7 +119,7 @@ public class DefaultContentStoreServiceTest extends AbstractContentStoreTest {
 
 		Assert.assertTrue(StringUtils.isNotBlank(actualUrl));
 		Assert.assertEquals(actualUrl,
-			String.format(CONTENT_STORE_DOWNLOAD_URL_PATTERN, BASE_URL, contentStoreProperties.getServer().getContextPath(), thisTicketId));
+			CONTENT_STORE_DOWNLOAD_URL_PATTERN.formatted(BASE_URL, contentStoreProperties.getServer().getContextPath(), thisTicketId));
 
 		ArgumentCaptor<ContentAfterRequestEvent> contentAfterRequestEventArgumentCaptor = ArgumentCaptor.forClass(ContentAfterRequestEvent.class);
 
@@ -136,7 +136,7 @@ public class DefaultContentStoreServiceTest extends AbstractContentStoreTest {
 			Assert.expectThrows(NotFoundException.class, () -> contentStoreService.requestContentUrl(contentId, TICKET_DURATION));
 
 		Assert.assertNotNull(exception);
-		Assert.assertEquals(exception.getMessage(), String.format(Constants.CANNOT_FIND_CONTENT_BY_ID_PATTERN, contentId));
+		Assert.assertEquals(exception.getMessage(), Constants.CANNOT_FIND_CONTENT_BY_ID_PATTERN.formatted(contentId));
 	}
 
 	@Test public void testFindPublicContentUrl_shouldReturnValidUrl_whenGivenValidPublicContent() {
@@ -148,7 +148,7 @@ public class DefaultContentStoreServiceTest extends AbstractContentStoreTest {
 		Assert.assertTrue(actualUrl.isPresent());
 		Assert.assertTrue(StringUtils.isNotBlank(actualUrl.get()));
 		Assert.assertEquals(actualUrl.get(),
-			String.format(CONTENT_STORE_DOWNLOAD_URL_PATTERN, BASE_URL, contentStoreProperties.getServer().getContextPath(), contentId));
+			CONTENT_STORE_DOWNLOAD_URL_PATTERN.formatted(BASE_URL, contentStoreProperties.getServer().getContextPath(), contentId));
 	}
 
 	@Test public void testFindPublicContentUrl_shouldReturnEmpty_whenGivenValidPrivateContent() {

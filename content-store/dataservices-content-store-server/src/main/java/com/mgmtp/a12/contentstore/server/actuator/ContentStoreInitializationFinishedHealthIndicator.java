@@ -30,19 +30,20 @@
  * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
  */
 package com.mgmtp.a12.contentstore.server.actuator;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.boot.actuate.health.Status;
+
+import org.springframework.boot.health.contributor.Health;
+import org.springframework.boot.health.contributor.HealthIndicator;
+import org.springframework.boot.health.contributor.Status;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import com.mgmtp.a12.dataservices.common.events.CommonDataServicesEventListener;
 import com.mgmtp.a12.contentstore.initialization.events.ContentStoreInitializationFinishedEvent;
+import com.mgmtp.a12.dataservices.common.events.CommonDataServicesEventListener;
 
 /**
  * Health indicator for initialization process of Content Store.
  */
-@Component("initializationFinished") public class ContentStoreInitializationFinishedHealthIndicator implements HealthIndicator {
+@Component("contentstoreInitializationFinished") public class ContentStoreInitializationFinishedHealthIndicator implements HealthIndicator {
 	private static final String DETAIL_KEY = "dataServicesInitialization";
 	private static final String FINISHED_DETAIL = "Finished";
 	private static final String NOT_FINISHED_DETAIL = "Not Finished";

@@ -34,6 +34,7 @@ package com.mgmtp.a12.dataservices.relationship;
 import java.io.Serializable;
 
 import com.mgmtp.a12.dataservices.document.DocumentReference;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Every relationship has 2 roles, one for each side of the relationship. This interface represents such a role.
@@ -41,7 +42,7 @@ import com.mgmtp.a12.dataservices.document.DocumentReference;
  * would be "parent" and the other "child". If client needs a child document, it would query for documents that have
  * targetRole of "child". The sourceRole would be "parent" in this case.
  */
-public interface RelationshipRole extends Serializable {
+@OnlyForUsage public interface RelationshipRole extends Serializable {
 
 	/**
 	 *

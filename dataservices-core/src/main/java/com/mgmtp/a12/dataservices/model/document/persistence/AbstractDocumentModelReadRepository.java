@@ -34,12 +34,16 @@ package com.mgmtp.a12.dataservices.model.document.persistence;
 import java.util.function.Predicate;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.model.internal.ModelCacheManager;
 import com.mgmtp.a12.dataservices.model.persistence.AbstractModelReadRepository;
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity.ModelHeaderEntity;
+import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.repository.ModelHeaderJpaRepository;
+import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.repository.ModelJpaRepository;
+import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 import com.mgmtp.a12.model.header.Header;
 
@@ -56,6 +60,15 @@ import static com.mgmtp.a12.dataservices.model.ModelConstants.DOCUMENT_MODEL_TYP
  */
 @Slf4j
 @Component public abstract class AbstractDocumentModelReadRepository<T extends IDocumentModel> extends AbstractModelReadRepository<T> {
+
+	protected final DocumentModelUtils documentModelUtils;
+
+	protected AbstractDocumentModelReadRepository(ModelJpaRepository modelJpaRepository,
+		ModelHeaderJpaRepository modelHeaderJpaRepository,
+		ApplicationEventPublisher eventPublisher, DocumentModelUtils documentModelUtils) {
+		super(modelJpaRepository, modelHeaderJpaRepository, eventPublisher);
+		this.documentModelUtils = documentModelUtils;
+	}
 
 	@Cacheable(value = ModelCacheManager.DOCUMENT_MODEL_READ_CACHE)
 	@Override public T readModel(@NonNull String modelId) {

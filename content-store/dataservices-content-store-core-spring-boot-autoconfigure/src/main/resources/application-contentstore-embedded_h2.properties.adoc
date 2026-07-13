@@ -1,5 +1,10 @@
 = H2 database
 
+[NOTE]
+====
+This profile is deprecated and should not be used in production. DS supports only PostgreSQL. The content store uses a separate data source and has no dependencies on any PostgreSQL-specific features, but DS has no tests for any other database.
+====
+
 Set up the application to use embedded H2 in-memory database.
 
 To specify different datasource use these additional properties:

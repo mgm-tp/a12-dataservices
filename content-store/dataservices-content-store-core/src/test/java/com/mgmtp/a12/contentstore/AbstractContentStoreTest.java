@@ -86,7 +86,7 @@ public abstract class AbstractContentStoreTest {
 		Mockito.when(contentStoreProperties.getServer()).thenReturn(new ContentStoreProperties.Server());
 		Mockito.when(contentStoreProperties.getBaseUrl()).thenReturn(BASE_URL);
 		Mockito.when(contentStoreProperties.getContentWaitReadyTimeout()).thenReturn(10_000L);
-		Mockito.when(contentTypeDetector.probeContentType(ArgumentMatchers.any(InputStream.class), ArgumentMatchers.isNull(String.class)))
+		Mockito.when(contentTypeDetector.probeContentType(ArgumentMatchers.any(InputStream.class), ArgumentMatchers.isNull()))
 			.thenReturn(MimeTypeUtils.ALL_VALUE);
 		fixedClock = Clock.fixed(ZonedDateTime.now().toInstant(), ZoneId.of("UTC"));
 		fixedClockInstant = fixedClock.instant();

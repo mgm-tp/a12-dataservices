@@ -35,6 +35,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mgmtp.a12.model.Content;
 
 import lombok.Data;
@@ -43,13 +44,11 @@ import lombok.Data;
  * Relationship Model Content class. Used in relationship model to define the content of a relationship model that is currently implemented.
  *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class RelationshipModelContent implements Content, Serializable {
 	private List<Label> labels = Collections.emptyList();
-	private String associationType;
 	private String linkDocumentModel;
 	private Boolean duplicatesAllowed;
 	private List<EntityCharacteristics> entityCharacteristics = Collections.emptyList();
-	private String storage;
-	private String embeddedGroupPath;
 }

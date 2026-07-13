@@ -7,17 +7,23 @@ dependencies {
 	api project(':dataservices-common:dataservices-common-api')
 	api project(':dataservices-domain')
 
+	api libs.jacksonDatabind
+	api libs.reflections
+
 	api libs.commonsCollections4
 
-	api libs.kernelMdFacade
+	api libs.kernelMdFacade,
+			libs.kernelConversion
 
 	api libs.bundles.tika,
 			libs.junitApi,
 			libs.indriya,
 			libs.jimFs
 
-	implementation libs.springWeb,
-			libs.springContext
+	implementation libs.springWeb, libs.springContext
+	// TODO A12S-6689: drop as soon as Hibernate supports Jackson 3
+	implementation libs.jacksonDatatypeJdk8, libs.jacksonDatatypeJsr310
+	implementation libs.persistenceApi
 
 	// This is only needed to avoid compilation time warnings of missing enums from this library.
 	// There is no known functional impact of this library not being included in dependencies

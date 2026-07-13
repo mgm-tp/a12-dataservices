@@ -29,6 +29,14 @@
  * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
  * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
  */
+import {
+	isArray,
+	isNull,
+	isObject,
+	isOptionalFieldOfType,
+	isString
+} from "../common/TypeGuardUtils.js";
+
 /** @module Relationship/api */
 export namespace Relationship {
 	export interface LinkRef {
@@ -36,9 +44,33 @@ export namespace Relationship {
 		readonly id: string;
 	}
 
+	export namespace LinkRef {
+		export function isInstance(obj: unknown): obj is LinkRef {
+			return (
+				isObject(obj) &&
+				"linkDescriptor" in obj &&
+				LinkDescriptor.isInstance(obj.linkDescriptor) &&
+				"id" in obj &&
+				isString(obj.id)
+			);
+		}
+	}
+
 	export interface LinkRefResponse {
 		readonly linkDescriptor: LinkDescriptorResponse;
 		readonly id?: string | null;
+		readonly sourceRank?: string | null;
+		readonly targetRank?: string | null;
+	}
+
+	export namespace LinkRefResponse {
+		export function isInstance(obj: unknown): obj is LinkRefResponse {
+			return (
+				isObject(obj) &&
+				"linkDescriptor" in obj &&
+				LinkDescriptorResponse.isInstance(obj.linkDescriptor)
+			);
+		}
 	}
 
 	export interface LinkDescriptor {
@@ -49,6 +81,28 @@ export namespace Relationship {
 		 * if position is also null, then in server-side we consider TOP as its default value
 		 */
 		readonly position?: LinkPosition | null;
+	}
+
+	export namespace LinkDescriptor {
+		export function isInstance(obj: unknown): obj is LinkDescriptor {
+			return (
+				isObject(obj) &&
+				"relationshipModel" in obj &&
+				isString(obj.relationshipModel) &&
+				"entities" in obj &&
+				isArray(obj.entities, LinkEntitySpec.isInstance) &&
+				isOptionalFieldOfType(
+					obj,
+					"predecessorLinkRef",
+					value => isNull(value) || isString(value)
+				) &&
+				isOptionalFieldOfType(
+					obj,
+					"position",
+					value => isNull(value) || LinkPosition.isInstance(value)
+				)
+			);
+		}
 	}
 
 	export interface LinkDescriptorResponse {
@@ -62,13 +116,54 @@ export namespace Relationship {
 		readonly position?: LinkPosition | null;
 	}
 
+	export namespace LinkDescriptorResponse {
+		export function isInstance(obj: unknown): obj is LinkDescriptorResponse {
+			return (
+				isObject(obj) &&
+				"relationshipModel" in obj &&
+				isString(obj.relationshipModel) &&
+				"entities" in obj &&
+				isArray(obj.entities, LinkEntitySpecResponse.isInstance) &&
+				isOptionalFieldOfType(obj, "linkDocumentDocRef", isString) &&
+				isOptionalFieldOfType(
+					obj,
+					"predecessorLinkRef",
+					value => isNull(value) || isString(value)
+				) &&
+				isOptionalFieldOfType(
+					obj,
+					"position",
+					value => isNull(value) || LinkPosition.isInstance(value)
+				)
+			);
+		}
+	}
+
 	export interface LinkEntitySpec {
 		readonly role: string;
-		readonly docRef: string | null;
+		readonly docRef: string;
+	}
+
+	export namespace LinkEntitySpec {
+		export function isInstance(obj: unknown): obj is LinkEntitySpec {
+			return (
+				isObject(obj) &&
+				"role" in obj &&
+				isString(obj.role) &&
+				"docRef" in obj &&
+				isString(obj.docRef)
+			);
+		}
 	}
 
 	export interface LinkEntitySpecResponse extends LinkEntitySpec {
 		readonly modelName: string;
+	}
+
+	export namespace LinkEntitySpecResponse {
+		export function isInstance(obj: unknown): obj is LinkEntitySpecResponse {
+			return LinkEntitySpec.isInstance(obj) && "modelName" in obj && isString(obj.modelName);
+		}
 	}
 
 	/**
@@ -81,14 +176,26 @@ export namespace Relationship {
 		BOTTOM = "BOTTOM"
 	}
 
+	export namespace LinkPosition {
+		export function isInstance(obj: unknown): obj is LinkPosition {
+			return obj === LinkPosition.TOP || obj === LinkPosition.BOTTOM;
+		}
+	}
+
 	export interface Candidate {
 		readonly linkRef: LinkRefResponse;
 		readonly document: object;
 	}
 
 	export namespace Candidate {
-		export function isInstance(obj: Candidate | object): obj is Candidate {
-			return "linkRef" in obj && typeof obj.linkRef === "object";
+		export function isInstance(obj: unknown): obj is Candidate {
+			return (
+				isObject(obj) &&
+				"linkRef" in obj &&
+				LinkRefResponse.isInstance(obj.linkRef) &&
+				"document" in obj &&
+				isObject(obj.document)
+			);
 		}
 	}
 
@@ -98,8 +205,14 @@ export namespace Relationship {
 	}
 
 	export namespace LinkWithDocument {
-		export function isInstance(obj: LinkWithDocument | object): obj is LinkWithDocument {
-			return "linkRef" in obj && typeof obj.linkRef === "object";
+		export function isInstance(obj: unknown): obj is LinkWithDocument {
+			return (
+				isObject(obj) &&
+				"linkRef" in obj &&
+				LinkRefResponse.isInstance(obj.linkRef) &&
+				"document" in obj &&
+				isObject(obj.document)
+			);
 		}
 	}
 }

@@ -31,26 +31,23 @@
  */
 package com.mgmtp.a12.dataservices.common.anonymizing.internal.masking;
 
-import java.io.IOException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.BeanProperty;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.ser.std.StdSerializer;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.BeanProperty;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.ContextualSerializer;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-
-public class SensitiveDataSerializer extends StdSerializer<String> implements ContextualSerializer {
+public class SensitiveDataSerializer extends StdSerializer<String> {
 
 	protected SensitiveDataSerializer() {
 		super(String.class);
 	}
 
-	@Override public JsonSerializer<?> createContextual(SerializerProvider prov, BeanProperty property) {
+	@Override public ValueSerializer<?> createContextual(SerializationContext prov, BeanProperty property) {
 		return new SensitiveDataSerializer();
 	}
 
-	@Override public void serialize(String value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	@Override public void serialize(String value, JsonGenerator gen, SerializationContext provider) {
 		gen.writeString(SQLExceptionAnonymizer.anonymize(value));
 	}
 }

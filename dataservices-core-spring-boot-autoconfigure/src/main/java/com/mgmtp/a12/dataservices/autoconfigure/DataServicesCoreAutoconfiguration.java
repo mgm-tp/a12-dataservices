@@ -31,31 +31,23 @@
  */
 package com.mgmtp.a12.dataservices.autoconfigure;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.mgmtp.a12.dataservices.cdd.internal.CddSkeletonFactory;
 import com.mgmtp.a12.dataservices.client.rpc.RequestBuilderFactory;
 import com.mgmtp.a12.dataservices.common.anonymizing.Anonymizer;
@@ -71,36 +63,37 @@ import com.mgmtp.a12.dataservices.document.internal.KernelDocumentSerializer;
 import com.mgmtp.a12.dataservices.document.persistence.internal.AggregatedDocumentRepository;
 import com.mgmtp.a12.dataservices.document.persistence.internal.DefaultDocumentService;
 import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
-import com.mgmtp.a12.dataservices.model.bulkload.BulkImporterConfiguration;
+import com.mgmtp.a12.dataservices.initialization.internal.ModelImportConfiguration;
 import com.mgmtp.a12.dataservices.model.document.IValidationCodeProvider;
 import com.mgmtp.a12.dataservices.model.document.internal.ValidationCodeGenerator;
 import com.mgmtp.a12.dataservices.model.internal.DataServicesDocumentDynamicServiceConfig;
+import com.mgmtp.a12.dataservices.model.internal.DataServicesDocumentModelServiceFactory;
 import com.mgmtp.a12.dataservices.model.internal.DataServicesModelCodeCache;
 import com.mgmtp.a12.dataservices.model.internal.DefaultModelTypeService;
-import com.mgmtp.a12.dataservices.model.metadata.DocumentModelMetadataInjectorFactory;
 import com.mgmtp.a12.dataservices.model.persistence.IModelLoader;
 import com.mgmtp.a12.dataservices.model.relationship.persistence.RelationshipModelLoader;
-import com.mgmtp.a12.dataservices.relationship.RelationshipLinkService;
-import com.mgmtp.a12.dataservices.relationship.RelationshipMigration;
+import com.mgmtp.a12.dataservices.query.internal.marshalling.QuerySubtypeProvider;
+import com.mgmtp.a12.dataservices.utils.internal.GenericUtils;
+import com.mgmtp.a12.dataservices.relationship.factory.RelationshipLinkFactory;
+import com.mgmtp.a12.dataservices.relationship.internal.DefaultRelationshipLinkFactory;
 import com.mgmtp.a12.dataservices.relationship.internal.DefaultRelationshipLinkService;
 import com.mgmtp.a12.dataservices.relationship.internal.DocumentDeletionListener;
-import com.mgmtp.a12.dataservices.relationship.internal.RelationshipLinkFactory;
-import com.mgmtp.a12.dataservices.relationship.internal.RelationshipValidationSupport;
 import com.mgmtp.a12.dataservices.relationship.internal.ranks.RelationshipRankService;
 import com.mgmtp.a12.dataservices.relationship.model.RelationshipModel;
+import com.mgmtp.a12.dataservices.relationship.model.RelationshipModelSerializer;
+import com.mgmtp.a12.dataservices.relationship.model.internal.DefaultRelationshipModelSerializer;
 import com.mgmtp.a12.dataservices.relationship.persistence.internal.DefaultRelationshipLinkRepository;
-import com.mgmtp.a12.dataservices.relationship.persistence.internal.RelationshipLinkRepository;
+import com.mgmtp.a12.dataservices.relationship.persistence.RelationshipLinkRepository;
 import com.mgmtp.a12.dataservices.relationship.persistence.internal.jpa.repository.RelationshipLinkJpaRepository;
+import com.mgmtp.a12.dataservices.relationship.validation.RelationshipValidationSupport;
+import com.mgmtp.a12.dataservices.rpc.internal.marshalling.DataServicesJacksonModule;
 import com.mgmtp.a12.dataservices.state.VersionInfo;
-import com.mgmtp.a12.kernel.md.document.api.services.IDocumentFactory;
-import com.mgmtp.a12.kernel.md.document.api.services.IDocumentSerializer;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 import com.mgmtp.a12.kernel.md.document.apiV2.services.IDocumentV2Serializer;
 import com.mgmtp.a12.kernel.md.facade.DocumentModelServiceFactory;
 import com.mgmtp.a12.kernel.md.facade.DocumentRtServiceFactory;
 import com.mgmtp.a12.kernel.md.facade.DocumentServiceFactory;
 import com.mgmtp.a12.kernel.md.model.a12internal.services.DocumentModelService;
-import com.mgmtp.a12.kernel.md.model.a12internal.services.join.DocumentModelJoiningService;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelResolver;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelSerializer;
@@ -117,8 +110,10 @@ import com.mgmtp.a12.model.serialization.JsonSerializationFactory;
 import com.mgmtp.a12.model.serialization.ModelTypeIdentifier;
 import com.mgmtp.a12.model.serialization.XmlSerializerFactory;
 
-import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.module.SimpleModule;
 
 /**
  * Core autoconfiguration for the DataServices module.
@@ -158,7 +153,6 @@ import lombok.RequiredArgsConstructor;
 		return new ConfigurationPropertiesData(applicationContext);
 	}
 
-
 	@Bean MonitorPropertiesData monitorPropertiesData(ApplicationContext applicationContext, ConfigurableEnvironment environment) {
 		return new MonitorPropertiesData(applicationContext, environment);
 	}
@@ -175,11 +169,15 @@ import lombok.RequiredArgsConstructor;
 
 	/**
 	 * Provides the {@link DocumentModelServiceFactory}.
+	 * The actual instance is a `DataServicesDocumentModelServiceFactory`, which extends
+	 * `DocumentModelServiceFactory` solely to add `@Cacheable` behavior to
+	 * `createDocumentModelSearchService`.
 	 *
-	 * @return A new {@link DocumentModelServiceFactory}.
+	 * @return A `DataServicesDocumentModelServiceFactory` instance typed as {@link DocumentModelServiceFactory}.
+	 * @see DataServicesDocumentModelServiceFactory
 	 */
 	@Bean public DocumentModelServiceFactory documentModelServiceFactory() {
-		return new DocumentModelServiceFactory();
+		return new DataServicesDocumentModelServiceFactory();
 	}
 
 	/**
@@ -212,7 +210,6 @@ import lombok.RequiredArgsConstructor;
 		return new DataServicesModelCodeCache();
 	}
 
-
 	/**
 	 * Provides dynamic document service configuration backed by the model code cache.
 	 *
@@ -234,7 +231,7 @@ import lombok.RequiredArgsConstructor;
 	 */
 	@ConditionalOnMissingBean(IValidationCodeProvider.class)
 	@Bean public IValidationCodeProvider validationCodeLoader(IDocumentModelService iDocumentModelService,
-		IValidationCodeGeneratorConfig validationCodeGeneratorConfig,  IModelLoader<IDocumentModel> documentModelLoader) {
+		IValidationCodeGeneratorConfig validationCodeGeneratorConfig, IModelLoader<IDocumentModel> documentModelLoader) {
 		return new ValidationCodeGenerator(iDocumentModelService, validationCodeGeneratorConfig, documentModelLoader);
 	}
 
@@ -270,26 +267,6 @@ import lombok.RequiredArgsConstructor;
 	}
 
 	/**
-	 * Creates the {@link IDocumentFactory}.
-	 *
-	 * @param documentServiceFactory Factory to create document services.
-	 * @return The {@link IDocumentFactory}.
-	 */
-	@Bean public IDocumentFactory documentFactory(DocumentServiceFactory documentServiceFactory) {
-		return documentServiceFactory.createDocumentFactory();
-	}
-
-	/**
-	 * Creates the {@link IDocumentSerializer}.
-	 *
-	 * @param documentServiceFactory Factory to create serializers.
-	 * @return The {@link IDocumentSerializer}.
-	 */
-	@Bean public IDocumentSerializer documentSerializer(DocumentServiceFactory documentServiceFactory) {
-		return documentServiceFactory.createDocumentSerializer();
-	}
-
-	/**
 	 * Creates the {@link IDocumentV2Serializer}.
 	 *
 	 * @param documentServiceFactory Factory to create serializers.
@@ -299,14 +276,6 @@ import lombok.RequiredArgsConstructor;
 		return documentServiceFactory.createDocumentV2Serializer();
 	}
 
-	/**
-	 * Provides a service to join document models.
-	 *
-	 * @return The {@link DocumentModelJoiningService}.
-	 */
-	@Bean public DocumentModelJoiningService documentModelJoiningService() {
-		return new DocumentModelJoiningService();
-	}
 
 	/**
 	 * Provides internal document model service implementation.
@@ -374,22 +343,65 @@ import lombok.RequiredArgsConstructor;
 	}
 
 	/**
-	 * Customizes the Jackson {@link com.fasterxml.jackson.databind.ObjectMapper} for DataServices.
+	 * Provides the {@link RelationshipModelSerializer} used to serialize and deserialize relationship models.
 	 *
-	 * Enables propagation of the `transient` marker and registers modules, including a serializer
-	 * for {@link com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2}.
+	 * @param objectMapper The Jackson {@link ObjectMapper} for JSON processing.
+	 * @return The {@link RelationshipModelSerializer}.
+	 */
+	@ConditionalOnMissingBean
+	@Bean public RelationshipModelSerializer relationshipModelSerializer(ObjectMapper objectMapper) {
+		return new DefaultRelationshipModelSerializer(objectMapper);
+	}
+
+	/**
+	 * Scans the application classpath for classes annotated with `@QueryOperator` and
+	 * `@QueryAggregationFunction` and exposes them as a {@link QuerySubtypeProvider} bean.
+	 *
+	 * @param applicationContext Spring application context used to derive the scan scope.
+	 * @return the provider; never null.
+	 */
+	@Bean
+	public QuerySubtypeProvider querySubtypeProvider(ApplicationContext applicationContext) {
+		return new QuerySubtypeProvider(GenericUtils.getApplicationReflections(applicationContext));
+	}
+
+	/**
+	 * Provides the Jackson module that registers DataServices-specific serializers, deserializers,
+	 * and subtypes for query operators and aggregation functions.
+	 *
+	 * @param querySubtypeProvider provider of discovered query operator and aggregation function subtypes.
+	 * @return The {@link DataServicesJacksonModule}.
+	 */
+	@ConditionalOnMissingBean
+	@Bean
+	public DataServicesJacksonModule dataServicesJacksonModule(QuerySubtypeProvider querySubtypeProvider) {
+		return new DataServicesJacksonModule(querySubtypeProvider.getSubtypes());
+	}
+
+	/**
+	 * Customizes the Jackson {@link tools.jackson.databind.ObjectMapper} for DataServices.
+	 *
+	 * Configures field-based serialization (ignoring getters/setters/constructors) so that
+	 * Lombok-generated classes with `@Builder` and `@NonNull` fields work correctly.
+	 * Also enables propagation of the `transient` marker and registers DataServices modules.
 	 *
 	 * @param kernelDocumentSerializer Serializer for {@link com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2}.
+	 * @param dataServicesJacksonModule Module with DataServices serializers and subtypes.
 	 * @return The customizer applied to the Jackson builder.
 	 */
-	@Bean public Jackson2ObjectMapperBuilderCustomizer dataServicesJacksonCustomizer(KernelDocumentSerializer kernelDocumentSerializer) {
+	@Bean
+	public JsonMapperBuilderCustomizer jackson3Customizer(
+		KernelDocumentSerializer kernelDocumentSerializer,
+		DataServicesJacksonModule dataServicesJacksonModule) {
 		return builder -> {
-			builder.featuresToEnable(MapperFeature.PROPAGATE_TRANSIENT_MARKER);
-			builder.modules(
-				new Jdk8Module(),
-				new JavaTimeModule(),
-				new SimpleModule().addSerializer(DocumentV2.class, kernelDocumentSerializer)
-			);
+			builder.enable(MapperFeature.PROPAGATE_TRANSIENT_MARKER)
+				.changeDefaultVisibility(vc -> vc
+					.withFieldVisibility(JsonAutoDetect.Visibility.PUBLIC_ONLY)
+					.withGetterVisibility(JsonAutoDetect.Visibility.PUBLIC_ONLY)
+					.withSetterVisibility(JsonAutoDetect.Visibility.PUBLIC_ONLY)
+					.withCreatorVisibility(JsonAutoDetect.Visibility.NONE))
+				.addModule(new SimpleModule().addSerializer(DocumentV2.class, kernelDocumentSerializer))
+				.addModule(dataServicesJacksonModule);
 		};
 	}
 
@@ -398,49 +410,25 @@ import lombok.RequiredArgsConstructor;
 	}
 
 	/**
-	 * Provides bulk importer configuration bound from core properties.
+	 * Provides model import configuration bound from core properties.
 	 *
 	 * @param coreProperties Core properties providing initialization import settings.
-	 * @return The {@link BulkImporterConfiguration}.
+	 * @return The {@link ModelImportConfiguration}.
 	 */
-	@Bean public BulkImporterConfiguration bulkImporterConfiguration(DataServicesCoreProperties coreProperties) {
-		BulkImporterConfiguration config = new BulkImporterConfiguration();
+	@Bean public ModelImportConfiguration modelImportConfiguration(DataServicesCoreProperties coreProperties) {
 		DataServicesCoreProperties.Initialization.Import.Model models = coreProperties.getInitialization().getImport().getModels();
-		config.setOverwriteDocumentModels(models.getOverwrite().getDocumentModels().isEnabled());
+		ModelImportConfiguration config = ModelImportConfiguration.builder()
+			.overwriteDocumentModels(models.getOverwrite().getDocumentModels().isEnabled())
+			.overwriteModelsDefault(models.getOverwrite().isEnabled())
+			.paths(models.getPath())
+			.modelTypes(models.getTypesToClear())
+			.build();
 		config.setOverwriteModels(models.getOverwrite().getModels());
-		config.setOverwriteModelsDefault(models.getOverwrite().isEnabled());
-		config.setPaths(models.getPath());
-		config.setModelTypes(models.getTypesToClear());
 		return config;
 	}
 
-	/**
-	 * Configures FreeMarker template engine for DataServices.
-	 *
-	 * @return The FreeMarker {@link freemarker.template.Configuration}.
-	 * @throws IOException If templates cannot be loaded.
-	 * @throws TemplateException If FreeMarker configuration fails.
-	 */
-	@Bean public freemarker.template.Configuration freemarkerConfiguration() throws IOException, TemplateException {
-		FreeMarkerConfigurationFactoryBean factory = new FreeMarkerConfigurationFactoryBean();
-		factory.setTemplateLoaderPath("classpath:templates/");
-		factory.setPreferFileSystemAccess(false);
-		factory.setDefaultEncoding(String.valueOf(StandardCharsets.UTF_8));
-		return factory.createConfiguration();
-	}
 
-	@SuppressWarnings({"removal"})
-	/**
-	 * Provides the {@link RelationshipMigration} utility for relationship data migration.
-	 *
-	 * @param objectMapper ObjectMapper used to (de)serialize migration payloads.
-	 * @return The {@link RelationshipMigration}.
-	 */
-	@Bean public RelationshipMigration relationshipMigration(ObjectMapper objectMapper) {
-		return new RelationshipMigration(objectMapper);
-	}
 
-	// TODO A12S-6047: Get rid of the @Lazy annotation of `DefaultDocumentService`
 	/**
 	 * Provides the {@link DefaultRelationshipLinkService}.
 	 *
@@ -450,7 +438,7 @@ import lombok.RequiredArgsConstructor;
 	 * @param documentSupport Support services for document handling.
 	 * @param properties Core properties controlling relationship behavior.
 	 * @param eventPublisher Publishes relationship events.
-	 * @param defaultDocumentService Default document service (lazy).
+	 * @param defaultDocumentService Default document service.
 	 * @return The {@link DefaultRelationshipLinkService}.
 	 */
 	@Bean public DefaultRelationshipLinkService relationshipLinkService(
@@ -460,7 +448,7 @@ import lombok.RequiredArgsConstructor;
 		DocumentSupport documentSupport,
 		DataServicesCoreProperties properties,
 		ApplicationEventPublisher eventPublisher,
-		@Lazy DefaultDocumentService defaultDocumentService
+		DefaultDocumentService defaultDocumentService
 	) {
 		return new DefaultRelationshipLinkService(
 			repository,
@@ -495,7 +483,7 @@ import lombok.RequiredArgsConstructor;
 		RelationshipRankService relationshipRankService,
 		RelationshipValidationSupport relationshipValidationSupport
 	) {
-		return new RelationshipLinkFactory(relationshipRankService, relationshipValidationSupport);
+		return new DefaultRelationshipLinkFactory(relationshipRankService, relationshipValidationSupport);
 	}
 
 	/**
@@ -511,17 +499,24 @@ import lombok.RequiredArgsConstructor;
 	/**
 	 * Provides support for relationship validation.
 	 *
+	 * Creates the default `RelationshipValidationSupport` bean only when no custom bean of this
+	 * type is present in the application context. Customer projects may provide their own
+	 * implementation to override the default validation behavior (for example, to skip validation
+	 * during bulk import).
+	 *
 	 * @param modelLoader Loader for relationship models.
 	 * @param aggregatedDocumentRepository Repository supporting aggregated documents.
 	 * @param modelTypeService Service resolving model types.
 	 * @return The {@link RelationshipValidationSupport}.
 	 */
+	@ConditionalOnMissingBean(RelationshipValidationSupport.class)
 	@Bean public RelationshipValidationSupport relationshipValidationSupport(
 		IModelLoader<RelationshipModel> modelLoader,
 		AggregatedDocumentRepository aggregatedDocumentRepository,
 		DefaultModelTypeService modelTypeService
 	) {
-		return new RelationshipValidationSupport(modelLoader, aggregatedDocumentRepository, modelTypeService);
+		return new com.mgmtp.a12.dataservices.relationship.internal.RelationshipValidationSupport(
+			modelLoader, aggregatedDocumentRepository, modelTypeService);
 	}
 
 	/**
@@ -534,19 +529,6 @@ import lombok.RequiredArgsConstructor;
 		return new JsonRpcPropertiesValidator();
 	}
 
-	/**
-	 * Provides a factory to inject document model metadata.
-	 *
-	 * @param documentModelJoiningService Service to join models.
-	 * @param iDocumentFactory Factory to create documents.
-	 * @param documentModelService Internal document model service.
-	 * @return The {@link DocumentModelMetadataInjectorFactory}.
-	 */
-	@Bean
-	public DocumentModelMetadataInjectorFactory modelMetadataHelper(DocumentModelJoiningService documentModelJoiningService, IDocumentFactory iDocumentFactory,
-		DocumentModelService documentModelService) {
-		return new DocumentModelMetadataInjectorFactory(documentModelJoiningService, iDocumentFactory, documentModelService);
-	}
 
 	@Bean Locale defautlLocale() {
 		return Locale.US;
@@ -558,14 +540,17 @@ import lombok.RequiredArgsConstructor;
 	}
 
 	/**
-	 * Provides a factory to build CDD skeletons based on relationship models and link service.
+	 * Provides a factory to build CDD skeletons based on relationship models and the link repository.
 	 *
-	 * @param relationshipModelLoader Loader for {@link RelationshipModel}.
-	 * @param relationshipLinkService Service providing relationship links.
+	 * @param relationshipModelLoader      Loader for {@link RelationshipModel}.
+	 * @param relationshipLinkRepository   Repository for reading relationship links.
+	 * @param dataServicesCoreProperties   Core configuration properties (used for page-size cap).
 	 * @return The {@link CddSkeletonFactory}.
 	 */
-	@Bean public CddSkeletonFactory cddSkeletonFactory(IModelLoader<RelationshipModel> relationshipModelLoader, RelationshipLinkService relationshipLinkService) {
-		return new CddSkeletonFactory(relationshipLinkService, relationshipModelLoader);
+	@Bean public CddSkeletonFactory cddSkeletonFactory(IModelLoader<RelationshipModel> relationshipModelLoader,
+		RelationshipLinkRepository relationshipLinkRepository,
+		DataServicesCoreProperties dataServicesCoreProperties) {
+		return new CddSkeletonFactory(relationshipLinkRepository, relationshipModelLoader, dataServicesCoreProperties);
 	}
 
 }

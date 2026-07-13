@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
 	implementation(project(':dataservices-core')) {
-		exclude group: 'com.mgmtp.a12.dataservices', module: 'dataservices-content-store-client'
+		exclude group: 'com.mgmtp.a12.dataservices.contentstore', module: 'dataservices-content-store-client'
 		exclude group: 'com.mgmtp.a12.uaa', module: 'uaa-authentication'
 		exclude group: 'com.mgmtp.a12.uaa', module: 'uaa-authentication-principal-extension'
 		exclude group: 'com.mgmtp.a12.uaa', module: 'uaa-authorization'

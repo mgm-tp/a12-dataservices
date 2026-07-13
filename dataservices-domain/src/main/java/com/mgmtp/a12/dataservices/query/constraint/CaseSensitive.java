@@ -32,11 +32,13 @@
 package com.mgmtp.a12.dataservices.query.constraint;
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Interface marks case sensitivity of a query fragment. I.e.: the case sensitivity is used for string comparisons in queries.
  *
  */
-public interface CaseSensitive {
+@OnlyForUsage public interface CaseSensitive {
 
 	/**
 	 * Indicates whether comparisons apply case sensitivity.

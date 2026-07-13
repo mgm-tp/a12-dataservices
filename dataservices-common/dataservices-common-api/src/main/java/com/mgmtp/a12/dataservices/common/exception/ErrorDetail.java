@@ -31,6 +31,7 @@
  */
 package com.mgmtp.a12.dataservices.common.exception;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 
@@ -50,7 +51,7 @@ import lombok.ToString;
 @Data @ToString @NoArgsConstructor @AllArgsConstructor @Builder
 public class ErrorDetail implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	@Serial private static final long serialVersionUID = 1L;
 
 	public static final int RPC_ERROR_EXCEPTION_CODE = -32035;
 
@@ -62,18 +63,35 @@ public class ErrorDetail implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 	private OffsetDateTime time;
 
+	/**
+	 * Creates a generic error detail with the given code.
+	 *
+	 * @param code the error code.
+	 */
 	public ErrorDetail(int code) {
 		this.code = String.valueOf(code);
 		this.subsystem = "GENERIC";
 		this.time = OffsetDateTime.now();
 	}
 
+	/**
+	 * Creates an error detail with the given code, subsystem and time.
+	 *
+	 * @param code the error code.
+	 * @param subsystem the subsystem where the error occurred.
+	 * @param offsetDateTime the time when the error occurred.
+	 */
 	public ErrorDetail(int code, String subsystem, OffsetDateTime offsetDateTime) {
 		this.code = String.valueOf(code);
 		this.subsystem = subsystem;
 		this.time = offsetDateTime;
 	}
 
+	/**
+	 * Creates a generic error detail.
+	 *
+	 * @return the error detail.
+	 */
 	public static ErrorDetail createGenericError() {
 		return new ErrorDetail(String.valueOf(RPC_ERROR_EXCEPTION_CODE), "GENERIC", OffsetDateTime.now());
 	}

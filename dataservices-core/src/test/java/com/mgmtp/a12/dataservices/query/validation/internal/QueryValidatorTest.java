@@ -55,6 +55,7 @@ import com.mgmtp.a12.dataservices.constants.RelationshipModelConstants.RoleConst
 import com.mgmtp.a12.dataservices.model.internal.DefaultModelTypeService;
 import com.mgmtp.a12.dataservices.query.QueryContext;
 import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
+import com.mgmtp.a12.dataservices.query.constraint.internal.UnknownOperator;
 import com.mgmtp.a12.dataservices.query.constraint.logical.AndOperator;
 import com.mgmtp.a12.dataservices.query.constraint.logical.NotOperator;
 import com.mgmtp.a12.dataservices.query.constraint.logical.OrOperator;
@@ -96,8 +97,9 @@ public class QueryValidatorTest extends AbstractQueryContextAwareTest {
 	@Mock private final DefaultQueryContext queryContext = mock(DefaultQueryContext.class);
 	@Spy private final @NonNull RelationshipUtils relationshipUtils = new RelationshipUtils(modelTypeService);
 	@Spy private final @NonNull LinkAwareValidator linkAwareValidator = new LinkAwareValidator(modelTypeService, dataServicesCoreProperties, relationshipUtils);
+	@Mock private final @NonNull OrderValidator orderValidator = mock(OrderValidator.class);
 	@Spy private final @NonNull QueryValidator queryValidator = new QueryValidator(dataServicesCoreProperties, documentModelPermissionEvaluator,
-		linkAwareValidator, relationshipModelLoader, mock(FieldsValidator.class));
+		linkAwareValidator, relationshipModelLoader, mock(FieldsValidator.class), orderValidator);
 	@Spy private final @NonNull VariadicOperatorValidator variadicOperatorValidator = new VariadicOperatorValidator(dataServicesCoreProperties);
 
 	@SneakyThrows
@@ -330,6 +332,42 @@ public class QueryValidatorTest extends AbstractQueryContextAwareTest {
 		assertNotNull(validationItems.stream()
 			.map(ValidationItem::message)
 			.filter(m -> m.equals("Only 5 operands are allowed for an `or` operator."))
+			.findFirst()
+			.orElse(null));
+	}
+
+	@Test
+	public void shouldRejectUnknownOperatorWhenValidationEnabled() {
+		DataServicesCoreProperties.Query query = new DataServicesCoreProperties.Query();
+		query.setDisabledOperators(Collections.emptyList());
+		Mockito.when(dataServicesCoreProperties.getQuery()).thenReturn(query);
+		ILogicOperator unknownOperator = new UnknownOperator();
+		ValidationResult result = new ValidationResult();
+
+		queryValidator.validateOperators(unknownOperator, "someDocumentModel", new String[] { "path" }, queryContext, result, true);
+
+		assertTrue(result.hasErrors());
+		assertNotNull(result.getErrors().stream()
+			.map(ValidationItem::message)
+			.filter(m -> m.equals("Unknown query operator type."))
+			.findFirst()
+			.orElse(null));
+	}
+
+	@Test
+	public void shouldRejectUnknownOperatorWhenValidationDisabled() {
+		DataServicesCoreProperties.Query query = new DataServicesCoreProperties.Query();
+		query.setDisabledOperators(Collections.emptyList());
+		Mockito.when(dataServicesCoreProperties.getQuery()).thenReturn(query);
+		ILogicOperator unknownOperator = new UnknownOperator();
+		ValidationResult result = new ValidationResult();
+
+		queryValidator.validateOperators(unknownOperator, "someDocumentModel", new String[] { "path" }, queryContext, result, false);
+
+		assertTrue(result.hasErrors());
+		assertNotNull(result.getErrors().stream()
+			.map(ValidationItem::message)
+			.filter(m -> m.equals("Unknown query operator type."))
 			.findFirst()
 			.orElse(null));
 	}

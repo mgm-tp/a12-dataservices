@@ -54,7 +54,7 @@ public class RelationshipRoleDocumentNotFoundException extends RelationshipValid
 	public RelationshipRoleDocumentNotFoundException(String relationshipModelName, RelationshipRoleSpec role) {
 		super(new RelationshipValidationException.Builder(ExceptionCodes.RELATIONSHIP_ROLE_DOCUMENT_NOT_FOUND_EXCEPTION_CODE,
 			ExceptionKeys.RELATIONSHIP_LINK_ADD_DOCUMENT_NOT_FOUND_ERROR_KEY, "Missing Link Documents",
-			String.format("Requested document for link %s in role %s is missing: %s", relationshipModelName, role.getRole(), role.getDocRef())));
+			"Requested document for link %s in role %s is missing: %s".formatted(relationshipModelName, role.getRole(), role.getDocRef())));
 		this.relationshipModelName = relationshipModelName;
 		this.role = role;
 	}

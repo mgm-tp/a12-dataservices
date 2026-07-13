@@ -37,8 +37,6 @@ import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.exception.query.QueryJsonParsingException;
 import com.mgmtp.a12.dataservices.internal.DocumentationDiagram;
 import com.mgmtp.a12.dataservices.query.Order;
@@ -51,6 +49,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.ExecutionPhase.QUERY_GENERAL;
 import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.QUERY_INVALID_INPUT_ERROR_KEY;
@@ -114,7 +114,7 @@ public class QueryRoot extends AbstractQueryTopology implements QueryTopology, T
 				getLinks() != null ? new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(getLinks()) : "",
 				sort != null ? sort.toString() : "",
 				paging != null ? paging.toString() : "");
-		} catch (JsonProcessingException e) {
+		} catch (JacksonException e) {
 			throw new QueryJsonParsingException(QUERY_GENERAL, QUERY_INVALID_INPUT_ERROR_KEY, null, e)
 				.withAnonymityMessage("Could not process JSON when logging query");
 		}

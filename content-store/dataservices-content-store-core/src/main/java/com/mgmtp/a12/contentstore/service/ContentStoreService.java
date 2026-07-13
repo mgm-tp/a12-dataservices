@@ -37,13 +37,14 @@ import java.util.Optional;
 import com.mgmtp.a12.contentstore.ContentPersistenceResult;
 import com.mgmtp.a12.contentstore.annotation.internal.ContentStoreTransactional;
 import com.mgmtp.a12.contentstore.content.ContentStream;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 import lombok.NonNull;
 
 /**
  * Service interface for content store operations. Implementations handle content storage, retrieval, and management.
  */
-public interface ContentStoreService {
+@OnlyForUsage public interface ContentStoreService {
 
 	/**
 	 * Registers a download ticket for private content and returns a time-limited URL containing the ticket id.

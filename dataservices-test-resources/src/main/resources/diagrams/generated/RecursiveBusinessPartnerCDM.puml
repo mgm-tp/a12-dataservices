@@ -223,94 +223,71 @@ computes: ../tax
 
 	include_4af42 ||--o| "0..1" include_c08c7
 	cdmGroup('"ContractAmendment" as group_4bc79')
-	field('"ContractName" as group_4bc79_field_770f2 <<StringType>>')
-	group_4bc79 -- group_4bc79_field_770f2
-	field('"ContractDescription" as group_4bc79_field_770f3 <<StringType>>')
-	group_4bc79 -- group_4bc79_field_770f3
-	field('"LengthOfContract" as group_4bc79_field_828da <<NumberType>>')
-	group_4bc79 -- group_4bc79_field_828da
-	field('"ContractValue" as group_4bc79_field_29708 <<NumberType>>')
-	group_4bc79 -- group_4bc79_field_29708
-	field('"Liability" as group_4bc79_field_edb7e <<NumberType>>')
-	group_4bc79 -- group_4bc79_field_edb7e
-	field('"CostToCustomer" as group_4bc79_field_502f7 <<NumberType>>')
-	group_4bc79 -- group_4bc79_field_502f7
-	field('"NoOfCoInsuredCustomers" as group_4bc79_field_f8187 <<NumberType>>')
-	group_4bc79 -- group_4bc79_field_f8187
-	field('"MaxDiscount" as group_4bc79_field_c472d <<StringType>>')
-	group_4bc79 -- group_4bc79_field_c472d
-	field('"CostPerCoInsured" as group_4bc79_field_24959 <<NumberType>>')
-	group_4bc79 -- group_4bc79_field_24959
-	field('"Valid" as group_4bc79_field_a09a6 <<BooleanType>>')
-	group_4bc79 -- group_4bc79_field_a09a6
-	field('"Type" as group_4bc79_field_48s48 <<EnumerationType>>')
-	group_4bc79 -- group_4bc79_field_48s48
-	group('"ContractDates" as group_4bc79_G2')
-	field('"ContractStartDate" as group_4bc79_G2F1 <<DateTimeType>>')
-	group_4bc79_G2 -- group_4bc79_G2F1
-	field('"ContractEndDate" as group_4bc79_G2F2 <<DateType>>')
-	group_4bc79_G2 -- group_4bc79_G2F2
-	field('"ContractEndTime" as group_4bc79_G2F3 <<TimeType>>')
-	group_4bc79_G2 -- group_4bc79_G2F3
-	field('"ContractReviewDate" as group_4bc79_G2F4 <<DateFragmentType>>')
-	group_4bc79_G2 -- group_4bc79_G2F4
-	field('"LastPremiumPaidDate" as group_4bc79_G2F5 <<DateType>>')
-	group_4bc79_G2 -- group_4bc79_G2F5
-	field('"CoveragePeriod" as group_4bc79_G2F6 <<DateRangeType>>')
-	group_4bc79_G2 -- group_4bc79_G2F6
+	group('"__meta" as group_4bc79_group_8f4b1')
+	field('"docRef" as group_4bc79_field_1169c <<StringType>>')
+	group_4bc79_group_8f4b1 -- group_4bc79_field_1169c
+	field('"modelReference" as group_4bc79_field_cfb40 <<StringType>>')
+	group_4bc79_group_8f4b1 -- group_4bc79_field_cfb40
+	field('"modelVersion" as group_4bc79_field_17e3b <<StringType>>')
+	group_4bc79_group_8f4b1 -- group_4bc79_field_17e3b
+	field('"creator" as group_4bc79_field_cdaf9 <<StringType>>')
+	group_4bc79_group_8f4b1 -- group_4bc79_field_cdaf9
+	field('"createdAt" as group_4bc79_field_65672 <<DateTimeType>>')
+	group_4bc79_group_8f4b1 -- group_4bc79_field_65672
+	field('"modifier" as group_4bc79_field_1fa32 <<StringType>>')
+	group_4bc79_group_8f4b1 -- group_4bc79_field_1fa32
+	field('"modifiedAt" as group_4bc79_field_5cd66 <<DateTimeType>>')
+	group_4bc79_group_8f4b1 -- group_4bc79_field_5cd66
+	group('"extensions" as group_4bc79_group_4c9a1')
 
-	group_4bc79 ||--o| "0..1" group_4bc79_G2
-	group('"ChangeLog" as group_4bc79_group_7a5d0')
-	field('"ID" as group_4bc79_field_fbee9 <<StringType>>')
-	group_4bc79_group_7a5d0 -- group_4bc79_field_fbee9
-	field('"Number" as group_4bc79_field_f9502 <<NumberType>>')
-	group_4bc79_group_7a5d0 -- group_4bc79_field_f9502
-	field('"ChangeTimestamp" as group_4bc79_field_5b05b <<DateType>>')
-	group_4bc79_group_7a5d0 -- group_4bc79_field_5b05b
-	field('"Description" as group_4bc79_field_e1113 <<StringType>>')
-	group_4bc79_group_7a5d0 -- group_4bc79_field_e1113
-	field('"User" as group_4bc79_field_ccb79 <<StringType>>')
-	group_4bc79_group_7a5d0 -- group_4bc79_field_ccb79
-	field('"Status" as group_4bc79_field_980c8 <<TypeDefType>>')
-	group_4bc79_group_7a5d0 -- group_4bc79_field_980c8
-	field('"Priority" as group_4bc79_field_18ea0 <<EnumerationType>>')
-	group_4bc79_group_7a5d0 -- group_4bc79_field_18ea0
-	group('"Changes" as group_4bc79_group_61e6a')
-	field('"ID" as group_4bc79_field_cdba0 <<StringType>>')
-	group_4bc79_group_61e6a -- group_4bc79_field_cdba0
-	field('"Title" as group_4bc79_field_bf1d6 <<StringType>>')
-	group_4bc79_group_61e6a -- group_4bc79_field_bf1d6
-	field('"Details" as group_4bc79_field_7de61 <<StringType>>')
-	group_4bc79_group_61e6a -- group_4bc79_field_7de61
-	field('"Priority" as group_4bc79_field_69efa <<EnumerationType>>')
-	group_4bc79_group_61e6a -- group_4bc79_field_69efa
-	field('"Status" as group_4bc79_field_1ecc4 <<TypeDefType>>')
-	group_4bc79_group_61e6a -- group_4bc79_field_1ecc4
-	field('"LastModified" as group_4bc79_field_3695e <<DateType>>')
-	group_4bc79_group_61e6a -- group_4bc79_field_3695e
-	group('"SubChanges" as group_4bc79_group_c4a35')
-	field('"ID" as group_4bc79_field_26340 <<StringType>>')
-	group_4bc79_group_c4a35 -- group_4bc79_field_26340
-	field('"TItle" as group_4bc79_field_3c130 <<StringType>>')
-	group_4bc79_group_c4a35 -- group_4bc79_field_3c130
-	field('"Details" as group_4bc79_field_89b43 <<StringType>>')
-	group_4bc79_group_c4a35 -- group_4bc79_field_89b43
-	field('"Priority" as group_4bc79_field_6df38 <<EnumerationType>>')
-	group_4bc79_group_c4a35 -- group_4bc79_field_6df38
-	field('"Status" as group_4bc79_field_797cc <<TypeDefType>>')
-	group_4bc79_group_c4a35 -- group_4bc79_field_797cc
-	field('"CreatedAt" as group_4bc79_field_eb669 <<DateFragmentType>>')
-	group_4bc79_group_c4a35 -- group_4bc79_field_eb669
+	group_4bc79_group_8f4b1 ||--o| "0..1" group_4bc79_group_4c9a1
 
-	group_4bc79_group_61e6a ||--o{ "0..99" group_4bc79_group_c4a35
-
-	group_4bc79_group_7a5d0 ||--o{ "0..99" group_4bc79_group_61e6a
-
-	group_4bc79 ||--o{ "0..10000" group_4bc79_group_7a5d0
+	group_4bc79 ||--o| "0..1" group_4bc79_group_8f4b1
 
 	include_4af42 ||--o{ "0..100" group_4bc79
+	group('"__meta" as include_4af42_group_8f4b1')
+	field('"docRef" as include_4af42_field_1169c <<StringType>>')
+	include_4af42_group_8f4b1 -- include_4af42_field_1169c
+	field('"modelReference" as include_4af42_field_cfb40 <<StringType>>')
+	include_4af42_group_8f4b1 -- include_4af42_field_cfb40
+	field('"modelVersion" as include_4af42_field_17e3b <<StringType>>')
+	include_4af42_group_8f4b1 -- include_4af42_field_17e3b
+	field('"creator" as include_4af42_field_cdaf9 <<StringType>>')
+	include_4af42_group_8f4b1 -- include_4af42_field_cdaf9
+	field('"createdAt" as include_4af42_field_65672 <<DateTimeType>>')
+	include_4af42_group_8f4b1 -- include_4af42_field_65672
+	field('"modifier" as include_4af42_field_1fa32 <<StringType>>')
+	include_4af42_group_8f4b1 -- include_4af42_field_1fa32
+	field('"modifiedAt" as include_4af42_field_5cd66 <<DateTimeType>>')
+	include_4af42_group_8f4b1 -- include_4af42_field_5cd66
+	group('"extensions" as include_4af42_group_4c9a1')
+
+	include_4af42_group_8f4b1 ||--o| "0..1" include_4af42_group_4c9a1
+
+	include_4af42 ||--o| "0..1" include_4af42_group_8f4b1
 
 	RecursiveBusinessPartnerCDMDocumentRoot ||--o{ "0..100" include_4af42
+
+	group('"__meta" as abc6a6767a60488754aace2accb73824_group_8f4b1')
+	field('"docRef" as abc6a6767a60488754aace2accb73824_field_1169c <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_1169c
+	field('"modelReference" as abc6a6767a60488754aace2accb73824_field_cfb40 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_cfb40
+	field('"modelVersion" as abc6a6767a60488754aace2accb73824_field_17e3b <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_17e3b
+	field('"creator" as abc6a6767a60488754aace2accb73824_field_cdaf9 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_cdaf9
+	field('"createdAt" as abc6a6767a60488754aace2accb73824_field_65672 <<DateTimeType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_65672
+	field('"modifier" as abc6a6767a60488754aace2accb73824_field_1fa32 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_1fa32
+	field('"modifiedAt" as abc6a6767a60488754aace2accb73824_field_5cd66 <<DateTimeType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_5cd66
+	group('"extensions" as abc6a6767a60488754aace2accb73824_group_4c9a1')
+
+	abc6a6767a60488754aace2accb73824_group_8f4b1 ||--o| "0..1" abc6a6767a60488754aace2accb73824_group_4c9a1
+
+	RecursiveBusinessPartnerCDMDocumentRoot ||--o| "0..1" abc6a6767a60488754aace2accb73824_group_8f4b1
 
 }
 @enduml

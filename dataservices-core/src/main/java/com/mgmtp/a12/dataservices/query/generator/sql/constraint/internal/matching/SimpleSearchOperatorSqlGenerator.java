@@ -48,8 +48,6 @@ import com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorContext;
 import com.mgmtp.a12.dataservices.query.generator.sql.SqlGeneratorHelpers;
 import com.mgmtp.a12.dataservices.query.generator.sql.internal.SqlGeneratorHelpersInternal;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,36 +58,22 @@ import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConst
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.COMMA;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.ColumnNames.ENUMERATION_ORIGINAL_VALUE_KEY;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.ColumnNames.FIELD_NAME_COLUMN_NAME;
-import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.ColumnNames.LOCALE_COLUMN_NAME;
-import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.ColumnNames.LOCALIZED_FULLTEXT_STRING_COLUMN_NAME;
-import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.ColumnNames.MODEL_NAME_COLUMN_ALIAS;
-import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.ColumnNames.MODEL_NAME_COLUMN_NAME;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.ColumnNames.ORIGINAL_VALUE_COLUMN_NAME;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.DOT_JOINER;
-import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.EMPTY_VALUE;
-import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.EQUALS_OPERATOR;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.FORWARD_SLASH;
-import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.FROM_KEYWORD;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.FieldTypes.ENUMERATION_FIELD_TYPE;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.ILIKE_OPERATOR;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.IN_OPERATOR;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.OPENING_BRACKET;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.OR_OPERATOR;
-import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.SELECT_KEYWORD;
 import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.SPACE;
-import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.TEXT_QUOTE;
-import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.TableNames.LOCALIZED_FIELDS_TABLE_NAME;
-import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.WHERE_KEYWORD;
 
 @QueryOperatorGenerator({ SimpleSearchOperator.class })
-@RequiredArgsConstructor
-@Slf4j
+@RequiredArgsConstructor @Slf4j
 @Component public class SimpleSearchOperatorSqlGenerator implements ILogicOperatorGenerator<SimpleSearchOperator> {
 
-	private final EntityManager entityManager;
 	private final DataServicesCoreProperties dataServicesCoreProperties;
 
-	// TODO [A12S-5896]: This code needs to be conditionally executed based on new config if RegexSearch is disabled
 	private static final SimpleSearchOperator.TermJoinType JOIN_TYPE = SimpleSearchOperator.TermJoinType.AND;
 
 	@Override
@@ -112,63 +96,12 @@ import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConst
 					operator.getValue() :
 					String.join(", ", operator.getValues()),
 				minSearchableTokenSize);
-			throw new QueryInvalidInputException(ExceptionKeys.ExecutionPhase.QUERY_SQL_GENERATION, INVALID_QUERY_ERROR_KEY, "Query could not be executed due to invalid search data");
+			throw new QueryInvalidInputException(ExceptionKeys.ExecutionPhase.QUERY_SQL_GENERATION, INVALID_QUERY_ERROR_KEY,
+				"Query could not be executed due to invalid search data");
 		}
 
 		return RegexSearchHelper.appendSimpleSearchCondition(sb, operator, generatorContext.getCurrentDocumentTableAlias(), false, false,
 			dataServicesCoreProperties.getQuery().getSimpleSearch().getExcludingMetadata().isEnabled(), generatorContext);
-
-		// TODO [A12S-5896]: This code needs to be conditionally executed based on new config if RegexSearch is disabled
-		/*List<String> searchTerms = documentFieldsJpaRepository.convertInputToSearchTerms(operator.getValue()).stream()
-			.filter(term -> term.length() >= dataServicesCoreProperties.getQuery().getSimpleSearch().getMinSearchableTokenSize())
-			.toList();
-
-		if (searchTerms.isEmpty()) {
-			// condition which should never be satisfied
-			return sb.append("1 = 0");
-		}
-
-		String joinedSearchTerms = buildFulltextSearchTerms(searchTerms, operator.getTermJoinType().getValue(),
-			generatorContext.getCurrentDocumentTableAlias(), FULLTEXT_STRING_COLUMN_NAME);
-
-		if (!queryConfigHelper.isSearchTableEnabled()) {
-			if (!operator.getFields().isEmpty()) {
-				return renderFieldsJsonbCondition(operator, generatorContext, sb, searchTerms);
-			}
-
-			return renderJsonbCondition(sb, joinedSearchTerms);
-		}
-
-		if (CollectionUtils.isNotEmpty(operator.getFields())) {
-			appendFieldCondition(sb, operator, generatorContext.getCurrentDocumentTableAlias());
-		}
-
-		if (operator.getEnrichedLocale() != null) {
-			String localizedSearchClause = buildLocalizedSearchClause(searchTerms, operator, generatorContext);
-			String inClauseValues = fetchInClauseValues(localizedSearchClause);
-
-			if (!inClauseValues.isEmpty()) {
-				appendInClause(sb, inClauseValues);
-			}
-
-			sb.append(OPENING_BRACKET)
-				.append(generatorContext.getCurrentDocumentTableAlias())
-				.append(DOT_JOINER)
-				.append(FIELD_TYPE_COLUMN_NAME)
-				.append(NOT_EQUALS_OPERATOR)
-				.append(TEXT_QUOTE)
-				.append(ENUMERATION_FIELD_TYPE)
-				.append(TEXT_QUOTE)
-				.append(AND_OPERATOR);
-		}
-
-		sb.append(OPENING_BRACKET).append(joinedSearchTerms).append(CLOSING_BRACKET);
-
-		if (operator.getEnrichedLocale() != null ) {
-			sb.append(CLOSING_BRACKET);
-		}
-
-		return sb;*/
 	}
 
 	private static boolean valuesContainInvalidSearchTerm(List<String> values, int minSearchableTokenSize) {
@@ -240,79 +173,10 @@ import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConst
 			.append(AND_OPERATOR);
 	}
 
-	private static String buildLocalizedSearchClause(List<String> searchTerms, SimpleSearchOperator operator, QueryGeneratorContext generatorContext) {
-		String joinedTerms = searchTerms.stream()
-			.map(term -> LOCALIZED_FULLTEXT_STRING_COLUMN_NAME + ILIKE_OPERATOR + SqlGeneratorHelpers.addParam(term, generatorContext))
-			.collect(Collectors.joining(SPACE + JOIN_TYPE.getValue() + SPACE));
-
-		StringBuilder sb = new StringBuilder()
-			.append(SELECT_KEYWORD)
-			.append(ORIGINAL_VALUE_COLUMN_NAME)
-			.append(COMMA)
-			.append(FIELD_NAME_COLUMN_NAME)
-			.append(COMMA)
-			.append(MODEL_NAME_COLUMN_ALIAS)
-			.append(FROM_KEYWORD)
-			.append(LOCALIZED_FIELDS_TABLE_NAME)
-			.append(WHERE_KEYWORD);
-
-		if (CollectionUtils.isNotEmpty(operator.getFields())) {
-			appendFieldCondition(sb, operator, LOCALIZED_FIELDS_TABLE_NAME, generatorContext);
-		}
-
-		String targetDocumentModel = generatorContext.getTargetDocumentModel();
-		sb.append(LOCALE_COLUMN_NAME)
-			.append(EQUALS_OPERATOR)
-			.append(SqlGeneratorHelpers.addParam(generatorContext.getEnrichments().getModelLocale(targetDocumentModel), generatorContext))
-			.append(AND_OPERATOR)
-			.append(MODEL_NAME_COLUMN_NAME)
-			.append(EQUALS_OPERATOR)
-			.append(SqlGeneratorHelpers.addParam(targetDocumentModel, generatorContext))
-			.append(AND_OPERATOR)
-			.append(OPENING_BRACKET).append(joinedTerms).append(CLOSING_BRACKET);
-
-		return sb.toString();
-	}
-
-	@SuppressWarnings("unchecked")
-	private String fetchInClauseValues(String localizedSearchClause, QueryGeneratorContext generatorContext) {
-		Query query = entityManager.createNativeQuery(localizedSearchClause);
-		List<String> results = query.getResultStream()
-			.map(row -> {
-				Object[] columns = (Object[]) row;
-				String originalValue = columns[0].toString().replace(TEXT_QUOTE, EMPTY_VALUE);
-				String fieldName = columns[1].toString().replace(TEXT_QUOTE, EMPTY_VALUE);
-				String modelName = columns[2].toString().replace(TEXT_QUOTE, EMPTY_VALUE);
-				return OPENING_BRACKET
-					+ SqlGeneratorHelpers.addParam(originalValue, generatorContext) + COMMA
-					+ SqlGeneratorHelpers.addParam(fieldName, generatorContext) + COMMA
-					+ SqlGeneratorHelpers.addParam(modelName, generatorContext)
-					+ CLOSING_BRACKET;
-			})
-			.toList();
-
-		return String.join(COMMA, results);
-	}
-
-	private static void appendInClause(StringBuilder sb, String inClauseValues) {
-		sb.append(OPENING_BRACKET)
-			.append(ORIGINAL_VALUE_COLUMN_NAME)
-			.append(COMMA)
-			.append(FIELD_NAME_COLUMN_NAME)
-			.append(COMMA)
-			.append(MODEL_NAME_COLUMN_ALIAS)
-			.append(CLOSING_BRACKET)
-			.append(IN_OPERATOR)
-			.append(OPENING_BRACKET)
-			.append(inClauseValues)
-			.append(CLOSING_BRACKET)
-			.append(OR_OPERATOR);
-	}
-
 	private static boolean isLongerThanMaxLength(int maxLength, SimpleSearchOperator operator) {
 		if (maxLength < StringUtils.length(operator.getValue())) {
 			return true;
 		}
-		return operator.getValues() != null &&  operator.getValues().stream().anyMatch(v -> maxLength < StringUtils.length(v));
+		return operator.getValues() != null && operator.getValues().stream().anyMatch(v -> maxLength < StringUtils.length(v));
 	}
 }

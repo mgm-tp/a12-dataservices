@@ -6,10 +6,15 @@
 		"types": ["jest", "node"],
 		"inlineSourceMap": true,
 		"sourceMap": false,
+		"rootDir": "./src",
 		"outDir": "./lib",
 		"incremental": false,
 		"allowSyntheticDefaultImports": true,
 		"noEmitOnError": false,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		// TODO A12S-6679: Remove when migrationtool-utils is upgraded to 3.x
+		// migrationtool-utils@2.x generates `import { MigrationStep }` instead of `import type`,
+		// which is incompatible with verbatimModuleSyntax: true from the devtools tsconfig.
+		"verbatimModuleSyntax": false
 	}
 }

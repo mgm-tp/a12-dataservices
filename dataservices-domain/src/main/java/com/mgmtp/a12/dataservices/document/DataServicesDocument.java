@@ -32,6 +32,7 @@
 package com.mgmtp.a12.dataservices.document;
 
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * The main persistence wrapper used in all document related APIs, Contains {@link DocumentReference}, instance of kernel
@@ -39,7 +40,7 @@ import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
  *
  * New instances of {@link DataServicesDocument} are created using {@link DataServicesDocumentFactory#newDataServicesDocument(DocumentV2)}.
  */
-public interface DataServicesDocument {
+@OnlyForUsage public interface DataServicesDocument {
 
 	/**
 	 * Returns the immutable kernel document contained in this wrapper.

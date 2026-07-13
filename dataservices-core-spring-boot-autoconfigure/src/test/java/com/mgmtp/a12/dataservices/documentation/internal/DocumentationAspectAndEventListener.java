@@ -198,8 +198,8 @@ import lombok.extern.slf4j.Slf4j;
 	private SecurityCheck logPermissionCheck(ProceedingJoinPoint jp) {
 		Signature signature = jp.getSignature();
 		if (active) {
-			if (signature instanceof MethodSignature) {
-				Method method = ((MethodSignature) signature).getMethod();
+			if (signature instanceof MethodSignature methodSignature) {
+				Method method = methodSignature.getMethod();
 				SecurityCheck securityCheck = getSecurityCheck(jp, method);
 				currentQueue.get().add(securityCheck);
 				return securityCheck;

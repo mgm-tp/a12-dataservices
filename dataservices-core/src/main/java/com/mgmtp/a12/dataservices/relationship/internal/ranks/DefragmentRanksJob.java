@@ -35,6 +35,7 @@ import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.uaa.authentication.backend.BackendAuthenticationService;
@@ -53,6 +54,7 @@ public class DefragmentRanksJob implements Job {
 	private final DataServicesCoreProperties dataServicesCoreProperties;
 	private final BackendAuthenticationService backendAuthenticationService;
 
+	@Transactional
 	@Override public void execute(JobExecutionContext context) throws JobExecutionException {
 		backendAuthenticationService.executeWithBackendAuthentication(
 			dataServicesCoreProperties.getAuthorization().getBackendJob().getPrincipal().getUsername(),
@@ -64,7 +66,7 @@ public class DefragmentRanksJob implements Job {
 						try {
 							log.info("Recalculated {} ranks for {}.", relationshipRankService.refreshRanks(rm), rm);
 						} catch (Throwable t) {
-							log.error(String.format("Something went wrong recalculating the %s ranks", rm), t);
+							log.error("Something went wrong recalculating the %s ranks".formatted(rm), t);
 						}
 					}
 				} else {

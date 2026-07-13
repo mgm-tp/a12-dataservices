@@ -29,8 +29,10 @@
  * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
  * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
  */
-import type { Header } from "@com.mgmtp.a12.base/base-model-api/lib/main/header/index.js";
-import type { RestRequestPayload } from "@com.mgmtp.a12.utils/utils-connector/lib/main/index.js";
+import type { Header } from "@com.mgmtp.a12.base/base-model-api";
+import type { RestRequestPayload } from "@com.mgmtp.a12.utils/utils-connector";
+
+import { isArray, isNull, isObject, isString } from "../common/TypeGuardUtils.js";
 
 import type { RelationshipModel } from "./RelationshipModel.js";
 import { isRelationshipModel } from "./isRelationshipModel.js";
@@ -52,12 +54,7 @@ export namespace ModelGraph {
 
 	export namespace ModelGraphElement {
 		export function isInstance(obj: unknown): obj is ModelGraphElement {
-			return (
-				typeof obj === "object" &&
-				obj !== null &&
-				"modelId" in obj &&
-				typeof obj.modelId === "string"
-			);
+			return isObject(obj) && "modelId" in obj && isString(obj.modelId);
 		}
 	}
 
@@ -69,7 +66,13 @@ export namespace ModelGraph {
 
 	export namespace DocumentModel {
 		export function isInstance(obj: unknown): obj is DocumentModel {
-			return ModelGraphElement.isInstance(obj) && "relations" in obj && "subTypes" in obj;
+			return (
+				ModelGraphElement.isInstance(obj) &&
+				"relations" in obj &&
+				(isArray(obj.relations, isString) || isNull(obj.relations)) &&
+				"subTypes" in obj &&
+				(isArray(obj.subTypes, isString) || isNull(obj.subTypes))
+			);
 		}
 	}
 
@@ -82,7 +85,7 @@ export namespace ModelGraph {
 			return (
 				ModelGraphElement.isInstance(obj) &&
 				"rootDocumentModelId" in obj &&
-				typeof obj.rootDocumentModelId === "string"
+				isString(obj.rootDocumentModelId)
 			);
 		}
 	}
@@ -93,7 +96,7 @@ export namespace ModelGraph {
 
 	export namespace OtherModel {
 		export function isInstance(obj: unknown): obj is OtherModel {
-			return ModelGraphElement.isInstance(obj) && "type" in obj && typeof obj.type === "string";
+			return ModelGraphElement.isInstance(obj) && "type" in obj && isString(obj.type);
 		}
 	}
 
@@ -107,17 +110,13 @@ export namespace ModelGraph {
 
 	export function isInstance(obj: unknown): obj is ModelGraph {
 		return (
-			typeof obj === "object" &&
-			obj !== null &&
+			isObject(obj) &&
 			"documentModels" in obj &&
-			Array.isArray(obj.documentModels) &&
-			obj.documentModels.every(ModelGraph.DocumentModel.isInstance) &&
+			isArray(obj.documentModels, ModelGraph.DocumentModel.isInstance) &&
 			"composeDocumentModels" in obj &&
-			Array.isArray(obj.composeDocumentModels) &&
-			obj.composeDocumentModels.every(ModelGraph.ComposeDocumentModel.isInstance) &&
+			isArray(obj.composeDocumentModels, ModelGraph.ComposeDocumentModel.isInstance) &&
 			"relationshipModels" in obj &&
-			Array.isArray(obj.relationshipModels) &&
-			obj.relationshipModels.every(isRelationshipModel)
+			isArray(obj.relationshipModels, isRelationshipModel)
 		);
 	}
 }

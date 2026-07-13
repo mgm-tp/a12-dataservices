@@ -34,11 +34,13 @@ package com.mgmtp.a12.dataservices.common.anonymizing;
 import java.util.Objects;
 import java.util.function.Function;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Simple functional interface used for anonymizing data. Can be used for hiding sensitive data from logs.
  * How is anonymization performed depends on implementing classes.
  */
-public interface Anonymizer extends Function<String, String> {
+@OnlyForUsage public interface Anonymizer extends Function<String, String> {
 
 	default String anonymize(Object obj) {
 		return apply(Objects.toString(obj, ""));

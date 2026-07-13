@@ -34,19 +34,14 @@ package com.mgmtp.a12.dataservices.migration.internal;
 import java.io.Serializable;
 import java.time.Instant;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Immutable;
-import org.hibernate.annotations.Parameter;
 
+import com.mgmtp.a12.dataservices.common.repository.StringSequenceGenerator;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -62,14 +57,14 @@ import lombok.NoArgsConstructor;
 /**
  * Contains all resources for document definition.
  */
+// TODO A12S-6875: Remove this entity and the DOCUMENT_BACKUP table — used only for 37→38 migration, obsolete since 39.
+@Deprecated(since = "39.0.0")
 @Table(name = "DOCUMENT_BACKUP")
-@GenericGenerator(name = "document_seq", strategy = "com.mgmtp.a12.dataservices.common.repository.StringSequenceGenerator", parameters = {
-	@Parameter(name = "sequence_name", value = "DOCUMENT_SEQ"), @Parameter(name = "increment_size", value = "1") })
-@Cacheable @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data @NoArgsConstructor @AllArgsConstructor(access = AccessLevel.PRIVATE) @Builder(toBuilder = true)
 @Immutable @Entity public class OldDocumentEntity implements Serializable {
 
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "document_seq")
+	@GeneratedValue(generator = StringSequenceGenerator.GENERATOR_NAME)
+	@StringSequenceGenerator.Sequence(name = "DOCUMENT_SEQ")
 	@Id private String id;
 
 	@NotNull @Column(name = "model_name") private String modelName;

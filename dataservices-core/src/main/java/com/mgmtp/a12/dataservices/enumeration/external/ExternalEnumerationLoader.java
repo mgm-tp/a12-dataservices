@@ -32,6 +32,7 @@
 package com.mgmtp.a12.dataservices.enumeration.external;
 
 import com.mgmtp.a12.dataservices.document.DocumentReference;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 import lombok.NonNull;
 
@@ -40,7 +41,7 @@ import lombok.NonNull;
  *
  * You can load enumerations via {@link ExternalEnumerationService}, which uses implementations of this loader to filter documents and create enumerations.
  */
-public interface ExternalEnumerationLoader {
+@OnlyForUsage public interface ExternalEnumerationLoader {
 
 	/**
 	 * Indicates whether this loader supports the given model.

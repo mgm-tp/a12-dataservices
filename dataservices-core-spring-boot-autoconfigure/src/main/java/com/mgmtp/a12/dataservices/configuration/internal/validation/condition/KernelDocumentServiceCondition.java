@@ -36,6 +36,7 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
+import com.mgmtp.a12.dataservices.configuration.condition.internal.AbstractDataServicesCondition;
 import com.mgmtp.a12.dataservices.configuration.validation.internal.ConfigurationMessage;
 import com.mgmtp.a12.dataservices.utils.internal.GenericUtils;
 
@@ -68,12 +69,11 @@ public class KernelDocumentServiceCondition extends AbstractDataServicesConditio
 
 	private ConfigurationMessage handleNonEmptyModelsList(List<String> modelsList) {
 		if (modelsList.contains(DataServicesCoreProperties.MATCH_ALL)) {
-			return makeWarnMessage(String.format(
-				"Computation enabled for these models: %%s%%nBut there is '%s' in the list of the supported models, but it is considered to be exact model name instead of wildcard because there are more model names in the list.".formatted(
-					DataServicesCoreProperties.MATCH_ALL),
+			return makeWarnMessage("Computation enabled for these models: %%s%%nBut there is '%s' in the list of the supported models, but it is considered to be exact model name instead of wildcard because there are more model names in the list.".formatted(
+				DataServicesCoreProperties.MATCH_ALL).formatted(
 				modelsList), COMPUTATION_FOR_MODEL);
 		} else {
-				return makeValidMessage(String.format("Computation enabled for these models: %s", modelsList), COMPUTATION_FOR_MODEL);
+				return makeValidMessage("Computation enabled for these models: %s".formatted(modelsList), COMPUTATION_FOR_MODEL);
 		}
 	}
 }

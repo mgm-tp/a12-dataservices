@@ -29,10 +29,10 @@
  * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
  * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
  */
-import { rest, rpc } from "./dispatchServerRequest.js";
+import { rest, rpc, rpcSettled } from "./dispatchServerRequest.js";
 
-export * from "./TypeGuards.js";
 export type * from "./ResponseTypings.js";
+export * from "./TypeGuards.js";
 
 /**
  * @experimental
@@ -47,9 +47,24 @@ export const Dispatcher = {
 	 *
 	 * The response typings are inferred from their corresponding requests.
 	 *
+	 * If any request in the batch fails, an error is thrown and the successful responses
+	 * of the remaining requests are discarded. Use {@link rpcSettled} when the caller needs
+	 * access to the successful responses regardless of individual failures.
+	 *
 	 * NOTE: A configured `ServerConnector` is required.
 	 */
 	rpc,
+	/**
+	 * Dispatches one or more given requests using JSON-RPC and returns each request's outcome.
+	 * Per-request errors are surfaced as `{ status: "rejected", reason }` entries
+	 * rather than causing the call to throw, so successful responses from other requests
+	 * in the batch are preserved.
+	 *
+	 * Transport-level failures (network error, invalid server response shape) still throw.
+	 *
+	 * NOTE: A configured `ServerConnector` is required.
+	 */
+	rpcSettled,
 	/**
 	 * Dispatches the given rest request and returns the response.
 	 * `responseChecker` can be used to type-guard the response.

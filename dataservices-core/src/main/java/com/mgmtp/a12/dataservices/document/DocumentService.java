@@ -36,10 +36,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import tools.jackson.databind.JsonNode;
+
 import com.mgmtp.a12.dataservices.document.persistence.DocumentComputationStrategy;
 import com.mgmtp.a12.dataservices.document.persistence.DocumentValidationStrategy;
-import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 import lombok.NonNull;
 
@@ -47,7 +49,7 @@ import lombok.NonNull;
  * Service API for creating, updating, loading, and deleting documents supported by a persister.
  * The implementation ensures that operations run only for supported document models and handle transactional consistency.
  */
-public interface DocumentService {
+@OnlyForUsage public interface DocumentService {
 
 	/**
 	 * Creation of document.
@@ -155,10 +157,7 @@ public interface DocumentService {
 	 *
 	 * @authorizationScope Query
 	 * @authorizationResource DataServicesDocument
-	 * @deprecated since 38.0.1 please use {@link com.mgmtp.a12.dataservices.query.QueryService#query(QueryRoot, String)} instead.
-	 * Construct your query root with `exact_match` operator constraint to retrieve document by `/__meta/docRef` field.
 	 */
-	@Deprecated(since = "38.0.1")
 	Optional<DataServicesDocument> load(@NonNull DocumentReference documentReference);
 
 	/**
@@ -170,6 +169,47 @@ public interface DocumentService {
 	 * @authorizationResource DataServicesDocument
 	 */
 	void delete(@NonNull DocumentReference documentReference);
+
+	/**
+	 * Creates a new document from raw JSON content.
+	 *
+	 * This method handles JSON-to-document conversion and creation within the service layer,
+	 * including authorization checks. If the document model does not exist and the user lacks
+	 * create permission, an `AccessDeniedException` is thrown to prevent information leakage
+	 * about model existence.
+	 *
+	 * This method is executed within a JPA transaction. Thus, if an error occurs during execution,
+	 * all changes are rolled back in the database.
+	 *
+	 * @param documentModelName The document model name.
+	 * @param documentContent The document content as JSON.
+	 * @param locale for kernel error messages
+	 * @return Data Services wrapper of new document
+	 *
+	 * @authorizationScope Document Create
+	 * @authorizationResource DataServicesDocument
+	 */
+	DataServicesDocument create(@NonNull String documentModelName, @NonNull JsonNode documentContent, Locale locale);
+
+	/**
+	 * Secure copy of a document.
+	 *
+	 * Creates a new document with the same content as the source document but with a new
+	 * {@link DocumentReference}. Authorization checks are performed within the service layer.
+	 * If the source document does not exist and the user lacks create permission, an
+	 * `AccessDeniedException` is thrown to prevent information leakage about document existence.
+	 *
+	 * This method is executed within a JPA transaction. Thus, if an error occurs during execution,
+	 * all changes are rolled back in the database.
+	 *
+	 * @param documentReference of the source document to copy
+	 * @param locale for kernel error messages
+	 * @return Data Services wrapper of the new (copied) document
+	 *
+	 * @authorizationScope Document Create
+	 * @authorizationResource DataServicesDocument
+	 */
+	DataServicesDocument copy(@NonNull DocumentReference documentReference, Locale locale);
 
 	/**
 	 * Secure delete of a document references collection.

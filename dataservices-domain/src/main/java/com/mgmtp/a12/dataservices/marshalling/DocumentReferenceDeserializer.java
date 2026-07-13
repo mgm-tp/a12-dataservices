@@ -31,13 +31,13 @@
  */
 package com.mgmtp.a12.dataservices.marshalling;
 
-import java.io.IOException;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.JsonToken;
+import tools.jackson.core.exc.StreamReadException;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.deser.std.StdDeserializer;
 
 /**
  * Deserializes a document reference from either a plain string or an object with a `docRef` field.
@@ -46,7 +46,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
  * - `"model/documentId"`
  * - `{"docRef":"model/documentId"}`
  */
-public class  DocumentReferenceDeserializer extends StdDeserializer<String> {
+public class DocumentReferenceDeserializer extends StdDeserializer<String> {
 	protected DocumentReferenceDeserializer() {
 		super(String.class);
 	}
@@ -57,22 +57,22 @@ public class  DocumentReferenceDeserializer extends StdDeserializer<String> {
 	 * @param p the Jackson parser positioned at the value to read; never null.
 	 * @param ctxt the deserialization context; never null.
 	 * @return the document reference string (e.g., `model/documentId`).
-	 * @throws IOException if reading from the parser fails.
-	 * @throws com.fasterxml.jackson.core.JsonParseException if the input structure is not recognized.
+	 * @throws JacksonException if reading from the parser fails.
+	 * @throws JacksonException if the input structure is not recognized.
 	 */
-	@Override public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+	@Override public String deserialize(JsonParser p, DeserializationContext ctxt) throws JacksonException {
 		if (p.hasToken(JsonToken.VALUE_STRING)) {
-			return p.getText();
+			return p.getString();
 		}
-		if (p.hasToken(JsonToken.START_OBJECT) && p.nextFieldName().equals("docRef")) {
-			String value = p.nextTextValue();
+		if (p.hasToken(JsonToken.START_OBJECT) && p.nextName().equals("docRef")) {
+			String value = p.nextStringValue();
 			p.nextToken();
 			if (p.hasToken(JsonToken.END_OBJECT)) {
 				return value;
 
 			}
 		}
-		throw new JsonParseException(p, "Unable to parse Document Reference.");
+		throw new StreamReadException(p, "Unable to parse Document Reference.");
 	}
 }
 

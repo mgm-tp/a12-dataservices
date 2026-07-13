@@ -33,12 +33,13 @@ package com.mgmtp.a12.dataservices.query.enrichment;
 
 import com.mgmtp.a12.dataservices.query.QueryContext;
 import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Query Enricher interface. Implementation is used to enrich a query before execution phase.
  *
  */
-public interface QueryEnricher {
+@OnlyForUsage public interface QueryEnricher {
 	/**
 	 * Enriches the given query before execution by adding or modifying data needed for evaluation.
 	 *

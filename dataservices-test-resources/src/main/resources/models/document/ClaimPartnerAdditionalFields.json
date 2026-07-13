@@ -1,0 +1,1986 @@
+{
+  "header": {
+    "id": "ClaimPartnerAdditionalFields",
+    "modelType": "document",
+    "modelVersion": "29.2.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Claim Partner Additional Fields"
+      },
+      {
+        "locale": "de",
+        "text": "Anspruchspartner Zusatzfelder"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "ClaimPartnerAdditionalFields",
+      "immutable": false,
+      "joinedModelsInfo": "ClaimPartnerAdditionalFields-document-meta-data+Add"
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "group_cpaf01",
+          "name": "ClaimPartnerRoot",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_cpaf01",
+                "name": "PartnerRole",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "CLM",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Claimant"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Claimant"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Anspruchsteller"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "ATT",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Attorney"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Attorney"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Anwalt"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "WIT",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Witness"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Witness"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Zeuge"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "EXP",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Expert"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Expert"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Sachverständiger"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "ADJ",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Adjuster"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Adjuster"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Schadenregulierer"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Role of involved partner"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Role of involved partner"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Rolle des beteiligten Partners"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_cpaf02",
+                "name": "InvolvementDate",
+                "annotations": [
+                  {
+                    "name": "indexed",
+                    "value": "true"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Date of Involvement"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Date of Involvement"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Datum der Beteiligung"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_cpaf03",
+                "name": "Notes",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Notes"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Notes"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Anmerkungen"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_cpaf04",
+                "name": "Verified",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Involvement Verified"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Involvement Verified"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Beteiligung bestätigt"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_cpaf05",
+                "name": "InvolvementEndDate",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateType",
+                    "DateType": {
+                      "format": "yyyy-MM-dd"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "End Date of Involvement"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "End Date of Involvement"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Ende der Beteiligung"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_cpaf06",
+                "name": "InvolvementType",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "Primary",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Primary"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Primary"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Primär"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Secondary",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Secondary"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Secondary"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Sekundär"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "Consulting",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Consulting"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Consulting"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Beratend"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Type of Involvement"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Type of Involvement"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Art der Beteiligung"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_cpaf07",
+                "name": "CompensationAmount",
+                "Field": {
+                  "fieldType": {
+                    "type": "NumberType",
+                    "NumberType": {
+                      "maxFractionalDigits": 2
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Compensation Amount"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Compensation Amount"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Vergütungsbetrag"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_cpaf08",
+                "name": "CompensationCurrency",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "USD",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "US Dollar"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "US Dollar"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "US-Dollar"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "EUR",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Euro"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Euro"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Euro"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "GBP",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "British Pound"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "British Pound"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Britisches Pfund"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Compensation Currency"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Compensation Currency"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Vergütungswährung"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_cpaf02",
+                "name": "ContactInformation",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Contact Information"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Contact Information"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Kontaktinformationen"
+                    }
+                  ],
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "field_cpaf09",
+                      "name": "PhoneNumber",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Phone Number"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Phone Number"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Telefonnummer"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_cpaf22",
+                      "name": "AlternativePhone",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Alternative Phone Number"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Alternative Phone Number"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Alternative Telefonnummer"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_cpaf10",
+                      "name": "EmailAddress",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Email Address"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Email Address"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "E-Mail-Adresse"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_cpaf11",
+                      "name": "PreferredContactMethod",
+                      "Field": {
+                        "fieldType": {
+                          "type": "EnumerationType",
+                          "EnumerationType": {
+                            "values": [
+                              {
+                                "value": "Phone",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Phone"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Phone"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Telefon"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Email",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Email"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Email"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "E-Mail"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "InPerson",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "In Person"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "In Person"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Persönlich"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Mail",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Mail"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Mail"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Post"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Preferred Contact Method"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Preferred Contact Method"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bevorzugte Kontaktmethode"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_cpaf03",
+                      "name": "PostalAddress",
+                      "Group": {
+                        "repeatability": 1,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Postal Address"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Postal Address"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Postanschrift"
+                          }
+                        ],
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "field_cpaf12",
+                            "name": "Street",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Street"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Street"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Straße"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_cpaf13",
+                            "name": "City",
+                            "annotations": [
+                              {
+                                "name": "indexed",
+                                "value": "true"
+                              }
+                            ],
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "City"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "City"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Stadt"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_cpaf14",
+                            "name": "PostalCode",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Postal Code"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Postal Code"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Postleitzahl"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_cpaf15",
+                            "name": "Country",
+                            "Field": {
+                              "fieldType": {
+                                "type": "EnumerationType",
+                                "EnumerationType": {
+                                  "values": [
+                                    {
+                                      "value": "US",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "United States"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "United States"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Vereinigte Staaten"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "DE",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Germany"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Germany"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Deutschland"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "GB",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "United Kingdom"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "United Kingdom"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Vereinigtes Königreich"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "FR",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "France"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "France"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Frankreich"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "AT",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Austria"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Austria"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Österreich"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Country"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Country"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Land"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_cpaf04",
+                "name": "CommunicationLog",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Communication Log"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Communication Log"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Kommunikationsprotokoll"
+                    }
+                  ],
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "field_cpaf16",
+                      "name": "PreferredLanguage",
+                      "Field": {
+                        "fieldType": {
+                          "type": "EnumerationType",
+                          "EnumerationType": {
+                            "values": [
+                              {
+                                "value": "EN",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "English"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "English"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Englisch"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "DE",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "German"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "German"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Deutsch"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "FR",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "French"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "French"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Französisch"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "ES",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Spanish"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Spanish"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Spanisch"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "IT",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Italian"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Italian"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Italienisch"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Preferred Language"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Preferred Language"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Bevorzugte Sprache"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_cpaf17",
+                      "name": "RequiresTranslator",
+                      "Field": {
+                        "fieldType": {
+                          "type": "BooleanType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Requires Translator"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Requires Translator"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Benötigt Übersetzer"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_cpaf05",
+                      "name": "Interactions",
+                      "Group": {
+                        "repeatability": 15,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Interactions"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Interactions"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Interaktionen"
+                          }
+                        ],
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "field_cpaf18",
+                            "name": "InteractionDate",
+                            "annotations": [
+                              {
+                                "name": "indexed",
+                                "value": "true"
+                              }
+                            ],
+                            "Field": {
+                              "fieldType": {
+                                "type": "DateType",
+                                "DateType": {
+                                  "format": "yyyy-MM-dd"
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Interaction Date"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Interaction Date"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Interaktionsdatum"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_cpaf19",
+                            "name": "Channel",
+                            "Field": {
+                              "fieldType": {
+                                "type": "EnumerationType",
+                                "EnumerationType": {
+                                  "values": [
+                                    {
+                                      "value": "Phone",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Phone"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Phone"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Telefon"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "Email",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Email"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Email"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "E-Mail"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "InPerson",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "In Person"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "In Person"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Persönlich"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "Mail",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Mail"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Mail"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Post"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Channel"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Channel"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Kanal"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_cpaf20",
+                            "name": "Summary",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Summary"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Summary"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Zusammenfassung"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_cpaf21",
+                            "name": "FollowUpRequired",
+                            "Field": {
+                              "fieldType": {
+                                "type": "BooleanType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Follow-up Required"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Follow-up Required"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Nachverfolgung erforderlich"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_cpaf23",
+                            "name": "Duration",
+                            "Field": {
+                              "fieldType": {
+                                "type": "NumberType",
+                                "NumberType": {
+                                  "maxFractionalDigits": 0
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Duration (minutes)"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Duration (minutes)"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Dauer (Minuten)"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_cpaf24",
+                            "name": "HandledBy",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Handled By"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Handled By"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Bearbeitet von"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_cpaf25",
+                            "name": "Outcome",
+                            "Field": {
+                              "fieldType": {
+                                "type": "EnumerationType",
+                                "EnumerationType": {
+                                  "values": [
+                                    {
+                                      "value": "Resolved",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Resolved"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Resolved"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Gelöst"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "Pending",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Pending"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Pending"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Ausstehend"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "Escalated",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Escalated"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Escalated"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Eskaliert"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "NoAnswer",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "No Answer"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "No Answer"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Keine Antwort"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Outcome"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Outcome"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Ergebnis"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_cpaf06",
+                "name": "ClaimImpact",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Claim Impact"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Claim Impact"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Schadensauswirkung"
+                    }
+                  ],
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "field_cpaf26",
+                      "name": "InjurySeverity",
+                      "annotations": [
+                        {
+                          "name": "indexed",
+                          "value": "true"
+                        }
+                      ],
+                      "Field": {
+                        "fieldType": {
+                          "type": "EnumerationType",
+                          "EnumerationType": {
+                            "values": [
+                              {
+                                "value": "None",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "None"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "None"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Keine"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Minor",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Minor"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Minor"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Leicht"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Moderate",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Moderate"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Moderate"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Mittel"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Severe",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Severe"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Severe"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Schwer"
+                                  }
+                                ]
+                              },
+                              {
+                                "value": "Fatal",
+                                "label": [
+                                  {
+                                    "locale": "en",
+                                    "text": "Fatal"
+                                  },
+                                  {
+                                    "locale": "en_US",
+                                    "text": "Fatal"
+                                  },
+                                  {
+                                    "locale": "de",
+                                    "text": "Tödlich"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Injury Severity"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Injury Severity"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Verletzungsschwere"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_cpaf27",
+                      "name": "MedicalTreatmentRequired",
+                      "Field": {
+                        "fieldType": {
+                          "type": "BooleanType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Medical Treatment Required"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Medical Treatment Required"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Medizinische Behandlung erforderlich"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_cpaf28",
+                      "name": "TreatmentPeriod",
+                      "Field": {
+                        "fieldType": {
+                          "type": "DateRangeType",
+                          "DateRangeType": {
+                            "format": "yyyy-MM-dd"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Treatment Period"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Treatment Period"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Behandlungszeitraum"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "group_cpaf07",
+                      "name": "InjuredBodyParts",
+                      "Group": {
+                        "repeatability": 10,
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Injured Body Parts"
+                          },
+                          {
+                            "locale": "en_US",
+                            "text": "Injured Body Parts"
+                          },
+                          {
+                            "locale": "de",
+                            "text": "Verletzte Körperstellen"
+                          }
+                        ],
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "field_cpaf29",
+                            "name": "BodyPart",
+                            "Field": {
+                              "fieldType": {
+                                "type": "EnumerationType",
+                                "EnumerationType": {
+                                  "values": [
+                                    {
+                                      "value": "Head",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Head"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Head"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Kopf"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "Neck",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Neck"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Neck"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Hals"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "Arm",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Arm"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Arm"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Arm"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "Leg",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Leg"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Leg"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Bein"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "Torso",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Torso"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Torso"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Rumpf"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "Back",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Back"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Back"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Rücken"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "value": "Other",
+                                      "label": [
+                                        {
+                                          "locale": "en",
+                                          "text": "Other"
+                                        },
+                                        {
+                                          "locale": "en_US",
+                                          "text": "Other"
+                                        },
+                                        {
+                                          "locale": "de",
+                                          "text": "Sonstige"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Body Part"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Body Part"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Körperstelle"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_cpaf30",
+                            "name": "Description",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Description"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Description"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Beschreibung"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "field_cpaf31",
+                            "name": "TreatmentCost",
+                            "Field": {
+                              "fieldType": {
+                                "type": "NumberType",
+                                "NumberType": {
+                                  "maxFractionalDigits": 2
+                                }
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Treatment Cost"
+                                },
+                                {
+                                  "locale": "en_US",
+                                  "text": "Treatment Cost"
+                                },
+                                {
+                                  "locale": "de",
+                                  "text": "Behandlungskosten"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "id": "abc6a6767a60488754aace2accb73824_group_8f4b1",
+          "name": "__meta",
+          "Group": {
+            "repeatability": 1,
+            "label": [
+              {
+                "locale": "en",
+                "text": "Meta"
+              },
+              {
+                "locale": "de",
+                "text": "Meta"
+              }
+            ],
+            "usageType": "metadata",
+            "elements": [
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_1169c",
+                "name": "docRef",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Document Reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Dokumentreferenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_cfb40",
+                "name": "modelReference",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Document Model Reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Document Model-Referenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_17e3b",
+                "name": "modelVersion",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Model Version"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Model-Version"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_cdaf9",
+                "name": "creator",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Creator"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erstellt von"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_65672",
+                "name": "createdAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Created At"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erstellt am"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_1fa32",
+                "name": "modifier",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Modifier"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Bearbeitet von"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_5cd66",
+                "name": "modifiedAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Modified At"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Bearbeitet am"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "abc6a6767a60488754aace2accb73824_group_4c9a1",
+                "name": "extensions",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Extensions"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erweiterungen"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

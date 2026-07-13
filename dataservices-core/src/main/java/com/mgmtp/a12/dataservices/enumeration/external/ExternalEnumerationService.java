@@ -36,7 +36,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -51,21 +50,23 @@ import com.mgmtp.a12.dataservices.document.persistence.internal.DefaultDocumentS
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * Service that loads and converts external enumerations from persisted documents.
  * Applies authorization checks and respects configured limits on the number of loaded documents.
  */
+@RequiredArgsConstructor
 @Slf4j
 // TODO A12S-4114: Hide this implementation behind a public interface and move it to internal package
 @Service public class ExternalEnumerationService {
 
-	@Autowired private ModelPermissionEvaluator<IDocumentModel> modelPermissionEvaluator;
-	@Autowired private DocumentService documentService;
-	@Autowired private Optional<List<ExternalEnumerationLoader>> externalEnumerationLoaders;
-	@Autowired private DataServicesCoreProperties dataServicesCoreProperties;
-	@Autowired private DefaultDocumentService defaultDocumentService;
+	private final ModelPermissionEvaluator<IDocumentModel> modelPermissionEvaluator;
+	private final DocumentService documentService;
+	private final Optional<List<ExternalEnumerationLoader>> externalEnumerationLoaders;
+	private final DataServicesCoreProperties dataServicesCoreProperties;
+	private final DefaultDocumentService defaultDocumentService;
 
 	/**
 	 * Returns external enumerations for particular model.
@@ -80,7 +81,7 @@ import lombok.extern.slf4j.Slf4j;
 		List<ExternalEnumerationLoader> loaders = externalEnumerationLoaders
 			.filter(CollectionUtils::isNotEmpty)
 			.orElseThrow(() -> new NotFoundException(ExceptionKeys.EXTERNAL_ENUM_NOT_FOUND_ERROR_KEY,
-				String.format("No external enumeration implementation found for model %s", modelName)));
+			"No external enumeration implementation found for model %s".formatted(modelName)));
 
 		List<DataServicesDocument> documents = loadDocuments(modelName);
 		return loaders.stream()
@@ -94,7 +95,7 @@ import lombok.extern.slf4j.Slf4j;
 		log.debug("Number of documents loaded is restricted to [{}] by configuration", maxPageSize);
 		return defaultDocumentService.loadForModel(modelName, PageRequest.of(0, maxPageSize, Sort.unsorted())).stream()
 			.map(docRef -> documentService.load(docRef)
-				.orElseThrow(() -> new NotFoundException(ExceptionKeys.DOCUMENT_NOT_FOUND_ERROR_KEY, String.format("Document [%s] not found", docRef))))
+				.orElseThrow(() -> new NotFoundException(ExceptionKeys.DOCUMENT_NOT_FOUND_ERROR_KEY, "Document [%s] not found".formatted(docRef))))
 			.toList();
 	}
 

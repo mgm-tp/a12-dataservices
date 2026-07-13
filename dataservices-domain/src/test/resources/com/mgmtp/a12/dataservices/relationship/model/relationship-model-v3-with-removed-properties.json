@@ -1,0 +1,51 @@
+{
+  "header": {
+    "id": "ContractPartner",
+    "modelType": "relationship",
+    "modelVersion": "3.0.0",
+    "annotations": [{"type": "roles", "value": ["USER"]}],
+    "locales": ["en_US"],
+    "modelReferences": [
+      {"reference": "Contract", "modelType": "document"},
+      {"reference": "Partner", "modelType": "document"}
+    ]
+  },
+  "content": {
+    "associationType": "OWNED",
+    "storage": "EXTERNAL",
+    "embeddedGroupPath": null,
+    "labels": [{"locale": "en_US", "text": "Contract-Partner"}],
+    "linkDocumentModel": null,
+    "duplicatesAllowed": false,
+    "entityCharacteristics": [
+      {
+        "role": "Contract",
+        "documentModel": "Contract",
+        "ordered": false,
+        "navigable": true,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "unbounded": true,
+            "duplicatesAllowed": false
+          }
+        },
+        "candidateConstraints": {}
+      },
+      {
+        "role": "Partner",
+        "documentModel": "Partner",
+        "ordered": false,
+        "navigable": false,
+        "linkConstraints": {
+          "multiplicity": {
+            "lowerLimit": 0,
+            "upperLimit": 1,
+            "unbounded": false,
+            "duplicatesAllowed": false
+          }
+        }
+      }
+    ]
+  }
+}

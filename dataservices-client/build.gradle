@@ -4,23 +4,24 @@ plugins {
 
 dependencies {
 	api project(':dataservices-client-api')
+	api project(':dataservices-common:dataservices-common-lib')
 	api libs.jaxbApi
 	implementation libs.uaaRestClient
 	implementation libs.mgmModelApi
 	implementation libs.modelMarshalling
-	implementation libs.jacksonJaxrsJsonProvider
-	implementation libs.jacksonDatabind
 	implementation libs.springCore
 	implementation libs.springContext
 	implementation libs.springWeb
-	implementation libs.julToSlf4j
+	implementation libs.slf4jJul
 	implementation libs.slf4jApi
 	implementation libs.commonsLang3
 	implementation libs.commonsCollections4
+	implementation libs.springBootStarterRestClient
 	testImplementation libs.testng
 	testImplementation libs.springTest
 	testImplementation libs.jsonassert
 	testImplementation libs.json
+	testRuntimeOnly libs.slf4jJcl
 }
 
 description = 'Data Services REST client java implementation'

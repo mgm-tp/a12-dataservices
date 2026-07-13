@@ -1,2 +1,3 @@
+com.mgmtp.a12.dataservices.client.autoconfigure.ClientMessageConvertersConfiguration
 com.mgmtp.a12.dataservices.client.autoconfigure.ClientAutoConfiguration
 com.mgmtp.a12.dataservices.client.autoconfigure.ErrorHandlerConfiguration

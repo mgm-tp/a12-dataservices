@@ -67,6 +67,7 @@ import static com.mgmtp.a12.dataservices.client.cli.internal.commands.HelpComman
 @Component public class ModelUploadCommand extends AbstractRPCCommand<List<String>> {
 
 	public static final String MODEL_UPLOAD_COMMAND = "model upload";
+
 	private final ModelsClient modelsClient;
 	private final DelegatingResourceLoader resourceLoader;
 
@@ -111,7 +112,7 @@ import static com.mgmtp.a12.dataservices.client.cli.internal.commands.HelpComman
 				});
 			long importedModelsCount = paramFiles
 				.filter(Objects::nonNull)
-				.flatMap(is -> modelsClient.importModelBulk(is).stream())
+				.flatMap(is -> modelsClient.importRuntimeModels(is).stream())
 				.peek(output::println)
 				.count();
 			output.flush();
@@ -163,8 +164,8 @@ import static com.mgmtp.a12.dataservices.client.cli.internal.commands.HelpComman
 
 			@Override public List<String> getExamples() {
 				return List.of(
-					String.format("%s %s my_model.json", JAVA_COMMAND, MODEL_UPLOAD_COMMAND),
-					String.format("%s %s my_models.zip", JAVA_COMMAND, MODEL_UPLOAD_COMMAND)
+					"%s %s my_model.json".formatted(JAVA_COMMAND, MODEL_UPLOAD_COMMAND),
+					"%s %s my_models.zip".formatted(JAVA_COMMAND, MODEL_UPLOAD_COMMAND)
 				);
 			}
 		};

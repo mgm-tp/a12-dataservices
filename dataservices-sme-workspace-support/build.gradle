@@ -1,0 +1,34 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+    annotationProcessor libs.lombokMapstruct
+
+	api project(':dataservices-core')
+	api project(':dataservices-common:dataservices-common-api')
+
+	implementation libs.uaaAuthenticationPrincipalExtensionSpringbootAutoconfigure
+	implementation libs.springWebmvc
+	implementation libs.springContext
+	implementation libs.springCore
+	implementation libs.commonsLang3
+	implementation libs.springBootAutoconfigure
+	implementation libs.lombok
+	implementation libs.jacksonDataformatYaml
+	implementation libs.wcf
+	runtimeClasspath libs.rmc
+	implementation libs.springBootStarterRestClient
+	api libs.bundles.tika
+	compileOnly libs.servletApi
+
+	testImplementation libs.testng
+	testImplementation libs.mockitoTestNG
+	testImplementation libs.springTest
+	testImplementation libs.mockitoCore
+	testImplementation(testFixtures(project(':dataservices-core')))
+	testImplementation project(':dataservices-test-resources')
+	testImplementation libs.servletApi
+}
+
+description = 'Data Services SME Workspace Support - workspace import, export, and database management'

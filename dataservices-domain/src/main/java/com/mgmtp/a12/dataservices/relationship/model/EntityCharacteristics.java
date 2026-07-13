@@ -33,26 +33,26 @@ package com.mgmtp.a12.dataservices.relationship.model;
 
 import java.io.Serializable;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
  * Describes characteristics of an entity participating in a relationship.
- * Includes role designation, labeling, document model binding, ordering and navigability flags,
- * as well as constraints for link creation and candidate selection.
+ * Includes role designation, labeling, document model binding, ordering flag,
+ * as well as constraints for link creation.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data public class EntityCharacteristics implements Serializable {
 	private String role;
 	private List<Label> labels;
 	private String documentModel;
 	private Boolean ordered;
-	private Boolean navigable;
 	private LinkConstraints linkConstraints;
-	private CandidateConstraints candidateConstraints;
 
 	@Override public String toString() {
 		return "EntityCharacteristics [role=" + role + ", labels=" + labels + ", documentModel=" + documentModel + ", ordered=" + ordered
-			+ ", navigable=" + navigable + ", linkConstraints=" + linkConstraints + ", candidateConstraints=" + candidateConstraints + "]";
+			+ ", linkConstraints=" + linkConstraints + "]";
 	}
 }

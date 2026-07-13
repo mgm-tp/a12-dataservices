@@ -113,7 +113,7 @@ public class DefaultAttachmentHeaderRepository implements AttachmentHeaderReposi
 		StopWatch stopWatch = StopWatch.createStarted();
 		AttachmentHeaderEntity headerEntity = attachmentHeaderJpaRepository.findById(header.getAttachmentId())
 			.orElseThrow(() -> new NotFoundException(ExceptionKeys.ATTACHMENT_GENERAL_ERROR_KEY,
-				String.format("Unable to assign attachment %s to final destination.", header.getAttachmentId())));
+			"Unable to assign attachment %s to final destination.".formatted(header.getAttachmentId())));
 		attachmentReferenceJpaRepository.save(headerEntity.addReference(attachmentMapper.buildAttachmentReferenceEntity(reference)));
 		log.trace("Attachment reference for attachment header [{}] stored in database in [{}] ms", header.getAttachmentId(), stopWatch.getTime());
 	}

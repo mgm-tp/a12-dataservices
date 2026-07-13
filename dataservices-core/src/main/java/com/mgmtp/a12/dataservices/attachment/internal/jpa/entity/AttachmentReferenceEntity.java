@@ -33,12 +33,8 @@ package com.mgmtp.a12.dataservices.attachment.internal.jpa.entity;
 
 import java.io.Serializable;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import com.mgmtp.a12.dataservices.attachment.AttachmentReferenceType;
 
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -59,7 +55,6 @@ import lombok.ToString;
 
 @Table(name = "ATTACHMENT_REFERENCE")
 @SequenceGenerator(name = "attachment_reference_seq", sequenceName = "ATTACHMENT_REFERENCE_SEQ", allocationSize = 1)
-@Cacheable @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor @Builder
 @Entity public class AttachmentReferenceEntity implements Serializable {
 

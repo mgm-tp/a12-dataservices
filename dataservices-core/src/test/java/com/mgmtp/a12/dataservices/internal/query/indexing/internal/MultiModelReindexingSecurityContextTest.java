@@ -70,12 +70,12 @@ import com.mgmtp.a12.dataservices.document.internal.entity.DocumentEntity;
 import com.mgmtp.a12.dataservices.document.persistence.internal.AggregatedDocumentRepository;
 import com.mgmtp.a12.dataservices.document.persistence.internal.DefaultDocumentRepository;
 import com.mgmtp.a12.dataservices.document.persistence.internal.DocumentJpaRepository;
-import com.mgmtp.a12.dataservices.initialization.BusinessModelInitializer;
+import com.mgmtp.a12.dataservices.initialization.internal.BusinessModelInitializer;
 import com.mgmtp.a12.dataservices.initialization.events.DataServicesCustomInitializationEvent;
 import com.mgmtp.a12.dataservices.initialization.internal.DataServicesInitializationService;
 import com.mgmtp.a12.dataservices.initialization.internal.JsonRpcInitializer;
 import com.mgmtp.a12.dataservices.migration.internal.MigrationRunner;
-import com.mgmtp.a12.dataservices.migration.internal.TransactionHandler;
+import com.mgmtp.a12.dataservices.internal.TransactionHandler;
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.repository.ModelHeaderJpaRepository;
 import com.mgmtp.a12.dataservices.query.indexing.internal.DefaultQueryIndexManager;
 import com.mgmtp.a12.dataservices.query.indexing.internal.DocumentSearchIndexBehaviour;
@@ -117,7 +117,6 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Test to reproduce and verify fix for A12S-6560:
  * Authentication missing in SecurityContext during re-indexing phase with multiple models.
  */
 @Slf4j
@@ -180,8 +179,8 @@ import static org.testng.Assert.assertTrue;
 			transactionHandler, documentModelFieldsIndexer, documentSearchJpaRepository, dataSource, backendAuthenticationService);
 
 		dataServicesInitializationService = new DataServicesInitializationService(dataServicesCoreProperties,
-			migrationRunner, businessModelInitializer, eventPublisher, backendAuthenticationService, requestIdService, jsonRpcInitializer, List.of(), List.of(),
-			queryIndexManager);
+			migrationRunner, businessModelInitializer, eventPublisher, backendAuthenticationService, requestIdService, jsonRpcInitializer,
+			Optional.of(queryIndexManager));
 
 	}
 

@@ -61,7 +61,7 @@ public class PartialModifyDocumentOperationTest {
 	private final DocumentReference documentReference = new DocumentReference("BusinessPartner", "1");
 
 	@Test public void testPartialModifyDocument_success() {
-		partialModifyDocumentOperation.rpc(documentReference, List.of(), null);
+		partialModifyDocumentOperation.rpc(documentReference.toString(), List.of(), null);
 
 		Mockito.verify(documentService, Mockito.times(1)).update(Mockito.any(), Mockito.any(List.class), Mockito.any());
 	}
@@ -72,7 +72,7 @@ public class PartialModifyDocumentOperationTest {
 			.update(Mockito.any(), Mockito.any(List.class), Mockito.any());
 
 		try {
-			partialModifyDocumentOperation.rpc(documentReference, List.of(), null);
+			partialModifyDocumentOperation.rpc(documentReference.toString(), List.of(), null);
 			fail("expected RpcException");
 		} catch (RpcException e) {
 			assertEquals(e.getOperationError().getOperationId(), RemoteOperation.RemoteOperationHelper.getOperationId(PartialModifyDocumentOperation.class));

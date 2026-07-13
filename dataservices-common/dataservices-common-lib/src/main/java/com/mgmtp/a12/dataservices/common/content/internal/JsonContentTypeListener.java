@@ -31,19 +31,19 @@
  */
 package com.mgmtp.a12.dataservices.common.content.internal;
 
-import java.io.IOException;
 import java.util.Optional;
 
-import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.util.MimeTypeUtils;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.common.events.ContentTypeDetectedEvent;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * This is listener which listen on {@link ContentTypeDetectedEvent} to perform application/json content-type custom detection.
@@ -54,7 +54,7 @@ public class JsonContentTypeListener {
 	private final ObjectMapper objectMapper;
 
 	public JsonContentTypeListener(ObjectMapper objectMapper) {
-		this.objectMapper = objectMapper.copy().configure(DeserializationFeature.FAIL_ON_TRAILING_TOKENS, true);
+		this.objectMapper = objectMapper.rebuild().configure(DeserializationFeature.FAIL_ON_TRAILING_TOKENS, true).build();
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class JsonContentTypeListener {
 				log.debug("Handling json detection for mime type: {} for file name: {}, result is: {}",
 					event.getDetectedMimeType(), event.getFilename(), mimeType);
 				event.setDetectedMimeType(mimeType);
-			} catch (IOException e) {
+			} catch (JacksonException e) {
 				log.debug("An error occurs while trying to handle json mime type with file name: {}", event.getFilename(), e);
 			}
 		}
@@ -80,5 +80,4 @@ public class JsonContentTypeListener {
 		return MimeTypeUtils.TEXT_PLAIN_VALUE.equalsIgnoreCase(event.getDetectedMimeType())
 			&& event.getInputStream() != null && StringUtils.isBlank(event.getFilename());
 	}
-
 }

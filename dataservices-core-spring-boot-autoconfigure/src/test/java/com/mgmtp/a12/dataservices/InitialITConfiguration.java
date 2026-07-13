@@ -48,16 +48,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.dataformat.yaml.YAMLMapper;
 
 /**
  * Configuration for test
@@ -71,11 +72,11 @@ import lombok.extern.slf4j.Slf4j;
 })
 @DataServicesApplication public class InitialITConfiguration {
 
-	private final YAMLFactory yamlFactory = new YAMLFactory();
-	private final ObjectMapper yamlObjectMapper = new ObjectMapper(yamlFactory)
-		.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	private final ObjectMapper yamlObjectMapper = YAMLMapper.builder()
+		.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+		.build();
 
-	@Bean public Map<String, TestGrantedAuthority> grantedAuthorities() throws IOException {
+	@Bean public Map<String, TestGrantedAuthority> grantedAuthorities() {
 		LinkedHashMap<String, Collection<TestGrantedAuthority>> roleDefinitions =
 			yamlObjectMapper.readValue(this.getClass().getResourceAsStream("/testUserRoles.yaml"), new TypeReference<>() {
 			});
@@ -89,7 +90,7 @@ import lombok.extern.slf4j.Slf4j;
 		Map<String, TestUserDetails> users = testUserDetails.stream()
 			.peek(user -> user.setAuthorities(user.getRoles().stream()
 				.map((String key) -> grantedAuthorities.computeIfAbsent(key, k -> {
-					throw new IllegalStateException(String.format("missing role %s", k));
+					throw new IllegalStateException("missing role %s".formatted(k));
 				}))
 				.collect(Collectors.toList())))
 			.collect(Collectors.toMap(TestUserDetails::getUsername, e -> e));
@@ -114,8 +115,8 @@ import lombok.extern.slf4j.Slf4j;
 		return testUserDetails;
 	}
 
-	private TestUserDetails createUser(String userFile) throws IOException {
-		Map<String, Object> values = yamlObjectMapper.readValue(yamlFactory.createParser(this.getClass().getResourceAsStream("/local_users/" + userFile)),
+	private TestUserDetails createUser(String userFile) {
+		Map<String, Object> values = yamlObjectMapper.readValue(this.getClass().getResourceAsStream("/local_users/" + userFile),
 			new TypeReference<>() {});
 		TestUserDetails user = new TestUserDetails();
 		user.setUsername(values.get("username").toString());
@@ -149,9 +150,8 @@ import lombok.extern.slf4j.Slf4j;
 		}
 	}
 
-	@Data @AllArgsConstructor @NoArgsConstructor
+	@Data @AllArgsConstructor(onConstructor_ = @JsonCreator)
 	public static class TestAccessRight {
 		@JsonValue private String name;
 	}
-
 }

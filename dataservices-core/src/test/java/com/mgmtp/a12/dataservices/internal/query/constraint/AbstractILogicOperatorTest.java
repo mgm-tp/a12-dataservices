@@ -37,22 +37,29 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
 import com.mgmtp.a12.dataservices.query.generator.sql.internal.DefaultQueryGeneratorContext;
+import com.mgmtp.a12.dataservices.query.internal.marshalling.QuerySubtypeProvider;
+import com.mgmtp.a12.dataservices.rpc.internal.marshalling.DataServicesJacksonModule;
 
 import lombok.SneakyThrows;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.mockito.Mockito.mock;
 
 public abstract class AbstractILogicOperatorTest {
 
-	@BeforeMethod protected void setUp() {
-		new DefaultQueryGeneratorContext.QueryGeneratorContextFactory(objectMapper, mock(ApplicationContext.class)).init();
-	}
+	protected ObjectMapper objectMapper;
 
-	protected ObjectMapper objectMapper = new ObjectMapper().registerModules(new JavaTimeModule());
+	@BeforeMethod protected void setUp() {
+		var provider = new QuerySubtypeProvider(DataServicesCoreProperties.DS_PACKAGE_PREFIX);
+		var mapper = JsonMapper.builder().addModule(new DataServicesJacksonModule(provider.getSubtypes())).build();
+		var factory = new DefaultQueryGeneratorContext.QueryGeneratorContextFactory(mapper, mock(ApplicationContext.class), provider);
+		factory.init();
+		objectMapper = factory.getObjectMapper();
+	}
 
 	@SneakyThrows
 	@Test(dataProvider = "operatorProvider")

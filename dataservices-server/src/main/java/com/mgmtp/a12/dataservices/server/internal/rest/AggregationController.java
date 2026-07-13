@@ -41,8 +41,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
+import com.mgmtp.a12.dataservices.authorization.DocumentPermissionEvaluator;
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.exception.query.QueryInvalidInputException;
 import com.mgmtp.a12.dataservices.query.DocumentTreeResult;
@@ -75,6 +76,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 	private final QueryService queryService;
 	private final DataServicesCoreProperties dataServicesCoreProperties;
+	private final DocumentPermissionEvaluator documentPermissionEvaluator;
 
 	/**
 	 * Returns aggregated values as a 2-dim object array with the values of the group by columns first, and the aggregated values behind them.
@@ -98,6 +100,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 	@PostMapping(consumes = APPLICATION_JSON_VALUE)
 	public Object[][] loadAggregations(@RequestBody QueryRoot queryRoot) {
 
+		documentPermissionEvaluator.checkDocumentQueryPermission(queryRoot.getTargetDocumentModel());
 		validate(queryRoot);
 		HttpServletRequest httpRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		QueryPage<DocumentTreeResult> queryResult = queryService.query(queryRoot, httpRequest.getHeader(ACCEPT_LANGUAGE));

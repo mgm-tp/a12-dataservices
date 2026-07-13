@@ -1,0 +1,9 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+	api project(':dataservices-domain')
+}
+
+description = 'API interfaces for model graph generation in Data Services'

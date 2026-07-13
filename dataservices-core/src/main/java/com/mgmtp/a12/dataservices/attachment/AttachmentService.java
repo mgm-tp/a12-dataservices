@@ -32,6 +32,8 @@
 package com.mgmtp.a12.dataservices.attachment;
 
 import com.mgmtp.a12.dataservices.document.DocumentReference;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 import lombok.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +45,7 @@ import java.util.Optional;
  * Main entrypoint for working with attachments. Provides methods to create attachments and to retrieve URLs for downloading attachments and their thumbnails.
  *
  */
-public interface AttachmentService {
+@OnlyForUsage public interface AttachmentService {
 
 	/**
 	 * Saves an attachment that is passed as InputStream.

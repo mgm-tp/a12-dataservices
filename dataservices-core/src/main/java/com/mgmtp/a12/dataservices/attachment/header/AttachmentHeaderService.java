@@ -42,12 +42,13 @@ import com.mgmtp.a12.dataservices.attachment.AttachmentHeader;
 import com.mgmtp.a12.dataservices.attachment.AttachmentReference;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.reference.GenericReference;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Service interface for managing {@link AttachmentHeader}s. {@link AttachmentHeader}s are used to store metadata about attachments (e.g.
  * filename, mime type, size) as well as references to documents the attachment is associated with.
  */
-public interface AttachmentHeaderService {
+@OnlyForUsage public interface AttachmentHeaderService {
 
 	/**
 	 * Saves a new attachment header in the database.

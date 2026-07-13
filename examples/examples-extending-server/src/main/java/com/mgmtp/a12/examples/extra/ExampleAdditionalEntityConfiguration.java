@@ -31,18 +31,15 @@
  */
 package com.mgmtp.a12.examples.extra;
 
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
-import lombok.RequiredArgsConstructor;
 
 /**
  * Example configuration for registering additional entities, repositories, and components in the example package.
  */
 @Configuration
-@RequiredArgsConstructor
 @EntityScan(basePackages = { "com.mgmtp.a12.examples.extra" })
 @EnableJpaRepositories(basePackages = "com.mgmtp.a12.examples.extra", entityManagerFactoryRef = "dsEntityManagerFactory", transactionManagerRef = "dsTransactionManager")
 @ComponentScan(basePackages = "com.mgmtp.a12.examples.extra")

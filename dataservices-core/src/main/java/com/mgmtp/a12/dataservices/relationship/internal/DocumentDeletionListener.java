@@ -86,7 +86,7 @@ public class DocumentDeletionListener {
 	public void validateDocumentsDeletion(Collection<DocumentReference> documentReferences) {
 		if (relationshipLinkService.countByLinkInDocumentDocRefs(documentReferences) > 0) {
 			throw new IntegrityException(
-				String.format("Document reference %s cannot be deleted as it is a link document in a relationship", documentReferences));
+				"Document reference %s cannot be deleted as it is a link document in a relationship".formatted(documentReferences));
 		}
 
 		validateDisabledCascade(documentReferences);
@@ -107,7 +107,7 @@ public class DocumentDeletionListener {
 
 			if (!disabledCascadeLinkDocRefs.isEmpty() && relationshipLinkJpaRepository.countNumberOfLinksForDocuments(disabledCascadeLinkDocRefs) > 0) {
 				throw new IntegrityException(
-					String.format("Document reference %s cannot be deleted because it is used in the link and cascade delete is disabled for this model.",
+					"Document reference %s cannot be deleted because it is used in the link and cascade delete is disabled for this model.".formatted(
 						String.join(", ", documentReferences)));
 			}
 		}

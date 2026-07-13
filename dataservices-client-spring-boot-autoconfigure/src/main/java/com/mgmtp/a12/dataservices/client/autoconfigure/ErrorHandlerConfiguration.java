@@ -34,6 +34,7 @@ package com.mgmtp.a12.dataservices.client.autoconfigure;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.client.exception.DataServicesErrorHandler;
 
 /**
@@ -50,8 +51,8 @@ public class ErrorHandlerConfiguration {
 	 * @return A new {@link com.mgmtp.a12.dataservices.client.exception.DataServicesErrorHandler}.
 	 */
 	@Bean
-	public DataServicesErrorHandler createDataServicesErrorHandler() {
-		return new DataServicesErrorHandler();
+	public DataServicesErrorHandler createDataServicesErrorHandler(ObjectMapper objectMapper) {
+		return new DataServicesErrorHandler(objectMapper);
 	}
 
 }

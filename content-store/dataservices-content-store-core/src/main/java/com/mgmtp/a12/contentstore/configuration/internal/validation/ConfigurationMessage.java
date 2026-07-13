@@ -56,12 +56,11 @@ public class ConfigurationMessage {
 	@Override
 	public String toString() {
 		String heading = "==== " + getTitle() + " ==========";
-		String props = String.format("- %s", String.join("\n- ", getRelatedProperties()));
+		String props = "- %s".formatted(String.join("\n- ", getRelatedProperties()));
 		int headingLength = heading.length();
 		String row = "-".repeat(headingLength);
 		String endRow = "=".repeat(headingLength);
-		return String.format(
-			"Content Store configuration\n%s\n%s\n%s\n%s\nRelated properties:\n%s\n%s",
+		return "Content Store configuration\n%s\n%s\n%s\n%s\nRelated properties:\n%s\n%s".formatted(
 			heading, getSubtitle(), indentString(getMessage(), 2), row, props, endRow);
 	}
 

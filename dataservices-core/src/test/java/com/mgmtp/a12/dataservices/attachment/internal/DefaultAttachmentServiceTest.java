@@ -61,7 +61,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.mgmtp.a12.dataservices.AbstractKernelAwareTest;
-import com.mgmtp.a12.dataservices.MetadataTestSupport;
 import com.mgmtp.a12.dataservices.attachment.AttachmentAnnotation;
 import com.mgmtp.a12.dataservices.attachment.AttachmentHeader;
 import com.mgmtp.a12.dataservices.attachment.AttachmentReference;
@@ -80,6 +79,7 @@ import com.mgmtp.a12.dataservices.attachment.persitence.AttachmentPersistenceRes
 import com.mgmtp.a12.dataservices.attachment.persitence.IAttachmentRepository;
 import com.mgmtp.a12.dataservices.attachment.persitence.internal.ThumbnailUtil;
 import com.mgmtp.a12.dataservices.authorization.AttachmentPermissionEvaluator;
+import com.mgmtp.a12.dataservices.common.content.ContentTypeDetector;
 import com.mgmtp.a12.dataservices.authorization.AuthConstants;
 import com.mgmtp.a12.dataservices.authorization.DocumentPermissionEvaluator;
 import com.mgmtp.a12.dataservices.authorization.ModelPermissionEvaluator;
@@ -128,8 +128,7 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 	@Mock private DefaultDocumentRepository defaultDocumentRepository;
 	@Mock private ThumbnailUrlGenerator thumbnailUrlGenerator;
 	@Mock private QueryService queryService;
-
-	MetadataTestSupport metadataTestSupport = MetadataTestSupport.getInstance();
+	@Mock private ContentTypeDetector contentTypeDetector;
 
 	@Spy private RetryRegistry retryRegistry = Mockito.spy(RetryRegistry.of(RetryConfig.custom()
 		.maxAttempts(3)
@@ -146,20 +145,20 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 		DefaultAttachmentService realService =
 			new DefaultAttachmentService(attachmentRepository, attachmentHeaderService, dataServicesCoreProperties, eventPublisher,
 				List.of(defaultDocumentRepository), attachmentPermissionEvaluator, modelPermissionEvaluator, retryRegistry,
-				thumbnailUrlGenerator, queryService);
+				thumbnailUrlGenerator, queryService, contentTypeDetector);
 		defaultAttachmentService = Mockito.spy(realService);
 	}
 
 	@BeforeMethod public void clearAndSetup() {
 		Mockito.reset(attachmentRepository, attachmentHeaderService, defaultAttachmentService, thumbnailUrlGenerator, attachmentPermissionEvaluator,
-			modelPermissionEvaluator, documentPermissionEvaluator, eventPublisher);
+			modelPermissionEvaluator, documentPermissionEvaluator, eventPublisher, contentTypeDetector);
 		name = RandomStringUtils.randomAlphabetic(10);
-		contentId = RandomStringUtils.randomAlphabetic(10);
-		modelName = RandomStringUtils.randomAlphabetic(10);
-		fileName = RandomStringUtils.randomAlphabetic(10);
-		pathToField = RandomStringUtils.randomAlphabetic(10);
-		errorMessage = RandomStringUtils.randomAlphabetic(15);
-		annotations = List.of(AttachmentAnnotation.builder().name(RandomStringUtils.randomAlphabetic(5)).value(RandomStringUtils.randomAlphabetic(10)).build());
+		contentId = RandomStringUtils.insecure().nextAlphabetic(10);
+		modelName = RandomStringUtils.insecure().nextAlphabetic(10);
+		fileName = RandomStringUtils.insecure().nextAlphabetic(10);
+		pathToField = RandomStringUtils.insecure().nextAlphabetic(10);
+		errorMessage = RandomStringUtils.insecure().nextAlphabetic(15);
+		annotations = List.of(AttachmentAnnotation.builder().name(RandomStringUtils.insecure().nextAlphabetic(5)).value(RandomStringUtils.insecure().nextAlphabetic(10)).build());
 
 		dataServicesCoreProperties.getAttachments().getThumbnail().getPreview().setEnabled(true);
 		UaaTestHelper.setCurrentUserName(User.builder().username(name).password("").build());
@@ -188,10 +187,10 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 
 		Mockito.verify(attachmentRepository, Mockito.times(1))
 			.create(ArgumentMatchers.anyString(), any(InputStream.class), any(),
-				ArgumentMatchers.eq(TypeOfTheContent.ATTACHMENT_PUBLIC));
+				ArgumentMatchers.eq(TypeOfTheContent.ATTACHMENT_PUBLIC), ArgumentMatchers.nullable(String.class));
 		Mockito.verify(attachmentRepository, Mockito.times(2))
 			.create(ArgumentMatchers.anyString(), any(InputStream.class), any(),
-				ArgumentMatchers.eq(TypeOfTheContent.ATTACHMENT_THUMBNAIL));
+				ArgumentMatchers.eq(TypeOfTheContent.ATTACHMENT_THUMBNAIL), ArgumentMatchers.nullable(String.class));
 		verifyCreateAttachmentHeaderByType(TypeOfTheContent.ATTACHMENT_PUBLIC);
 		dataServicesCoreProperties.getAttachments().getType().getPublicType().getModels().clear();
 	}
@@ -216,10 +215,10 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 
 			Mockito.verify(attachmentRepository, Mockito.times(1))
 				.create(ArgumentMatchers.anyString(), any(InputStream.class), any(),
-					ArgumentMatchers.eq(TypeOfTheContent.ATTACHMENT_SECURED));
+					ArgumentMatchers.eq(TypeOfTheContent.ATTACHMENT_SECURED), ArgumentMatchers.nullable(String.class));
 			Mockito.verify(attachmentRepository, Mockito.times(2))
 				.create(ArgumentMatchers.anyString(), any(InputStream.class), any(),
-					ArgumentMatchers.eq(TypeOfTheContent.ATTACHMENT_THUMBNAIL));
+					ArgumentMatchers.eq(TypeOfTheContent.ATTACHMENT_THUMBNAIL), ArgumentMatchers.nullable(String.class));
 			verifyCreateAttachmentHeaderByType(TypeOfTheContent.ATTACHMENT_SECURED);
 			attachmentHelperMockedStatic.verify(
 				() -> AttachmentHelper.prepareAttachmentHeader(eq(attachmentId)
@@ -248,10 +247,10 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 
 		Mockito.verify(attachmentRepository, Mockito.times(1))
 			.create(ArgumentMatchers.anyString(), any(InputStream.class), any(),
-				ArgumentMatchers.eq(TypeOfTheContent.ATTACHMENT_SECURED));
+				ArgumentMatchers.eq(TypeOfTheContent.ATTACHMENT_SECURED), ArgumentMatchers.nullable(String.class));
 		Mockito.verify(attachmentRepository, Mockito.times(2))
 			.create(ArgumentMatchers.anyString(), any(InputStream.class), any(),
-				ArgumentMatchers.eq(TypeOfTheContent.ATTACHMENT_THUMBNAIL));
+				ArgumentMatchers.eq(TypeOfTheContent.ATTACHMENT_THUMBNAIL), ArgumentMatchers.nullable(String.class));
 		verifyCreateAttachmentHeaderByType(TypeOfTheContent.ATTACHMENT_SECURED);
 	}
 
@@ -279,7 +278,8 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 			ArgumentMatchers.anyString(),
 			any(InputStream.class),
 			ArgumentMatchers.anyString(),
-			any(TypeOfTheContent.class)
+			any(TypeOfTheContent.class),
+			ArgumentMatchers.nullable(String.class)
 		)).thenThrow(new UnexpectedException(errorMessage));
 		UnexpectedException e = Assert.expectThrows(UnexpectedException.class, () ->
 			defaultAttachmentService.createAttachment(
@@ -308,7 +308,7 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 				Objects.requireNonNull(this.getClass().getResourceAsStream("/attachment/image-attachment.png")),
 				fileName,
 				modelName,
-				RandomStringUtils.randomAlphabetic(10),
+				RandomStringUtils.insecure().nextAlphabetic(10),
 				Collections.emptyList())
 		);
 
@@ -331,11 +331,11 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 
 		Mockito.when(
 				attachmentRepository.create(ArgumentMatchers.anyString(), any(InputStream.class), Mockito.eq(fileName),
-					Mockito.eq(TypeOfTheContent.ATTACHMENT_SECURED)))
+					Mockito.eq(TypeOfTheContent.ATTACHMENT_SECURED), ArgumentMatchers.nullable(String.class)))
 			.thenReturn(result);
 
 		Mockito.when(attachmentRepository.create(ArgumentMatchers.anyString(), any(InputStream.class), ArgumentMatchers.anyString(),
-				Mockito.eq(TypeOfTheContent.ATTACHMENT_THUMBNAIL)))
+				Mockito.eq(TypeOfTheContent.ATTACHMENT_THUMBNAIL), ArgumentMatchers.nullable(String.class)))
 			.thenReturn(result);
 
 		Mockito.when(attachmentHeaderService.create(any(AttachmentHeader.class)))
@@ -438,7 +438,7 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 		Mockito.verify(attachmentRepository, Mockito.times(3)).delete(deleteCaptor.capture());
 
 		Assert.assertEquals(deleteCaptor.getAllValues().size(), 3);
-		Assert.assertEquals(deleteCaptor.getAllValues().get(0), header.getAttachmentId());
+		Assert.assertEquals(deleteCaptor.getAllValues().getFirst(), header.getAttachmentId());
 		Assert.assertEquals(deleteCaptor.getAllValues().get(1), header.getThumbnailBigId());
 		Assert.assertEquals(deleteCaptor.getAllValues().get(2), header.getThumbnailSmallId());
 
@@ -457,8 +457,7 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 	@Test
 	public void testFindAttachmentUrl_shouldReturnRightResult() {
 		String attachmentId = UUID.randomUUID().toString();
-		String fileName = RandomStringUtils.randomAlphabetic(12);
-		DocumentReference documentReference = new DocumentReference(BUSINESS_PARTNER_DOCUMENT_MODEL, RandomStringUtils.randomAlphabetic(20));
+		DocumentReference documentReference = new DocumentReference(BUSINESS_PARTNER_DOCUMENT_MODEL, RandomStringUtils.insecure().nextAlphabetic(20));
 		DocumentV2 emptyDoc = DocumentV2.empty(BUSINESS_PARTNER_DOCUMENT_MODEL);
 		DocumentV2 doc = metadataUtils.createDocumentMetadata(
 			emptyDoc,
@@ -474,7 +473,7 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 			.references(List.of(attachmentReference))
 			.typeOfTheContent(TypeOfTheContent.ATTACHMENT_SECURED)
 			.build();
-		AttachmentUrl attachmentUrl = new AttachmentUrl(RandomStringUtils.randomAlphabetic(50));
+		AttachmentUrl attachmentUrl = new AttachmentUrl(RandomStringUtils.insecure().nextAlphabetic(50));
 		QueryPage<String> queryResult = QueryPage.of(List.of("content"), 1, 0, 10, null);
 
 		Mockito.doReturn(Optional.of(dataServicesDocument)).when(defaultDocumentRepository).findByDocumentReference(documentReference);
@@ -493,8 +492,7 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 	@Test
 	public void testFindAttachmentUrl_shouldReturnRightResult_whenAttachHeaderHasNullTypeOfTheContent() {
 		String attachmentId = UUID.randomUUID().toString();
-		String fileName = RandomStringUtils.randomAlphabetic(12);
-		DocumentReference documentReference = new DocumentReference(BUSINESS_PARTNER_DOCUMENT_MODEL, RandomStringUtils.randomAlphabetic(20));
+		DocumentReference documentReference = new DocumentReference(BUSINESS_PARTNER_DOCUMENT_MODEL, RandomStringUtils.insecure().nextAlphabetic(20));
 		DocumentV2 emptyDoc = DocumentV2.empty(BUSINESS_PARTNER_DOCUMENT_MODEL);
 		DocumentV2 doc = metadataUtils.createDocumentMetadata(
 			emptyDoc,
@@ -511,7 +509,7 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 			.references(List.of(attachmentReference))
 			.typeOfTheContent(TypeOfTheContent.ATTACHMENT_SECURED)
 			.build();
-		AttachmentUrl attachmentUrl = new AttachmentUrl(RandomStringUtils.randomAlphabetic(50));
+		AttachmentUrl attachmentUrl = new AttachmentUrl(RandomStringUtils.insecure().nextAlphabetic(50));
 		QueryPage<String> queryResult = QueryPage.of(List.of("content"), 1, 0, 10, null);
 
 		Mockito.doReturn(Optional.of(dataServicesDocument)).when(defaultDocumentRepository).findByDocumentReference(documentReference);
@@ -530,7 +528,7 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 	@Test(expectedExceptions = NotFoundException.class, expectedExceptionsMessageRegExp = "No URL from attachmentId .* could be found.")
 	public void testFindAttachmentUrl_throwExactExceptionWhenDocumentNotFound() {
 		String attachmentId = UUID.randomUUID().toString();
-		DocumentReference documentReference = new DocumentReference(RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(20));
+		DocumentReference documentReference = new DocumentReference(RandomStringUtils.insecure().nextAlphabetic(10), RandomStringUtils.insecure().nextAlphabetic(20));
 
 		QueryPage<String> queryResult = QueryPage.of(new ArrayList<>(), 0, 0, 10, null);
 		Mockito.doReturn(queryResult).when(queryService).query(Mockito.any(), Mockito.any());
@@ -541,7 +539,7 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 	@Test
 	public void testFindAttachmentUrl_throwExactException_whenNoHaveModelReadPermission() {
 		String attachmentId = UUID.randomUUID().toString();
-		DocumentReference documentReference = new DocumentReference(RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(20));
+		DocumentReference documentReference = new DocumentReference(RandomStringUtils.insecure().nextAlphabetic(10), RandomStringUtils.insecure().nextAlphabetic(20));
 		DocumentV2 emptyDoc = DocumentV2.empty(BUSINESS_PARTNER_DOCUMENT_MODEL);
 		DocumentV2 doc = metadataUtils.createDocumentMetadata(
 			emptyDoc,
@@ -565,7 +563,7 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 	@Test
 	public void testFindAttachmentUrl_throwExactException_whenNoHaveQueryPermission() {
 		String attachmentId = UUID.randomUUID().toString();
-		DocumentReference documentReference = new DocumentReference(RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(20));
+		DocumentReference documentReference = new DocumentReference(RandomStringUtils.insecure().nextAlphabetic(10), RandomStringUtils.insecure().nextAlphabetic(20));
 		DocumentV2 emptyDoc = DocumentV2.empty(BUSINESS_PARTNER_DOCUMENT_MODEL);
 		DocumentV2 doc = metadataUtils.createDocumentMetadata(
 			emptyDoc,
@@ -624,6 +622,45 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 		Mockito.verify(thumbnailUrlGenerator, Mockito.times(0)).generateThumbnailUrl(attachmentHeader, ThumbnailType.SMALL);
 	}
 
+	@SneakyThrows
+	@Test
+	public void testCreateAttachment_shouldPassNullMimeType_whenProbeMimeTypeDisabled() {
+		dataServicesCoreProperties.getAttachments().getMimeType().getProbeMimeType().setEnabled(false);
+		mockSuccessSaveContents();
+		mockAttachmentHeader();
+
+		defaultAttachmentService.createAttachment(
+			Objects.requireNonNull(this.getClass().getResourceAsStream(PNG_ATTACHMENT_PATH)),
+			fileName, modelName, pathToField, annotations);
+
+		Mockito.verify(attachmentRepository, Mockito.times(1))
+			.create(ArgumentMatchers.anyString(), any(InputStream.class), ArgumentMatchers.anyString(),
+				ArgumentMatchers.eq(TypeOfTheContent.ATTACHMENT_SECURED), ArgumentMatchers.isNull());
+		Mockito.verify(contentTypeDetector, Mockito.never()).probeContentType(any(), any());
+	}
+
+	@SneakyThrows
+	@Test
+	public void testCreateAttachment_shouldPassProbedMimeType_whenProbeMimeTypeEnabled() {
+		dataServicesCoreProperties.getAttachments().getMimeType().getProbeMimeType().setEnabled(true);
+		String probedMimeType = "image/png";
+		Mockito.when(contentTypeDetector.probeContentType(any(InputStream.class), ArgumentMatchers.anyString()))
+			.thenReturn(probedMimeType);
+		mockSuccessSaveContents();
+		mockAttachmentHeader();
+
+		defaultAttachmentService.createAttachment(
+			Objects.requireNonNull(this.getClass().getResourceAsStream(PNG_ATTACHMENT_PATH)),
+			fileName, modelName, pathToField, annotations);
+
+		Mockito.verify(attachmentRepository, Mockito.times(1))
+			.create(ArgumentMatchers.anyString(), any(InputStream.class), ArgumentMatchers.anyString(),
+				ArgumentMatchers.eq(TypeOfTheContent.ATTACHMENT_SECURED), ArgumentMatchers.eq(probedMimeType));
+		Mockito.verify(contentTypeDetector, Mockito.times(1)).probeContentType(any(InputStream.class), ArgumentMatchers.eq(fileName));
+
+		dataServicesCoreProperties.getAttachments().getMimeType().getProbeMimeType().setEnabled(false);
+	}
+
 	private void setupRollbackSaveAttachment() {
 		Mockito.when(attachmentHeaderService.create(any(AttachmentHeader.class))).thenThrow(new UnexpectedException(errorMessage));
 	}
@@ -636,7 +673,7 @@ public class DefaultAttachmentServiceTest extends AbstractKernelAwareTest {
 			.attachmentId(contentId)
 			.build();
 		Mockito.when(
-				attachmentRepository.create(any(), any(), any(), any(TypeOfTheContent.class)))
+				attachmentRepository.create(any(), any(), any(), any(TypeOfTheContent.class), ArgumentMatchers.nullable(String.class)))
 			.thenReturn(result);
 	}
 

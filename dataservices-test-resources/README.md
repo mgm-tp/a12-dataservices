@@ -1,22 +1,4 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://www.mgm-tp.com/global-content/cd/logos/a12/app-icons/dark/A12-Dark.svg" />
-  <img src="https://www.mgm-tp.com/global-content/cd/logos/a12/app-icons/light/A12-Light.svg" height="200" alt="A12 logo" />
-</picture>
-
 # Test resources
-
-The Data Services Server Application component for A12.
-
-Refer to https://geta12.com/#/docs to get started with A12 development
-
----
-
-## License
-
-Parts of the A12 platform are made available under a **dual license**.
-Please check the [LICENSE](../LICENSE) file for details.
-
----
 
 ## Insurance domain structure
 ![Insurance domain](src/main/resources/diagrams/images/insurance_domain.svg)\
@@ -68,17 +50,3 @@ Please check the [LICENSE](../LICENSE) file for details.
 ### AnonymizedBusinessPartnerCDM
 ![AnonymizedBusinessPartnerCDM.json](src/main/resources/diagrams/images/AnonymizedBusinessPartnerCDM.json.svg)\
 [PUML diagram](src/main/resources/diagrams/AnonymizedBusinessPartnerCDM.json.puml)
-
----
-
-## Documentation
-
-- Full technical documentation is available at [GetA12.com](https://GetA12.com).
-- The website also provides access to the **A12 Discourse Community Forum**.
-
----
-
-**The mgm A12 Team**
-
-[mgm technology partners GmbH](https://www.mgm-tp.com) • [Imprint](https://www.mgm-tp.com/imprint.html)
-

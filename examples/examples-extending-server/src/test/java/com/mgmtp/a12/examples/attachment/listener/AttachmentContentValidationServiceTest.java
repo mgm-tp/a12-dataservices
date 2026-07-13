@@ -77,7 +77,7 @@ public class AttachmentContentValidationServiceTest {
 
 		// Assert: validators called with buffer
 		Assert.assertEquals(validatedContent.size(), 2);
-		Assert.assertEquals(validatedContent.get(0), original);
+		Assert.assertEquals(validatedContent.getFirst(), original);
 		Assert.assertEquals(validatedContent.get(1), original);
 
 		// Assert: content supplier replaced and yields same bytes

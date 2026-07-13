@@ -47,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
  * if needed for authorization.
  */
 @Slf4j
-@ConditionalOnProperty(prefix = "com.mgmtp.a12.examples", name = "black-box-authorization-example.enabled", havingValue = "true")
+@ConditionalOnProperty(prefix = "com.mgmtp.a12.examples", name = "authorization-black-box-example.enabled", havingValue = "true")
 @Component public class NoFirstElementAuthorization implements IQueryResultAuthorization {
 
 	/**

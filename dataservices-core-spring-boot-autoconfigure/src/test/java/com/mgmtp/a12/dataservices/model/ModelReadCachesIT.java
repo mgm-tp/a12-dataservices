@@ -103,8 +103,8 @@ public class ModelReadCachesIT extends AbstractSpringContextIT {
 				BUSINESS_PARTNER_DOCUMENT_MODEL_PATH), ADDRESS_DOCUMENT_MODEL)},
 			{"RelationshipModel", new TestData(relationshipModelReadRepository, PARTNER_ADDRESSES_MODEL, resourceFunctions.loadResource(
 				PARTNER_ADDRESSES_RELATIONSHIP_MODEL_PATH), CONTRACT_BUSINESS_PARTNER_MODEL)},
-			{"ComposeDocumentModel", new TestData(composeDocumentModelReadRepository, NATURAL_PERSON_CDM, String.format(resourceFunctions.loadResource(
-				CDM_TEMPLATE_PATH), NATURAL_PERSON_CDM), NATURAL_PERSON_2_CDM)}
+			{"ComposeDocumentModel", new TestData(composeDocumentModelReadRepository, NATURAL_PERSON_CDM, resourceFunctions.loadResource(
+				CDM_TEMPLATE_PATH).formatted(NATURAL_PERSON_CDM), NATURAL_PERSON_2_CDM)}
 		};
 	}
 

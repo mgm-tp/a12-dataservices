@@ -37,12 +37,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
 import com.mgmtp.a12.dataservices.query.enrichement.Enrichments;
 import com.mgmtp.a12.dataservices.query.fields.aggregation.IAggregationFunction;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Context of the query's current processing state. Is passed to custom generators, so it has information needed for rendering.
  * Single instance shouldn't be accessed by multiple threads.
  */
-public interface QueryGeneratorContext {
+@OnlyForUsage public interface QueryGeneratorContext {
 	<T extends ILogicOperator> ILogicOperatorGenerator<T> getConstraintGenerator(Class<T> operator);
 
 	<T extends IAggregationFunction> IAggregationFunctionGenerator<T> getFunctionGenerator(Class<T> function);

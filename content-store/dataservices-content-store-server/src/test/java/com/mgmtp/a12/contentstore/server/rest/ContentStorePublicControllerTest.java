@@ -79,20 +79,20 @@ public class ContentStorePublicControllerTest extends AbstractSpringContextServe
 						.get(contentStoreProperties.getServer().getContextPath() + DOWNLOAD_ENDPOINT_PATH + "/" + contentId)
 						.queryParam("cacheDuration", "5000"))
 				.andExpect(status().isOk())
-				.andExpect(header().string("Cache-Control", String.format("max-age=%s, must-revalidate, public", 5000)))
+				.andExpect(header().string("Cache-Control", "max-age=%s, must-revalidate, public".formatted(5000)))
 				.andExpect(content().string("randomStr"));
 
 		mockMvc.perform(MockMvcRequestBuilders
 						.get(contentStoreProperties.getServer().getContextPath() + DOWNLOAD_ENDPOINT_PATH + "/" + contentId))
 				.andExpect(status().isOk())
-				.andExpect(header().string("Cache-Control", String.format("max-age=%s, must-revalidate, public", 3600)))
+				.andExpect(header().string("Cache-Control", "max-age=%s, must-revalidate, public".formatted(3600)))
 				.andExpect(content().string("randomStr"));
 
 		mockMvc.perform(MockMvcRequestBuilders
 						.get(contentStoreProperties.getServer().getContextPath() + DOWNLOAD_ENDPOINT_PATH + "/" + contentId)
 						.queryParam("cacheDuration", "-1"))
 				.andExpect(status().isOk())
-				.andExpect(header().string("Cache-Control", String.format("max-age=%s, must-revalidate, public", Integer.MAX_VALUE)))
+				.andExpect(header().string("Cache-Control", "max-age=%s, must-revalidate, public".formatted(Integer.MAX_VALUE)))
 				.andExpect(content().string("randomStr"));
 
 
@@ -109,7 +109,7 @@ public class ContentStorePublicControllerTest extends AbstractSpringContextServe
 						.queryParam("cacheDuration", "0")
 				)
 				.andExpect(status().isOk())
-				.andExpect(header().string("Cache-Control", String.format("max-age=%s, must-revalidate, public", 0)))
+				.andExpect(header().string("Cache-Control", "max-age=%s, must-revalidate, public".formatted(0)))
 				.andExpect(content().string("randomStr"));
 	}
 

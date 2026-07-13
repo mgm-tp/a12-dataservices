@@ -31,22 +31,28 @@
  */
 package com.mgmtp.a12.dataservices.marshalling;
 
-import com.fasterxml.jackson.databind.util.StdConverter;
+import tools.jackson.databind.util.StdConverter;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 
+import lombok.NonNull;
+
 /**
- * Document reference needs to be serializable to the single string that is understood by client. DocumentReferenceToStringConverter provides serialization in client
- * desired format
+ * Converts a {@link DocumentReference} to its canonical string representation.
+ *
+ * @deprecated Use {@link DocumentReferenceSerializer} instead, which is registered as a module-level
+ *             serializer and handles `DocumentReference` automatically. This converter is no longer
+ *             needed on individual fields.
  */
-public class DocumentReferenceToStringConverter extends StdConverter<DocumentReference,String> {
+@Deprecated(since = "39.0.0", forRemoval = true)
+public class DocumentReferenceToStringConverter extends StdConverter<DocumentReference, String> {
 
 	/**
 	 * Converts a {@link DocumentReference} to its canonical string representation understood by clients.
 	 *
-	 * @param value the document reference to convert; TODO A12S-6443: Clarify contract (uncertain behavior) for null.
+	 * @param value the document reference to convert; must not be `null`.
 	 * @return the string form of the document reference.
 	 */
-	@Override public String convert(DocumentReference value) {
+	@Override public String convert(@NonNull DocumentReference value) {
 		return value.toString();
 	}
 }

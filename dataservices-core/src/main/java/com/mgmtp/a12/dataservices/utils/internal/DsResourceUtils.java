@@ -39,7 +39,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -109,7 +108,7 @@ import lombok.extern.slf4j.Slf4j;
 	 */
 	public @NotNull Stream<Resource> getJsonResources(String directoryOrArchivePath) throws IOException {
 		if (StringUtils.isBlank(directoryOrArchivePath)) {
-			throw new InvalidInputException("Path must be provided.");
+			throw new InvalidInputException(ExceptionKeys.QUERY_INVALID_INPUT_ERROR_KEY, "Path must be provided.");
 		}
 		if (directoryOrArchivePath.startsWith("classpath:")) {
 			Resource resource = resourcePatternResolver.getResource(getLocation(directoryOrArchivePath));
@@ -130,7 +129,7 @@ import lombok.extern.slf4j.Slf4j;
 		try {
 			return resourcePatternResolver.getResource(getLocation(location));
 		} catch (Exception e) {
-			throw new InvalidInputException("Error while resolving resource for location: %s".formatted(location), e);
+			throw new InvalidInputException(ExceptionKeys.RESOURCE_RESOLUTION_ERROR_KEY, "Error while resolving resource for location: %s".formatted(location), e);
 		}
 	}
 
@@ -197,7 +196,7 @@ import lombok.extern.slf4j.Slf4j;
 	private static void validateBasePath(URI basePath) {
 		basePath = basePath.normalize();
 		if (!basePath.isAbsolute()) {
-			throw new InvalidInputException(ExceptionKeys.MODEL_BULK_IMPORT_GENERIC_ERROR_KEY, String.format("Base URI must be absolute: %s", basePath))
+			throw new InvalidInputException(ExceptionKeys.MODEL_IMPORT_GENERIC_ERROR_KEY, "Base URI must be absolute: %s".formatted(basePath))
 				.withAnonymityMessage("Base path validation failed.");
 		}
 	}
@@ -274,7 +273,7 @@ import lombok.extern.slf4j.Slf4j;
 		// Strip leading "file:" scheme (case-insensitive)
 		if (location.regionMatches(true, 0, "file:", 0, 5)) {
 			try {
-				Path p = Paths.get(new URI(location));
+				Path p = Path.of(new URI(location));
 				return p.toString();
 			} catch (Exception e) {
 				// Fallback: strip file: prefix

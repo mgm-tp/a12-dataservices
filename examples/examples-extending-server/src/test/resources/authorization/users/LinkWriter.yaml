@@ -1,0 +1,7 @@
+username: "LinkWriter"
+password: "LinkWriter"
+authorities:
+  - "LinkWrite"
+email: linkwriter@mgm-tp.com
+firstname: Foo
+lastname: Bar

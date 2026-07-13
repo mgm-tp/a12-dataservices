@@ -31,7 +31,6 @@
  */
 package com.mgmtp.a12.contentstore.client.content;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -43,7 +42,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mgmtp.a12.contentstore.DownloadUrlResponse;
 import com.mgmtp.a12.contentstore.client.AbstractContentStoreClientTest;
 import com.mgmtp.a12.contentstore.client.utils.UrlUtils;
@@ -65,7 +63,7 @@ public class ContentStoreTicketClientTest extends AbstractContentStoreClientTest
 		contentId = UUID.randomUUID().toString();
 	}
 
-	@Test public void testRequestTicket_shouldSuccess() throws IOException {
+	@Test public void testRequestTicket_shouldSuccess() {
 		String url = RandomStringUtils.randomAlphabetic(50);
 		mockApiGetTicket(url);
 
@@ -80,7 +78,7 @@ public class ContentStoreTicketClientTest extends AbstractContentStoreClientTest
 		}
 	}
 
-	@Test public void testUploadContentWithDuration_shouldSuccess() throws IOException {
+	@Test public void testUploadContentWithDuration_shouldSuccess() {
 		String url = RandomStringUtils.randomAlphabetic(50);
 		String duration = "1 s";
 		mockApiGetTicketWithDuration(url, duration);
@@ -96,12 +94,12 @@ public class ContentStoreTicketClientTest extends AbstractContentStoreClientTest
 		}
 	}
 
-	@Test(expectedExceptions = {NullPointerException.class}, expectedExceptionsMessageRegExp = "contentId is marked non-null but is null")
+	@Test(expectedExceptions = { NullPointerException.class }, expectedExceptionsMessageRegExp = "contentId is marked non-null but is null")
 	public void testRequestTicket_idIsNull_shouldThrowException() {
 		contentStoreTicketClient.requestTicket(null);
 	}
 
-	public void mockApiGetTicket(String url) throws JsonProcessingException {
+	public void mockApiGetTicket(String url) {
 		DownloadUrlResponse response = new DownloadUrlResponse();
 		response.setUrl(url);
 
@@ -121,7 +119,7 @@ public class ContentStoreTicketClientTest extends AbstractContentStoreClientTest
 			);
 	}
 
-	public void mockApiGetTicketWithDuration(String url, String duration) throws JsonProcessingException {
+	public void mockApiGetTicketWithDuration(String url, String duration) {
 		DownloadUrlResponse response = new DownloadUrlResponse();
 		response.setUrl(url);
 

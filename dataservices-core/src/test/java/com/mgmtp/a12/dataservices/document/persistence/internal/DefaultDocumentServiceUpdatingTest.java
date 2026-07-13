@@ -48,6 +48,7 @@ import org.testng.annotations.Test;
 
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
+import com.mgmtp.a12.dataservices.exception.UniqueConstraintViolationException;
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
 import com.mgmtp.a12.dataservices.document.DocumentPart;
@@ -102,7 +103,8 @@ public class DefaultDocumentServiceUpdatingTest extends AbstractDefaultDocumentS
 		Assert.assertThrows(NotFoundException.class,
 			() -> defaultDocumentService.update(new DocumentReference(testModelName, "documentId"), DocumentV2.empty(testModelName), null));
 		Mockito.verify(documentRepository, Mockito.times(0)).update(Mockito.any());
-		Mockito.verifyNoInteractions(eventPublisher, modelPermissionEvaluator, documentPermissionEvaluator, kernelDocumentService,
+		Mockito.verify(documentPermissionEvaluator, Mockito.times(1)).checkDocumentUpdatePermissionByModel(testModelName);
+		Mockito.verifyNoInteractions(eventPublisher, modelPermissionEvaluator, kernelDocumentService,
 			attachmentHandler, attachmentSupport);
 	}
 
@@ -222,7 +224,8 @@ public class DefaultDocumentServiceUpdatingTest extends AbstractDefaultDocumentS
 
 		Mockito.verify(documentRepository, Mockito.times(1)).findByDocumentReference(docRef);
 
-		Mockito.verify(documentPermissionEvaluator, Mockito.times(1)).checkDocumentPartialUpdatePermission(Mockito.eq(oldKernelDocument), Mockito.any(), Mockito.eq(docRef));
+		Mockito.verify(documentPermissionEvaluator, Mockito.times(1))
+			.checkDocumentPartialUpdatePermission(Mockito.eq(oldKernelDocument), Mockito.any(), Mockito.eq(docRef));
 
 		assertUpdateDocument(oldDataServiceDocument, result, uploadAttachmentIds, existedAttachmentIds,
 			locale);
@@ -236,8 +239,9 @@ public class DefaultDocumentServiceUpdatingTest extends AbstractDefaultDocumentS
 		Assert.assertThrows(NotFoundException.class, () -> defaultDocumentService.update(new DocumentReference(testModelName, "documentId"), List.of(), null));
 
 		Mockito.verify(documentRepository, Mockito.times(0)).update(Mockito.any());
-		Mockito.verifyNoInteractions(documentPermissionEvaluator, modelPermissionEvaluator, eventPublisher, modelHeaderRepository,
-			documentServiceFactory, documentFactory, documentUtils);
+		Mockito.verify(documentPermissionEvaluator, Mockito.times(1)).checkDocumentPartialUpdatePermissionByModel(testModelName);
+		Mockito.verifyNoInteractions(modelPermissionEvaluator, eventPublisher, modelHeaderRepository,
+			documentServiceFactory, documentUtils);
 	}
 
 	@Test
@@ -253,7 +257,7 @@ public class DefaultDocumentServiceUpdatingTest extends AbstractDefaultDocumentS
 			() -> defaultDocumentService.update(new DocumentReference(testModelName, "documentId"), List.of(), null));
 
 		Mockito.verify(documentPermissionEvaluator, Mockito.times(1)).checkDocumentPartialUpdatePermission(Mockito.any(), Mockito.any(), Mockito.any());
-		Mockito.verifyNoInteractions(modelPermissionEvaluator, eventPublisher, modelHeaderRepository, documentFactory, documentUtils);
+		Mockito.verifyNoInteractions(modelPermissionEvaluator, eventPublisher, modelHeaderRepository, documentUtils);
 	}
 
 	@Test(expectedExceptions = InvalidInputException.class, expectedExceptionsMessageRegExp = "Invalid documentPart for partial modify document")
@@ -294,6 +298,54 @@ public class DefaultDocumentServiceUpdatingTest extends AbstractDefaultDocumentS
 		Mockito.verify(modelPermissionEvaluator, Mockito.times(1)).checkModelReadPermission(Mockito.any(Header.class));
 		Mockito.verify(eventPublisher, Mockito.times(1)).publishEvent(Mockito.any(DocumentBeforeUpdateEvent.class));
 		Mockito.verifyNoMoreInteractions(eventPublisher);
+	}
+
+	@Test(description = "Should invoke uniqueConstraintValidator.update with the correct docRef after a successful update")
+	public void shouldInvokeUniqueConstraintUpdateAfterSuccessfulUpdate() {
+		Locale locale = Locale.GERMANY;
+		DocumentReference docRef = new DocumentReference(testModelName, "testDocumentId");
+		DocumentV2 oldKernelDocument =
+			loadDocumentV2(DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL, DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL + ".json");
+		oldKernelDocument = metadataUtils.createDocumentMetadata(oldKernelDocument, docRef, "admin", Instant.now(), null);
+		DocumentV2 updateKernelDocument = oldKernelDocument.withFieldValue(DOCUMENT_FIELD_NAME, "testUserName");
+		DefaultDataServicesDocument oldDoc = createDataServicesDocument(docRef, oldKernelDocument);
+
+		Mockito.when(documentRepository.supports(Mockito.any())).thenReturn(true);
+		Mockito.when(modelHeaderRepository.findById(testModelName)).thenReturn(Optional.of(headerEntity));
+		Mockito.when(documentRepository.findByDocumentReference(Mockito.any())).thenReturn(Optional.of(oldDoc));
+		Mockito.when(kernelDocumentService.computeDocument(Mockito.any(DocumentV2.class), Mockito.eq(locale)))
+			.then(AdditionalAnswers.returnsFirstArg());
+
+		defaultDocumentService.update(docRef, updateKernelDocument, locale);
+
+		ArgumentCaptor<DocumentReference> docRefCaptor = ArgumentCaptor.forClass(DocumentReference.class);
+		Mockito.verify(uniqueConstraintValidator, Mockito.times(1))
+			.update(Mockito.any(DocumentV2.class), docRefCaptor.capture(), Mockito.any(Locale.class));
+		Assert.assertEquals(docRefCaptor.getValue(), docRef);
+	}
+
+	@Test(description = "Should propagate UniqueConstraintViolationException when a unique constraint is violated during update")
+	public void shouldPropagateUniqueConstraintViolationExceptionOnUpdate() {
+		Locale locale = Locale.GERMANY;
+		DocumentReference docRef = new DocumentReference(testModelName, "testDocumentId");
+		DocumentV2 oldKernelDocument =
+			loadDocumentV2(DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL, DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL + ".json");
+		oldKernelDocument = metadataUtils.createDocumentMetadata(oldKernelDocument, docRef, "admin", Instant.now(), null);
+		DocumentV2 updateKernelDocument = oldKernelDocument.withFieldValue(DOCUMENT_FIELD_NAME, "testUserName");
+		DefaultDataServicesDocument oldDoc = createDataServicesDocument(docRef, oldKernelDocument);
+
+		Mockito.when(documentRepository.supports(Mockito.any())).thenReturn(true);
+		Mockito.when(modelHeaderRepository.findById(testModelName)).thenReturn(Optional.of(headerEntity));
+		Mockito.when(documentRepository.findByDocumentReference(Mockito.any())).thenReturn(Optional.of(oldDoc));
+		Mockito.when(kernelDocumentService.computeDocument(Mockito.any(DocumentV2.class), Mockito.eq(locale)))
+			.then(AdditionalAnswers.returnsFirstArg());
+		Mockito.doThrow(new UniqueConstraintViolationException("c1", testModelName))
+			.when(uniqueConstraintValidator).update(Mockito.any(DocumentV2.class), Mockito.any(DocumentReference.class), Mockito.any());
+
+		Assert.assertThrows(UniqueConstraintViolationException.class, () -> defaultDocumentService.update(docRef, updateKernelDocument, locale));
+
+		Mockito.verify(uniqueConstraintValidator, Mockito.times(1)).update(Mockito.any(), Mockito.any(), Mockito.any());
+		Mockito.verify(documentRepository, Mockito.never()).update(Mockito.any());
 	}
 
 	private void assertUpdateDocument(@NotNull DataServicesDocument oldDataServiceDocument, DataServicesDocument updatedDataServiceDocument,

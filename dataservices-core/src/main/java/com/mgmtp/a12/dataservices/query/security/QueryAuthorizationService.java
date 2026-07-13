@@ -32,11 +32,12 @@
 package com.mgmtp.a12.dataservices.query.security;
 
 import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Query Authorization Service interface. Service to add ABAC rules to a given constraint. Used in blackbox authorization
  */
-public interface QueryAuthorizationService {
+@OnlyForUsage public interface QueryAuthorizationService {
 	/**
 	 * Adds ABAC rules to the given constraint for the specified document model.
 	 *

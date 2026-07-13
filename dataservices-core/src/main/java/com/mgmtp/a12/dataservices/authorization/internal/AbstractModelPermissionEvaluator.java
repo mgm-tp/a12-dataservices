@@ -91,7 +91,7 @@ import lombok.extern.slf4j.Slf4j;
 	public void checkModelReadPermission(String modelId) {
 		Header header = Optional.ofNullable(modelId)
 			.flatMap(modelHeaderRepository::findById)
-			.orElseThrow(() -> new NotFoundException(ExceptionKeys.MODEL_NOT_FOUND_ERROR_KEY, String.format("Model [%s] not found", modelId)));
+			.orElseThrow(() -> new NotFoundException(ExceptionKeys.MODEL_NOT_FOUND_ERROR_KEY, "Model [%s] not found".formatted(modelId)));
 		if (!hasModelReadPermission(header)) {
 			throw new AccessDeniedException(AuthConstants.ACCESS_DENIED);
 		}

@@ -39,6 +39,11 @@ import { ConnectorLocator, type ServerConnector } from "@com.mgmtp.a12.utils/uti
 import type { LoadAttachmentUrlJsonRpc2 } from "../Attachment/attachment.js";
 import { Dispatcher } from "../dispatch/index.js";
 import type { AddDocumentJsonRpc2Response, DocumentJsonRpc2Request } from "../Document/index.js";
+import type {
+	RpcFulfilledResult,
+	RpcRejectedResult,
+	RpcSettledResult
+} from "../dispatch/ResponseTypings.js";
 import type { JsonRpc2Response, JsonRpc2ResponseError } from "../json-rpc/index.js";
 import type { RelationshipJsonRpc2response } from "../Relationship/index.js";
 import { type RelationshipJsonRpc2request } from "../Relationship/index.js";
@@ -157,6 +162,143 @@ suite("Dispatcher", () => {
 				() => Dispatcher.rpc("", [mockRequest(1), mockRequest(2)]),
 				/Expect a response of type/
 			);
+		});
+	});
+
+	suite("rpcSettled", () => {
+		function mockRequest(id: number): LoadAttachmentUrlJsonRpc2.Request {
+			return {
+				method: "LOAD_ATTACHMENT_URL",
+				params: { attachmentId: "1", docRef: "1" },
+				jsonrpc: "2.0",
+				id
+			};
+		}
+
+		function mockResponse(id: number): LoadAttachmentUrlJsonRpc2.Response {
+			return { jsonrpc: "2.0", id, result: { location: `url${id}` } };
+		}
+
+		function mockErrorResponse(id: number, code = 123): JsonRpc2ResponseError {
+			return { jsonrpc: "2.0", id, error: { code, message: "err", data: {} } };
+		}
+
+		test("returns fulfilled results for successful requests", async () => {
+			const response1 = mockResponse(1);
+			const response2 = mockResponse(2);
+			fetchDataMock.mock.mockImplementationOnce(async () =>
+				Response.json([response1, response2] satisfies JsonRpc2Response[])
+			);
+
+			const actual = await Dispatcher.rpcSettled("", [mockRequest(1), mockRequest(2)]);
+
+			deepEqual(actual, [
+				{ status: "fulfilled", value: response1 },
+				{ status: "fulfilled", value: response2 }
+			]);
+		});
+
+		test("preserves fulfilled results when another request in the batch rejects", async () => {
+			const response1 = mockResponse(1);
+			const error2 = mockErrorResponse(2);
+			fetchDataMock.mock.mockImplementationOnce(async () =>
+				Response.json([response1, error2] satisfies JsonRpc2Response[])
+			);
+
+			const actual = await Dispatcher.rpcSettled("", [mockRequest(1), mockRequest(2)]);
+
+			deepEqual(actual, [
+				{ status: "fulfilled", value: response1 },
+				{ status: "rejected", reason: error2 }
+			]);
+		});
+
+		test("returns only rejected results when every request fails", async () => {
+			const error1 = mockErrorResponse(1);
+			const error2 = mockErrorResponse(2);
+			fetchDataMock.mock.mockImplementationOnce(async () =>
+				Response.json([error1, error2] satisfies JsonRpc2Response[])
+			);
+
+			const actual = await Dispatcher.rpcSettled("", [mockRequest(1), mockRequest(2)]);
+
+			deepEqual(actual, [
+				{ status: "rejected", reason: error1 },
+				{ status: "rejected", reason: error2 }
+			]);
+		});
+
+		test("returns undefined for undefined requests", async () => {
+			const response = mockResponse(1);
+			fetchDataMock.mock.mockImplementationOnce(async () =>
+				Response.json([response] satisfies JsonRpc2Response[])
+			);
+
+			const actual = await Dispatcher.rpcSettled("", [undefined, mockRequest(1), undefined]);
+
+			deepEqual(actual, [undefined, { status: "fulfilled", value: response }, undefined]);
+		});
+
+		test("throws if a response is missing for a request", async () => {
+			fetchDataMock.mock.mockImplementationOnce(async () =>
+				Response.json([mockResponse(1)] satisfies JsonRpc2Response[])
+			);
+			await rejects(
+				() => Dispatcher.rpcSettled("", [mockRequest(1), mockRequest(2)]),
+				/No response found for request 2/
+			);
+		});
+
+		test("throws if the typeguard fails for a fulfilled response", async () => {
+			fetchDataMock.mock.mockImplementationOnce(async () =>
+				Response.json([
+					mockResponse(1),
+					{ jsonrpc: "2.0", id: 2, result: { wrong: true } }
+				] satisfies JsonRpc2Response[])
+			);
+			await rejects(
+				() => Dispatcher.rpcSettled("", [mockRequest(1), mockRequest(2)]),
+				/Expect a response of type/
+			);
+		});
+	});
+
+	suite("rpcSettled (type-only)", () => {
+		type Req = LoadAttachmentUrlJsonRpc2.Request;
+		type Resp = LoadAttachmentUrlJsonRpc2.Response;
+
+		function asType<T>(): T {
+			return undefined as T;
+		}
+
+		test("returns RpcSettledResult for a single request", async () => {
+			const request = asType<Req>();
+
+			const results = await Dispatcher.rpcSettled("", [request]);
+
+			expectTypeOf<typeof results>().toEqualTypeOf<[RpcSettledResult<Req>]>();
+		});
+
+		test("exposes discriminated fulfilled/rejected members", () => {
+			type Result = RpcSettledResult<Req>;
+
+			expectTypeOf<Extract<Result, { status: "fulfilled" }>>().toEqualTypeOf<
+				RpcFulfilledResult<Req>
+			>();
+			expectTypeOf<Extract<Result, { status: "fulfilled" }>["value"]>().toEqualTypeOf<Resp>();
+
+			expectTypeOf<Extract<Result, { status: "rejected" }>>().toEqualTypeOf<RpcRejectedResult>();
+			expectTypeOf<
+				Extract<Result, { status: "rejected" }>["reason"]
+			>().toEqualTypeOf<JsonRpc2ResponseError>();
+		});
+
+		test("returns undefined slots for undefined requests", async () => {
+			const request = asType<Req | undefined>();
+
+			const results = await Dispatcher.rpcSettled("", [request]);
+
+			expectTypeOf<typeof results>().toEqualTypeOf<[RpcSettledResult<Req> | undefined]>();
 		});
 	});
 

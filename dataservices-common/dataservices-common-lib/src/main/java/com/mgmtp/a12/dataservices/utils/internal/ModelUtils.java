@@ -115,22 +115,22 @@ public class ModelUtils {
 
 		if (!isModelNameValid(header.getId())) {
 			throw new InvalidInputException(ExceptionKeys.MODEL_ID_NOT_VALID_ERROR_KEY,
-				String.format("Model name [%s] is not valid", header.getId()));
+				"Model name [%s] is not valid".formatted(header.getId()));
 		}
 
 		if (StringUtils.isEmpty(header.getModelType())) {
 			throw new InvalidInputException(ExceptionKeys.MODEL_MODEL_TYPE_NOT_FOUND_ERROR_KEY,
-				String.format("Model [%s] does not have modelType defined", header.getId()));
+				"Model [%s] does not have modelType defined".formatted(header.getId()));
 		}
 
 		if (roleBased && getObjectRoles(header).isEmpty()) {
 			throw new InvalidInputException(ExceptionKeys.MODEL_ROLES_NOT_FOUND_ERROR_KEY,
-				String.format("Model [%s] does not have roles defined", header.getId()));
+				"Model [%s] does not have roles defined".formatted(header.getId()));
 		}
 
 		if (annotationsContainNullOrBlankName(header)) {
 			throw new InvalidInputException(ExceptionKeys.MODEL_HEADER_ANNOTATION_IS_MISSING_ERROR_KEY,
-				String.format("Header annotation of model [%s] is missing", header.getId()));
+				"Header annotation of model [%s] is missing".formatted(header.getId()));
 		}
 
 	}
@@ -158,8 +158,7 @@ public class ModelUtils {
 		alreadyProcessed.add(modelSubtypes.getModelName());
 		modelSubtypes.getDirectSubtypes().forEach(subEntity -> {
 			if (alreadyProcessed.contains(subEntity.getModelName())) {
-				throw new InvalidInputException(ExceptionKeys.DOCUMENT_MODEL_HETEROGENEITY_ERROR_KEY, String.format(
-					"Heterogeneity inheritance loop in model's %s chain: Nested model %s has subtype %s which is already in the chain of its supertypes.",
+				throw new InvalidInputException(ExceptionKeys.DOCUMENT_MODEL_HETEROGENEITY_ERROR_KEY, "Heterogeneity inheritance loop in model's %s chain: Nested model %s has subtype %s which is already in the chain of its supertypes.".formatted(
 					topLevelModelName, modelSubtypes.getModelName(), subEntity.getModelName()));
 			}
 			validateHeterogeneity(subEntity, new HashSet<>(alreadyProcessed), topLevelModelName);

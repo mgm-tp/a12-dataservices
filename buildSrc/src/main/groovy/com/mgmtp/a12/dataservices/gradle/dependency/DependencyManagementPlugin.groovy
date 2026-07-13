@@ -59,6 +59,7 @@ class DependencyManagementPlugin implements Plugin<Project> {
 			def applyVersion = { version, body -> body(version) }
 
 			api platform(project.libs.springFrameworkBom)
+			api platform(project.libs.springBootBom)
 			api platform(project.libs.springSecurityBom)
 			api platform(project.libs.jacksonBom)
 
@@ -79,7 +80,6 @@ class DependencyManagementPlugin implements Plugin<Project> {
 			all*.exclude group: 'commons-logging', module: 'commons-logging'
 			all*.exclude group: 'com.zaxxer', module: 'HikariCP-java7'
 			all*.exclude group: 'com.vaadin.external.google', module: 'android-json'
-			all*.exclude group: 'org.slf4j', module: 'jcl-over-slf4j'
 			all*.exclude group: 'org.glassfish.hk2.external', module: 'aopalliance-repackaged'
 			all*.exclude group: 'org.eclipse.jetty.toolchain', module: 'jetty-servlet-api'
 			all*.exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j2-impl'

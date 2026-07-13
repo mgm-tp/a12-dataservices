@@ -41,9 +41,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.exception.query.QueryInvalidInputException;
@@ -101,14 +101,14 @@ import static com.mgmtp.a12.examples.query.BusinessPartnerTaxAuthorityRegistrati
 			throw new QueryInvalidInputException(
 				ExceptionKeys.ExecutionPhase.QUERY_VALIDATION,
 				"query.validation.projection.targetDocumentModel.invalid",
-				String.format("%s projection does only allow documents of model %s", PROJECTION_NAME, BUSINESS_PARTNER_DOCUMENT_MODEL_NAME));
+				"%s projection does only allow documents of model %s".formatted(PROJECTION_NAME, BUSINESS_PARTNER_DOCUMENT_MODEL_NAME));
 		}
 
 		if (originalQuery.getLinks() != null && !originalQuery.getLinks().isEmpty()) {
 			throw new QueryInvalidInputException(
 				ExceptionKeys.ExecutionPhase.QUERY_VALIDATION,
 				"query.validation.projection.links.not.allowed",
-				String.format("%s projection does not allow for links to be specified because they are loaded automatically from 3rd party servers",
+				"%s projection does not allow for links to be specified because they are loaded automatically from 3rd party servers".formatted(
 					PROJECTION_NAME));
 		}
 

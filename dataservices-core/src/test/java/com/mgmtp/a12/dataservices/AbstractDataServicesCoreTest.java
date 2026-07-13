@@ -52,12 +52,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.testng.annotations.Listeners;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.constants.UserConstants;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
@@ -80,6 +74,10 @@ import com.mgmtp.a12.model.header.Header;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
 
 import static com.mgmtp.a12.dataservices.constants.DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL;
 import static com.mgmtp.a12.dataservices.model.metadata.DocumentMetadataConstants.DOCUMENT_METADATA_GROUP_NAME;
@@ -93,8 +91,6 @@ public abstract class AbstractDataServicesCoreTest extends AbstractKernelAwareTe
 
 	@Spy protected final DataServicesCoreProperties dataServicesCoreProperties = spy(new DataServicesCoreProperties());
 	protected final ObjectMapper objectMapper = spy(JsonMapper.builder()
-		.addModule(new JavaTimeModule())
-		.addModule(new Jdk8Module())
 		.addModule(new SimpleModule().addSerializer(DocumentV2.class, kernelTestSupport.getKernelDocumentSerializer()))
 		.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 		.build());

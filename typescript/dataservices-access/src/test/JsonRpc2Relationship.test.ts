@@ -75,12 +75,12 @@ suite("JSON-RPC Relationship Tests", () => {
 						entities: [
 							{
 								role: "Contract",
-								modelName: null,
+								modelName: "Contract",
 								docRef: "Contract/1"
 							},
 							{
 								role: "Partner",
-								modelName: null,
+								modelName: "BusinessPartner",
 								docRef: "BusinessPartner/2"
 							}
 						],
@@ -107,8 +107,8 @@ suite("JSON-RPC Relationship Tests", () => {
 			const responseWithoutId = omitAtPath(rpcResponse, ["result", "id"]);
 			strictEqual(
 				RelationshipJsonRpc2response.AddLinkJsonRpc2Response.isInstance(responseWithoutId),
-				false,
-				"Add Link response without id was incorrectly recognized!"
+				true,
+				"Add Link response without id was not recognized!"
 			);
 		});
 	});
@@ -212,12 +212,12 @@ suite("JSON-RPC Relationship Tests", () => {
 						entities: [
 							{
 								role: "Contract",
-								modelName: null,
+								modelName: "Contract",
 								docRef: "Contract/4"
 							},
 							{
 								role: "Partner",
-								modelName: null,
+								modelName: "BusinessPartner",
 								docRef: "BusinessPartner/5"
 							}
 						],
@@ -246,8 +246,8 @@ suite("JSON-RPC Relationship Tests", () => {
 			const responseWithoutId = omitAtPath(rpcResponse, ["result", "id"]);
 			strictEqual(
 				RelationshipJsonRpc2response.RelinkDocumentJsonRpc2Response.isInstance(responseWithoutId),
-				false,
-				"Relink Link response without id was incorrectly recognized!"
+				true,
+				"Relink Link response without id was not recognized!"
 			);
 		});
 	});

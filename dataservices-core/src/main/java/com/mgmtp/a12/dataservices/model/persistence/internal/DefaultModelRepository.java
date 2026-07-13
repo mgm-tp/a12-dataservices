@@ -81,7 +81,7 @@ import lombok.extern.slf4j.Slf4j;
 		updatedModelEntity.setUpdatedBy(UaaConnector.getCurrentUserName());
 		ModelEntity savedEntity = modelJpaRepository.save(getModelEntityFromBeforeRepositorySaveEvent(updatedModelEntity, header));
 		newModel.setContent(new GenericModelContent(savedEntity.getContent()));
-		log.debug(String.format("Model [%s] has been successfully updated", header.getId()));
+		log.debug("Model [%s] has been successfully updated".formatted(header.getId()));
 		return newModel;
 	}
 
@@ -90,7 +90,7 @@ import lombok.extern.slf4j.Slf4j;
 		modelJpaRepository.findById(header.getId())
 			.ifPresent(modelEntity -> {
 				modelJpaRepository.deleteById(header.getId());
-				log.debug(String.format("Model [%s] has been successfully deleted", header.getId()));
+				log.debug("Model [%s] has been successfully deleted".formatted(header.getId()));
 			});
 		return true;
 	}

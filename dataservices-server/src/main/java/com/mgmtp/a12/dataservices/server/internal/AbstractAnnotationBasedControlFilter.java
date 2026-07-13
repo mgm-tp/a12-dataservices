@@ -41,8 +41,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 public abstract class AbstractAnnotationBasedControlFilter implements HandlerInterceptor {
 	protected <A extends Annotation> Stream<A> getParameterAnnotations(Object handler, Class<A> annotation) {
-		if (handler instanceof HandlerMethod) {
-			HandlerMethod methodHandler = (HandlerMethod) handler;
+		if (handler instanceof HandlerMethod methodHandler) {
 			return Stream.concat(Stream.of(methodHandler.getMethodAnnotation(annotation)), Arrays.stream(methodHandler.getReturnType().getParameterAnnotations()))
 				.filter(Objects::nonNull)
 				.filter(a -> annotation.isAssignableFrom(a.getClass()))

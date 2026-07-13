@@ -41,8 +41,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.jsonrpc4j.JsonRpcBasicServer;
 import com.mgmtp.a12.dataservices.common.exception.UnexpectedException;
 import com.mgmtp.a12.dataservices.rpc.JsonRpc2Response;
@@ -51,6 +49,8 @@ import com.mgmtp.a12.dataservices.utils.internal.DsResourceUtils;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
 
 @Slf4j
 public class JsonRpcInitializer {
@@ -67,7 +67,7 @@ public class JsonRpcInitializer {
 	public JsonRpcInitializer(JsonRpcBasicServer jsonRpcBasicServer, ObjectMapper objectMapper, List<String> paths,
 		ResourcePatternResolver resourcePatternResolver) {
 		this.jsonRpcBasicServer = jsonRpcBasicServer;
-		this.objectMapper = objectMapper.copy().enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+		this.objectMapper = objectMapper.rebuild().enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY).build();
 		this.paths = paths;
 		this.resourcePatternResolver = resourcePatternResolver;
 	}
@@ -100,7 +100,7 @@ public class JsonRpcInitializer {
 			.map(JsonRpc2Response::getError)
 			.map(JsonRpc2ResponseError::toString)
 			.forEach(e -> {
-				String errorMessage = String.format(JSON_RPC_ERROR_FOR_PATH_EXCEPTION, sneakyGetURI(resource), e);
+				String errorMessage = JSON_RPC_ERROR_FOR_PATH_EXCEPTION.formatted(sneakyGetURI(resource), e);
 				log.error(errorMessage);
 				throw new UnexpectedException(errorMessage).withAnonymityMessage("Rpc initialization failed.");
 			});

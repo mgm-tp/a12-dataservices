@@ -62,7 +62,7 @@ public class LoadAttachmentAndThumbnailV2IT extends AbstractSpringContextIT {
 		docRef = preparedDocument.getDataServicesDocument().getMetadata().getDocRef();
 		attachmentId = preparedDocument.getImageAttachment().getAttachmentId();
 		// load attachment
-		DataServicesAttachmentURL attachmentURL = loadAttachmentUrlOperation.rpc(attachmentId, docRef);
+		DataServicesAttachmentURL attachmentURL = loadAttachmentUrlOperation.rpc(attachmentId, docRef.toString());
 		assertTrue(ATTACHMENT_SECURED_URL_PATTERN.test(attachmentURL.getLocation()));
 		// load thumbnails
 		AttachmentThumbnailUrl thumbnails = loadThumbnailUrlOperation.rpc(attachmentId);

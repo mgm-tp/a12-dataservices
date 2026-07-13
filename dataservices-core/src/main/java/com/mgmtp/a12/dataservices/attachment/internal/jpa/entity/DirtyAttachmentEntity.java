@@ -34,10 +34,6 @@ package com.mgmtp.a12.dataservices.attachment.internal.jpa.entity;
 import java.io.Serializable;
 import java.time.Instant;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -51,7 +47,6 @@ import lombok.NoArgsConstructor;
  * Contains all resources for attachment header definition.
  */
 @Table(name = "DIRTY_ATTACHMENT")
-@Cacheable @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data @NoArgsConstructor @AllArgsConstructor @Builder(toBuilder = true)
 @Entity public class DirtyAttachmentEntity implements Serializable {
 

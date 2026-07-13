@@ -35,9 +35,7 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.mgmtp.a12.dataservices.marshalling.DocumentReferenceToStringConverter;
+import tools.jackson.databind.annotation.JsonDeserialize;
 import com.mgmtp.a12.dataservices.marshalling.JsonRawValueDeserializer;
 
 import lombok.Data;
@@ -49,7 +47,6 @@ import lombok.NoArgsConstructor;
 @Data @NoArgsConstructor
 public class DocumentSpec implements Serializable {
 
-	@JsonSerialize(converter = DocumentReferenceToStringConverter.class)
 	private DocumentReference docRef;
 	private String documentModelName;
 	@JsonRawValue

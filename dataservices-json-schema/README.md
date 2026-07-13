@@ -1,22 +1,6 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://www.mgm-tp.com/global-content/cd/logos/a12/app-icons/dark/A12-Dark.svg" />
-  <img src="https://www.mgm-tp.com/global-content/cd/logos/a12/app-icons/light/A12-Light.svg" height="200" alt="A12 logo" />
-</picture>
-
 # JSON Schema Generator
 
 This module provides a CLI tool for generating JSON Schema definitions from the operator and topology classes of the A12 query module. The generated schema is intended for internal use and should not be used by customer projects.
-
-Refer to https://geta12.com/#/docs to get started with A12 development
-
----
-
-## License
-
-Parts of the A12 platform are made available under a **dual license**.
-Please check the [LICENSE](../LICENSE) file for details.
-
----
 
 ## Features
 
@@ -64,16 +48,3 @@ java -jar build/libs/dataservices-json-schema-generator.jar [options]
 ```shell
 java -jar build/libs/dataservices-json-schema-generator.jar -o build/schema/query-schema.json
 ```
-
----
-
-## Documentation
-
-- Full technical documentation is available at [GetA12.com](https://GetA12.com).
-- The website also provides access to the **A12 Discourse Community Forum**.
-
----
-
-**The mgm A12 Team**
-
-[mgm technology partners GmbH](https://www.mgm-tp.com) • [Imprint](https://www.mgm-tp.com/imprint.html)

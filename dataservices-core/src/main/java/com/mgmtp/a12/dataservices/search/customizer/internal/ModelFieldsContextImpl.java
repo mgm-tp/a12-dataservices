@@ -35,8 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.entity.LocalizedFieldEntity;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.entity.ModelFieldEntity;
 import com.mgmtp.a12.dataservices.search.customizer.ModelFieldsContext;
 import com.mgmtp.a12.kernel.md.model.api.IField;
@@ -53,18 +52,17 @@ public class ModelFieldsContextImpl implements ModelFieldsContext {
 	private final IField field;
 	private final IFieldType effectiveFieldType;
 	private final ModelFieldEntity.ModelFieldEntityBuilder modelFieldEntityBuilder;
-	private final Map<String, Map<String, LocalizedFieldEntity>> localizedFieldEntities;
+	private final Map<String, Map<String, String>> localizedFieldEntities;
 
 	@Override public String getOriginalLocalizedValue(String locale, String key) {
 		return Optional.of(localizedFieldEntities)
 			.map(locales -> locales.get(locale))
 			.map(keys -> keys.get(key))
-			.map(LocalizedFieldEntity::getLocalizedValue)
 			.orElse(null);
 	}
 
 	@Override public ModelFieldsContext putLocalizedValue(String locale, String key, String value) {
-		localizedFieldEntities.getOrDefault(locale, new HashMap<>()).getOrDefault(key, LocalizedFieldEntity.builder().build()).setLocalizedValue(value);
+		localizedFieldEntities.computeIfAbsent(locale, k -> new HashMap<>()).put(key, value);
 		return this;
 	}
 

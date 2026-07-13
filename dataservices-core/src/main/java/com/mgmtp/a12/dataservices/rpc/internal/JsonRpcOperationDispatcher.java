@@ -31,6 +31,7 @@
  */
 package com.mgmtp.a12.dataservices.rpc.internal;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -39,12 +40,16 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.time.Clock;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,13 +61,18 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.annotation.Order;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.core.env.Environment;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.exc.StreamReadException;
+import tools.jackson.databind.DatabindException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.googlecode.jsonrpc4j.ErrorResolver;
+import com.googlecode.jsonrpc4j.JsonResponse;
 import com.googlecode.jsonrpc4j.JsonRpcBasicServer;
 import com.googlecode.jsonrpc4j.JsonRpcInterceptor;
 import com.googlecode.jsonrpc4j.RequestInterceptor;
@@ -75,18 +85,24 @@ import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.exception.ExceptionCodes;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
+import com.mgmtp.a12.dataservices.internal.DataSourceContextHolder;
+import com.mgmtp.a12.dataservices.internal.TransactionHandler;
 import com.mgmtp.a12.dataservices.relationship.internal.RelationshipLinkValidationListener;
+
+import tools.jackson.databind.DeserializationFeature;
 import com.mgmtp.a12.dataservices.rpc.ExceptionDetail;
 import com.mgmtp.a12.dataservices.rpc.OperationError;
 import com.mgmtp.a12.dataservices.rpc.RemoteOperation;
 import com.mgmtp.a12.dataservices.rpc.RpcException;
 import com.mgmtp.a12.dataservices.rpc.RpcExceptionSupport;
 import com.mgmtp.a12.dataservices.utils.OperationContextHolder;
-import com.mgmtp.a12.dataservices.utils.internal.JsonUtils;
 import com.mgmtp.a12.dataservices.utils.internal.LoadedDocumentReferencesContextHolder;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import static com.mgmtp.a12.dataservices.exception.ExceptionCodes.ACCESS_DENIED_EXCEPTION_CODE;
 import static com.mgmtp.a12.dataservices.exception.ExceptionCodes.RPC_ERROR_EXCEPTION_CODE;
 import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.RPC_ID_NULL_ERROR_KEY;
 import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.RPC_OPERATION_ERROR_KEY;
@@ -103,37 +119,36 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.RPC_OPERATION_E
 @Slf4j
 public class JsonRpcOperationDispatcher extends JsonRpcBasicServer implements RequestInterceptor, JsonRpcInterceptor, ErrorResolver {
 
+	private final ObjectMapper objectMapper;
 	private final ObjectMapper throwableObjectMapper;
 
 	public static final String RPC_ERROR_MESSAGE = "JSON-RPC Request failed and rollback was performed";
 	protected static final String UNKNOWN = "UNKNOWN";
 	private static final String METHOD_NAME_EXECUTE = "rpc";
 	private static final Pattern METHOD_WITH_VERSION = Pattern.compile("^(.*):(\\d+)$");
+
 	private final boolean spelAllowed;
 	private final Set<String> allowedOperations;
 	private final DataServicesCoreProperties dataServicesCoreProperties;
 	private final RelationshipLinkValidationListener linkValidator;
-	private final ApplicationEventPublisher applicationEventPublisher;
 	private final JsonNodeSpelProcessor spelProcessor;
 	private final boolean debugRpcResponses;
-	private Map<String, Object> operations;
+	private final TransactionHandler transactionHandler;
+	private final boolean replicaRoutingEnabled;
+
+	@Getter(AccessLevel.PROTECTED)
+	private Map<String, Object> operations = new HashMap<>();
 	private RequestInterceptor requestInterceptor;
 
-	public JsonRpcOperationDispatcher(
-		Set<String> allowedOperations,
-		RelationshipLinkValidationListener linkValidator,
-		ApplicationEventPublisher applicationEventPublisher,
-		ObjectMapper objectMapper,
-		DataServicesCoreProperties dataServicesCoreProperties,
-		boolean spelAllowed,
-		JsonUtils jsonUtils,
-		boolean debugRpcResponses
-	) {
-		super(objectMapper, (Object) null);
+	public JsonRpcOperationDispatcher(Set<String> allowedOperations, RelationshipLinkValidationListener linkValidator,
+		ApplicationEventPublisher ignoredApplicationEventPublisher, ObjectMapper objectMapper, DataServicesCoreProperties dataServicesCoreProperties,
+		boolean spelAllowed, boolean debugRpcResponses, TransactionHandler transactionHandler, Environment environment) {
+
+		super(objectMapper.rebuild().disable(DeserializationFeature.WRAP_EXCEPTIONS).build(), (Object) null);
+		this.objectMapper = objectMapper;
 		this.allowedOperations = allowedOperations;
 		this.linkValidator = linkValidator;
 		this.dataServicesCoreProperties = dataServicesCoreProperties;
-		this.applicationEventPublisher = applicationEventPublisher;
 		this.spelAllowed = spelAllowed;
 		super.setRequestInterceptor(this);
 		super.getInterceptorList().add(this);
@@ -141,9 +156,11 @@ public class JsonRpcOperationDispatcher extends JsonRpcBasicServer implements Re
 		setAllowLessParams(true);
 		setErrorResolver(this);
 		setRethrowExceptions(false);
-		spelProcessor = new JsonNodeSpelProcessor(jsonUtils);
-		throwableObjectMapper = objectMapper.copy().addMixIn(Throwable.class, ThrowableMixin.class);
+		spelProcessor = new JsonNodeSpelProcessor(objectMapper);
+		throwableObjectMapper = objectMapper.rebuild().addMixIn(Throwable.class, ThrowableMixin.class).build();
 		this.debugRpcResponses = debugRpcResponses;
+		this.transactionHandler = transactionHandler;
+		this.replicaRoutingEnabled = StringUtils.isNotBlank(environment.getProperty(RpcUtils.REPLICA_URL_PROPERTY));
 	}
 
 	private static String operationName(Object o) {
@@ -177,21 +194,98 @@ public class JsonRpcOperationDispatcher extends JsonRpcBasicServer implements Re
 		detail.setDetails(error.getErrorDetail());
 
 		if (debugRpcResponses) {
-			detail.setException(throwableObjectMapper.valueToTree(t));
-			try (StringWriter sw = new StringWriter()) {
-				t.printStackTrace(new PrintWriter(sw));
-				detail.setStacktrace(sw.toString());
-			} catch (IOException e) {
-				detail.setStacktrace("N/A: %s".formatted(e.getMessage()));
-			}
 			log.error(t.getMessage(), t);
+			try {
+				detail.setException(throwableObjectMapper.valueToTree(t));
+				try (StringWriter sw = new StringWriter()) {
+					t.printStackTrace(new PrintWriter(sw));
+					detail.setStacktrace(sw.toString());
+				} catch (IOException e) {
+					detail.setStacktrace("N/A: %s".formatted(e.getMessage()));
+				}
+			} catch (Exception e) {
+				log.error(t.getMessage(), e);
+			}
 		}
 
 		return detail;
 	}
 
-	@Transactional
-	@Override public int handleRequest(InputStream input, OutputStream output) throws IOException {
+	@Override
+	public int handleRequest(InputStream input, OutputStream output) throws IOException {
+		if (!replicaRoutingEnabled) {
+			return runInTransaction(transactionHandler::runMethodInDefaultTransaction,
+				() -> executeRequestInternal(input, output));
+		}
+
+		byte[] requestBytes = input.readAllBytes();
+		JsonNode jsonRequest = objectMapper.readTree(requestBytes);
+		boolean isReadOnly = RpcUtils.isAllOperationsNonMutating(jsonRequest, operations);
+
+		try (InputStream newInput = new ByteArrayInputStream(requestBytes)) {
+			if (isReadOnly) {
+				return handleRequestInReadOnlyTransaction(newInput, output);
+			} else {
+				return runInTransaction(transactionHandler::runMethodInDefaultTransaction,
+					() -> executeRequestInternal(newInput, output));
+			}
+		}
+	}
+
+	// Must be set before the transaction opens: HibernateJpaDialect acquires the JDBC connection
+	// eagerly inside doBegin() to apply read-only settings, before Spring sets the read-only flag.
+	private int handleRequestInReadOnlyTransaction(InputStream input, OutputStream output) throws IOException {
+		DataSourceContextHolder.setDataSourceType(DataSourceContextHolder.DataSourceType.REPLICA);
+		try {
+			return runInTransaction(transactionHandler::runMethodInReadOnlyTransaction,
+				() -> executeRequestInternal(input, output));
+		} finally {
+			DataSourceContextHolder.clearDataSourceType();
+		}
+	}
+
+	private static int runInTransaction(Consumer<Runnable> txRunner, IoSupplier body) throws IOException {
+		// AtomicInteger/AtomicReference allow mutation from inside the lambda
+		// (variables captured by lambdas must be effectively final).
+		AtomicInteger result = new AtomicInteger(0);
+		AtomicReference<IOException> captured = new AtomicReference<>();
+		txRunner.accept(() -> {
+			try {
+				result.set(body.get());
+			} catch (IOException e) {
+				captured.set(e);
+			}
+		});
+		if (captured.get() != null) {
+			throw captured.get();
+		}
+		return result.get();
+	}
+
+	@FunctionalInterface
+	private interface IoSupplier {
+		int get() throws IOException;
+	}
+
+	/**
+	 * Extracts the operation ID from a single JSON-RPC request node and stores it in {@link OperationContextHolder}
+	 * before delegating to the parent implementation. This ensures the operation ID is available in error logging
+	 * even when the request targets an operation that does not exist (in which case the request interceptor
+	 * would not be reached).
+	 */
+	@Override
+	protected JsonResponse handleJsonNodeRequest(JsonNode node) throws StreamReadException, DatabindException {
+		if (!node.isArray()) {
+			JsonNode idNode = node.get(ID);
+			if (idNode != null && !idNode.isNull()) {
+				OperationContextHolder.id(idNode.asText());
+			}
+		}
+		return super.handleJsonNodeRequest(node);
+	}
+
+	private int executeRequestInternal(InputStream input, OutputStream output) throws IOException {
+		AtomicReference<Throwable> caughtException = new AtomicReference<>();
 		try {
 			int result = super.handleRequest(input, output);
 			if (result != 0) {
@@ -201,11 +295,17 @@ public class JsonRpcOperationDispatcher extends JsonRpcBasicServer implements Re
 			return result;
 		} catch (Exception e) {
 			OperationContextHolder.error();
+			caughtException.set(e);
 			throw e;
 		} finally {
 			if (OperationContextHolder.isFailed()) {
-				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-				log.info("Exception occurred during execution of the RPC request, Rollback of the operation has been triggered");
+				 // When replica routing is enabled,  IllegalStateException is thrown if no transaction is active
+				if (TransactionSynchronizationManager.isActualTransactionActive()) {
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				}
+				Throwable failure = caughtException.get();
+				log.warn("RPC operation [{}] failed; rollback triggered: {}",
+					OperationContextHolder.id(), failure != null ? failure.getMessage() : "no exception");
 			}
 			linkValidator.clearLinks();
 			OperationContextHolder.clear();
@@ -294,10 +394,6 @@ public class JsonRpcOperationDispatcher extends JsonRpcBasicServer implements Re
 			|| Objects.nonNull(group) && allowedOperations.contains(group);
 	}
 
-	private boolean isNullNodeOrValue(JsonNode node) {
-		return node == null || node.isNull();
-	}
-
 	private boolean allowAllRpcOperations() {
 		if (allowedOperations.contains(DataServicesCoreProperties.MATCH_ALL)) {
 			if (allowedOperations.size() == 1) {
@@ -312,14 +408,24 @@ public class JsonRpcOperationDispatcher extends JsonRpcBasicServer implements Re
 
 	private String getOperationId(JsonNode request) {
 		JsonNode node = request.get(JsonRpcBasicServer.ID);
-		return isNullNodeOrValue(node) ? null : node.asText();
+		return node == null || node.isNull() ? null : node.asText();
 	}
 
+	/**
+	 * Resolves exceptions from RPC operations into JSON-RPC error responses.
+	 * Integrates with `OperationContextHolder` for RPC lifecycle management and provides structured error details.
+	 * 
+	 * @param t the exception thrown during RPC operation execution
+	 * @param method the RPC method that encountered the exception  
+	 * @param arguments the JSON arguments passed to the RPC method
+	 * @return JSON-RPC error object for client response
+	 */
 	@Override
 	public JsonError resolveError(Throwable t, Method method, List<JsonNode> arguments) {
 		OperationContextHolder.error();
 		OperationError operationError = createOperationError(t, OperationContextHolder.id());
 		ExceptionDetail exceptionDetail = createExceptionDetail(operationError, t);
+		log.warn("RPC operation [{}] failed: {}", operationError.getOperationId(), t.getMessage());
 		return new JsonError(operationError.getCode(), exceptionDetail.getTitle().getDefaultMessage(), exceptionDetail);
 	}
 
@@ -342,14 +448,18 @@ public class JsonRpcOperationDispatcher extends JsonRpcBasicServer implements Re
 	}
 
 	private OperationError.OperationErrorBuilder createOperationErrorBuilder(Throwable e, String oid) {
+		int exceptionCode = e instanceof AccessDeniedException ? ACCESS_DENIED_EXCEPTION_CODE : RPC_ERROR_EXCEPTION_CODE;
+		String longMessageKey = e instanceof AccessDeniedException
+			? ExceptionKeys.SECURITY_NOT_AUTHORIZED_ERROR_KEY
+			: ExceptionKeys.INVALID_INPUT_ERROR_KEY;
 		return OperationError.builder()
 			.operationId(oid)
-			.code(RPC_ERROR_EXCEPTION_CODE)
+			.code(exceptionCode)
 			.level(ErrorLevel.ERROR)
 			.genericMessage()
-			.errorDetail(new ErrorDetail(RPC_ERROR_EXCEPTION_CODE, "GENERAL", OffsetDateTime.now()))
+			.errorDetail(new ErrorDetail(exceptionCode, "GENERAL", OffsetDateTime.now()))
 			.shortMessage(new LocalizedEntry(RPC_OPERATION_ERROR_KEY, RPC_ERROR_MESSAGE))
-			.longMessage(new LocalizedEntry(RPC_OPERATION_ERROR_KEY, e.getMessage()));
+			.longMessage(new LocalizedEntry(longMessageKey, e.getMessage()));
 	}
 
 	private OperationError.OperationErrorBuilder createOperationErrorBuilder(BaseException e, String oid) {

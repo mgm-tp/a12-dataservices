@@ -5,7 +5,6 @@
     },
     "name": "ContractCoInsuredPartner",
     "displayLabel": "ContractCoInsuredPartnerDisplayLabel",
-    "associationType": "SHARED",
     "linkDocumentModel": "CoInsuredAdditionalFields",
     "entityCharacteristics": [
       {
@@ -13,23 +12,12 @@
         "displayLabel": "Contract",
         "documentModel": "Contract",
         "ordered": false,
-        "navigable": true,
         "linkConstraints": {
           "multiplicity": {
-            "lowerLimit": 0,
             "unbounded": false,
             "upperLimit": 5
           },
           "duplicatesAllowed": false
-        },
-        "candidateConstraints": {
-          "population": "",
-          "populationParameters": [
-            {
-              "name": "",
-              "value": ""
-            }
-          ]
         }
       },
       {
@@ -37,27 +25,14 @@
         "displayLabel": "Partner",
         "documentModel": "Partner",
         "ordered": false,
-        "navigable": true,
         "linkConstraints": {
           "multiplicity": {
-            "lowerLimit": 0,
             "unbounded": true,
             "upperLimit": null
           },
           "duplicatesAllowed": false
-        },
-        "candidateConstraints": {
-          "population": "",
-          "populationParameters": [
-            {
-              "name": "requiredField",
-              "value": "requiredField"
-            }
-          ]
         }
       }
-    ],
-    "storage": "EXTERNAL",
-    "embeddedGroupPath": ""
+    ]
   }
 }

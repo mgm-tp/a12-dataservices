@@ -31,21 +31,18 @@
  */
 package com.mgmtp.a12.dataservices.examples;
 
-import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldType;
-import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldTypeFactory;
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.Set;
+import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldTypeFactory;
+import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldValidator;
+
+import lombok.NonNull;
 
 @Component public class TaxIDCustomFieldTypeFactory implements ICustomFieldTypeFactory {
-	@Override
-	public Set<String> getSupportedTypeNames() {
-		return Collections.singleton("TaxIDCustomFieldType");
-	}
 
-	@Override
-	public ICustomFieldType createCustomFieldType(String s) {
-		return new TaxIDCustomFieldType();
+	@Override public Optional<ICustomFieldValidator> createCustomFieldValidator(@NonNull String customFieldTypeName) {
+		return Optional.of(new TaxIDCustomFieldType());
 	}
 }

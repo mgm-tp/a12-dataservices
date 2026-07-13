@@ -3891,7 +3891,7 @@ var Meta_contractcdm = (function () {
 		this._metaRegeln = new Meta_Regel_contractcdm();
 		this._unterstuetzteSprachen = ["en", "en_US", "de"];
 		this._da = new Model_t(
-				"28.4.0", // Produkt-Version
+				"29.4.0", // Produkt-Version
 				".", // dezimaltrenner
 				["en", "en_US", "de"], // unterstuetzte Sprachen
 				MetaDataHelper.createSetOfStrings(), //  Namen der Applikationsbedingungen
@@ -3924,7 +3924,7 @@ var Meta_contractcdm = (function () {
 		metaPlfFeldInfo
 			.addLokalePflichtFeldInfos(this._meta.getValue(IMetaKeysInternal.MODEL_ADDITIV_PFLICHTFELD));
 	}
-	Object.defineProperty(Meta_contractcdm, "RUNTIME_VERSION", { get: function () { return "30.8"; },
+	Object.defineProperty(Meta_contractcdm, "RUNTIME_VERSION", { get: function () { return "31.1"; },
 		enumerable: true,
 		configurable: true
 	});

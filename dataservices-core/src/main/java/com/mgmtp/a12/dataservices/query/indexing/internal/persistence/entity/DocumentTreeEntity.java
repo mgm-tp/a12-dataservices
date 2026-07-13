@@ -81,6 +81,13 @@ import lombok.NoArgsConstructor;
 		}
 	}
 
+	public static class BlankDocumentReference extends DocumentReference {
+
+		@Override public String toString() {
+			return "BlankDocumentReference";
+		}
+	}
+
 	@Data
 	@Embeddable public static class CompositeId implements Serializable {
 
@@ -113,10 +120,4 @@ import lombok.NoArgsConstructor;
 		@Column private boolean fieldsProjection;
 	}
 
-	public static class BlankDocumentReference extends DocumentReference {
-
-		@Override public String toString() {
-			return "BlankDocumentReference";
-		}
-	}
 }

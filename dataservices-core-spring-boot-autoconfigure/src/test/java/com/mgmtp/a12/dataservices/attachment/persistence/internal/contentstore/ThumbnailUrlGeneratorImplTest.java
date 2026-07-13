@@ -34,7 +34,6 @@ package com.mgmtp.a12.dataservices.attachment.persistence.internal.contentstore;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -47,9 +46,7 @@ import com.mgmtp.a12.dataservices.attachment.persitence.internal.contentstore.Th
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 
-@SpringBootTest()
 public class ThumbnailUrlGeneratorImplTest extends AbstractSpringContextIT {
 
 	@Autowired private ThumbnailUrlGeneratorImpl thumbnailUrlGenerator;
@@ -62,8 +59,7 @@ public class ThumbnailUrlGeneratorImplTest extends AbstractSpringContextIT {
 	private static final String BIG_THUMBNAIL_ID = "thumbnailBigId";
 	private static final String SMALL_THUMBNAIL_ID = "thumbnailSmallId";
 
-	@Test
-	public void testBuildThumbnailUrl_returnNull_WhenNoHaveThumbnail() {
+	@Test public void testBuildThumbnailUrl_returnNull_WhenNoHaveThumbnail() {
 		AttachmentHeader attachmentHeader = AttachmentHeader.builder()
 			.attachmentId(ATTACHMENT_ID)
 			.build();
@@ -73,8 +69,7 @@ public class ThumbnailUrlGeneratorImplTest extends AbstractSpringContextIT {
 
 	}
 
-	@Test
-	public void testBuildThumbnailUrl_withDisableAutoBuildUrl() {
+	@Test public void testBuildThumbnailUrl_withDisableAutoBuildUrl() {
 		AttachmentHeader attachmentHeader = AttachmentHeader.builder()
 			.attachmentId(ATTACHMENT_ID)
 			.thumbnailBigId(BIG_THUMBNAIL_ID)
@@ -85,8 +80,7 @@ public class ThumbnailUrlGeneratorImplTest extends AbstractSpringContextIT {
 		Assert.assertTrue(thumbnailUrlGenerator.generateThumbnailUrl(attachmentHeader, ThumbnailType.SMALL).isEmpty());
 	}
 
-	@Test
-	public void testBuildThumbnailUrl_withEnableAutoBuildUrl() {
+	@Test public void testBuildThumbnailUrl_withEnableAutoBuildUrl() {
 		AttachmentHeader attachmentHeader = AttachmentHeader.builder()
 			.attachmentId(ATTACHMENT_ID)
 			.thumbnailBigId(BIG_THUMBNAIL_ID)
@@ -110,8 +104,8 @@ public class ThumbnailUrlGeneratorImplTest extends AbstractSpringContextIT {
 		doReturn(BASE_URL).when(optimization).getBaseUrl();
 
 		try (MockedStatic<UrlUtils> ignored = Mockito.mockStatic(UrlUtils.class)) {
-			when(UrlUtils.buildContentUrl(BASE_URL, "", BIG_THUMBNAIL_ID)).thenReturn(GENERATED_BIG_URL);
-			when(UrlUtils.buildContentUrl(BASE_URL, "", SMALL_THUMBNAIL_ID)).thenReturn(GENERATED_SMALL_URL);
+			ignored.when(() -> UrlUtils.buildContentUrl(BASE_URL, "", BIG_THUMBNAIL_ID)).thenReturn(GENERATED_BIG_URL);
+			ignored.when(() -> UrlUtils.buildContentUrl(BASE_URL, "", SMALL_THUMBNAIL_ID)).thenReturn(GENERATED_SMALL_URL);
 			Assert.assertEquals(thumbnailUrlGenerator.generateThumbnailUrl(attachmentHeader, ThumbnailType.BIG).get(), GENERATED_BIG_URL);
 			Assert.assertEquals(thumbnailUrlGenerator.generateThumbnailUrl(attachmentHeader, ThumbnailType.SMALL).get(), GENERATED_SMALL_URL);
 		}

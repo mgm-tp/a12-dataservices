@@ -34,11 +34,12 @@ package com.mgmtp.a12.dataservices.authorization;
 import org.springframework.security.access.AccessDeniedException;
 
 import com.mgmtp.a12.dataservices.attachment.AttachmentHeader;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Evaluates attachment permissions for the current user.
  */
-public interface AttachmentPermissionEvaluator {
+@OnlyForUsage public interface AttachmentPermissionEvaluator {
 
 	/**
 	 * Checks whether the current user has permission to upload the provided attachment.

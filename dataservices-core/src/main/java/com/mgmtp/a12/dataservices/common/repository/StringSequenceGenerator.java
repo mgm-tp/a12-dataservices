@@ -32,19 +32,19 @@
 package com.mgmtp.a12.dataservices.common.repository;
 
 import java.io.Serializable;
-import java.util.Properties;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 import org.hibernate.HibernateException;
-import org.hibernate.MappingException;
+import org.hibernate.annotations.IdGeneratorType;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.enhanced.SequenceStyleGenerator;
-import org.hibernate.service.ServiceRegistry;
-import org.hibernate.type.StandardBasicTypeTemplate;
-import org.hibernate.type.Type;
-import org.hibernate.type.descriptor.java.BigDecimalJavaType;
-import org.hibernate.type.descriptor.jdbc.BigIntJdbcType;
 
 import com.mgmtp.a12.dataservices.document.internal.entity.DocumentEntity;
+
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
 
 /**
  * Convert generated sequence to string in order to use it for {@link String} fields.
@@ -52,7 +52,25 @@ import com.mgmtp.a12.dataservices.document.internal.entity.DocumentEntity;
  */
 public class StringSequenceGenerator extends SequenceStyleGenerator {
 
-	private static final Type SEQ_TYPE = new StandardBasicTypeTemplate<>(BigIntJdbcType.INSTANCE, BigDecimalJavaType.INSTANCE);
+	public static final String GENERATOR_NAME = "string-sequence-generator";
+
+	/**
+	 * Annotation to configure the string sequence generator.
+	 */
+	@IdGeneratorType(StringSequenceGenerator.class)
+	@Target({FIELD, METHOD})
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface Sequence {
+		/**
+		 * The name of the database sequence.
+		 */
+		String name();
+
+		/**
+		 * The increment size for the sequence.
+		 */
+		int incrementSize() default 1;
+	}
 
 	/**
 	 * Generates a sequence value and converts it to a {@link String}.
@@ -64,27 +82,5 @@ public class StringSequenceGenerator extends SequenceStyleGenerator {
 	 */
 	@Override public Serializable generate(final SharedSessionContractImplementor session, final Object object) throws HibernateException {
 		return super.generate(session, object).toString();
-	}
-
-	/**
-	 * Returns the identifier type used by this generator.
-	 *
-	 * @return The Hibernate {@link Type} representing the sequence type.
-	 */
-	@Override public Type getIdentifierType() {
-		return SEQ_TYPE;
-	}
-
-	/**
-	 * Configures the generator to use {@link #SEQ_TYPE} irrespective of requested `type`.
-	 *
-	 * @param type Ignored; the generator uses {@link #SEQ_TYPE}.
-	 * @param params Generator parameters.
-	 * @param serviceRegistry The Hibernate service registry.
-	 * @throws MappingException If configuration fails.
-	 */
-	@Override public void configure(final Type type, final Properties params, final ServiceRegistry serviceRegistry)
-		throws MappingException {
-		super.configure(SEQ_TYPE, params, serviceRegistry);
 	}
 }

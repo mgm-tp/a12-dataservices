@@ -35,11 +35,12 @@ import java.util.List;
 
 import com.mgmtp.a12.dataservices.rpc.JsonRpc2Request;
 import com.mgmtp.a12.dataservices.rpc.JsonRpc2Response;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * RpcOperationsClient interface provides access to JSON-RPC 2.0 based functionality.
  */
-public interface RpcOperationsClient {
+@OnlyForUsage public interface RpcOperationsClient {
 
 	/**
 	 * Processes an RPC request. The request consists of a list of {@link JsonRpc2Request} objects,

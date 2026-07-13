@@ -66,7 +66,7 @@ import lombok.SneakyThrows;
 		return new EmbeddedPostgresProperties();
 	}
 
-	@Primary @Bean public DataSource contentstoreDataSource(EmbeddedPostgresProperties csEmbeddedPostgresProperties, ResourceLoader resourceLoader)
+	@Primary @Bean("csDataSource") public DataSource csDataSource(EmbeddedPostgresProperties csEmbeddedPostgresProperties, ResourceLoader resourceLoader)
 		throws IOException {
 		if (embeddedPostgres == null) {
 			EmbeddedPostgres.Builder postgresBuilder = EmbeddedPostgres.builder();
@@ -85,12 +85,14 @@ import lombok.SneakyThrows;
 			postgresBuilder.setPort(csEmbeddedPostgresProperties.getPort());
 			csEmbeddedPostgresProperties.getConnectConfig().forEach(postgresBuilder::setConnectConfig);
 			postgresBuilder.setLocaleConfig(EmbeddedPostgresProperties.LC_CTYPE, csEmbeddedPostgresProperties.getLocaleCType());
+			postgresBuilder.setLocaleConfig(EmbeddedPostgresProperties.LC_COLLATE, csEmbeddedPostgresProperties.getLocaleCollate());
 			csEmbeddedPostgresProperties.getPostgresConfig().forEach(postgresBuilder::setServerConfig);
 
 			if (csEmbeddedPostgresProperties.getOverrideWorkingDirectory() != null) {
 				postgresBuilder.setOverrideWorkingDirectory(csEmbeddedPostgresProperties.getOverrideWorkingDirectory());
 			}
 
+			postgresBuilder.setPGStartupWait(csEmbeddedPostgresProperties.getPgStartupWait());
 			embeddedPostgres = postgresBuilder.start();
 		}
 		return embeddedPostgres.getPostgresDatabase();

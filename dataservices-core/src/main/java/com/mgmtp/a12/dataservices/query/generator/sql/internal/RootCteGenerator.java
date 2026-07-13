@@ -34,22 +34,17 @@ package com.mgmtp.a12.dataservices.query.generator.sql.internal;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import com.mgmtp.a12.dataservices.model.metadata.DocumentMetadataConstants;
 import com.mgmtp.a12.dataservices.query.DocumentTreeNodeType;
-import com.mgmtp.a12.dataservices.query.Order;
 import com.mgmtp.a12.dataservices.query.TargetDocumentModelAware;
 import com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants;
 import com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.ColumnNames;
@@ -62,11 +57,17 @@ import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 
-import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.FieldTypes.NUMBER_FIELD_TYPE;
-import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.FieldTypes.STRING_FIELD_TYPE;
-
 @SuperBuilder
 public class RootCteGenerator extends AbstractCteGenerator<QueryRoot> {
+
+	private RootCteOrderRenderer orderRenderer;
+
+	private RootCteOrderRenderer getOrderRenderer() {
+		if (orderRenderer == null) {
+			orderRenderer = RootCteOrderRenderer.of(getQuery().getSort(), getGeneratorContext());
+		}
+		return orderRenderer;
+	}
 
 	@Override protected AbstractTopologyColumnGenerator.AbstractTopologyColumnGeneratorBuilder<?, ?> getFinalSelectColumnBuilder() {
 		return RootColumnGenerator.builder();
@@ -81,7 +82,7 @@ public class RootCteGenerator extends AbstractCteGenerator<QueryRoot> {
 		if (getQuery().isAggregated()) {
 			appendAggregationSelect(sb);
 		} else {
-			sb.append(QueryGeneratorConstants.ASTERISK);
+			getOrderRenderer().appendSelectClause(sb);
 		}
 
 		sb.append(QueryGeneratorConstants.FROM_KEYWORD)
@@ -120,7 +121,7 @@ public class RootCteGenerator extends AbstractCteGenerator<QueryRoot> {
 			handleAggregationsOnRepeatableFields(sb);
 			addGroupingForAggregations(sb);
 		} else {
-			renderOrderBy(sb);
+			getOrderRenderer().renderJoinsAndOrderBy(sb);
 		}
 
 		// Only append pagination for ROOT in case `exclude` is `false`
@@ -157,13 +158,13 @@ public class RootCteGenerator extends AbstractCteGenerator<QueryRoot> {
 	private void handleAggregationsOnRepeatableFields(StringBuilder sb) {
 		Set<String> handledAlias = new HashSet<>();
 		getQuery().getAggregation().getAggregations().forEach(aggregation -> {
-			boolean isRepeatable = generatorContext.getEnrichments().getFieldDescriptor(aggregation.getField()).getRepeatable();
+			boolean isRepeatable = getGeneratorContext().getEnrichments().getFieldDescriptor(aggregation.getField()).getRepeatable();
 			if (isRepeatable) {
 				handleRepeatableAggField(sb, aggregation.getField(), handledAlias);
 			}
 		});
 		getQuery().getAggregation().getGroup().forEach(projectionField -> {
-			boolean isRepeatable = generatorContext.getEnrichments().getFieldDescriptor(projectionField.getField()).getRepeatable();
+			boolean isRepeatable = getGeneratorContext().getEnrichments().getFieldDescriptor(projectionField.getField()).getRepeatable();
 			if (isRepeatable) {
 				handleRepeatableAggField(sb, projectionField.getField(), handledAlias);
 			}
@@ -193,15 +194,17 @@ public class RootCteGenerator extends AbstractCteGenerator<QueryRoot> {
 
 		sb.append(QueryGeneratorConstants.SELECT_KEYWORD);
 		getFinalSelectColumnGenerator()
-			.renderColumns(sb, generatorContext)
+			.renderColumns(sb, getGeneratorContext())
 			.append(QueryGeneratorConstants.FROM_KEYWORD)
 			.append(tableAlias)
 			.append(QueryGeneratorConstants.AS_KEYWORD)
 			.append(TableNames.ROOT_ALIAS);
+
+		getOrderRenderer().appendFinalSelectOrderBy(sb);
 	}
 
 	@Override protected void renderLinksCte(StringBuilder sb) {
-		Optional.ofNullable(query.getLinks()).stream()
+		Optional.ofNullable(getQuery().getLinks()).stream()
 			.flatMap(Collection::stream)
 			.map(l -> LinkCteGenerator.builder().query(l))
 			.map(b -> b.generatorContext(getGeneratorContext()))
@@ -225,77 +228,6 @@ public class RootCteGenerator extends AbstractCteGenerator<QueryRoot> {
 		boolean onlyOneGroupField =
 			query.getAggregation() != null && query.getAggregation().getGroup() != null && query.getAggregation().getGroup().size() == 1;
 		return onlyTheCountFunction && onlyOneGroupField;
-	}
-
-	private void renderOrderBy(StringBuilder sb) {
-		List<Order> sort = getQuery().getSort();
-		if (CollectionUtils.isNotEmpty(sort)) {
-			sb.append(QueryGeneratorConstants.ORDER_BY_KEYWORD)
-				.append(sort.stream()
-					.map(this::renderSortField)
-					.collect(Collectors.joining(QueryGeneratorConstants.COMMA)));
-		}
-	}
-
-	private String renderSortField(Order order) {
-		StringBuilder sb = new StringBuilder();
-
-		appendOrderColumns(sb, order);
-		appendOrderDirection(sb, order);
-		appendNullHandling(sb, order);
-
-		return sb.toString();
-	}
-
-	private void appendOrderColumns(StringBuilder sb, Order order) {
-		boolean isStringField = STRING_FIELD_TYPE.equals(getGeneratorContext().getEnrichments().getFieldDescriptor(order.field()).getFieldType());
-		boolean isCaseSensitive = !order.ignoreCase();
-		if (DocumentMetadataConstants.DOCREF_METADATA_PATH.equalsIgnoreCase(order.field())) {
-			sb.append(ColumnNames.DOC_REF_COLUMN_ALIAS);
-		} else if (DocumentMetadataConstants.MODEL_REFERENCE_PATH.equalsIgnoreCase(order.field())) {
-			sb.append(ColumnNames.MODEL_NAME_COLUMN_NAME);
-		} else if (isStringField && isCaseSensitive) {
-			sb.append(TableNames.CTE_ROOT_ALIAS)
-				.append(QueryGeneratorConstants.DOT_JOINER)
-				.append(ColumnNames.ORIGINAL_VALUE_COLUMN_NAME)
-				.append(SqlGeneratorHelpersInternal.makeJsonFieldValueReferenceAndGetAsText(order.field(), getGeneratorContext()))
-				.append(QueryGeneratorConstants.COLLATE_CASE_SENSIITVE);
-		} else if (getGeneratorContext().getEnrichments().getFieldDescriptor(order.field()).isEnumerationType()
-			&& StringUtils.isNotBlank(getGeneratorContext().getLocale())) {
-			sb.append(ColumnNames.VALUE_COLUMN_NAME)
-				.append(SqlGeneratorHelpersInternal.makeJsonFieldValueReferenceAndGetAsJson(
-					order.field() + QueryGeneratorConstants.FORWARD_SLASH + getGeneratorContext().getLocale(), getGeneratorContext()));
-		} else {
-			if (NUMBER_FIELD_TYPE.equals(getGeneratorContext().getEnrichments().getFieldDescriptor(order.field()).getFieldType())) {
-				sb.append(QueryGeneratorConstants.OPENING_BRACKET)
-					.append(TableNames.CTE_ROOT_ALIAS)
-					.append(QueryGeneratorConstants.DOT_JOINER)
-					.append(ColumnNames.ORIGINAL_VALUE_COLUMN_NAME)
-					.append(SqlGeneratorHelpersInternal.makeJsonFieldValueReferenceAndGetAsText(order.field(), getGeneratorContext()))
-					.append(QueryGeneratorConstants.CLOSING_BRACKET)
-					.append(QueryGeneratorConstants.CAST_OPERATOR)
-					.append(QueryGeneratorConstants.NUMERIC_TYPE);
-			} else {
-				sb.append(TableNames.CTE_ROOT_ALIAS)
-					.append(QueryGeneratorConstants.DOT_JOINER)
-					.append(ColumnNames.ORIGINAL_VALUE_COLUMN_NAME)
-					.append(SqlGeneratorHelpersInternal.makeJsonFieldValueReferenceAndGetAsJson(order.field(), getGeneratorContext()));
-			}
-		}
-	}
-
-	private static void appendNullHandling(StringBuilder sb, Order order) {
-		if (order.nullHandling() == Order.NullHandling.NULLS_FIRST) {
-			sb.append(QueryGeneratorConstants.NULLS_FIRST_KEYWORD);
-		} else if (order.nullHandling() == Order.NullHandling.NULLS_LAST) {
-			sb.append(QueryGeneratorConstants.NULLS_LAST_KEYWORD);
-		}
-	}
-
-	private static void appendOrderDirection(StringBuilder sb, Order order) {
-		if (order.direction() == Order.Direction.DESC) {
-			sb.append(QueryGeneratorConstants.DESC_KEYWORD);
-		}
 	}
 
 	/**
@@ -345,7 +277,18 @@ public class RootCteGenerator extends AbstractCteGenerator<QueryRoot> {
 				allLinksFlattened.set(getAllLinksFlattened());
 			}
 		} else {
+			// When non-excluded links follow, the root SELECT may carry an outer
+			// `ORDER BY` (relationship-based sort) which PostgreSQL rejects directly before
+			// `UNION ALL`. Wrap the root SELECT in parentheses in that case.
+			boolean parenthesize = getOrderRenderer().requiresRootSelectParenthesization()
+				&& getAllLinksFlattened().anyMatch(g -> !g.getQuery().isExclude());
+			if (parenthesize) {
+				sb.append(QueryGeneratorConstants.OPENING_BRACKET);
+			}
 			renderFinalSelect(sb, false);
+			if (parenthesize) {
+				sb.append(QueryGeneratorConstants.CLOSING_BRACKET);
+			}
 			putUnion.set(true);
 			allLinksFlattened.set(getAllLinksFlattened());
 		}
@@ -384,7 +327,7 @@ public class RootCteGenerator extends AbstractCteGenerator<QueryRoot> {
 	}
 
 	private void handleRepeatableAggField(StringBuilder sb, String projectionField, Set<String> handledAlias) {
-		Deque<RepeatableAggField> repeatableAggFields = generatorContext.getEnrichments().getRepeatableAggFields(projectionField);
+		Deque<RepeatableAggField> repeatableAggFields = getGeneratorContext().getEnrichments().getRepeatableAggFields(projectionField);
 		while (repeatableAggFields.size() > 1) {
 			RepeatableAggField field = repeatableAggFields.pop();
 			RepeatableAggField nextField = repeatableAggFields.peek();
@@ -410,5 +353,4 @@ public class RootCteGenerator extends AbstractCteGenerator<QueryRoot> {
 			.append((repeatableAggFields.peek() != null && StringUtils.isNotBlank(repeatableAggFields.peek().tempAggName()))? Objects.requireNonNull(
 				repeatableAggFields.peek()).tempAggName() : "");
 	}
-
 }

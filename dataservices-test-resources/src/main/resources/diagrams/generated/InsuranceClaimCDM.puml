@@ -1,0 +1,779 @@
+@startuml
+
+!procedure group(x)
+class x << (G,#DDAAFF) >>
+!endprocedure
+
+!procedure cdmGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure field(x)
+class x << (F,#DDFFAA) >> #White
+!endprocedure
+
+!procedure embeddedField(name, type, fieldType)
+name <<type>>: fieldType
+!endprocedure
+
+!procedure rule(x)
+class x << (R,#DDBBAA) >> #FFDDEE
+!endprocedure
+
+!procedure embeddedRule(name, type)
+<back:FFDDEE>name() <<type>></back>
+!endprocedure
+
+!procedure embeddedRule(name, type, $errorCondition)
+.. <back:FFDDEE> name <<type>> </back> ..
+<back:FFDDEE>errorCondition:</back> $errorCondition
+!endprocedure
+
+!procedure computation(x)
+class x << (C,#DDBBAA) >> #FFEEDD
+!endprocedure
+
+!procedure computationAlternative($operation, $precondition)
+.. alternative ..
+operation: $operation
+precondition: $precondition
+!endprocedure
+
+!procedure embeddedComputation(name, type, $operation, $precondition)
+.. <back:FFEEDD> name <<type>> </back> ..
+<back:FFEEDD>operation:</back> $operation
+<back:FFEEDD>precondition:</back> $precondition
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure embeddedComputation(name, type )
+<back:FFEEDD>name() <<type>></back>
+!endprocedure
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure linkGroup(x)
+group(x) #PeachPuff
+!endprocedure
+
+!procedure relLink($name,$rmId,$link1,$link2,$ld="")
+circle $name as $rmId #PeachPuff
+$rmId $link1
+$rmId $link2
+!if $ld!=""
+$rmId -[#IndianRed]right $ld: <<linkDocument>>
+linkDocument($ld)
+!endif
+!endprocedure
+
+skinparam linetype polyline
+left to right direction
+
+title Compose Document Model InsuranceClaimCDM<InsuranceClaimSuper}>
+
+package "InsuranceClaimCDM<InsuranceClaimSuper>" as InsuranceClaimCDM <<Frame>> {
+	() "documentRoot" as InsuranceClaimCDMDocumentRoot
+	group('"InsuranceClaimRoot" as include_ics01')
+	group('"Attachment" as include_ics01_G_icat1')
+	field('"original_filename" as include_ics01_F_ica01 <<StringType>>')
+	include_ics01_G_icat1 -- include_ics01_F_ica01
+	field('"internal_filename" as include_ics01_F_ica02 <<StringType>>')
+	include_ics01_G_icat1 -- include_ics01_F_ica02
+	field('"content" as include_ics01_F_ica03 <<StringType>>')
+	include_ics01_G_icat1 -- include_ics01_F_ica03
+	field('"attachment_id" as include_ics01_F_ica04 <<StringType>>')
+	include_ics01_G_icat1 -- include_ics01_F_ica04
+	field('"size" as include_ics01_F_ica05 <<NumberType>>')
+	include_ics01_G_icat1 -- include_ics01_F_ica05
+	field('"mime_type" as include_ics01_F_ica06 <<StringType>>')
+	include_ics01_G_icat1 -- include_ics01_F_ica06
+	field('"category" as include_ics01_F_ica07 <<StringType>>')
+	include_ics01_G_icat1 -- include_ics01_F_ica07
+	field('"description" as include_ics01_F_ica08 <<StringType>>')
+	include_ics01_G_icat1 -- include_ics01_F_ica08
+	rule('"AttachmentInternalFilenameRequired" as include_ics01_R_ica01') {
+}
+	include_ics01_G_icat1 -- include_ics01_R_ica01
+	rule('"AttachmentMimeTypeRequired" as include_ics01_R_ica02') {
+}
+	include_ics01_G_icat1 -- include_ics01_R_ica02
+	rule('"AttachmentIdOrContentFilled" as include_ics01_R_ica03') {
+}
+	include_ics01_G_icat1 -- include_ics01_R_ica03
+	rule('"SizeOfContentFilled" as include_ics01_R_ica04') {
+}
+	include_ics01_G_icat1 -- include_ics01_R_ica04
+
+	include_ics01 ||--o{ "0..99" include_ics01_G_icat1
+	field('"ClaimType" as include_ics01_field_ic008 <<StringType>>')
+	include_ics01 -- include_ics01_field_ic008
+	group('"ClaimDetails" as include_ics01_group_ic007')
+	field('"ClaimNumber" as include_ics01_field_ic001 <<StringType>>')
+	include_ics01_group_ic007 -- include_ics01_field_ic001
+	field('"ClaimReference" as include_ics01_field_ic011 <<NumberType>>')
+	include_ics01_group_ic007 -- include_ics01_field_ic011
+	field('"ClaimDate" as include_ics01_field_ic002 <<DateType>>')
+	include_ics01_group_ic007 -- include_ics01_field_ic002
+	field('"Status" as include_ics01_field_ic004 <<EnumerationType>>')
+	include_ics01_group_ic007 -- include_ics01_field_ic004
+	field('"Priority" as include_ics01_field_ic012 <<NumberType>>')
+	include_ics01_group_ic007 -- include_ics01_field_ic012
+	field('"IsUrgent" as include_ics01_field_ic009 <<BooleanType>>')
+	include_ics01_group_ic007 -- include_ics01_field_ic009
+	field('"SubmittedAt" as include_ics01_field_ic027 <<DateTimeType>>')
+	include_ics01_group_ic007 -- include_ics01_field_ic027
+	field('"Severity" as include_ics01_field_ic028 <<EnumerationType>>')
+	include_ics01_group_ic007 -- include_ics01_field_ic028
+
+	include_ics01 ||--o| "0..1" include_ics01_group_ic007
+	group('"IncidentInfo" as include_ics01_group_ic008')
+	field('"IncidentDate" as include_ics01_field_ic003 <<DateType>>')
+	include_ics01_group_ic008 -- include_ics01_field_ic003
+	field('"IncidentLocation" as include_ics01_field_ic033 <<StringType>>')
+	include_ics01_group_ic008 -- include_ics01_field_ic033
+	field('"HasWitness" as include_ics01_field_ic010 <<BooleanType>>')
+	include_ics01_group_ic008 -- include_ics01_field_ic010
+	field('"Description" as include_ics01_field_ic006 <<StringType>>')
+	include_ics01_group_ic008 -- include_ics01_field_ic006
+	group('"ReportingDates" as include_ics01_group_ic002')
+	field('"ReportedYear" as include_ics01_field_ic013 <<DateType>>')
+	include_ics01_group_ic002 -- include_ics01_field_ic013
+	field('"DocumentedDate" as include_ics01_field_ic014 <<DateType>>')
+	include_ics01_group_ic002 -- include_ics01_field_ic014
+	field('"OfficialFilingDate" as include_ics01_field_ic015 <<DateType>>')
+	include_ics01_group_ic002 -- include_ics01_field_ic015
+
+	include_ics01_group_ic008 ||--o| "0..1" include_ics01_group_ic002
+
+	include_ics01 ||--o| "0..1" include_ics01_group_ic008
+	group('"PolicyInfo" as include_ics01_group_ic003')
+	field('"PolicyHolderId" as include_ics01_field_ic007 <<StringType>>')
+	include_ics01_group_ic003 -- include_ics01_field_ic007
+	field('"PolicyNumber" as include_ics01_field_ic032 <<StringType>>')
+	include_ics01_group_ic003 -- include_ics01_field_ic032
+	field('"PolicyStartYear" as include_ics01_field_ic016 <<DateFragmentType>>')
+	include_ics01_group_ic003 -- include_ics01_field_ic016
+	field('"PolicyStartMonth" as include_ics01_field_ic017 <<DateFragmentType>>')
+	include_ics01_group_ic003 -- include_ics01_field_ic017
+	field('"PolicyEffectiveDate" as include_ics01_field_ic018 <<DateFragmentType>>')
+	include_ics01_group_ic003 -- include_ics01_field_ic018
+	field('"AnnualRenewalDate" as include_ics01_field_ic019 <<DateFragmentType>>')
+	include_ics01_group_ic003 -- include_ics01_field_ic019
+
+	include_ics01 ||--o| "0..1" include_ics01_group_ic003
+	group('"CoveragePeriods" as include_ics01_group_ic004')
+	field('"CoveragePeriod" as include_ics01_field_ic020 <<DateRangeType>>')
+	include_ics01_group_ic004 -- include_ics01_field_ic020
+	field('"PolicyTerm" as include_ics01_field_ic021 <<DateRangeType>>')
+	include_ics01_group_ic004 -- include_ics01_field_ic021
+	field('"ClaimSubmissionWindow" as include_ics01_field_ic022 <<DateRangeType>>')
+	include_ics01_group_ic004 -- include_ics01_field_ic022
+	field('"SeasonalCoverage" as include_ics01_field_ic030 <<DateRangeType>>')
+	include_ics01_group_ic004 -- include_ics01_field_ic030
+	field('"BillingCycle" as include_ics01_field_ic031 <<DateRangeType>>')
+	include_ics01_group_ic004 -- include_ics01_field_ic031
+	group('"PriorClaims" as include_ics01_group_ic005')
+	field('"PriorClaimPeriod" as include_ics01_field_ic023 <<DateRangeType>>')
+	include_ics01_group_ic005 -- include_ics01_field_ic023
+	field('"PriorClaimAmount" as include_ics01_field_ic034 <<NumberType>>')
+	include_ics01_group_ic005 -- include_ics01_field_ic034
+
+	include_ics01_group_ic004 ||--o{ "0..5" include_ics01_group_ic005
+
+	include_ics01 ||--o| "0..1" include_ics01_group_ic004
+	group('"FinancialInfo" as include_ics01_group_ic009')
+	field('"ClaimAmount" as include_ics01_field_ic005 <<NumberType>>')
+	include_ics01_group_ic009 -- include_ics01_field_ic005
+	field('"SettlementMethod" as include_ics01_field_ic029 <<EnumerationType>>')
+	include_ics01_group_ic009 -- include_ics01_field_ic029
+	group('"PaymentHistory" as include_ics01_group_ic006')
+	field('"PaymentDate" as include_ics01_field_ic024 <<DateType>>')
+	include_ics01_group_ic006 -- include_ics01_field_ic024
+	field('"PaymentAmount" as include_ics01_field_ic025 <<NumberType>>')
+	include_ics01_group_ic006 -- include_ics01_field_ic025
+	field('"PaymentReference" as include_ics01_field_ic026 <<StringType>>')
+	include_ics01_group_ic006 -- include_ics01_field_ic026
+	field('"PaymentMethod" as include_ics01_field_ic035 <<EnumerationType>>')
+	include_ics01_group_ic006 -- include_ics01_field_ic035
+
+	include_ics01_group_ic009 ||--o{ "0..10" include_ics01_group_ic006
+
+	include_ics01 ||--o| "0..1" include_ics01_group_ic009
+
+	InsuranceClaimCDMDocumentRoot ||--o| "0..1" include_ics01
+
+	cdmGroup('"ClaimBusinessPartner" as group_cbp01')
+	group('"BusinessPartnerRoot" as include_bps01')
+	group('"Attachment" as include_bps01_G77')
+	field('"original_filename" as include_bps01_F21 <<StringType>>')
+	include_bps01_G77 -- include_bps01_F21
+	field('"internal_filename" as include_bps01_F22 <<StringType>>')
+	include_bps01_G77 -- include_bps01_F22
+	field('"content" as include_bps01_F23 <<StringType>>')
+	include_bps01_G77 -- include_bps01_F23
+	field('"attachment_id" as include_bps01_F24 <<StringType>>')
+	include_bps01_G77 -- include_bps01_F24
+	field('"size" as include_bps01_F25 <<NumberType>>')
+	include_bps01_G77 -- include_bps01_F25
+	field('"mime_type" as include_bps01_F26 <<StringType>>')
+	include_bps01_G77 -- include_bps01_F26
+	field('"category" as include_bps01_F27 <<StringType>>')
+	include_bps01_G77 -- include_bps01_F27
+	field('"description" as include_bps01_F28 <<StringType>>')
+	include_bps01_G77 -- include_bps01_F28
+	rule('"AttachmentInternalFilenameRequired" as include_bps01_R29') {
+}
+	include_bps01_G77 -- include_bps01_R29
+	rule('"AttachmentMimeTypeRequired" as include_bps01_R30') {
+}
+	include_bps01_G77 -- include_bps01_R30
+	rule('"AttachmentIdOrContentFilled" as include_bps01_R31') {
+}
+	include_bps01_G77 -- include_bps01_R31
+	rule('"SizeOfContentFilled" as include_bps01_R32') {
+}
+	include_bps01_G77 -- include_bps01_R32
+
+	include_bps01 ||--o{ "0..99" include_bps01_G77
+	field('"Name" as include_bps01_field_fe6b2 <<StringType>>')
+	include_bps01 -- include_bps01_field_fe6b2
+	field('"Industry" as include_bps01_field_d6580 <<EnumerationType>>')
+	include_bps01 -- include_bps01_field_d6580
+	field('"StartOfRelationship" as include_bps01_field_663d2 <<DateType>>')
+	include_bps01 -- include_bps01_field_663d2
+	field('"EndOfRelationship" as include_bps01_field_663d3 <<DateTimeType>>')
+	include_bps01 -- include_bps01_field_663d3
+	field('"CustomerDiscount" as include_bps01_field_74a24 <<EnumerationType>>')
+	include_bps01 -- include_bps01_field_74a24
+	group('"Employment" as include_bps01_G2')
+	field('"income" as include_bps01_field_3920 <<NumberType>>')
+	include_bps01_G2 -- include_bps01_field_3920
+	field('"tax" as include_bps01_field_1c326 <<NumberType>>')
+	include_bps01_G2 -- include_bps01_field_1c326
+	computation('"TaxComputation" as include_bps01_computation_8a180') {
+computes: ../tax
+}
+	include_bps01_G2 -- include_bps01_computation_8a180
+
+	include_bps01 ||--o| "0..1" include_bps01_G2
+	field('"accountNumber" as include_bps01_field_5dsk4 <<NumberType>>')
+	include_bps01 -- include_bps01_field_5dsk4
+	field('"PersonOrEntity" as include_bps01_field_114de <<StringType>>')
+	include_bps01 -- include_bps01_field_114de
+
+	group_cbp01 ||--o| "0..1" include_bps01
+	field('"t_docRef" as field_cbp_docref <<StringType>>')
+	group_cbp01 -- field_cbp_docref
+	cdmGroup('"ClaimantAddresses" as group_cpa01')
+	group('"AddressRoot" as include_adr01')
+	field('"AddressType" as include_adr01_field_a48cs <<EnumerationType>>')
+	include_adr01 -- include_adr01_field_a48cs
+	field('"Location" as include_adr01_field_c51b9 <<StringType>>')
+	include_adr01 -- include_adr01_field_c51b9
+	field('"Street" as include_adr01_field_7bc6c <<StringType>>')
+	include_adr01 -- include_adr01_field_7bc6c
+	field('"HouseNumber" as include_adr01_field_38cf3 <<StringType>>')
+	include_adr01 -- include_adr01_field_38cf3
+	field('"City" as include_adr01_field_42965 <<StringType>>')
+	include_adr01 -- include_adr01_field_42965
+	field('"PostCode" as include_adr01_field_623a3 <<StringType>>')
+	include_adr01 -- include_adr01_field_623a3
+	field('"Country" as include_adr01_field_804c7 <<StringType>>')
+	include_adr01 -- include_adr01_field_804c7
+	field('"PostalAddress" as include_adr01_field_ce1e7 <<ConfirmType>>')
+	include_adr01 -- include_adr01_field_ce1e7
+	rule('"MustContainCountry" as include_adr01_rule_7c66e') {
+}
+	include_adr01 -- include_adr01_rule_7c66e
+
+	group_cpa01 ||--o| "0..1" include_adr01
+	field('"t_docRef" as field_cpa_docref <<StringType>>')
+	group_cpa01 -- field_cpa_docref
+	group('"__meta" as group_cpa01_group_8f4b1')
+	field('"docRef" as group_cpa01_field_1169c <<StringType>>')
+	group_cpa01_group_8f4b1 -- group_cpa01_field_1169c
+	field('"modelReference" as group_cpa01_field_cfb40 <<StringType>>')
+	group_cpa01_group_8f4b1 -- group_cpa01_field_cfb40
+	field('"modelVersion" as group_cpa01_field_17e3b <<StringType>>')
+	group_cpa01_group_8f4b1 -- group_cpa01_field_17e3b
+	field('"creator" as group_cpa01_field_cdaf9 <<StringType>>')
+	group_cpa01_group_8f4b1 -- group_cpa01_field_cdaf9
+	field('"createdAt" as group_cpa01_field_65672 <<DateTimeType>>')
+	group_cpa01_group_8f4b1 -- group_cpa01_field_65672
+	field('"modifier" as group_cpa01_field_1fa32 <<StringType>>')
+	group_cpa01_group_8f4b1 -- group_cpa01_field_1fa32
+	field('"modifiedAt" as group_cpa01_field_5cd66 <<DateTimeType>>')
+	group_cpa01_group_8f4b1 -- group_cpa01_field_5cd66
+	group('"extensions" as group_cpa01_group_4c9a1')
+
+	group_cpa01_group_8f4b1 ||--o| "0..1" group_cpa01_group_4c9a1
+
+	group_cpa01 ||--o| "0..1" group_cpa01_group_8f4b1
+
+	group_cbp01 ||--o{ "0..100" group_cpa01
+	group('"__meta" as group_cbp01_group_8f4b1')
+	field('"docRef" as group_cbp01_field_1169c <<StringType>>')
+	group_cbp01_group_8f4b1 -- group_cbp01_field_1169c
+	field('"modelReference" as group_cbp01_field_cfb40 <<StringType>>')
+	group_cbp01_group_8f4b1 -- group_cbp01_field_cfb40
+	field('"modelVersion" as group_cbp01_field_17e3b <<StringType>>')
+	group_cbp01_group_8f4b1 -- group_cbp01_field_17e3b
+	field('"creator" as group_cbp01_field_cdaf9 <<StringType>>')
+	group_cbp01_group_8f4b1 -- group_cbp01_field_cdaf9
+	field('"createdAt" as group_cbp01_field_65672 <<DateTimeType>>')
+	group_cbp01_group_8f4b1 -- group_cbp01_field_65672
+	field('"modifier" as group_cbp01_field_1fa32 <<StringType>>')
+	group_cbp01_group_8f4b1 -- group_cbp01_field_1fa32
+	field('"modifiedAt" as group_cbp01_field_5cd66 <<DateTimeType>>')
+	group_cbp01_group_8f4b1 -- group_cbp01_field_5cd66
+	group('"extensions" as group_cbp01_group_4c9a1')
+
+	group_cbp01_group_8f4b1 ||--o| "0..1" group_cbp01_group_4c9a1
+
+	group_cbp01 ||--o| "0..1" group_cbp01_group_8f4b1
+
+	InsuranceClaimCDMDocumentRoot ||--o| "0..1" group_cbp01
+
+	cdmGroup('"ClaimInvolvedPartner" as group_cip01')
+	group('"BusinessPartnerRoot" as include_bps02')
+	group('"Attachment" as include_bps02_G77')
+	field('"original_filename" as include_bps02_F21 <<StringType>>')
+	include_bps02_G77 -- include_bps02_F21
+	field('"internal_filename" as include_bps02_F22 <<StringType>>')
+	include_bps02_G77 -- include_bps02_F22
+	field('"content" as include_bps02_F23 <<StringType>>')
+	include_bps02_G77 -- include_bps02_F23
+	field('"attachment_id" as include_bps02_F24 <<StringType>>')
+	include_bps02_G77 -- include_bps02_F24
+	field('"size" as include_bps02_F25 <<NumberType>>')
+	include_bps02_G77 -- include_bps02_F25
+	field('"mime_type" as include_bps02_F26 <<StringType>>')
+	include_bps02_G77 -- include_bps02_F26
+	field('"category" as include_bps02_F27 <<StringType>>')
+	include_bps02_G77 -- include_bps02_F27
+	field('"description" as include_bps02_F28 <<StringType>>')
+	include_bps02_G77 -- include_bps02_F28
+	rule('"AttachmentInternalFilenameRequired" as include_bps02_R29') {
+}
+	include_bps02_G77 -- include_bps02_R29
+	rule('"AttachmentMimeTypeRequired" as include_bps02_R30') {
+}
+	include_bps02_G77 -- include_bps02_R30
+	rule('"AttachmentIdOrContentFilled" as include_bps02_R31') {
+}
+	include_bps02_G77 -- include_bps02_R31
+	rule('"SizeOfContentFilled" as include_bps02_R32') {
+}
+	include_bps02_G77 -- include_bps02_R32
+
+	include_bps02 ||--o{ "0..99" include_bps02_G77
+	field('"Name" as include_bps02_field_fe6b2 <<StringType>>')
+	include_bps02 -- include_bps02_field_fe6b2
+	field('"Industry" as include_bps02_field_d6580 <<EnumerationType>>')
+	include_bps02 -- include_bps02_field_d6580
+	field('"StartOfRelationship" as include_bps02_field_663d2 <<DateType>>')
+	include_bps02 -- include_bps02_field_663d2
+	field('"EndOfRelationship" as include_bps02_field_663d3 <<DateTimeType>>')
+	include_bps02 -- include_bps02_field_663d3
+	field('"CustomerDiscount" as include_bps02_field_74a24 <<EnumerationType>>')
+	include_bps02 -- include_bps02_field_74a24
+	group('"Employment" as include_bps02_G2')
+	field('"income" as include_bps02_field_3920 <<NumberType>>')
+	include_bps02_G2 -- include_bps02_field_3920
+	field('"tax" as include_bps02_field_1c326 <<NumberType>>')
+	include_bps02_G2 -- include_bps02_field_1c326
+	computation('"TaxComputation" as include_bps02_computation_8a180') {
+computes: ../tax
+}
+	include_bps02_G2 -- include_bps02_computation_8a180
+
+	include_bps02 ||--o| "0..1" include_bps02_G2
+	field('"accountNumber" as include_bps02_field_5dsk4 <<NumberType>>')
+	include_bps02 -- include_bps02_field_5dsk4
+	field('"PersonOrEntity" as include_bps02_field_114de <<StringType>>')
+	include_bps02 -- include_bps02_field_114de
+
+	group_cip01 ||--o| "0..1" include_bps02
+	group('"relationship" as group_cip_rel')
+	group('"ClaimPartnerRoot" as include_cpaf01')
+	field('"PartnerRole" as include_cpaf01_field_cpaf01 <<EnumerationType>>')
+	include_cpaf01 -- include_cpaf01_field_cpaf01
+	field('"InvolvementDate" as include_cpaf01_field_cpaf02 <<DateType>>')
+	include_cpaf01 -- include_cpaf01_field_cpaf02
+	field('"Notes" as include_cpaf01_field_cpaf03 <<StringType>>')
+	include_cpaf01 -- include_cpaf01_field_cpaf03
+	field('"Verified" as include_cpaf01_field_cpaf04 <<BooleanType>>')
+	include_cpaf01 -- include_cpaf01_field_cpaf04
+	field('"InvolvementEndDate" as include_cpaf01_field_cpaf05 <<DateType>>')
+	include_cpaf01 -- include_cpaf01_field_cpaf05
+	field('"InvolvementType" as include_cpaf01_field_cpaf06 <<EnumerationType>>')
+	include_cpaf01 -- include_cpaf01_field_cpaf06
+	field('"CompensationAmount" as include_cpaf01_field_cpaf07 <<NumberType>>')
+	include_cpaf01 -- include_cpaf01_field_cpaf07
+	field('"CompensationCurrency" as include_cpaf01_field_cpaf08 <<EnumerationType>>')
+	include_cpaf01 -- include_cpaf01_field_cpaf08
+	group('"ContactInformation" as include_cpaf01_group_cpaf02')
+	field('"PhoneNumber" as include_cpaf01_field_cpaf09 <<StringType>>')
+	include_cpaf01_group_cpaf02 -- include_cpaf01_field_cpaf09
+	field('"AlternativePhone" as include_cpaf01_field_cpaf22 <<StringType>>')
+	include_cpaf01_group_cpaf02 -- include_cpaf01_field_cpaf22
+	field('"EmailAddress" as include_cpaf01_field_cpaf10 <<StringType>>')
+	include_cpaf01_group_cpaf02 -- include_cpaf01_field_cpaf10
+	field('"PreferredContactMethod" as include_cpaf01_field_cpaf11 <<EnumerationType>>')
+	include_cpaf01_group_cpaf02 -- include_cpaf01_field_cpaf11
+	group('"PostalAddress" as include_cpaf01_group_cpaf03')
+	field('"Street" as include_cpaf01_field_cpaf12 <<StringType>>')
+	include_cpaf01_group_cpaf03 -- include_cpaf01_field_cpaf12
+	field('"City" as include_cpaf01_field_cpaf13 <<StringType>>')
+	include_cpaf01_group_cpaf03 -- include_cpaf01_field_cpaf13
+	field('"PostalCode" as include_cpaf01_field_cpaf14 <<StringType>>')
+	include_cpaf01_group_cpaf03 -- include_cpaf01_field_cpaf14
+	field('"Country" as include_cpaf01_field_cpaf15 <<EnumerationType>>')
+	include_cpaf01_group_cpaf03 -- include_cpaf01_field_cpaf15
+
+	include_cpaf01_group_cpaf02 ||--o| "0..1" include_cpaf01_group_cpaf03
+
+	include_cpaf01 ||--o| "0..1" include_cpaf01_group_cpaf02
+	group('"CommunicationLog" as include_cpaf01_group_cpaf04')
+	field('"PreferredLanguage" as include_cpaf01_field_cpaf16 <<EnumerationType>>')
+	include_cpaf01_group_cpaf04 -- include_cpaf01_field_cpaf16
+	field('"RequiresTranslator" as include_cpaf01_field_cpaf17 <<BooleanType>>')
+	include_cpaf01_group_cpaf04 -- include_cpaf01_field_cpaf17
+	group('"Interactions" as include_cpaf01_group_cpaf05')
+	field('"InteractionDate" as include_cpaf01_field_cpaf18 <<DateType>>')
+	include_cpaf01_group_cpaf05 -- include_cpaf01_field_cpaf18
+	field('"Channel" as include_cpaf01_field_cpaf19 <<EnumerationType>>')
+	include_cpaf01_group_cpaf05 -- include_cpaf01_field_cpaf19
+	field('"Summary" as include_cpaf01_field_cpaf20 <<StringType>>')
+	include_cpaf01_group_cpaf05 -- include_cpaf01_field_cpaf20
+	field('"FollowUpRequired" as include_cpaf01_field_cpaf21 <<BooleanType>>')
+	include_cpaf01_group_cpaf05 -- include_cpaf01_field_cpaf21
+	field('"Duration" as include_cpaf01_field_cpaf23 <<NumberType>>')
+	include_cpaf01_group_cpaf05 -- include_cpaf01_field_cpaf23
+	field('"HandledBy" as include_cpaf01_field_cpaf24 <<StringType>>')
+	include_cpaf01_group_cpaf05 -- include_cpaf01_field_cpaf24
+	field('"Outcome" as include_cpaf01_field_cpaf25 <<EnumerationType>>')
+	include_cpaf01_group_cpaf05 -- include_cpaf01_field_cpaf25
+
+	include_cpaf01_group_cpaf04 ||--o{ "0..15" include_cpaf01_group_cpaf05
+
+	include_cpaf01 ||--o| "0..1" include_cpaf01_group_cpaf04
+	group('"ClaimImpact" as include_cpaf01_group_cpaf06')
+	field('"InjurySeverity" as include_cpaf01_field_cpaf26 <<EnumerationType>>')
+	include_cpaf01_group_cpaf06 -- include_cpaf01_field_cpaf26
+	field('"MedicalTreatmentRequired" as include_cpaf01_field_cpaf27 <<BooleanType>>')
+	include_cpaf01_group_cpaf06 -- include_cpaf01_field_cpaf27
+	field('"TreatmentPeriod" as include_cpaf01_field_cpaf28 <<DateRangeType>>')
+	include_cpaf01_group_cpaf06 -- include_cpaf01_field_cpaf28
+	group('"InjuredBodyParts" as include_cpaf01_group_cpaf07')
+	field('"BodyPart" as include_cpaf01_field_cpaf29 <<EnumerationType>>')
+	include_cpaf01_group_cpaf07 -- include_cpaf01_field_cpaf29
+	field('"Description" as include_cpaf01_field_cpaf30 <<StringType>>')
+	include_cpaf01_group_cpaf07 -- include_cpaf01_field_cpaf30
+	field('"TreatmentCost" as include_cpaf01_field_cpaf31 <<NumberType>>')
+	include_cpaf01_group_cpaf07 -- include_cpaf01_field_cpaf31
+
+	include_cpaf01_group_cpaf06 ||--o{ "0..10" include_cpaf01_group_cpaf07
+
+	include_cpaf01 ||--o| "0..1" include_cpaf01_group_cpaf06
+
+	group_cip_rel ||--o| "0..1" include_cpaf01
+	group('"__meta" as group_cip_rel_group_8f4b1')
+	field('"docRef" as group_cip_rel_field_1169c <<StringType>>')
+	group_cip_rel_group_8f4b1 -- group_cip_rel_field_1169c
+	field('"modelReference" as group_cip_rel_field_cfb40 <<StringType>>')
+	group_cip_rel_group_8f4b1 -- group_cip_rel_field_cfb40
+	field('"modelVersion" as group_cip_rel_field_17e3b <<StringType>>')
+	group_cip_rel_group_8f4b1 -- group_cip_rel_field_17e3b
+	field('"creator" as group_cip_rel_field_cdaf9 <<StringType>>')
+	group_cip_rel_group_8f4b1 -- group_cip_rel_field_cdaf9
+	field('"createdAt" as group_cip_rel_field_65672 <<DateTimeType>>')
+	group_cip_rel_group_8f4b1 -- group_cip_rel_field_65672
+	field('"modifier" as group_cip_rel_field_1fa32 <<StringType>>')
+	group_cip_rel_group_8f4b1 -- group_cip_rel_field_1fa32
+	field('"modifiedAt" as group_cip_rel_field_5cd66 <<DateTimeType>>')
+	group_cip_rel_group_8f4b1 -- group_cip_rel_field_5cd66
+	group('"extensions" as group_cip_rel_group_4c9a1')
+
+	group_cip_rel_group_8f4b1 ||--o| "0..1" group_cip_rel_group_4c9a1
+
+	group_cip_rel ||--o| "0..1" group_cip_rel_group_8f4b1
+
+	group_cip01 ||--o| "0..1" group_cip_rel
+	group('"__meta" as group_cip01_group_8f4b1')
+	field('"docRef" as group_cip01_field_1169c <<StringType>>')
+	group_cip01_group_8f4b1 -- group_cip01_field_1169c
+	field('"modelReference" as group_cip01_field_cfb40 <<StringType>>')
+	group_cip01_group_8f4b1 -- group_cip01_field_cfb40
+	field('"modelVersion" as group_cip01_field_17e3b <<StringType>>')
+	group_cip01_group_8f4b1 -- group_cip01_field_17e3b
+	field('"creator" as group_cip01_field_cdaf9 <<StringType>>')
+	group_cip01_group_8f4b1 -- group_cip01_field_cdaf9
+	field('"createdAt" as group_cip01_field_65672 <<DateTimeType>>')
+	group_cip01_group_8f4b1 -- group_cip01_field_65672
+	field('"modifier" as group_cip01_field_1fa32 <<StringType>>')
+	group_cip01_group_8f4b1 -- group_cip01_field_1fa32
+	field('"modifiedAt" as group_cip01_field_5cd66 <<DateTimeType>>')
+	group_cip01_group_8f4b1 -- group_cip01_field_5cd66
+	group('"extensions" as group_cip01_group_4c9a1')
+
+	group_cip01_group_8f4b1 ||--o| "0..1" group_cip01_group_4c9a1
+
+	group_cip01 ||--o| "0..1" group_cip01_group_8f4b1
+
+	InsuranceClaimCDMDocumentRoot ||--o{ "0..10" group_cip01
+
+	cdmGroup('"ClaimMainContract" as group_cmc01')
+	group('"ContractRoot" as include_con01')
+	field('"ContractName" as include_con01_field_770f2 <<StringType>>')
+	include_con01 -- include_con01_field_770f2
+	field('"ContractDescription" as include_con01_field_770f3 <<StringType>>')
+	include_con01 -- include_con01_field_770f3
+	field('"LengthOfContract" as include_con01_field_828da <<NumberType>>')
+	include_con01 -- include_con01_field_828da
+	field('"ContractValue" as include_con01_field_29708 <<NumberType>>')
+	include_con01 -- include_con01_field_29708
+	field('"Liability" as include_con01_field_edb7e <<NumberType>>')
+	include_con01 -- include_con01_field_edb7e
+	field('"CostToCustomer" as include_con01_field_502f7 <<NumberType>>')
+	include_con01 -- include_con01_field_502f7
+	field('"NoOfCoInsuredCustomers" as include_con01_field_f8187 <<NumberType>>')
+	include_con01 -- include_con01_field_f8187
+	field('"MaxDiscount" as include_con01_field_c472d <<StringType>>')
+	include_con01 -- include_con01_field_c472d
+	field('"CostPerCoInsured" as include_con01_field_24959 <<NumberType>>')
+	include_con01 -- include_con01_field_24959
+	field('"Valid" as include_con01_field_a09a6 <<BooleanType>>')
+	include_con01 -- include_con01_field_a09a6
+	field('"Type" as include_con01_field_48s48 <<EnumerationType>>')
+	include_con01 -- include_con01_field_48s48
+	group('"ContractDates" as include_con01_G2')
+	field('"ContractStartDate" as include_con01_G2F1 <<DateTimeType>>')
+	include_con01_G2 -- include_con01_G2F1
+	field('"ContractEndDate" as include_con01_G2F2 <<DateType>>')
+	include_con01_G2 -- include_con01_G2F2
+	field('"ContractEndTime" as include_con01_G2F3 <<TimeType>>')
+	include_con01_G2 -- include_con01_G2F3
+	field('"ContractReviewDate" as include_con01_G2F4 <<DateFragmentType>>')
+	include_con01_G2 -- include_con01_G2F4
+	field('"LastPremiumPaidDate" as include_con01_G2F5 <<DateType>>')
+	include_con01_G2 -- include_con01_G2F5
+	field('"CoveragePeriod" as include_con01_G2F6 <<DateRangeType>>')
+	include_con01_G2 -- include_con01_G2F6
+
+	include_con01 ||--o| "0..1" include_con01_G2
+	group('"ChangeLog" as include_con01_group_7a5d0')
+	field('"ID" as include_con01_field_fbee9 <<StringType>>')
+	include_con01_group_7a5d0 -- include_con01_field_fbee9
+	field('"Number" as include_con01_field_f9502 <<NumberType>>')
+	include_con01_group_7a5d0 -- include_con01_field_f9502
+	field('"ChangeTimestamp" as include_con01_field_5b05b <<DateType>>')
+	include_con01_group_7a5d0 -- include_con01_field_5b05b
+	field('"Description" as include_con01_field_e1113 <<StringType>>')
+	include_con01_group_7a5d0 -- include_con01_field_e1113
+	field('"User" as include_con01_field_ccb79 <<StringType>>')
+	include_con01_group_7a5d0 -- include_con01_field_ccb79
+	field('"Status" as include_con01_field_980c8 <<TypeDefType>>')
+	include_con01_group_7a5d0 -- include_con01_field_980c8
+	field('"Priority" as include_con01_field_18ea0 <<EnumerationType>>')
+	include_con01_group_7a5d0 -- include_con01_field_18ea0
+	group('"Changes" as include_con01_group_61e6a')
+	field('"ID" as include_con01_field_cdba0 <<StringType>>')
+	include_con01_group_61e6a -- include_con01_field_cdba0
+	field('"Title" as include_con01_field_bf1d6 <<StringType>>')
+	include_con01_group_61e6a -- include_con01_field_bf1d6
+	field('"Details" as include_con01_field_7de61 <<StringType>>')
+	include_con01_group_61e6a -- include_con01_field_7de61
+	field('"Priority" as include_con01_field_69efa <<EnumerationType>>')
+	include_con01_group_61e6a -- include_con01_field_69efa
+	field('"Status" as include_con01_field_1ecc4 <<TypeDefType>>')
+	include_con01_group_61e6a -- include_con01_field_1ecc4
+	field('"LastModified" as include_con01_field_3695e <<DateType>>')
+	include_con01_group_61e6a -- include_con01_field_3695e
+	group('"SubChanges" as include_con01_group_c4a35')
+	field('"ID" as include_con01_field_26340 <<StringType>>')
+	include_con01_group_c4a35 -- include_con01_field_26340
+	field('"TItle" as include_con01_field_3c130 <<StringType>>')
+	include_con01_group_c4a35 -- include_con01_field_3c130
+	field('"Details" as include_con01_field_89b43 <<StringType>>')
+	include_con01_group_c4a35 -- include_con01_field_89b43
+	field('"Priority" as include_con01_field_6df38 <<EnumerationType>>')
+	include_con01_group_c4a35 -- include_con01_field_6df38
+	field('"Status" as include_con01_field_797cc <<TypeDefType>>')
+	include_con01_group_c4a35 -- include_con01_field_797cc
+	field('"CreatedAt" as include_con01_field_eb669 <<DateFragmentType>>')
+	include_con01_group_c4a35 -- include_con01_field_eb669
+
+	include_con01_group_61e6a ||--o{ "0..99" include_con01_group_c4a35
+
+	include_con01_group_7a5d0 ||--o{ "0..99" include_con01_group_61e6a
+
+	include_con01 ||--o{ "0..10000" include_con01_group_7a5d0
+
+	group_cmc01 ||--o| "0..1" include_con01
+	field('"t_docRef" as field_cmc_docref <<StringType>>')
+	group_cmc01 -- field_cmc_docref
+	group('"__meta" as group_cmc01_group_8f4b1')
+	field('"docRef" as group_cmc01_field_1169c <<StringType>>')
+	group_cmc01_group_8f4b1 -- group_cmc01_field_1169c
+	field('"modelReference" as group_cmc01_field_cfb40 <<StringType>>')
+	group_cmc01_group_8f4b1 -- group_cmc01_field_cfb40
+	field('"modelVersion" as group_cmc01_field_17e3b <<StringType>>')
+	group_cmc01_group_8f4b1 -- group_cmc01_field_17e3b
+	field('"creator" as group_cmc01_field_cdaf9 <<StringType>>')
+	group_cmc01_group_8f4b1 -- group_cmc01_field_cdaf9
+	field('"createdAt" as group_cmc01_field_65672 <<DateTimeType>>')
+	group_cmc01_group_8f4b1 -- group_cmc01_field_65672
+	field('"modifier" as group_cmc01_field_1fa32 <<StringType>>')
+	group_cmc01_group_8f4b1 -- group_cmc01_field_1fa32
+	field('"modifiedAt" as group_cmc01_field_5cd66 <<DateTimeType>>')
+	group_cmc01_group_8f4b1 -- group_cmc01_field_5cd66
+	group('"extensions" as group_cmc01_group_4c9a1')
+
+	group_cmc01_group_8f4b1 ||--o| "0..1" group_cmc01_group_4c9a1
+
+	group_cmc01 ||--o| "0..1" group_cmc01_group_8f4b1
+
+	InsuranceClaimCDMDocumentRoot ||--o| "0..1" group_cmc01
+
+	cdmGroup('"ClaimAmendmentContracts" as group_cac01')
+	group('"ContractRoot" as include_con02')
+	field('"ContractName" as include_con02_field_770f2 <<StringType>>')
+	include_con02 -- include_con02_field_770f2
+	field('"ContractDescription" as include_con02_field_770f3 <<StringType>>')
+	include_con02 -- include_con02_field_770f3
+	field('"LengthOfContract" as include_con02_field_828da <<NumberType>>')
+	include_con02 -- include_con02_field_828da
+	field('"ContractValue" as include_con02_field_29708 <<NumberType>>')
+	include_con02 -- include_con02_field_29708
+	field('"Liability" as include_con02_field_edb7e <<NumberType>>')
+	include_con02 -- include_con02_field_edb7e
+	field('"CostToCustomer" as include_con02_field_502f7 <<NumberType>>')
+	include_con02 -- include_con02_field_502f7
+	field('"NoOfCoInsuredCustomers" as include_con02_field_f8187 <<NumberType>>')
+	include_con02 -- include_con02_field_f8187
+	field('"MaxDiscount" as include_con02_field_c472d <<StringType>>')
+	include_con02 -- include_con02_field_c472d
+	field('"CostPerCoInsured" as include_con02_field_24959 <<NumberType>>')
+	include_con02 -- include_con02_field_24959
+	field('"Valid" as include_con02_field_a09a6 <<BooleanType>>')
+	include_con02 -- include_con02_field_a09a6
+	field('"Type" as include_con02_field_48s48 <<EnumerationType>>')
+	include_con02 -- include_con02_field_48s48
+	group('"ContractDates" as include_con02_G2')
+	field('"ContractStartDate" as include_con02_G2F1 <<DateTimeType>>')
+	include_con02_G2 -- include_con02_G2F1
+	field('"ContractEndDate" as include_con02_G2F2 <<DateType>>')
+	include_con02_G2 -- include_con02_G2F2
+	field('"ContractEndTime" as include_con02_G2F3 <<TimeType>>')
+	include_con02_G2 -- include_con02_G2F3
+	field('"ContractReviewDate" as include_con02_G2F4 <<DateFragmentType>>')
+	include_con02_G2 -- include_con02_G2F4
+	field('"LastPremiumPaidDate" as include_con02_G2F5 <<DateType>>')
+	include_con02_G2 -- include_con02_G2F5
+	field('"CoveragePeriod" as include_con02_G2F6 <<DateRangeType>>')
+	include_con02_G2 -- include_con02_G2F6
+
+	include_con02 ||--o| "0..1" include_con02_G2
+	group('"ChangeLog" as include_con02_group_7a5d0')
+	field('"ID" as include_con02_field_fbee9 <<StringType>>')
+	include_con02_group_7a5d0 -- include_con02_field_fbee9
+	field('"Number" as include_con02_field_f9502 <<NumberType>>')
+	include_con02_group_7a5d0 -- include_con02_field_f9502
+	field('"ChangeTimestamp" as include_con02_field_5b05b <<DateType>>')
+	include_con02_group_7a5d0 -- include_con02_field_5b05b
+	field('"Description" as include_con02_field_e1113 <<StringType>>')
+	include_con02_group_7a5d0 -- include_con02_field_e1113
+	field('"User" as include_con02_field_ccb79 <<StringType>>')
+	include_con02_group_7a5d0 -- include_con02_field_ccb79
+	field('"Status" as include_con02_field_980c8 <<TypeDefType>>')
+	include_con02_group_7a5d0 -- include_con02_field_980c8
+	field('"Priority" as include_con02_field_18ea0 <<EnumerationType>>')
+	include_con02_group_7a5d0 -- include_con02_field_18ea0
+	group('"Changes" as include_con02_group_61e6a')
+	field('"ID" as include_con02_field_cdba0 <<StringType>>')
+	include_con02_group_61e6a -- include_con02_field_cdba0
+	field('"Title" as include_con02_field_bf1d6 <<StringType>>')
+	include_con02_group_61e6a -- include_con02_field_bf1d6
+	field('"Details" as include_con02_field_7de61 <<StringType>>')
+	include_con02_group_61e6a -- include_con02_field_7de61
+	field('"Priority" as include_con02_field_69efa <<EnumerationType>>')
+	include_con02_group_61e6a -- include_con02_field_69efa
+	field('"Status" as include_con02_field_1ecc4 <<TypeDefType>>')
+	include_con02_group_61e6a -- include_con02_field_1ecc4
+	field('"LastModified" as include_con02_field_3695e <<DateType>>')
+	include_con02_group_61e6a -- include_con02_field_3695e
+	group('"SubChanges" as include_con02_group_c4a35')
+	field('"ID" as include_con02_field_26340 <<StringType>>')
+	include_con02_group_c4a35 -- include_con02_field_26340
+	field('"TItle" as include_con02_field_3c130 <<StringType>>')
+	include_con02_group_c4a35 -- include_con02_field_3c130
+	field('"Details" as include_con02_field_89b43 <<StringType>>')
+	include_con02_group_c4a35 -- include_con02_field_89b43
+	field('"Priority" as include_con02_field_6df38 <<EnumerationType>>')
+	include_con02_group_c4a35 -- include_con02_field_6df38
+	field('"Status" as include_con02_field_797cc <<TypeDefType>>')
+	include_con02_group_c4a35 -- include_con02_field_797cc
+	field('"CreatedAt" as include_con02_field_eb669 <<DateFragmentType>>')
+	include_con02_group_c4a35 -- include_con02_field_eb669
+
+	include_con02_group_61e6a ||--o{ "0..99" include_con02_group_c4a35
+
+	include_con02_group_7a5d0 ||--o{ "0..99" include_con02_group_61e6a
+
+	include_con02 ||--o{ "0..10000" include_con02_group_7a5d0
+
+	group_cac01 ||--o| "0..1" include_con02
+	field('"t_docRef" as field_cac_docref <<StringType>>')
+	group_cac01 -- field_cac_docref
+	group('"__meta" as group_cac01_group_8f4b1')
+	field('"docRef" as group_cac01_field_1169c <<StringType>>')
+	group_cac01_group_8f4b1 -- group_cac01_field_1169c
+	field('"modelReference" as group_cac01_field_cfb40 <<StringType>>')
+	group_cac01_group_8f4b1 -- group_cac01_field_cfb40
+	field('"modelVersion" as group_cac01_field_17e3b <<StringType>>')
+	group_cac01_group_8f4b1 -- group_cac01_field_17e3b
+	field('"creator" as group_cac01_field_cdaf9 <<StringType>>')
+	group_cac01_group_8f4b1 -- group_cac01_field_cdaf9
+	field('"createdAt" as group_cac01_field_65672 <<DateTimeType>>')
+	group_cac01_group_8f4b1 -- group_cac01_field_65672
+	field('"modifier" as group_cac01_field_1fa32 <<StringType>>')
+	group_cac01_group_8f4b1 -- group_cac01_field_1fa32
+	field('"modifiedAt" as group_cac01_field_5cd66 <<DateTimeType>>')
+	group_cac01_group_8f4b1 -- group_cac01_field_5cd66
+	group('"extensions" as group_cac01_group_4c9a1')
+
+	group_cac01_group_8f4b1 ||--o| "0..1" group_cac01_group_4c9a1
+
+	group_cac01 ||--o| "0..1" group_cac01_group_8f4b1
+
+	InsuranceClaimCDMDocumentRoot ||--o{ "0..10" group_cac01
+
+	group('"__meta" as abc6a6767a60488754aace2accb73824_group_8f4b1')
+	field('"docRef" as abc6a6767a60488754aace2accb73824_field_1169c <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_1169c
+	field('"modelReference" as abc6a6767a60488754aace2accb73824_field_cfb40 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_cfb40
+	field('"modelVersion" as abc6a6767a60488754aace2accb73824_field_17e3b <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_17e3b
+	field('"creator" as abc6a6767a60488754aace2accb73824_field_cdaf9 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_cdaf9
+	field('"createdAt" as abc6a6767a60488754aace2accb73824_field_65672 <<DateTimeType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_65672
+	field('"modifier" as abc6a6767a60488754aace2accb73824_field_1fa32 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_1fa32
+	field('"modifiedAt" as abc6a6767a60488754aace2accb73824_field_5cd66 <<DateTimeType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_5cd66
+	group('"extensions" as abc6a6767a60488754aace2accb73824_group_4c9a1')
+
+	abc6a6767a60488754aace2accb73824_group_8f4b1 ||--o| "0..1" abc6a6767a60488754aace2accb73824_group_4c9a1
+
+	InsuranceClaimCDMDocumentRoot ||--o| "0..1" abc6a6767a60488754aace2accb73824_group_8f4b1
+
+}
+@enduml

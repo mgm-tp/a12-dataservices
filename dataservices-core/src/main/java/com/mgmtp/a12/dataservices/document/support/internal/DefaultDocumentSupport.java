@@ -32,6 +32,7 @@
 package com.mgmtp.a12.dataservices.document.support.internal;
 
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.List;
@@ -40,6 +41,7 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.time.StopWatch;
 
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
@@ -128,6 +130,28 @@ public class DefaultDocumentSupport implements DocumentSupport {
 		return !skipNonExisting && preferredLocale != null ? preferredLocale : firstLocale;
 	}
 
+	@Override
+	public DocumentV2 convertJSONToDocument(String documentModelName, JsonNode jsonNode) throws DataServicesDocumentProblemReporterException {
+		return convertJSONToDocument(documentModelName, jsonNode, null);
+	}
+
+	@Override
+	public DocumentV2 convertJSONToDocument(String documentModelName, JsonNode jsonNode, DocumentReference documentReference) {
+		if (jsonNode == null) {
+			throw new DataServicesDocumentSerializationException("JsonNode cannot be null");
+		}
+
+		// Convert JsonNode to String and deserialize
+		// NOTE: This currently uses toString() but centralizes the conversion in one place.
+		// Future optimization: Create a custom Reader that wraps JsonParser from jsonNode.traverse()
+		// to stream directly without String allocation. This requires the kernel deserializer to
+		// properly handle streaming input.
+		String jsonString = jsonNode.toString();
+		try (StringReader reader = new StringReader(jsonString)) {
+			return deserializeDocument(reader, documentModelName, documentJsonDeserializationConfig, documentReference);
+		}
+	}
+
 	private DocumentV2 deserializeDocument(Reader reader, String documentModelId, @NonNull DocumentDeserializationConfig deserializationConfig,
 		DocumentReference documentReference) {
 		try {
@@ -135,18 +159,18 @@ public class DefaultDocumentSupport implements DocumentSupport {
 			ListIProblemReporter pr = new ListIProblemReporter();
 			DocumentV2 document = documentV2Serializer.deserializeV2(reader, documentModelId, deserializationConfig, pr);
 			if (pr.hasProblems()) {
-				log.warn(String.format("Deserialization of document has failed. Reason: %s", pr));
+				log.warn("Deserialization of document has failed. Reason: %s".formatted(pr));
 				throw new DataServicesDocumentProblemReporterException(
 					ExceptionCodes.DOCUMENT_MODEL_DE_SERIALIZATION_EXCEPTION_CODE,
 					ExceptionKeys.DOCUMENT_CONVERSION_ERROR_KEY,
 					pr,
-					String.format("The validation of document %s",
+					"The validation of document %s".formatted(
 						Optional.ofNullable(documentReference)
 							.filter(dr -> !documentReference.getDocumentId().isEmpty())
-							.map(dr -> String.format("with document reference '%s' failed", dr))
-							.orElse(String.format("of document model '%s' failed", documentModelId))));
+							.map(dr -> "with document reference '%s' failed".formatted(dr))
+							.orElse("of document model '%s' failed".formatted(documentModelId))));
 			}
-			log.trace(String.format("Deserialization of document finished successfully in [%s]", stopWatch.getTime()));
+			log.trace("Deserialization of document finished successfully in [%s]".formatted(stopWatch.getTime()));
 			return document;
 		} catch (DocumentSerializationException exception) {
 			/**
@@ -156,7 +180,7 @@ public class DefaultDocumentSupport implements DocumentSupport {
 			throw new DataServicesDocumentSerializationException(
 				ExceptionCodes.DOCUMENT_MODEL_DE_SERIALIZATION_EXCEPTION_CODE,
 				ExceptionKeys.DOCUMENT_CONVERSION_ERROR_KEY,
-				String.format("The deserialization of document %s failed. The document will not be available for any data retrieval API", documentReference), exception);
+				"The deserialization of document %s failed. The document will not be available for any data retrieval API".formatted(documentReference), exception);
 		} catch (UnsupportedOperationException exception) {
 			// This should not happen, but we need to handle it anyway in a non-breaking way.
 			throw new DataServicesDocumentSerializationException(exception.getMessage()).withAnonymityMessage("Document deserialization failed.");

@@ -34,23 +34,25 @@ package com.mgmtp.a12.dataservices;
 import java.io.InputStreamReader;
 import java.util.Objects;
 
-import com.mgmtp.a12.dataservices.model.metadata.DocumentModelMetadataInjectorFactory;
 import com.mgmtp.a12.dataservices.model.metadata.internal.DocumentMetadataMetaModelProvider;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 
 public class TestDocumentMetadataMetaModelProvider extends DocumentMetadataMetaModelProvider {
 
+	public static final String DOCUMENT_META_DATA_MODEL_NAME = "document-meta-data";
+
+
 	public TestDocumentMetadataMetaModelProvider(DocumentModelUtils documentModelUtils) {
 		super(documentModelUtils, null);
 		this.model = documentModelUtils.deserializeDocumentModel(new InputStreamReader(
-			Objects.requireNonNull(getClass().getResourceAsStream("/com/mgmtp/a12/platform/model/document-meta-data.json"))));
+			Objects.requireNonNull(getClass().getResourceAsStream("/com/mgmtp/a12/rmc/metadata/document-meta-data.json"))));
 	}
 
 	@Override protected String getModelName() {
-		return DocumentModelMetadataInjectorFactory.DOCUMENT_META_DATA_MODEL_NAME;
+		return DOCUMENT_META_DATA_MODEL_NAME;
 	}
 
 	@Override protected String getModelPath() {
-		return "/com/mgmtp/a12/platform/model/document-meta-data.json";
+		return "/com/mgmtp/a12/rmc/metadata/document-meta-data.json";
 	}
 }

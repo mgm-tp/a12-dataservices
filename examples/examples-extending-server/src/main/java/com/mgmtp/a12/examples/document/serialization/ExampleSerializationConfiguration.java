@@ -37,7 +37,6 @@ import org.springframework.context.annotation.Configuration;
 
 import com.mgmtp.a12.kernel.md.document.api.services.DocumentDeserializationConfig;
 import com.mgmtp.a12.kernel.md.document.api.services.DocumentSerializationConfig;
-import com.mgmtp.a12.model.serialization.A12DefaultJsonPrettyPrinter;
 
 /**
  * An example for configuring document (de)serialization of Kernel behavior in Data Services.
@@ -57,9 +56,7 @@ public class ExampleSerializationConfiguration {
 	@Bean
 	public DocumentSerializationConfig customizedDocumentSerializationConfig() {
 		return DocumentSerializationConfig.builder()
-			.failIfUnreadableXML(true)
 			.skipTransientFields(true)
-			.prettyJsonPrinter(new A12DefaultJsonPrettyPrinter())
 			.build();
 	}
 
@@ -71,7 +68,6 @@ public class ExampleSerializationConfiguration {
 	@Bean
 	public DocumentDeserializationConfig customizedDocumentDeserializationConfig() {
 		return DocumentDeserializationConfig.builder()
-			.addTransientFields(true)
 			.removeEmptyFieldsAndGroups(false)
 			.build();
 	}

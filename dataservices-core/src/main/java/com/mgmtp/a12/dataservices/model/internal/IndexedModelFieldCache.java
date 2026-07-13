@@ -38,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
-import com.mgmtp.a12.dataservices.model.document.persistence.internal.DocumentModelLoader;
+import com.mgmtp.a12.dataservices.model.document.persistence.DocumentModelLoader;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.DocumentModelFieldsIndexer;
 import com.mgmtp.a12.kernel.md.model.api.IField;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelService;

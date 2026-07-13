@@ -35,11 +35,10 @@ import java.util.List;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mgmtp.a12.dataservices.client.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.client.rpc.internal.JsonRpc2RequestBuilder;
 import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
@@ -47,42 +46,38 @@ import com.mgmtp.a12.dataservices.rpc.JsonRpc2Response;
 
 public class JsonRpc2ClientDocumentIT extends AbstractSpringContextIT {
 
-	@BeforeClass
-	public void setUp() {
+	@BeforeMethod public void setUp() {
 		createModelFromFile(CONTRACT_MODEL_FILE);
 	}
 
-	@AfterClass
-	public void cleanUp() {
+	@AfterMethod public void cleanUp() {
 		cleanUpByDocumentModel(CONTRACT_MODEL_NAME);
 	}
 
-	@Test
-	public void createDocumentTest() throws JsonProcessingException {
+	@Test public void createDocumentTest() {
 		String documentFileContent = readFile(CONTRACT_DOCUMENT);
 		JsonRpc2RequestBuilder rpcRequest = requestBuilderFactory.newJsonRpc2RequestBuilder();
 
 		rpcRequest
-				.addMethodCall(CoreOperationConstants.ADD_DOCUMENT_OPERATION)
-				.id("AddDocument")
-				.putParameter("documentModelName", CONTRACT_MODEL_NAME)
-				.putParameter("locale", "en")
-				.putParameter("document", objectMapper.readTree(documentFileContent));
+			.addMethodCall(CoreOperationConstants.ADD_DOCUMENT_OPERATION)
+			.id("AddDocument")
+			.putParameter("documentModelName", CONTRACT_MODEL_NAME)
+			.putParameter("locale", "en")
+			.putParameter("document", objectMapper.readTree(documentFileContent));
 
 		rpcRequest
-				.addMethodCall(CoreOperationConstants.GET_DOCUMENT_OPERATION)
-				.id("GetDocument")
-				.putParameter("docRef", "#{#AddDocument.metadata.docRef}");
+			.addMethodCall(CoreOperationConstants.GET_DOCUMENT_OPERATION)
+			.id("GetDocument")
+			.putParameter("docRef", "#{#AddDocument.metadata.docRef}");
 
 		List<JsonRpc2Response> responseList = rpcOperationsClient.invoke(rpcRequest.build());
 
 		responseList.forEach(res -> {
-			Assert.assertNull(res.getError(), String.format("Response [%s] should not contain error", res.getId()));
-			Assert.assertNotNull(res.getResult(), String.format("Response [%s] should contain result", res.getId()));
+			Assert.assertNull(res.getError(), "Response [%s] should not contain error".formatted(res.getId()));
+			Assert.assertNotNull(res.getResult(), "Response [%s] should contain result".formatted(res.getId()));
 		});
 
-
-		responseList.stream().filter(e ->  "GetDocument".equals(e.getId())).findFirst().ifPresent(e -> {
+		responseList.stream().filter(e -> "GetDocument".equals(e.getId())).findFirst().ifPresent(e -> {
 			JSONAssert.assertEquals(documentFileContent, e.getResult().get("document").toPrettyString(), false);
 		});
 	}

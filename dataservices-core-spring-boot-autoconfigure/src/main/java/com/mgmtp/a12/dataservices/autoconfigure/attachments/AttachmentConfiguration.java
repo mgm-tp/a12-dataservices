@@ -71,6 +71,7 @@ import com.mgmtp.a12.dataservices.authorization.DocumentPermissionEvaluator;
 import com.mgmtp.a12.dataservices.authorization.ModelPermissionEvaluator;
 import com.mgmtp.a12.dataservices.authorization.internal.DefaultAttachmentPermissionEvaluator;
 import com.mgmtp.a12.dataservices.autoconfigure.attachments.internal.contentstore.ContentStoreConfiguration;
+import com.mgmtp.a12.dataservices.common.content.ContentTypeDetector;
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.configuration.internal.validation.condition.OnEnabledJobCondition;
 import com.mgmtp.a12.dataservices.configuration.internal.validation.condition.attachment.OnEnabledAttachmentCondition;
@@ -204,7 +205,7 @@ import static com.mgmtp.a12.dataservices.autoconfigure.ServiceFactoryConfigurati
 	 */
 	@Bean
 	public DefaultAttachmentService defaultAttachmentService(IAttachmentRepository attachmentRepository, AttachmentHeaderRepository attachmentHeaderRepository,
-		DirtyAttachmentService dirtyAttachmentService, QueryService queryService) {
+		DirtyAttachmentService dirtyAttachmentService, QueryService queryService, ContentTypeDetector contentTypeDetector) {
 		System.setProperty("thumbnailator.conserveMemoryWorkaround",
 			String.valueOf(
 				dataServicesCoreProperties.getAttachments().getThumbnail().getGeneration().getThumbnailator().getConserveMemoryWorkaround().isEnabled()));
@@ -219,7 +220,8 @@ import static com.mgmtp.a12.dataservices.autoconfigure.ServiceFactoryConfigurati
 			modelPermissionEvaluator,
 			attachmentRetryRegistry,
 			thumbnailUrlGenerator,
-			queryService
+			queryService,
+			contentTypeDetector
 		);
 	}
 

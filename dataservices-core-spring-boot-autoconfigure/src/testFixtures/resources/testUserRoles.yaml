@@ -58,10 +58,7 @@ roles:
   - name: DocumentWrite
     description: Role should allow write permissions to user
     accessRights:
-      - MODEL_CREATE
-      - MODEL_UPDATE
       - MODEL_READ
-      - MODEL_DELETE
       - DOCUMENT_CREATE
       - DOCUMENT_UPDATE
       - DOCUMENT_PARTIAL_UPDATE

@@ -79,7 +79,7 @@ public class RpcModifyDocumentOperationIT extends AbstractSpringContextIT {
 	public void modifySingleDocument() throws IOException {
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "templates/document_modify_template.json");
 		String newBusinessPartnerVersion = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "modify/doc_businesspartner_content.json");
-		request = String.format(request, businessPartner1DocRef, newBusinessPartnerVersion);
+		request = request.formatted(businessPartner1DocRef, newBusinessPartnerVersion);
 
 		JsonRpc2Response response = sendRpcRequest(request).getFirst();
 		Assert.assertTrue(response.isSuccess());
@@ -95,11 +95,11 @@ public class RpcModifyDocumentOperationIT extends AbstractSpringContextIT {
 		String newBusinessPartnerVersion = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "modify/doc_businesspartner_content.json");
 		String newAddressVersion = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "modify/doc_address_content.json");
 		request =
-			String.format(request, 
-					businessPartner1DocRef, newBusinessPartnerVersion, 
-					businessPartner2DocRef, newBusinessPartnerVersion, 
-					address1DocRef, newAddressVersion, 
-					address2DocRef, newAddressVersion);
+			request.formatted(
+				businessPartner1DocRef, newBusinessPartnerVersion,
+				businessPartner2DocRef, newBusinessPartnerVersion,
+				address1DocRef, newAddressVersion,
+				address2DocRef, newAddressVersion);
 
 		List<JsonRpc2Response> response = sendRpcRequest(request);
 		Assert.assertFalse(response.stream().anyMatch(e -> !e.isSuccess()));
@@ -114,7 +114,7 @@ public class RpcModifyDocumentOperationIT extends AbstractSpringContextIT {
 	public void modifyNonExistingDocument() throws IOException {
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "templates/document_modify_template.json");
 		String newBusinessPartnerVersion = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "modify/doc_businesspartner_content.json");
-		request = String.format(request, DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL + "/155477884456", newBusinessPartnerVersion);
+		request = request.formatted(DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL + "/155477884456", newBusinessPartnerVersion);
 		JsonRpc2Response response = sendRpcRequest(request).getFirst();
 		OperationError expectedError = createErrorTemplate("error.modify_document.document.notFound", "Document [BusinessPartner/155477884456] was not found",
 			"Document [BusinessPartner/155477884456] not found", "modifyDocument");

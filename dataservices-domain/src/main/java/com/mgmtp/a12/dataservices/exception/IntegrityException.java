@@ -124,7 +124,7 @@ public class IntegrityException extends BaseException {
 	 * @param message human-readable description; may be null.
 	 * @param cause the underlying cause; may be null.
 	 */
-	protected IntegrityException(int code, String key, String message, Throwable cause) {
+	public IntegrityException(int code, String key, String message, Throwable cause) {
 		super(code, key, message, cause);
 	}
 }

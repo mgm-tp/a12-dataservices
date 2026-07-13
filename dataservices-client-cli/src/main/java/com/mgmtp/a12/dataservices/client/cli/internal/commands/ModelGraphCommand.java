@@ -41,11 +41,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.client.cli.internal.IApplicationOutput;
 import com.mgmtp.a12.dataservices.client.relationship.RelationshipClient;
 import com.mgmtp.a12.dataservices.common.exception.UnexpectedException;
@@ -59,12 +58,14 @@ import lombok.extern.slf4j.Slf4j;
 @Component public class ModelGraphCommand extends AbstractRPCCommand<ApplicationArguments> {
 
 	public static final String MODEL_GRAPH_COMMAND = "model graph";
-	@Autowired private final RelationshipClient relationshipClient;
-	@Autowired private ObjectMapper objectMapper;
 
-	public ModelGraphCommand(@NonNull RelationshipClient relationshipClient, @NonNull IApplicationOutput applicationOutput) {
+	private final RelationshipClient relationshipClient;
+	private final ObjectMapper objectMapper;
+
+	public ModelGraphCommand(@NonNull IApplicationOutput applicationOutput, @NonNull RelationshipClient relationshipClient, @NonNull ObjectMapper objectMapper) {
 		super(applicationOutput);
 		this.relationshipClient = relationshipClient;
+		this.objectMapper = objectMapper;
 	}
 
 	@Override protected CommandResponse<ApplicationArguments> executeRemoteCommand(ApplicationArguments args) {
@@ -121,8 +122,8 @@ import lombok.extern.slf4j.Slf4j;
 
 			@Override public List<String> getExamples() {
 				return List.of(
-					String.format("%s %s", HelpCommand.JAVA_COMMAND, MODEL_GRAPH_COMMAND),
-					String.format("%s %s --output=./example/output.json", HelpCommand.JAVA_COMMAND, MODEL_GRAPH_COMMAND)
+					"%s %s".formatted(HelpCommand.JAVA_COMMAND, MODEL_GRAPH_COMMAND),
+					"%s %s --output=./example/output.json".formatted(HelpCommand.JAVA_COMMAND, MODEL_GRAPH_COMMAND)
 				);
 			}
 		};

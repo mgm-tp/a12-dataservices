@@ -47,8 +47,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.client.cli.internal.AbstractCliIT;
 import com.mgmtp.a12.dataservices.client.model.ModelsClient;
 
@@ -122,21 +122,21 @@ public class JsonRpcCommandIT extends AbstractCliIT {
 
 	@Test
 	public void testInvalidOption() {
-		client.run(new DefaultApplicationArguments("json", "rpc", String.format("--invalidOne=%s", FILE_1_OUTPUT_PATH)));
+		client.run(new DefaultApplicationArguments("json", "rpc", "--invalidOne=%s".formatted(FILE_1_OUTPUT_PATH)));
 		Assertions.assertThat(getCleanLineEndings(stderr.toString())).isEqualTo(USAGE_MSG + RPC_HELP_OUTPUT);
 		assertExit(EXIT_INVALID_ARGS);
 	}
 
 	@Test
 	public void testPathMissing() {
-		client.run(new DefaultApplicationArguments("json", "rpc", String.format("--output_dir=%s", FILE_1_OUTPUT_PATH)));
+		client.run(new DefaultApplicationArguments("json", "rpc", "--output_dir=%s".formatted(FILE_1_OUTPUT_PATH)));
 		Assertions.assertThat(getCleanLineEndings(stderr.toString())).isEqualTo(USAGE_MSG + RPC_HELP_OUTPUT);
 		assertExit(EXIT_INVALID_ARGS);
 	}
 
 	@Test
 	public void testOutputDirMissing() {
-		client.run(new DefaultApplicationArguments("json", "rpc", String.format("--path=%s", FILE_1_PATH)));
+		client.run(new DefaultApplicationArguments("json", "rpc", "--path=%s".formatted(FILE_1_PATH)));
 		Assertions.assertThat(getCleanLineEndings(stderr.toString())).isEqualTo(USAGE_MSG + RPC_HELP_OUTPUT);
 		assertExit(EXIT_INVALID_ARGS);
 	}
@@ -209,8 +209,8 @@ public class JsonRpcCommandIT extends AbstractCliIT {
 
 	private void runClientWithPath(String relativePath, String relativeOutputDir) {
 		client.run(new DefaultApplicationArguments("json", "rpc",
-			String.format("--input_path=%s", getFullPath(relativePath)),
-			String.format("--output_dir=%s", getFullPath(relativeOutputDir))
+			"--input_path=%s".formatted(getFullPath(relativePath)),
+			"--output_dir=%s".formatted(getFullPath(relativeOutputDir))
 		));
 	}
 

@@ -42,8 +42,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 @Component public class ResourceFunctions {
 
@@ -65,10 +65,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 	}
 
 	public <T> T loadResourceAsObject(String resourcePath, TypeReference<T> valueTypeRef, Object... params) throws IOException {
-		return objectMapper.readValue(String.format(loadResource(resourcePath), params), valueTypeRef);
+		return objectMapper.readValue(loadResource(resourcePath).formatted(params), valueTypeRef);
 	}
 
 	public Resource loadResourceFromClassPath(String classPath) {
-		return resourceLoader.getResource(String.format("classpath:%s", classPath));
+		return resourceLoader.getResource("classpath:%s".formatted(classPath));
 	}
 }

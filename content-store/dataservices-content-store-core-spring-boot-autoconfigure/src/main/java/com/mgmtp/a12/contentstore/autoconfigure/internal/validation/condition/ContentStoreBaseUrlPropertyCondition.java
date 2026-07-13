@@ -52,7 +52,7 @@ public class ContentStoreBaseUrlPropertyCondition extends AbstractContentStoreCo
 		if (evaluateCondition(contentStoreProperties)) {
 			return makeValidMessage("Valid content store base url", CONTENT_STORE_BASE_URL);
 		} else {
-			throw new UnexpectedException(String.format("%s is required and cannot be blank for starting content store application", CONTENT_STORE_BASE_URL))
+			throw new UnexpectedException("%s is required and cannot be blank for starting content store application".formatted(CONTENT_STORE_BASE_URL))
 				.withAnonymityMessage("Base URL is missing.");
 		}
 	}

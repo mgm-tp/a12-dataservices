@@ -140,7 +140,7 @@ public class RelationshipRankService {
 			.orElse(null);
 
 		String boundaryComplementaryOrder =
-			relationshipLinkRepository.findComplementaryBoundaryOrder(relationshipModelName, sourceRole.getRole(), targetRole.getRole(), sourceRole.getDocRef()).orElse(null);
+			relationshipLinkRepository.findComplementaryBoundaryOrder(relationshipModelName, targetRole.getRole(), targetRole.getDocRef()).orElse(null);
 
 		return findNextAvailableRank(relationshipModelName, sourceRole.getRole(), boundaryDocRef, new ImmutablePair<>(boundaryComplementaryOrder, null));
 	}
@@ -188,7 +188,7 @@ public class RelationshipRankService {
 			OffsetBasedPageRequest.ofOffset(0, 1, Sort.by(Arrays.stream(ORDER_BY_ROLES_SORT_COLUMNS).map(order::getOrder).toList()))
 		);
 
-		return page.getTotalElements() > 0 ? Optional.of(page.getContent().get(0)) : Optional.empty();
+		return page.getTotalElements() > 0 ? Optional.of(page.getContent().getFirst()) : Optional.empty();
 	}
 
 	private Pair<? extends RelationshipLink, ? extends RelationshipLink> findLinksInBetween(
@@ -213,7 +213,10 @@ public class RelationshipRankService {
 		if (!allLinks.isEmpty()) {
 			throw RpcExceptionSupport.createException(ExceptionCodes.RELATIONSHIP_LINK_ADD_PREDECESSOR_LINK_NOT_FOUND_EXCEPTION_CODE,
 				ExceptionKeys.RELATIONSHIP_LINK_ADD_PREDECESSOR_LINK_NOT_FOUND_ERROR_KEY,
-				"Missing predecessor Link", String.format("Predecessor link [%s] not found", predecessorRef), null);
+				"Missing predecessor Link",
+				"Predecessor link [%s] not found in relationship [%s] for role [%s] of document [%s]"
+					.formatted(predecessorRef, relationshipModelName, sourceRole, docRef),
+				null);
 		}
 		return new ImmutablePair<>(null, null);
 	}

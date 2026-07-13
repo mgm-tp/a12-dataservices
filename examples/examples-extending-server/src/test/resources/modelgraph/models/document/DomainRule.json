@@ -2,7 +2,7 @@
   "header": {
     "id": "DomainRule",
     "modelType": "document",
-    "modelVersion": "28.4.0",
+    "modelVersion": "29.2.0",
     "locales": [
       {
         "code": "en"
@@ -17,7 +17,6 @@
     ],
     "modelReferences": [
       {
-        "alias": "DomainElement",
         "modelType": "document",
         "purpose": "include",
         "reference": "DomainElement"
@@ -44,7 +43,9 @@
           "name": "GeneralInformation",
           "Group": {
             "repeatability": 1,
-            "modelAlias": "DomainElement"
+            "includeConfig": {
+              "reference": "DomainElement"
+            }
           }
         }
       ]

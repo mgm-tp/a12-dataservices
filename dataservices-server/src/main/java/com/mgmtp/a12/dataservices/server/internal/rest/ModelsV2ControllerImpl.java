@@ -35,8 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.net.URISyntaxException;
-import java.util.List;
+import java.util.SortedSet;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -55,14 +54,15 @@ import com.mgmtp.a12.dataservices.api.common.rest.NoCache;
 import com.mgmtp.a12.dataservices.common.exception.UnexpectedException;
 import com.mgmtp.a12.dataservices.exception.ExceptionCodes;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
+import com.mgmtp.a12.dataservices.experimental.ListIProblemReporter;
+import com.mgmtp.a12.dataservices.initialization.internal.ModelImportConfiguration;
+import com.mgmtp.a12.dataservices.initialization.internal.RuntimeModelImporter;
 import com.mgmtp.a12.dataservices.model.GenericModel;
 import com.mgmtp.a12.dataservices.model.ModelService;
-import com.mgmtp.a12.dataservices.model.bulkload.BulkImporterConfiguration;
-import com.mgmtp.a12.dataservices.model.bulkload.ModelBulkImporter;
 import com.mgmtp.a12.dataservices.model.document.SecuredValidationCodeGenerator;
 import com.mgmtp.a12.dataservices.server.uaa.SecuredController;
-import com.mgmtp.a12.dataservices.experimental.ListIProblemReporter;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -83,7 +83,7 @@ import lombok.RequiredArgsConstructor;
 	static final String MODEL_ID_PARAM = "model-id";
 
 	private final ModelService modelService;
-	private final ModelBulkImporter bulkImporter;
+	private final RuntimeModelImporter modelImporter;
 	private final SecuredValidationCodeGenerator securedValidationCodeGenerator;
 
 	/**
@@ -133,7 +133,7 @@ import lombok.RequiredArgsConstructor;
 	 */
 	@PostMapping(path = { "", "/" }, produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	@Transactional
-	public GenericModel createModel(Reader modelContent) {
+	public GenericModel createModel(@NonNull Reader modelContent) {
 		try {
 			return modelService.create(IOUtils.toString(modelContent));
 		} catch (IOException e) {
@@ -168,12 +168,17 @@ import lombok.RequiredArgsConstructor;
 	public String generateValidationCode(@PathVariable(MODEL_ID_PARAM) String modelName) {
 		ListIProblemReporter pr = new ListIProblemReporter();
 		String result = securedValidationCodeGenerator.generateValidationCode(modelName, pr);
-		pr.validate(ExceptionCodes.VALIDATION_CODES_GENERATION_EXCEPTION_CODE, ExceptionKeys.VALIDATION_CODES_GENERATION_ERROR_KEY, "Error while validation codes generation");
+		pr.validate(ExceptionCodes.VALIDATION_CODES_GENERATION_EXCEPTION_CODE, ExceptionKeys.VALIDATION_CODES_GENERATION_ERROR_KEY,
+			"Error while validation codes generation");
 		return result;
 	}
 
 	/**
 	 * Endpoint allowing a bulk import of models to database.
+	 *
+	 * This method is intentionally not `@Transactional`. Each model is imported in its own
+	 * transaction at the service layer, allowing partial success when some models fail and are
+	 * retried due to dependency ordering.
 	 *
 	 * @param modelBulk Stream of zip of models.
 	 * @return List of imported model IDs.
@@ -186,31 +191,17 @@ import lombok.RequiredArgsConstructor;
 	 * is not a valid A12 model.
 	 */
 	@PutMapping(path = { "", "/" }, produces = { MediaType.APPLICATION_JSON_VALUE })
-	@Transactional
-	public List<String> importModelBulk(InputStream modelBulk) {
+	public SortedSet<String> importModelBulk(@NonNull InputStream modelBulk) {
 		File tempFile = makeTempFile();
 		try {
 			FileUtils.copyInputStreamToFile(modelBulk, tempFile);
+			return modelImporter.importModels(tempFile.toURI().toString(),
+				ModelImportConfiguration.builder().overwriteModelsDefault(true).overwriteDocumentModels(true).build(), true);
 		} catch (IOException e) {
-			throw new UnexpectedException(ExceptionKeys.FILE_SYSTEM_IO_ERROR_KEY, "Unable to save bulk to tempfile");
-		}
-		return importModelBulkInternal(tempFile);
-	}
-
-	private List<String> importModelBulkInternal(File tempFile) {
-		try {
-			return bulkImporter.doImport(getBulkLocation(tempFile), new BulkImporterConfiguration());
-		} catch (URISyntaxException e) {
-			throw new UnexpectedException(ExceptionKeys.URI_FORMATION_ERROR_KEY, "Invalid base URI of bulk");
-		} catch (IOException e) {
-			throw new UnexpectedException(ExceptionKeys.FILE_SYSTEM_IO_ERROR_KEY, "Problem getting files in bulk");
+			throw new UnexpectedException(ExceptionKeys.FILE_SYSTEM_IO_ERROR_KEY, "Unable to import models from bulk archive");
 		} finally {
 			FileUtils.deleteQuietly(tempFile);
 		}
-	}
-
-	private String getBulkLocation(File tempFile) {
-		return tempFile.toURI().toString();
 	}
 
 	private File makeTempFile() {

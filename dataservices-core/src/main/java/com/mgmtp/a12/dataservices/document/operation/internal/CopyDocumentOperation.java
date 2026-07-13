@@ -33,15 +33,16 @@ package com.mgmtp.a12.dataservices.document.operation.internal;
 
 import java.util.Locale;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.mgmtp.a12.dataservices.common.anonymizing.Anonymizer;
 import com.mgmtp.a12.dataservices.common.exception.BaseException;
 import com.mgmtp.a12.dataservices.common.exception.BaseException.MessagePriority;
-import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
+import com.mgmtp.a12.dataservices.document.DocumentReferenceResult;
 import com.mgmtp.a12.dataservices.document.DocumentService;
 import com.mgmtp.a12.dataservices.document.events.DocumentAfterCreateEvent;
 import com.mgmtp.a12.dataservices.document.events.DocumentAfterLoadEvent;
@@ -49,13 +50,17 @@ import com.mgmtp.a12.dataservices.document.events.DocumentBeforeCreateEvent;
 import com.mgmtp.a12.dataservices.document.events.DocumentBeforeRepositorySaveEvent;
 import com.mgmtp.a12.dataservices.document.events.internal.DocumentAfterRepositoryCreateEvent;
 import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
-import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.rpc.RemoteOperation;
 import com.mgmtp.a12.dataservices.rpc.RpcExceptionSupport;
+import com.mgmtp.a12.dataservices.rpc.internal.RpcDocRefParser;
 import com.mgmtp.a12.dataservices.utils.OperationContextHolder;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+
+import static com.mgmtp.a12.dataservices.exception.ExceptionCodes.ACCESS_DENIED_EXCEPTION_CODE;
+import static com.mgmtp.a12.dataservices.exception.ExceptionCodes.RPC_ERROR_EXCEPTION_CODE;
+import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.COPY_DOCUMENT_ERROR_KEY;
+import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.SECURITY_NOT_AUTHORIZED_ERROR_KEY;
 
 /**
  * Copy the document together with its attachments to a new one with the new {@link DocumentReference}.
@@ -68,6 +73,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CopyDocumentOperation extends AbstractDocumentOperation {
 
 	private static final String COULD_NOT_COPY_DOCUMENT_MESSAGE = "Could not copy document";
+	private static final String OPERATION_FAILED_WITH_EXCEPTION = "COPY_DOCUMENT operation failed with the following exception";
 
 	public CopyDocumentOperation(DocumentService documentService, Anonymizer anonymizer) {
 		super(documentService, anonymizer);
@@ -84,22 +90,26 @@ public class CopyDocumentOperation extends AbstractDocumentOperation {
 	 * @event {@link DocumentAfterLoadEvent}
 	 */
 	@Transactional
-	public DocumentReference rpc(@NonNull @JsonRpcParam("docRef") DocumentReference docRef, @JsonRpcParam("locale") Locale locale) {
-		log.debug("{} called with parameters [docRef={}, locale={}]", CoreOperationConstants.COPY_DOCUMENT_OPERATION, anonymizer.apply(docRef.toString()),
+	public DocumentReferenceResult rpc(@JsonRpcParam("docRef") String docRef, @JsonRpcParam("locale") Locale locale) {
+		DocumentReference documentReference = RpcDocRefParser.parseDocRef(docRef);
+		log.debug("{} called with parameters [docRef={}, locale={}]", CoreOperationConstants.COPY_DOCUMENT_OPERATION, anonymizer.apply(documentReference.toString()),
 			locale);
+
 		try {
-			DataServicesDocument sourceDocument = documentService.load(docRef)
-				.orElseThrow(() -> new NotFoundException(ExceptionKeys.DOCUMENT_NOT_FOUND_ERROR_KEY, String.format("Document [%s] not found", docRef)));
-			DataServicesDocument result = documentService.create(sourceDocument.getKernelDocument().withId(null), locale);
+			DataServicesDocument result = documentService.copy(documentReference, locale);
 			OperationContextHolder.put(result);
-			return result.getMetadata().getDocRef();
+			return new DocumentReferenceResult(result.getMetadata().getDocRef());
 		} catch (BaseException e) {
-			log.info("{} operation failed with the following exception", CoreOperationConstants.COPY_DOCUMENT_OPERATION, e);
-			e.updateShortMessage(ExceptionKeys.COPY_DOCUMENT_ERROR_KEY, COULD_NOT_COPY_DOCUMENT_MESSAGE, MessagePriority.LOW);
+			log.info(OPERATION_FAILED_WITH_EXCEPTION, e);
+			e.updateShortMessage(COPY_DOCUMENT_ERROR_KEY, COULD_NOT_COPY_DOCUMENT_MESSAGE, MessagePriority.LOW);
 			throw e;
+		} catch (AccessDeniedException e) {
+			log.info(OPERATION_FAILED_WITH_EXCEPTION, e);
+			throw RpcExceptionSupport.createException(ACCESS_DENIED_EXCEPTION_CODE, SECURITY_NOT_AUTHORIZED_ERROR_KEY,
+				COULD_NOT_COPY_DOCUMENT_MESSAGE, e.getMessage(), RemoteOperation.RemoteOperationHelper.getOperationId(this.getClass()), e);
 		} catch (Exception e) {
-			log.info("{} operation failed with the following exception", CoreOperationConstants.COPY_DOCUMENT_OPERATION, e);
-			throw RpcExceptionSupport.createException(ExceptionKeys.COPY_DOCUMENT_ERROR_KEY, COULD_NOT_COPY_DOCUMENT_MESSAGE,
+			log.info(OPERATION_FAILED_WITH_EXCEPTION, e);
+			throw RpcExceptionSupport.createException(RPC_ERROR_EXCEPTION_CODE, COPY_DOCUMENT_ERROR_KEY, COULD_NOT_COPY_DOCUMENT_MESSAGE,
 				e.getMessage(), RemoteOperation.RemoteOperationHelper.getOperationId(this.getClass()));
 		}
 	}

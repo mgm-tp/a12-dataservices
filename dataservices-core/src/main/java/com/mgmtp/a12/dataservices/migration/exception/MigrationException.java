@@ -45,4 +45,14 @@ public class MigrationException extends RuntimeException {
 	public MigrationException(String message) {
 		super(message);
 	}
+
+	/**
+	 * Creates a new `MigrationException` with an underlying cause.
+	 *
+	 * @param message Human-readable description of the failure; may be `null`.
+	 * @param cause   The exception that triggered this failure; may be `null`.
+	 */
+	public MigrationException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

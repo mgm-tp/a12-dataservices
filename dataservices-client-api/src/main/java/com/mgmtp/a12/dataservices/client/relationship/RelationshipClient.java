@@ -32,11 +32,12 @@
 package com.mgmtp.a12.dataservices.client.relationship;
 
 import com.mgmtp.a12.dataservices.relationship.ModelGraphRoot;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * RelationshipClient interface provides access to the model graph.
  */
-public interface RelationshipClient {
+@OnlyForUsage public interface RelationshipClient {
 
 	/**
 	 * Retrieves the model graph containing document models and relationship model references.

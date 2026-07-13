@@ -57,9 +57,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
+import com.mgmtp.a12.dataservices.internal.TransactionHandler;
 import com.mgmtp.a12.dataservices.migration.ErrorHandling;
 import com.mgmtp.a12.dataservices.migration.MigrationStep;
 import com.mgmtp.a12.dataservices.migration.MigrationTask;
@@ -70,6 +69,7 @@ import com.vdurmont.semver4j.Semver;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.ObjectMapper;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -93,7 +93,7 @@ import lombok.extern.slf4j.Slf4j;
 			.sorted(Map.Entry.comparingByKey())
 			.map(Map.Entry::getValue)
 			.flatMap(List::stream)
-			.forEach(migrationStep -> transactionHandler.runMethodInNewTransaction(() -> processMigrationStep(migrationStep)));
+			.forEach(this::processMigrationStep);
 	}
 
 	private Map<Semver, List<Object>> resolveMigrationStepsWithVersions() {
@@ -126,7 +126,7 @@ import lombok.extern.slf4j.Slf4j;
 
 	private Object resolveUniqueBean(List<Map.Entry<String, Object>> beanInstances, Class<?> beanClass, DefaultListableBeanFactory beanFactory) {
 		if (beanInstances.size() == 1) {
-			return beanInstances.get(0).getValue(); // Only one bean available
+			return beanInstances.getFirst().getValue(); // Only one bean available
 		}
 
 		// Look for the @Primary bean in multiple instances
@@ -153,7 +153,7 @@ import lombok.extern.slf4j.Slf4j;
 		try {
 			return new Semver(version);
 		} catch (Exception e) {
-			log.warn(String.format("Semantic version defined in the migration step [%s] has wrong format.", migrationStepBean.getClass().getName()));
+			log.warn("Semantic version defined in the migration step [%s] has wrong format.".formatted(migrationStepBean.getClass().getName()));
 			throw e;
 		}
 	}
@@ -204,7 +204,7 @@ import lombok.extern.slf4j.Slf4j;
 		if (runTaskAlways || runStepAlways || alreadyExecuted == null) {
 			return true;
 		} else {
-			log.info(String.format("TASK method [%s] on class [%s] was already executed at [%tc].", taskMethod.getName(),
+			log.info("TASK method [%s] on class [%s] was already executed at [%tc].".formatted(taskMethod.getName(),
 				taskMethod.getDeclaringClass().getCanonicalName(), alreadyExecuted.getExecutionDate().atOffset(ZoneOffset.UTC)));
 			return false;
 		}
@@ -236,22 +236,31 @@ import lombok.extern.slf4j.Slf4j;
 		try {
 			// we are executing method only if migration task annotation is present
 			if (migrationTask != null) {
-				Object object = executeMigrationTask(method, stepInstance, migrationTask.name());
-				persistMigrationStep(method, stepClass, migrationStep, object);
+				// Run execution and persist in one REQUIRES_NEW transaction. If the task is
+				// @Transactional and throws, only this transaction is poisoned and rolls back.
+				transactionHandler.runMethodInNewTransaction(() -> {
+					try {
+						Object resultHolder = executeMigrationTask(method, stepInstance, migrationTask.name());
+						persistMigrationStep(method, stepClass, migrationStep, resultHolder);
+					} catch (InvocationTargetException | IllegalAccessException e) {
+						throw new MigrationException(
+							"Migration task [%s#%s] cannot be invoked.".formatted(method.getDeclaringClass().getSimpleName(), method.getName()), e);
+					}
+				});
 			}
 		} catch (Exception e) {
-			log.error(String.format("TASK method [%s] on class [%s] can't be executed!",
+			log.error("TASK method [%s] on class [%s] can't be executed!".formatted(
 				method.getName(), method.getDeclaringClass().getCanonicalName()), e);
 
 			if (errorHandling == ErrorHandling.HALT) {
 				throw new MigrationException(
-					String.format("Migration task [%s#%s] execution failed and error handling is set to HALT. Stopping the migration.",
+					"Migration task [%s#%s] execution failed and error handling is set to HALT. Stopping the migration.".formatted(
 						stepClass.getSimpleName(),
 						method.getName()));
 			}
 
 			if (errorHandling == ErrorHandling.MARK_RUN) {
-				persistMigrationStep(method, stepClass, migrationStep, null);
+				transactionHandler.runMethodInNewTransaction(() -> persistMigrationStep(method, stepClass, migrationStep, null));
 			}
 
 			// if error handling is equal to CONTINUE, we silently ignore the error
@@ -272,7 +281,7 @@ import lombok.extern.slf4j.Slf4j;
 		}
 
 		watch.stop();
-		log.info(String.format("TASK method [%s] on class [%s] has been executed in [%sms]..", method.getName(), method.getDeclaringClass().getCanonicalName(),
+		log.info("TASK method [%s] on class [%s] has been executed in [%sms]..".formatted(method.getName(), method.getDeclaringClass().getCanonicalName(),
 			watch.getTotalTimeMillis()));
 		return executionResult;
 	}
@@ -287,12 +296,7 @@ import lombok.extern.slf4j.Slf4j;
 		step.setAuthor(StringUtils.trimToNull(migrationStep.author()));
 		step.setExecutedVersion(versionInfo.getA12ServicesVersion());
 
-		try {
-			step.setMetadata(metadata == null ? null : objectMapper.writeValueAsString(metadata));
-		} catch (JsonProcessingException e) {
-			log.error("Unable to serialize metadata to json for migration step name: {}, version {} and method: {}", migrationStep.name(),
-				migrationStep.version(), method.getName());
-		}
+		step.setMetadata(metadata == null ? null : objectMapper.writeValueAsString(metadata));
 
 		migrationStepRepository.save(step);
 		putAlreadyExecuted(step);

@@ -34,9 +34,12 @@ package com.mgmtp.a12.dataservices.query.validation.internal.matching;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
+import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.query.QueryContext;
 import com.mgmtp.a12.dataservices.query.annotation.QueryOperatorValidator;
 import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
@@ -51,13 +54,30 @@ import lombok.RequiredArgsConstructor;
 @QueryOperatorValidator(ExactMatchOperator.class)
 @Component public class ExactMatchOperatorValidator implements IQueryOperatorValidator {
 
+	private final DataServicesCoreProperties dataServicesCoreProperties;
+
 	@Override public @NonNull Collection<ValidationItem> validate(ILogicOperator operator, String parentDocumentModel, String[] path, QueryContext context, boolean validationEnabled) {
 		if (validationEnabled && operator instanceof ExactMatchOperator<?> exactMatchOperator) {
-			if (exactMatchOperator.getValue() == null) {
-				return List.of(ValidationItem.invalid(path, "Please provide value for %s operator.".formatted(context.getOperatorName(operator))));
-			} else {
-				return List.of(ValidationItem.valid(path, "Validation passed for operator %s".formatted(context.getOperatorName(operator))));
+			String operatorName = context.getOperatorName(operator);
+			boolean hasValue = exactMatchOperator.getValue() != null;
+			boolean hasValues = !CollectionUtils.isEmpty(exactMatchOperator.getValues());
+
+			if (!hasValue && !hasValues) {
+				return List.of(ValidationItem.invalid(path, "Please provide value or values for %s operator.".formatted(operatorName)));
 			}
+			if (hasValue && hasValues) {
+				return List.of(ValidationItem.invalid(path, "Please provide either value or values, not both, for %s operator.".formatted(operatorName)));
+			}
+			if (hasValues) {
+				if (exactMatchOperator.getValues().stream().anyMatch(Objects::isNull)) {
+					return List.of(ValidationItem.invalid(path, "Please ensure none of the values are null for %s operator.".formatted(operatorName)));
+				}
+				int maxValuesCount = dataServicesCoreProperties.getQuery().getExactMatch().getMaxValuesCount();
+				if (exactMatchOperator.getValues().size() > maxValuesCount) {
+					return List.of(ValidationItem.invalid(path, "Please reduce the number of values to a value lower than or equal to %s for the %s operator.".formatted(maxValuesCount, operatorName)));
+				}
+			}
+			return List.of(ValidationItem.valid(path, "Validation passed for operator %s".formatted(operatorName)));
 		}
 		return Collections.emptyList();
 	}

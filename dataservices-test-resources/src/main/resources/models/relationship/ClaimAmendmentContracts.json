@@ -1,0 +1,105 @@
+{
+  "header": {
+    "id": "ClaimAmendmentContracts",
+    "modelType": "relationship",
+    "modelVersion": "4.0.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Insurance Claim and Amendment Contracts"
+      },
+      {
+        "locale": "de",
+        "text": "Versicherungsanspruch und Änderungsverträge"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "InsuranceClaimSuper",
+        "reference": "InsuranceClaimSuper"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "Contract",
+        "reference": "Contract"
+      }
+    ]
+  },
+  "content": {
+    "duplicatesAllowed": true,
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Insurance Claim and Amendment Contracts"
+      },
+      {
+        "locale": "de",
+        "text": "Versicherungsanspruch und Änderungsverträge"
+      }
+    ],
+    "entityCharacteristics": [
+      {
+        "ordered": false,
+        "linkConstraints": {
+          "multiplicity": {
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Insurance Claim"
+          },
+          {
+            "locale": "de",
+            "text": "Versicherungsanspruch"
+          }
+        ],
+        "role": "InsuranceClaim",
+        "documentModel": "InsuranceClaimSuper"
+      },
+      {
+        "ordered": false,
+        "linkConstraints": {
+          "multiplicity": {
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Amendment Contract"
+          },
+          {
+            "locale": "de",
+            "text": "Änderungsvertrag"
+          }
+        ],
+        "role": "Amendment",
+        "documentModel": "Contract"
+      }
+    ]
+  }
+}

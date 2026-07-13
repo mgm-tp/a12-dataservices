@@ -33,7 +33,6 @@ package com.mgmtp.a12.dataservices.relationship.spec;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,10 +41,36 @@ import lombok.NoArgsConstructor;
  * Relationship Link Spec class. Wrapper class for a {@link LinkDescriptor} and an id. Id always takes precedence over the link descriptor.
  *
  */
-@Data @AllArgsConstructor @NoArgsConstructor @Builder
+@Data @NoArgsConstructor @Builder
 public class RelationshipLinkSpec implements Serializable {
 
 	private LinkDescriptor linkDescriptor;
 	private String id;
+
+	public RelationshipLinkSpec(LinkDescriptor linkDescriptor, String id) {
+		this.linkDescriptor = linkDescriptor;
+		this.id = id;
+	}
+
+	public RelationshipLinkSpec(LinkDescriptor linkDescriptor, String id, String sourceRank, String targetRank) {
+		this.linkDescriptor = linkDescriptor;
+		this.id = id;
+		this.sourceRank = sourceRank;
+		this.targetRank = targetRank;
+	}
+
+	/**
+	 * Server-assigned rank of the created link from the perspective of the source-role entity.
+	 * Contains a lexicographic rank string (e.g. `"a"`, `"b"`, `"aa"`) or `null` when the
+	 * relationship is not ordered or the rank has not been set.
+	 */
+	private String sourceRank;
+
+	/**
+	 * Server-assigned rank of the created link from the perspective of the target-role entity.
+	 * Contains a lexicographic rank string (e.g. `"a"`, `"b"`, `"aa"`) or `null` when the
+	 * relationship is not ordered or the rank has not been set.
+	 */
+	private String targetRank;
 
 }

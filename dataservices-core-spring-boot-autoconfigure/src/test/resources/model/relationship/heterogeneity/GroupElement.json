@@ -2,7 +2,7 @@
   "header": {
     "id": "GroupElement",
     "modelType": "relationship",
-    "modelVersion": "3.0.0",
+    "modelVersion": "4.0.0",
     "locales": [
       {
         "code": "en"
@@ -37,7 +37,6 @@
   },
   "content": {
     "labels": [],
-    "associationType": "SHARED",
     "linkDocumentModel": null,
     "duplicatesAllowed": false,
     "entityCharacteristics": [
@@ -51,33 +50,25 @@
         ],
         "documentModel": "DomainGroup",
         "ordered": false,
-        "navigable": true,
         "linkConstraints": {
           "multiplicity": {
-            "lowerLimit": 0,
             "unbounded": false,
             "upperLimit": 3
           }
-        },
-        "candidateConstraints": null
+        }
       },
       {
         "role": "child",
         "labels": [],
         "documentModel": "DomainElement",
         "ordered": false,
-        "navigable": true,
         "linkConstraints": {
           "multiplicity": {
-            "lowerLimit": 0,
             "unbounded": true,
             "upperLimit": null
           }
-        },
-        "candidateConstraints": null
+        }
       }
-    ],
-    "storage": "EXTERNAL",
-    "embeddedGroupPath": null
+    ]
   }
 }

@@ -33,12 +33,12 @@ package com.mgmtp.a12.examples.configuration;
 
 import java.util.List;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
-import com.hazelcast.core.HazelcastInstance;
 import com.mgmtp.a12.dataservices.common.content.ContentTypeDetector;
 import com.mgmtp.a12.examples.attachment.AttachmentContentValidator;
 import com.mgmtp.a12.examples.attachment.audit.AttachmentAuditService;
@@ -74,6 +74,8 @@ public class ExtendedServerAutoConfiguration {
 	 * @param contentTypeDetector detector used to infer content types; must not be null.
 	 * @return a utility instance wired with the given detector.
 	 */
+	@ConditionalOnBean(ContentTypeDetector.class)
+	@ConditionalOnProperty(prefix = "com.mgmtp.a12.examples.attachments.mime-types.custom", name = "enabled", havingValue = "true")
 	@Bean public MediaTypeUtils mediaTypeUtils(ContentTypeDetector contentTypeDetector) {
 		return new MediaTypeUtils(contentTypeDetector);
 	}
@@ -83,7 +85,7 @@ public class ExtendedServerAutoConfiguration {
 	 *
 	 * @return an authorization component used in example scenarios.
 	 */
-	@ConditionalOnProperty(prefix = "com.mgmtp.a12.examples", name = "black-box-authorization-example.enabled", havingValue = "true")
+	@ConditionalOnProperty(prefix = "com.mgmtp.a12.examples", name = "authorization-black-box-example.enabled", havingValue = "true")
 	@Bean public NoFirstElementAuthorization noFirstElementAuthorization() {
 		return new NoFirstElementAuthorization();
 	}
@@ -124,14 +126,13 @@ public class ExtendedServerAutoConfiguration {
 	}
 
 	/**
-	 * Registers asynchronous listeners that encrypt attachments using a {@link HazelcastInstance}.
+	 * Registers asynchronous listeners that encrypt attachments using an in-memory map for intermediate content storage.
 	 *
-	 * @param hazelcastInstance the Hazelcast cluster instance used for async processing; must not be null.
 	 * @return asynchronous encryption listeners.
 	 */
 	@ConditionalOnProperty(prefix = "com.mgmtp.a12.examples.attachments.encryption.async", name = "enabled", havingValue = "true")
-	@Bean public AttachmentEncryptionAsyncListeners attachmentEncryptionAsyncListeners(HazelcastInstance hazelcastInstance) {
-		return new AttachmentEncryptionAsyncListeners(hazelcastInstance);
+	@Bean public AttachmentEncryptionAsyncListeners attachmentEncryptionAsyncListeners() {
+		return new AttachmentEncryptionAsyncListeners();
 	}
 
 	/**

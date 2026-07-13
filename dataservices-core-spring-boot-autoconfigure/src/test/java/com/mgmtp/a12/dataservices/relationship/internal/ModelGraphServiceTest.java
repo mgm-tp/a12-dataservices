@@ -39,9 +39,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -54,15 +52,13 @@ import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
 import com.mgmtp.a12.dataservices.constants.RelationshipModelConstants;
 import com.mgmtp.a12.dataservices.model.ModelService;
 import com.mgmtp.a12.dataservices.model.ModelTypeService;
-import com.mgmtp.a12.dataservices.model.internal.DefaultModelTypeService;
+import com.mgmtp.a12.dataservices.model.internal.AbstractModelTypeService;
 import com.mgmtp.a12.dataservices.model.relationship.persistence.RelationshipModelLoader;
 import com.mgmtp.a12.dataservices.relationship.ModelGraphDocumentModelElement;
 import com.mgmtp.a12.dataservices.relationship.ModelGraphElement;
 import com.mgmtp.a12.dataservices.relationship.ModelGraphRoot;
 import com.mgmtp.a12.dataservices.relationship.model.RelationshipModel;
-import com.mgmtp.a12.dataservices.relationship.model.RelationshipModelContent;
 import com.mgmtp.a12.dataservices.relationship.model.RelationshipModelSerializer;
-import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 import com.mgmtp.a12.model.Model;
 
@@ -73,13 +69,11 @@ public class ModelGraphServiceTest extends AbstractDataServiceTest {
 	@Mock private ModelService modelService;
 	@Mock private RelationshipModelLoader relationshipModelLoader;
 	@Mock private RelationshipModelSerializer relationshipModelSerializer;
-	@Mock private DocumentModelUtils documentModelUtils;
 	@Mock private ModelTypeService modelTypeService;
-	@Mock private DefaultModelTypeService defaultModelTypeService;
+	@Mock private AbstractModelTypeService abstractModelTypeService;
 	@Mock private ModelPermissionEvaluator<Model> modelPermissionEvaluator;
 
-	@InjectMocks private ModelGraphService modelGraphService;
-	private RelationshipModelContent relationshipModelContent;
+	private ModelGraphService modelGraphService;
 	private String serializeRelationshipModel;
 	private IDocumentModel addressModel;
 	private IDocumentModel businessPartnerSuperModel;
@@ -87,19 +81,18 @@ public class ModelGraphServiceTest extends AbstractDataServiceTest {
 	private IDocumentModel businessPartnerLTD;
 	private RelationshipModel relationshipModel;
 
-	@BeforeMethod public void before() throws IllegalAccessException, IOException {
-		FieldUtils.writeField(modelGraphService, "defaultModelTypeServiceOpt", Optional.of(defaultModelTypeService), true);
-		FieldUtils.writeField(modelGraphService, "modelPermissionEvaluator", modelPermissionEvaluator, true);
+	@BeforeMethod public void before() throws IOException {
+		modelGraphService = new ModelGraphService(modelService, relationshipModelLoader, relationshipModelSerializer,
+			modelTypeService, Optional.of(abstractModelTypeService), modelPermissionEvaluator);
 		Mockito.reset(relationshipModelLoader, modelService, relationshipModelSerializer, modelPermissionEvaluator, modelTypeService);
 
-		serializeRelationshipModel = RandomStringUtils.randomAlphabetic(50);
+		serializeRelationshipModel = RandomStringUtils.insecure().nextAlphabetic(50);
 
 		addressModel = documentModelResolver.getDocumentModelById(DocumentModelConstants.ADDRESS_DOCUMENT_MODEL);
 		businessPartnerSuperModel = documentModelResolver.getDocumentModelById(DocumentModelConstants.BUSINESS_PARTNER_SUPER_MODEL);
 		businessPartner = documentModelResolver.getDocumentModelById(DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL);
 		businessPartnerLTD = documentModelResolver.getDocumentModelById(DocumentModelConstants.BUSINESS_PARTNER_LTD_MODEL);
 		relationshipModel = relationshipModelResolver.getRelationshipModelById(RelationshipModelConstants.PARTNER_ADDRESSES_MODEL);
-		relationshipModelContent = relationshipModel.getContent();
 		Mockito.when(relationshipModelLoader.loadAllRelationshipModels()).thenReturn(Set.of(relationshipModel));
 		Mockito.when(modelService.findAllHeadersByType(DOCUMENT_MODEL_TYPE))
 			.thenReturn(List.of(
@@ -137,7 +130,7 @@ public class ModelGraphServiceTest extends AbstractDataServiceTest {
 
 	@Test
 	void testConstructModelGraph_hasNoPermissionForSubtypes() {
-		Set<String> subtypes = Set.of(RandomStringUtils.randomAlphabetic(15));
+		Set<String> subtypes = Set.of(RandomStringUtils.insecure().nextAlphabetic(15));
 
 		Mockito.when(modelPermissionEvaluator.hasModelReadPermission(ArgumentMatchers.anyString())).thenReturn(false);
 		Mockito.when(modelTypeService.findDirectSubtypes(Mockito.any())).thenReturn(subtypes);

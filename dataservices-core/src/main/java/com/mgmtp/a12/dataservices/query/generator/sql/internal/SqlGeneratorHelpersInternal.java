@@ -54,7 +54,6 @@ import com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants;
 import com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.ColumnNames;
 import com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants.TableNames;
 import com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorContext;
-import com.mgmtp.a12.dataservices.query.generator.sql.SqlGeneratorHelpers;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.entity.DocumentTreeEntity;
 import com.mgmtp.a12.dataservices.query.internal.aggregation.RepeatableAggField;
 import com.mgmtp.a12.dataservices.query.topology.QueryTopology;
@@ -80,28 +79,6 @@ import static com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConst
 @Slf4j @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SqlGeneratorHelpersInternal {
 
-	/**
-	 * Renders a search table constraint for the given logic operator and appends it to the provided StringBuilder.
-	 * Handles aggregation and connection to previous constraints as needed.
-	 *
-	 * Example SQL output (without aggregation, connectToPrevious=false):
-	 * [source,sql]
-	 * ----
-	 * (value #>> '{field,path}' = :p1)
-	 * ----
-	 *
-	 * Example SQL output (with aggregation, connectToPrevious=true):
-	 * [source,sql]
-	 * ----
-	 * AND target_doc.doc_ref = agg_doc.doc_ref AND (value #>> '{field,path}' = :p1)
-	 * ----
-	 *
-	 * @param sb The StringBuilder to append the SQL fragment to.
-	 * @param operator The logic operator representing the constraint.
-	 * @param queryGeneratorContext The context for query generation.
-	 * @param connectToPrevious Whether to connect this constraint to the previous one with an AND operator.
-	 * @param <T> The type of logic operator.
-	 */
 	public static <T extends ILogicOperator> void renderSearchTableConstraint(StringBuilder sb, T operator, QueryGeneratorContext queryGeneratorContext,
 		boolean connectToPrevious) {
 
@@ -124,27 +101,6 @@ public class SqlGeneratorHelpersInternal {
 		sb.append(CLOSING_BRACKET);
 	}
 
-	/**
-	 * Renders a constraint for the given logic operator and appends it to the provided StringBuilder.
-	 *
-	 * Example SQL output (connectToPrevious=false):
-	 * [source,sql]
-	 * ----
-	 * (value #>> '{field,path}' = :p1)
-	 * ----
-	 *
-	 * Example SQL output (connectToPrevious=true):
-	 * [source,sql]
-	 * ----
-	 * AND (value #>> '{field,path}' = :p1)
-	 * ----
-	 *
-	 * @param sb The StringBuilder to append the SQL fragment to.
-	 * @param operator The logic operator representing the constraint.
-	 * @param queryGeneratorContext The context for query generation.
-	 * @param connectToPrevious Whether to connect this constraint to the previous one with an AND operator.
-	 * @param <T> The type of logic operator.
-	 */
 	public static <T extends ILogicOperator> void renderConstraint(StringBuilder sb, T operator, QueryGeneratorContext queryGeneratorContext,
 		boolean connectToPrevious) {
 
@@ -161,37 +117,6 @@ public class SqlGeneratorHelpersInternal {
 		sb.append(CLOSING_BRACKET);
 	}
 
-	/**
-	 * Renders an EXISTS constraint for the given logic operator and appends it to the provided StringBuilder.
-	 *
-	 * Example SQL output (with parentDocref, connectToPrevious=false):
-	 * [source,sql]
-	 * ----
-	 * EXISTS (
-	 *   SELECT 1
-	 *   FROM schema.document_table AS doc_1
-	 *   WHERE target_doc.doc_ref = doc_1.doc_ref
-	 *   AND (value #>> '{field,path}' = :p1)
-	 * )
-	 * ----
-	 *
-	 * Example SQL output (without parentDocref, connectToPrevious=true):
-	 * [source,sql]
-	 * ----
-	 * AND EXISTS (
-	 *   SELECT 1
-	 *   FROM schema.document_table AS doc_1
-	 *   WHERE (value #>> '{field,path}' = :p1)
-	 * )
-	 * ----
-	 *
-	 * @param sb The StringBuilder to append the SQL fragment to.
-	 * @param operator The logic operator representing the constraint.
-	 * @param parentDocref The parent document reference, may be null.
-	 * @param queryGeneratorContext The context for query generation.
-	 * @param connectToPrevious Whether to connect this constraint to the previous one with an AND operator.
-	 * @param <T> The type of logic operator.
-	 */
 	public static <T extends ILogicOperator> void renderExistsConstraint(StringBuilder sb, T operator, CharSequence parentDocref,
 		QueryGeneratorContext queryGeneratorContext, boolean connectToPrevious) {
 		renderExistsConstraint(sb, operator, parentDocref, queryGeneratorContext, connectToPrevious, false);
@@ -247,64 +172,25 @@ public class SqlGeneratorHelpersInternal {
 			.append(negation ? CLOSING_BRACKET : QueryGeneratorConstants.EMPTY_STRING);
 	}
 
-	/**
-	 * Appends the necessary SQL conditions for linking roles and relationships in a query.
-	 *
-	 * Example SQL output:
-	 * [source,sql]
-	 * ----
-	 * AND link.relationship_model = :p1
-	 * AND src_role.relationship_id = link.id
-	 * AND link.id = tgt_role.relationship_id
-	 * AND src_role.role_name = :p2
-	 * AND tgt_role.role_name = :p3
-	 * AND link_tgt_ord.id = tgt_role.id
-	 * AND link_src_ord.id = src_role.id
-	 * ----
-	 *
-	 * @param sb The StringBuilder to append the SQL fragment to.
-	 * @param query The LinkAware query object containing relationship and role information.
-	 * @param generatorContext The context for query generation.
-	 */
 	public static void linkWhere(StringBuilder sb, LinkAware query, QueryGeneratorContext generatorContext) {
-		String input = query.getTargetRole();
-		String input1 = generatorContext.getEnrichments().getSourceRole(query);
-		String input2 = query.getRelationshipModel();
+		// Appends a leading AND and seven structural conditions for traversing a relationship hop
+		// with link_order rows for both roles. Example (appended to an existing WHERE clause):
+		//   AND link.relationship_model = ?                        -- relationship model filter
+		//   AND source_role.relationship_id = link.id             -- source role → link join
+		//   AND link.id = target_role.relationship_id             -- link → target role join
+		//   AND source_role.role_name = ?                         -- source role name filter
+		//   AND target_role.role_name = ?                         -- target role name filter
+		//   AND relationship_target_order.id = target_role.id     -- target order row → target role join
+		//   AND relationship_source_order.id = source_role.id     -- source order row → source role join
+		sb.append(QueryGeneratorConstants.AND_OPERATOR);
+		linkWhere(sb, query.getRelationshipModel(), generatorContext.getEnrichments().getSourceRole(query), query.getTargetRole(), generatorContext);
+		// AND relationship_target_order.id = target_role.id
 		sb.append(QueryGeneratorConstants.AND_OPERATOR)
-			.append(TableNames.LINK_TABLE_ALIAS).append(QueryGeneratorConstants.DOT_JOINER).append(ColumnNames.RELATIONSHIP_MODEL_COLUMN_NAME)
-			.append(QueryGeneratorConstants.EQUALS_OPERATOR)
-			.append(SqlGeneratorHelpers.addParam(input2, generatorContext))
-
-			.append(QueryGeneratorConstants.AND_OPERATOR)
-
-			.append(TableNames.SOURCE_ROLE_TABLE_ALIAS).append(QueryGeneratorConstants.DOT_JOINER)
-			.append(ColumnNames.RELATIONSHIP_ID_COLUMN_ALIAS)
-			.append(QueryGeneratorConstants.EQUALS_OPERATOR)
-			.append(TableNames.LINK_TABLE_ALIAS).append(QueryGeneratorConstants.DOT_JOINER).append(ColumnNames.LINK_ID_COLUMN_NAME)
-
-			.append(QueryGeneratorConstants.AND_OPERATOR)
-
-			.append(TableNames.LINK_TABLE_ALIAS).append(QueryGeneratorConstants.DOT_JOINER).append(ColumnNames.LINK_ID_COLUMN_NAME)
-			.append(QueryGeneratorConstants.EQUALS_OPERATOR)
-			.append(TableNames.TARGET_ROLE_TABLE_ALIAS).append(QueryGeneratorConstants.DOT_JOINER).append(ColumnNames.RELATIONSHIP_ID_COLUMN_ALIAS)
-
-			.append(QueryGeneratorConstants.AND_OPERATOR)
-
-			.append(TableNames.SOURCE_ROLE_TABLE_ALIAS).append(QueryGeneratorConstants.DOT_JOINER).append(ColumnNames.ROLE_NAME_COLUMN_NAME)
-			.append(QueryGeneratorConstants.EQUALS_OPERATOR)
-			.append(SqlGeneratorHelpers.addParam(input1, generatorContext))
-
-			.append(QueryGeneratorConstants.AND_OPERATOR)
-
-			.append(TableNames.TARGET_ROLE_TABLE_ALIAS).append(QueryGeneratorConstants.DOT_JOINER).append(ColumnNames.ROLE_NAME_COLUMN_NAME)
-			.append(QueryGeneratorConstants.EQUALS_OPERATOR)
-			.append(SqlGeneratorHelpers.addParam(input, generatorContext))
-			.append(QueryGeneratorConstants.AND_OPERATOR)
-
 			.append(TableNames.LINK_TARGET_ORDER_TABLE_ALIAS).append(QueryGeneratorConstants.DOT_JOINER).append(ColumnNames.ID_COLUMN_NAME)
 			.append(QueryGeneratorConstants.EQUALS_OPERATOR)
 			.append(TableNames.TARGET_ROLE_TABLE_ALIAS).append(QueryGeneratorConstants.DOT_JOINER).append(ColumnNames.ID_COLUMN_NAME)
 
+			// AND relationship_source_order.id = source_role.id
 			.append(QueryGeneratorConstants.AND_OPERATOR)
 
 			.append(TableNames.LINK_SOURCE_ORDER_TABLE_ALIAS).append(QueryGeneratorConstants.DOT_JOINER).append(ColumnNames.ID_COLUMN_NAME)
@@ -313,18 +199,55 @@ public class SqlGeneratorHelpersInternal {
 	}
 
 	/**
-	 * Appends a WHERE clause for filtering by model names using an IN operator.
+	 * Appends the five structural conditions for traversing one hop of a relationship link
+	 * using fixed table aliases (`source_role`, `link`, `target_role`).
 	 *
-	 * Example SQL output:
-	 * [source,sql]
-	 * ----
-	 * target_doc.model_name IN ('ModelA', 'ModelB', 'ModelC')
-	 * ----
+	 * This overload has no leading AND — it is intended for use as the first (or only) clause
+	 * of a WHERE expression. The caller is responsible for any preceding separator.
 	 *
-	 * @param sb The StringBuilder to append the SQL fragment to.
-	 * @param targetDocumentTableAlias The alias of the target document table.
-	 * @param stream A stream of model names to include in the filter.
+	 * @param sb the StringBuilder to append to
+	 * @param relationshipModel the relationship model name
+	 * @param sourceRole the source role name
+	 * @param targetRole the target role name
+	 * @param generatorContext the query generator context (receives bound parameters)
 	 */
+	public static void linkWhere(StringBuilder sb, String relationshipModel, String sourceRole, String targetRole, QueryGeneratorContext generatorContext) {
+		// Appends five structural conditions to traverse one relationship hop. Example:
+		//   link.relationship_model = ?                    -- filter: only rows of the requested relationship model
+		//   AND source_role.relationship_id = link.id      -- join: connect source role participant to the link record
+		//   AND link.id = target_role.relationship_id      -- join: connect link record to target role participant
+		//   AND source_role.role_name = ?                  -- filter: match the source role by its name
+		//   AND target_role.role_name = ?                  -- filter: match the target role by its name
+		sb.append(TableNames.LINK_TABLE_ALIAS).append(DOT_JOINER).append(ColumnNames.RELATIONSHIP_MODEL_COLUMN_NAME)
+			.append(EQUALS_OPERATOR).append(addParam(relationshipModel, generatorContext))
+
+			// AND source_role.relationship_id = link.id
+			.append(QueryGeneratorConstants.AND_OPERATOR)
+
+			.append(TableNames.SOURCE_ROLE_TABLE_ALIAS).append(DOT_JOINER).append(ColumnNames.RELATIONSHIP_ID_COLUMN_ALIAS)
+			.append(EQUALS_OPERATOR)
+			.append(TableNames.LINK_TABLE_ALIAS).append(DOT_JOINER).append(ColumnNames.LINK_ID_COLUMN_NAME)
+
+			// AND link.id = target_role.relationship_id
+			.append(QueryGeneratorConstants.AND_OPERATOR)
+
+			.append(TableNames.LINK_TABLE_ALIAS).append(DOT_JOINER).append(ColumnNames.LINK_ID_COLUMN_NAME)
+			.append(EQUALS_OPERATOR)
+			.append(TableNames.TARGET_ROLE_TABLE_ALIAS).append(DOT_JOINER).append(ColumnNames.RELATIONSHIP_ID_COLUMN_ALIAS)
+
+			// AND source_role.role_name = ?
+			.append(QueryGeneratorConstants.AND_OPERATOR)
+
+			.append(TableNames.SOURCE_ROLE_TABLE_ALIAS).append(DOT_JOINER).append(ColumnNames.ROLE_NAME_COLUMN_NAME)
+			.append(EQUALS_OPERATOR).append(addParam(sourceRole, generatorContext))
+
+			// AND target_role.role_name = ?
+			.append(QueryGeneratorConstants.AND_OPERATOR)
+
+			.append(TableNames.TARGET_ROLE_TABLE_ALIAS).append(DOT_JOINER).append(ColumnNames.ROLE_NAME_COLUMN_NAME)
+			.append(EQUALS_OPERATOR).append(addParam(targetRole, generatorContext));
+	}
+
 	public static void modelWhere(StringBuilder sb, String targetDocumentTableAlias, Stream<String> stream) {
 		sb.append(targetDocumentTableAlias).append(QueryGeneratorConstants.DOT_JOINER)
 			.append(ColumnNames.MODEL_NAME_COLUMN_NAME)
@@ -335,25 +258,6 @@ public class SqlGeneratorHelpersInternal {
 			.append(CLOSING_BRACKET);
 	}
 
-	/**
-	 * Appends the schema name to the StringBuilder if it is not blank, followed by a dot.
-	 *
-	 * Example SQL output (with schema):
-	 * [source,sql]
-	 * ----
-	 * my_schema.
-	 * ----
-	 *
-	 * Example SQL output (without schema):
-	 * [source,sql]
-	 * ----
-	 * (empty string)
-	 * ----
-	 *
-	 * @param sb The StringBuilder to append the schema to.
-	 * @param schema The schema name to append.
-	 * @return The same StringBuilder instance for chaining.
-	 */
 	public static StringBuilder renderSchema(StringBuilder sb, CharSequence schema) {
 		if (StringUtils.isNotBlank(schema)) {
 			sb.append(schema).append(QueryGeneratorConstants.DOT_JOINER);
@@ -364,18 +268,6 @@ public class SqlGeneratorHelpersInternal {
 	/**
 	 * Processes an SQL query string by replacing parameter placeholders with actual values,
 	 * handling escape sequences, and ensuring proper formatting for Hibernate.
-	 *
-	 * Example SQL input:
-	 * [source,sql]
-	 * ----
-	 * SELECT * FROM table WHERE name = :p1 AND age > :p2
-	 * ----
-	 *
-	 * Example SQL output (with p1='John', p2='25'):
-	 * [source,sql]
-	 * ----
-	 * SELECT * FROM table WHERE name = 'John' AND age > '25'
-	 * ----
 	 *
 	 * @param sql The SQL query as a `CharSequence` that may contain parameter placeholders (e.g., ":p1").
 	 * @param queryGeneratorContext The `QueryGeneratorContext` containing the parameter values and context
@@ -404,12 +296,6 @@ public class SqlGeneratorHelpersInternal {
 		return replacement;
 	}
 
-	/**
-	 * Determines if the given field is a document field (starts with a forward slash).
-	 *
-	 * @param field The field name to check.
-	 * @return True if the field is a document field, false otherwise.
-	 */
 	public static boolean isDocumentField(String field) {
 		return field.startsWith(QueryGeneratorConstants.FORWARD_SLASH);
 	}
@@ -419,14 +305,8 @@ public class SqlGeneratorHelpersInternal {
 	 *
 	 * The returned expression is intended to be used after a column reference to a JSONB or JSON column.
 	 *
-	 * Example SQL output:
-	 * [source,sql]
-	 * ----
-	 * #> '{"field","nested","path"}'
-	 * ----
-	 *
 	 * @param field The field for which the value should be returned.
-	 * @param generatorContext The context for query generation (currently not used but kept for future extensions).
+	 * @param generatorContext
 	 * @return The SQL expression that returns the value of this field as a json value.
 	 */
 	@NonNull public static String makeJsonFieldValueReferenceAndGetAsJson(String field, QueryGeneratorContext generatorContext) {
@@ -438,14 +318,8 @@ public class SqlGeneratorHelpersInternal {
 	 *
 	 * The returned expression is intended to be used after a column reference to a JSONB or JSON column.
 	 *
-	 * Example SQL output:
-	 * [source,sql]
-	 * ----
-	 * #>> '{"field","nested","path"}'
-	 * ----
-	 *
 	 * @param field The field for which the value should be returned.
-	 * @param generatorContext The context for query generation (currently not used but kept for future extensions).
+	 * @param generatorContext
 	 * @return The SQL expression that returns the value of this field as a text value.
 	 */
 	@NonNull public static String makeJsonFieldValueReferenceAndGetAsText(String field, QueryGeneratorContext generatorContext) {
@@ -468,35 +342,20 @@ public class SqlGeneratorHelpersInternal {
 			QueryGeneratorConstants.TEXT_QUOTE;
 	}
 
-	/**
-	 * Escapes single and double quotes in a JSON array member for use in SQL expressions.
-	 *
-	 * @param input The input string to escape.
-	 * @return The escaped string suitable for use in a JSON path array.
-	 */
 	public static String escapeArrayMemberQuotes(String input) {
 		return "\"%s\"".formatted(StringUtils.replace(StringUtils.replace(input, "'", "''"), "\"", "\\\""));
 	}
 
-	/**
-	 * Prepares a JPA Query from a RootCteGenerator by rendering its SQL and using its context.
-	 *
-	 * @param entityManager The EntityManager to create the query with.
-	 * @param gen The RootCteGenerator providing SQL and context.
-	 * @return The prepared JPA Query instance.
-	 */
+	public static String addParam(Object value, QueryGeneratorContext queryGeneratorContext) {
+		String id = "p%d".formatted(queryGeneratorContext.getParamCounter().getAndIncrement());
+		queryGeneratorContext.getParamHolder().put(id, value);
+		return ":%s".formatted(id);
+	}
+
 	public static Query prepareQuery(EntityManager entityManager, RootCteGenerator gen) {
 		return prepareQuery(entityManager, gen.render(new StringBuilder()).toString(), gen.getGeneratorContext());
 	}
 
-	/**
-	 * Prepares a JPA Query from a SQL string and query context, setting all parameters as needed.
-	 *
-	 * @param entityManager The EntityManager to create the query with.
-	 * @param sql The SQL string to use for the query.
-	 * @param queryGeneratorContext The context holding parameters and configuration.
-	 * @return The prepared JPA Query instance.
-	 */
 	public static Query prepareQuery(EntityManager entityManager, String sql, QueryGeneratorContext queryGeneratorContext) {
 		if (queryGeneratorContext.getParamHolder().isEmpty()) {
 			log.atDebug().setMessage("""
@@ -530,14 +389,6 @@ public class SqlGeneratorHelpersInternal {
 		return query;
 	}
 
-	/**
-	 * Renders all aggregation functions for the given query topology and appends them to the StringBuilder.
-	 *
-	 * @param sb The StringBuilder to append the SQL fragment to.
-	 * @param queryRoot The query topology containing aggregations.
-	 * @param isSearchTable Whether the context is a search table.
-	 * @param queryGeneratorContext The context for query generation.
-	 */
 	public static void renderAggregations(StringBuilder sb, QueryTopology queryRoot, boolean isSearchTable, QueryGeneratorContext queryGeneratorContext) {
 		Iterator<IAggregationFunction> aggregations = queryRoot.getAggregation().getAggregations().iterator();
 		while (aggregations.hasNext()) {
@@ -548,28 +399,12 @@ public class SqlGeneratorHelpersInternal {
 		}
 	}
 
-	/**
-	 * Renders a single aggregation function and appends it to the StringBuilder.
-	 *
-	 * @param sb The StringBuilder to append the SQL fragment to.
-	 * @param aggregationFunction The aggregation function to render.
-	 * @param isSearchTable Whether the context is a search table.
-	 * @param queryGeneratorContext The context for query generation.
-	 * @param <T> The type of aggregation function.
-	 */
 	public static <T extends IAggregationFunction> void renderAggregation(StringBuilder sb, T aggregationFunction, boolean isSearchTable,
 		QueryGeneratorContext queryGeneratorContext) {
 		queryGeneratorContext.getFunctionGenerator((Class<T>) aggregationFunction.getClass()).renderFunction(sb, aggregationFunction,
 			isSearchTable, queryGeneratorContext);
 	}
 
-	/**
-	 * Constructs a JSON object for group columns in the aggregation and appends it to the StringBuilder.
-	 *
-	 * @param sb The StringBuilder to append the SQL fragment to.
-	 * @param queryRoot The query topology containing group columns.
-	 * @param queryGeneratorContext The context for query generation.
-	 */
 	public static void constructJsonForGroupColumns(StringBuilder sb, QueryTopology queryRoot, QueryGeneratorContext queryGeneratorContext) {
 		Iterator<ProjectionField> groupFields = queryRoot.getAggregation().getGroup().iterator();
 		while (groupFields.hasNext()) {
@@ -589,32 +424,19 @@ public class SqlGeneratorHelpersInternal {
 		}
 	}
 
-	/**
-	 * Renders a JSONB field reference for the given field and appends it to the StringBuilder.
-	 *
-	 * @param sb The StringBuilder to append the SQL fragment to.
-	 * @param field The field name to reference.
-	 * @param generatorContext The context for query generation.
-	 */
 	public static void renderJsonbField(StringBuilder sb, String field, QueryGeneratorContext generatorContext) {
 		// value #>> '{ContractRoot,ContractName}'
-		if (SqlGeneratorHelpersInternal.isDocumentField(field)) {
+		if (isDocumentField(field)) {
 			sb
 				.append(QueryGeneratorConstants.TableNames.CTE_ROOT_ALIAS)
 				.append(QueryGeneratorConstants.DOT_JOINER)
 				.append(generatorContext.getJsonColumnName())
-				.append(SqlGeneratorHelpersInternal.makeJsonFieldValueReferenceAndGetAsText(field, generatorContext));
+				.append(makeJsonFieldValueReferenceAndGetAsText(field, generatorContext));
 		} else {
-			sb.append(SqlGeneratorHelpers.addParam(field, generatorContext));
+			sb.append(addParam(field, generatorContext));
 		}
 	}
 
-	/**
-	 * Renders a repeatable aggregation field for use in SQL and appends it to the StringBuilder.
-	 *
-	 * @param sb The StringBuilder to append the SQL fragment to.
-	 * @param repeatableAggField The optional repeatable aggregation field to render.
-	 */
 	public static void renderAggRepeatableField(StringBuilder sb, Optional<RepeatableAggField> repeatableAggField) {
 		sb
 			.append(repeatableAggField.map(RepeatableAggField::tempAggName).orElse(""));

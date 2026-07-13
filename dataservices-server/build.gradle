@@ -5,24 +5,26 @@ plugins {
 }
 
 dependencies {
+	annotationProcessor libs.lombokMapstruct
+
 	api project(':dataservices-core')
 	api project(':dataservices-security-user-api')
 	api project(':content-store:dataservices-content-store-core')
 	api libs.uaaAuthenticationSpringBootAutoconfigure
 	api libs.springSecurityWeb
-	api libs.jacksonJaxrsJsonProvider
 	api libs.uaaAuthorizationSpringBootAutoconfigure
 	api libs.uaaAuthorizationWebSpringBootAutoconfigure
 	api libs.jaxbApi
 	implementation libs.uaaAuthenticationPrincipalExtensionSpringBootAutoconfigure
-	implementation libs.julToSlf4j
+	implementation libs.slf4jJul
 	implementation libs.slf4jApi
 	implementation libs.springWebmvc
-	implementation libs.hazelcast, libs.hazelcastSpring
 	implementation libs.commonsLang3
 	implementation libs.commonsFileupload
 	implementation libs.annotationApi
 	implementation libs.jsonrpc4j
+	implementation libs.infinispanSpringBoot4StarterEmbedded
+	implementation libs.springBootHealth
 	implementation libs.springBootStarterActuator
 
 	api libs.servletApi
@@ -36,6 +38,7 @@ dependencies {
 	testImplementation libs.xmlunitCore
 	testImplementation libs.xmlunitMatchers
 	testImplementation libs.testng
+	testImplementation libs.mockitoTestNG
 	testImplementation libs.springTest
 	testImplementation libs.assertjCore
 	testImplementation libs.hamcrest
@@ -47,7 +50,7 @@ dependencies {
 	testImplementation libs.springBootStarter
 	testImplementation libs.springBoot
 	testImplementation libs.springBootTest
-	testImplementation libs.sqlworkbench
+	testImplementation libs.springBootStarterWebmvcTest
 	testImplementation libs.servletApi
 	testImplementation libs.mockitoCore
 	testImplementation libs.jsonassert

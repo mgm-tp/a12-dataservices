@@ -31,6 +31,8 @@
  */
 package com.mgmtp.a12.dataservices.server.actuator.internal;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
@@ -39,24 +41,25 @@ import org.springframework.boot.actuate.endpoint.annotation.Selector;
 
 import com.mgmtp.a12.dataservices.configuration.internal.ConfigurationPropertiesData;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
-@Slf4j
+@Slf4j @RequiredArgsConstructor
 @Endpoint(id = ConfigurationEndpoint.CONFIGURATION_ENDPOINT) public class ConfigurationEndpoint {
 
 	public static final String CONFIGURATION_ENDPOINT = "configuration";
 	private final ConfigurationPropertiesData configurationPropertiesData;
-
-	public ConfigurationEndpoint(ConfigurationPropertiesData configurationPropertiesData) {
-		this.configurationPropertiesData = configurationPropertiesData;
-	}
 
 	@ReadOperation public Map<String, Object> all() {
 		return configurationPropertiesData.getAll();
 	}
 
 	@ReadOperation public Object sub(@Selector String name) {
-		return configurationPropertiesData.getByKey(name);
+		Object object = configurationPropertiesData.getByKey(name);
+		if (object instanceof Collection<?> collection) {
+			// Collection is wrapped because of proper serialization.
+			return new ArrayList<>(collection);
+		}
+		return object;
 	}
 }

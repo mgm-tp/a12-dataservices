@@ -31,9 +31,9 @@
  */
 package com.mgmtp.a12.dataservices.configuration;
 
+import org.mockito.testng.MockitoTestNGListener;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener;
 import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ContextConfiguration;
@@ -41,6 +41,7 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.mgmtp.a12.dataservices.EmbeddedPostgresInitializer;
@@ -56,13 +57,13 @@ import static org.testng.Assert.assertNull;
 @WithUserDetails("test")
 @TestPropertySource(locations = { "classpath:services-version.properties" })
 @TestPropertySource(properties = {
-	"spring.main.allow-bean-definition-overriding=true",
 	"spring.datasources.dataservices.embedded-postgres.enabled=true",
 	"spring.quartz.properties.org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.PostgreSQLDelegate",
 	"spring.datasources.contentstore.embedded-postgres.enabled=true"
 })
 @ContextConfiguration(initializers = EmbeddedPostgresInitializer.class)
-@TestExecutionListeners(listeners = { WithSecurityContextTestExecutionListener.class, MockitoTestExecutionListener.class, TransactionalTestExecutionListener.class },
+@Listeners(MockitoTestNGListener.class)
+@TestExecutionListeners(listeners = { WithSecurityContextTestExecutionListener.class, TransactionalTestExecutionListener.class },
 	mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 @SpringBootTest(classes = { InitialITConfiguration.class },
 	properties = {"mgmtp.a12.dataservices.attachments.enabled=false"})

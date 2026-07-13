@@ -34,13 +34,15 @@ package com.mgmtp.a12.dataservices.common.content;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Strategy interface for probing the MIME type of binary content.
  * Implementations should publish a {@link com.mgmtp.a12.dataservices.common.events.ContentTypeDetectedEvent}
  * after successful detection. Be mindful that the provided {@link InputStream} may be consumed during probing;
  * supply a fresh stream or a supplier if further processing is required.
  */
-public interface ContentTypeDetector {
+@OnlyForUsage public interface ContentTypeDetector {
 
 	/**
 	 * Detects the MIME type from the given content stream.

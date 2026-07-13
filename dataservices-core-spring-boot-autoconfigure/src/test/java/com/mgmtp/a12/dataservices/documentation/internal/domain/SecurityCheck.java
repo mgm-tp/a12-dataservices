@@ -69,7 +69,7 @@ public class SecurityCheck extends AbstractLoggedElement {
 	}
 
 	@NonNull private static String formatRules(String post, Collection<String> rules) {
-		return CollectionUtils.isEmpty(rules) ? "" : String.format("--//%s checks//--\\n**%s**", post, joinString(rules, "**\\n**"));
+		return CollectionUtils.isEmpty(rules) ? "" : "--//%s checks//--\\n**%s**".formatted(post, joinString(rules, "**\\n**"));
 	}
 
 	@Override public AbstractLoggedElement createReturn() {
@@ -82,7 +82,7 @@ public class SecurityCheck extends AbstractLoggedElement {
 			return new Caller(target.getDeclaringClass().getName(), target.getName(),
 				getModifier(target.getDeclaringClass().getName(), target.getName()));
 		} else {
-			StackTraceElement stackTraceElement = getCallHistory().get(0);
+			StackTraceElement stackTraceElement = getCallHistory().getFirst();
 			return new Caller(stackTraceElement.getClassName(), stackTraceElement.getMethodName(),
 				getModifier(stackTraceElement.getClassName(), stackTraceElement.getMethodName()));
 		}

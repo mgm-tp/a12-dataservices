@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.stream.StreamSupport;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -45,11 +44,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.MissingNode;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.MissingNode;
 import com.googlecode.jsonrpc4j.JsonRpcBasicServer;
 import com.mgmtp.a12.dataservices.exception.FunctionalityDisabledException;
 import com.mgmtp.a12.dataservices.rpc.JsonRpc2Response;
@@ -59,6 +58,8 @@ import com.mgmtp.a12.dataservices.rpc.internal.JsonRpcOperationDispatcher;
 import com.mgmtp.a12.dataservices.rpc.internal.RequestIdManager;
 import com.mgmtp.a12.dataservices.rpc.internal.RequestIdService;
 import com.mgmtp.a12.dataservices.server.uaa.SecuredController;
+
+import lombok.RequiredArgsConstructor;
 
 import static com.mgmtp.a12.dataservices.rpc.JsonRpc2Request.REQUEST_ID_HEADER;
 
@@ -70,14 +71,15 @@ import static com.mgmtp.a12.dataservices.rpc.JsonRpc2Request.REQUEST_ID_HEADER;
  * Per operation errors are handled by {@link JsonRpcBasicServer} and resolved to error responses there, so not handled
  * here.
  */
+@RequiredArgsConstructor
 @RequestMapping("#{@dataServicesCoreProperties.server.contextPath}/v2/rpc")
 @SecuredController
 @RestController public class JsonRpcControllerImpl {
 
-	@Autowired private JsonRpcBasicServer jsonRpcServer;
-	@Autowired private ObjectMapper objectMapper;
-	@Autowired private RequestIdService requestIdFactory;
-	@Autowired private JsonRpcOperationDispatcher jsonRpcOperationDispatcher;
+	private final JsonRpcBasicServer jsonRpcServer;
+	private final ObjectMapper objectMapper;
+	private final RequestIdService requestIdFactory;
+	private final JsonRpcOperationDispatcher jsonRpcOperationDispatcher;
 
 	/**
 	 * Handles JSON-RPC requests, ensuring request ID lifecycle management and graceful error aggregation.
@@ -140,12 +142,10 @@ import static com.mgmtp.a12.dataservices.rpc.JsonRpc2Request.REQUEST_ID_HEADER;
 	private JsonRpc2Response createErrorResponse(Throwable t) {
 		return new JsonRpc2Response(
 			t instanceof RpcException rpcException
-
 				? new JsonRpc2ResponseError(
 				rpcException.getOperationError().getCode(),
 				t.getMessage(),
 				objectMapper.valueToTree(jsonRpcOperationDispatcher.createExceptionDetail(rpcException.getOperationError(), t)))
-
 				: new JsonRpc2ResponseError(-1, t.getMessage(), null)
 		);
 	}

@@ -2,7 +2,7 @@
   "header": {
     "id": "ProductBundleLimit",
     "modelType": "relationship",
-    "modelVersion": "3.0.0",
+    "modelVersion": "4.0.0",
     "locales": [
       {
         "code": "de"
@@ -59,7 +59,6 @@
         "text": "ProductBundleLimit"
       }
     ],
-    "associationType": "SHARED",
     "linkDocumentModel": "AdditionalFieldsModel",
     "duplicatesAllowed": false,
     "entityCharacteristics": [
@@ -77,22 +76,11 @@
         ],
         "documentModel": "Product",
         "ordered": false,
-        "navigable": true,
         "linkConstraints": {
           "multiplicity": {
-            "lowerLimit": 0,
             "unbounded": true,
             "upperLimit": null
           }
-        },
-        "candidateConstraints": {
-          "population": "",
-          "populationParameters": [
-            {
-              "name": "requiredField",
-              "value": "requiredField"
-            }
-          ]
         }
       },
       {
@@ -109,26 +97,13 @@
         ],
         "documentModel": "Bundle",
         "ordered": false,
-        "navigable": true,
         "linkConstraints": {
           "multiplicity": {
-            "lowerLimit": 1,
             "unbounded": false,
             "upperLimit": 1
           }
-        },
-        "candidateConstraints": {
-          "population": "",
-          "populationParameters": [
-            {
-              "name": "requiredField",
-              "value": "requiredField"
-            }
-          ]
         }
       }
-    ],
-    "storage": "EXTERNAL",
-    "embeddedGroupPath": ""
+    ]
   }
 }

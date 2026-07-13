@@ -39,6 +39,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
+import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.env.Environment;
@@ -52,8 +53,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class AbstractControllerCondition extends SpringBootCondition {
-
-	@NonNull private static Optional<ContentStoreProperties> boundProperties = Optional.empty();
 
 	@Override public final ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
 		ContentStoreProperties contentStoreProperties = AbstractControllerCondition.findBoundProperties(context.getEnvironment());
@@ -90,17 +89,18 @@ public abstract class AbstractControllerCondition extends SpringBootCondition {
 
 	/**
 	 * Function to get actual values of {@link ContentStoreProperties}.
-	 * Falls back to a default instance when no {@code mgmtp.a12.dataservices.contentstore.*} property is present.
+	 * Falls back to a default instance when no `mgmtp.a12.dataservices.contentstore.*` property is present.
 	 *
 	 * @param environment spring {@link Environment}
-	 * @return actual {@link ContentStoreProperties}, never {@code null}
+	 * @return actual {@link ContentStoreProperties}, never `null`
 	 */
 	public static @NonNull ContentStoreProperties findBoundProperties(Environment environment) {
-		if (boundProperties.isEmpty()) {
-			boundProperties = Optional.of(Binder.get(environment)
-				.bindOrCreate(ContentStoreProperties.PROPERTIES_PREFIX, ContentStoreProperties.class));
-		}
-		return boundProperties.get();
+		return Optional.of(environment)
+			.map(Binder::get)
+			.map(b -> b.bind(ContentStoreProperties.PROPERTIES_PREFIX, ContentStoreProperties.class))
+			.filter(BindResult::isBound)
+			.map(BindResult::get)
+			.orElse(new ContentStoreProperties());
 	}
 
 	protected ConfigurationMessage makeValidMessage(String message, String... relatedProperties) {

@@ -1,0 +1,9 @@
+plugins {
+    id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+    implementation(libs.rewriteJava)
+}
+
+description = 'OpenRewrite recipes for Data Services'

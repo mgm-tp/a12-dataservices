@@ -31,10 +31,12 @@
  */
 package com.mgmtp.a12.contentstore.client.content;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Constants used by the Content Store client.
  */
-public interface ContentStoreClientConstants {
+@OnlyForUsage public interface ContentStoreClientConstants {
 
 	/**
 	 * Context path segment of the Content Store REST API base URL.

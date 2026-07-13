@@ -1,0 +1,268 @@
+@startuml
+
+!procedure group(x)
+class x << (G,#DDAAFF) >>
+!endprocedure
+
+!procedure cdmGroup(x)
+group(x) #DDEEFF
+!endprocedure
+
+!procedure field(x)
+class x << (F,#DDFFAA) >> #White
+!endprocedure
+
+!procedure embeddedField(name, type, fieldType)
+name <<type>>: fieldType
+!endprocedure
+
+!procedure rule(x)
+class x << (R,#DDBBAA) >> #FFDDEE
+!endprocedure
+
+!procedure embeddedRule(name, type)
+<back:FFDDEE>name() <<type>></back>
+!endprocedure
+
+!procedure embeddedRule(name, type, $errorCondition)
+.. <back:FFDDEE> name <<type>> </back> ..
+<back:FFDDEE>errorCondition:</back> $errorCondition
+!endprocedure
+
+!procedure computation(x)
+class x << (C,#DDBBAA) >> #FFEEDD
+!endprocedure
+
+!procedure computationAlternative($operation, $precondition)
+.. alternative ..
+operation: $operation
+precondition: $precondition
+!endprocedure
+
+!procedure embeddedComputation(name, type, $operation, $precondition)
+.. <back:FFEEDD> name <<type>> </back> ..
+<back:FFEEDD>operation:</back> $operation
+<back:FFEEDD>precondition:</back> $precondition
+!endprocedure
+
+!procedure document(x)
+class x << (D,#AADDBB) >> #PowderBlue
+!endprocedure
+
+!procedure embeddedComputation(name, type )
+<back:FFEEDD>name() <<type>></back>
+!endprocedure
+
+!procedure linkDocument(x)
+class x << (L,#AADDFF) >> #PeachPuff
+!endprocedure
+
+!procedure linkGroup(x)
+group(x) #PeachPuff
+!endprocedure
+
+!procedure relLink($name,$rmId,$link1,$link2,$ld="")
+circle $name as $rmId #PeachPuff
+$rmId $link1
+$rmId $link2
+!if $ld!=""
+$rmId -[#IndianRed]right $ld: <<linkDocument>>
+linkDocument($ld)
+!endif
+!endprocedure
+
+skinparam linetype polyline
+left to right direction
+
+title Document Model PropertyClaim
+
+package "PropertyClaim" as PropertyClaim <<Frame>> {
+	() "documentRoot" as PropertyClaimDocumentRoot
+	group('"InsuranceClaimRoot" as group_ic001')
+	group('"Attachment" as G_icat1')
+	field('"original_filename" as F_ica01 <<StringType>>')
+	G_icat1 -- F_ica01
+	field('"internal_filename" as F_ica02 <<StringType>>')
+	G_icat1 -- F_ica02
+	field('"content" as F_ica03 <<StringType>>')
+	G_icat1 -- F_ica03
+	field('"attachment_id" as F_ica04 <<StringType>>')
+	G_icat1 -- F_ica04
+	field('"size" as F_ica05 <<NumberType>>')
+	G_icat1 -- F_ica05
+	field('"mime_type" as F_ica06 <<StringType>>')
+	G_icat1 -- F_ica06
+	field('"category" as F_ica07 <<StringType>>')
+	G_icat1 -- F_ica07
+	field('"description" as F_ica08 <<StringType>>')
+	G_icat1 -- F_ica08
+	rule('"AttachmentInternalFilenameRequired" as R_ica01') {
+}
+	G_icat1 -- R_ica01
+	rule('"AttachmentMimeTypeRequired" as R_ica02') {
+}
+	G_icat1 -- R_ica02
+	rule('"AttachmentIdOrContentFilled" as R_ica03') {
+}
+	G_icat1 -- R_ica03
+	rule('"SizeOfContentFilled" as R_ica04') {
+}
+	G_icat1 -- R_ica04
+
+	group_ic001 ||--o{ "0..99" G_icat1
+	field('"ClaimType" as field_ic008 <<StringType>>')
+	group_ic001 -- field_ic008
+	group('"ClaimDetails" as group_ic007')
+	field('"ClaimNumber" as field_ic001 <<StringType>>')
+	group_ic007 -- field_ic001
+	field('"ClaimReference" as field_ic011 <<NumberType>>')
+	group_ic007 -- field_ic011
+	field('"ClaimDate" as field_ic002 <<DateType>>')
+	group_ic007 -- field_ic002
+	field('"Status" as field_ic004 <<EnumerationType>>')
+	group_ic007 -- field_ic004
+	field('"Priority" as field_ic012 <<NumberType>>')
+	group_ic007 -- field_ic012
+	field('"IsUrgent" as field_ic009 <<BooleanType>>')
+	group_ic007 -- field_ic009
+	field('"SubmittedAt" as field_ic027 <<DateTimeType>>')
+	group_ic007 -- field_ic027
+	field('"Severity" as field_ic028 <<EnumerationType>>')
+	group_ic007 -- field_ic028
+
+	group_ic001 ||--o| "0..1" group_ic007
+	group('"IncidentInfo" as group_ic008')
+	field('"IncidentDate" as field_ic003 <<DateType>>')
+	group_ic008 -- field_ic003
+	field('"IncidentLocation" as field_ic033 <<StringType>>')
+	group_ic008 -- field_ic033
+	field('"HasWitness" as field_ic010 <<BooleanType>>')
+	group_ic008 -- field_ic010
+	field('"Description" as field_ic006 <<StringType>>')
+	group_ic008 -- field_ic006
+	group('"ReportingDates" as group_ic002')
+	field('"ReportedYear" as field_ic013 <<DateType>>')
+	group_ic002 -- field_ic013
+	field('"DocumentedDate" as field_ic014 <<DateType>>')
+	group_ic002 -- field_ic014
+	field('"OfficialFilingDate" as field_ic015 <<DateType>>')
+	group_ic002 -- field_ic015
+
+	group_ic008 ||--o| "0..1" group_ic002
+
+	group_ic001 ||--o| "0..1" group_ic008
+	group('"PolicyInfo" as group_ic003')
+	field('"PolicyHolderId" as field_ic007 <<StringType>>')
+	group_ic003 -- field_ic007
+	field('"PolicyNumber" as field_ic032 <<StringType>>')
+	group_ic003 -- field_ic032
+	field('"PolicyStartYear" as field_ic016 <<DateFragmentType>>')
+	group_ic003 -- field_ic016
+	field('"PolicyStartMonth" as field_ic017 <<DateFragmentType>>')
+	group_ic003 -- field_ic017
+	field('"PolicyEffectiveDate" as field_ic018 <<DateFragmentType>>')
+	group_ic003 -- field_ic018
+	field('"AnnualRenewalDate" as field_ic019 <<DateFragmentType>>')
+	group_ic003 -- field_ic019
+
+	group_ic001 ||--o| "0..1" group_ic003
+	group('"CoveragePeriods" as group_ic004')
+	field('"CoveragePeriod" as field_ic020 <<DateRangeType>>')
+	group_ic004 -- field_ic020
+	field('"PolicyTerm" as field_ic021 <<DateRangeType>>')
+	group_ic004 -- field_ic021
+	field('"ClaimSubmissionWindow" as field_ic022 <<DateRangeType>>')
+	group_ic004 -- field_ic022
+	field('"SeasonalCoverage" as field_ic030 <<DateRangeType>>')
+	group_ic004 -- field_ic030
+	field('"BillingCycle" as field_ic031 <<DateRangeType>>')
+	group_ic004 -- field_ic031
+	group('"PriorClaims" as group_ic005')
+	field('"PriorClaimPeriod" as field_ic023 <<DateRangeType>>')
+	group_ic005 -- field_ic023
+	field('"PriorClaimAmount" as field_ic034 <<NumberType>>')
+	group_ic005 -- field_ic034
+
+	group_ic004 ||--o{ "0..5" group_ic005
+
+	group_ic001 ||--o| "0..1" group_ic004
+	group('"FinancialInfo" as group_ic009')
+	field('"ClaimAmount" as field_ic005 <<NumberType>>')
+	group_ic009 -- field_ic005
+	field('"SettlementMethod" as field_ic029 <<EnumerationType>>')
+	group_ic009 -- field_ic029
+	group('"PaymentHistory" as group_ic006')
+	field('"PaymentDate" as field_ic024 <<DateType>>')
+	group_ic006 -- field_ic024
+	field('"PaymentAmount" as field_ic025 <<NumberType>>')
+	group_ic006 -- field_ic025
+	field('"PaymentReference" as field_ic026 <<StringType>>')
+	group_ic006 -- field_ic026
+	field('"PaymentMethod" as field_ic035 <<EnumerationType>>')
+	group_ic006 -- field_ic035
+
+	group_ic009 ||--o{ "0..10" group_ic006
+
+	group_ic001 ||--o| "0..1" group_ic009
+	group('"PropertyDetails" as group_pc001')
+	field('"PropertyAddress" as field_pc001 <<StringType>>')
+	group_pc001 -- field_pc001
+	field('"PropertyType" as field_pc008 <<EnumerationType>>')
+	group_pc001 -- field_pc008
+	field('"DamageType" as field_pc002 <<EnumerationType>>')
+	group_pc001 -- field_pc002
+	group('"PropertyInfo" as group_pc002')
+	field('"BuildingAge" as field_pc006 <<NumberType>>')
+	group_pc002 -- field_pc006
+	field('"LastInspectionDate" as field_pc005 <<DateType>>')
+	group_pc002 -- field_pc005
+	field('"IsRepairable" as field_pc009 <<BooleanType>>')
+	group_pc002 -- field_pc009
+
+	group_pc001 ||--o| "0..1" group_pc002
+	group('"DamageAssessment" as group_pc003')
+	field('"EstimatedRepairCost" as field_pc003 <<NumberType>>')
+	group_pc003 -- field_pc003
+	field('"PropertyValue" as field_pc004 <<NumberType>>')
+	group_pc003 -- field_pc004
+	field('"AdjusterName" as field_pc010 <<StringType>>')
+	group_pc003 -- field_pc010
+	field('"RepairPeriod" as field_pc007 <<DateRangeType>>')
+	group_pc003 -- field_pc007
+
+	group_pc001 ||--o| "0..1" group_pc003
+	computation('"PropertyClaimTypeComp" as computation_pc01') {
+computes: ../../ClaimType
+}
+	group_pc001 -- computation_pc01
+	rule('"PropertyAddressRequired" as R_pc001') {
+}
+	group_pc001 -- R_pc001
+
+	group_ic001 ||--o| "0..1" group_pc001
+
+	PropertyClaimDocumentRoot ||--o| "0..1" group_ic001
+
+	group('"__meta" as abc6a6767a60488754aace2accb73824_group_8f4b1')
+	field('"docRef" as abc6a6767a60488754aace2accb73824_field_1169c <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_1169c
+	field('"modelReference" as abc6a6767a60488754aace2accb73824_field_cfb40 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_cfb40
+	field('"modelVersion" as abc6a6767a60488754aace2accb73824_field_17e3b <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_17e3b
+	field('"creator" as abc6a6767a60488754aace2accb73824_field_cdaf9 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_cdaf9
+	field('"createdAt" as abc6a6767a60488754aace2accb73824_field_65672 <<DateTimeType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_65672
+	field('"modifier" as abc6a6767a60488754aace2accb73824_field_1fa32 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_1fa32
+	field('"modifiedAt" as abc6a6767a60488754aace2accb73824_field_5cd66 <<DateTimeType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_5cd66
+	group('"extensions" as abc6a6767a60488754aace2accb73824_group_4c9a1')
+
+	abc6a6767a60488754aace2accb73824_group_8f4b1 ||--o| "0..1" abc6a6767a60488754aace2accb73824_group_4c9a1
+
+	PropertyClaimDocumentRoot ||--o| "0..1" abc6a6767a60488754aace2accb73824_group_8f4b1
+
+}
+@enduml

@@ -67,9 +67,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.jsonrpc4j.JsonRpcMethod;
 import com.mgmtp.a12.dataservices.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.attachment.AttachmentHeader;
@@ -83,7 +80,9 @@ import com.mgmtp.a12.dataservices.constants.PathConstants;
 import com.mgmtp.a12.dataservices.constants.RelationshipModelConstants;
 import com.mgmtp.a12.dataservices.constants.UserConstants;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
+import com.mgmtp.a12.dataservices.document.operation.internal.CheckUniquenessOperation;
 import com.mgmtp.a12.dataservices.document.operation.internal.AddDocumentOperation;
+import com.mgmtp.a12.dataservices.document.operation.internal.CheckUniquenessOperation;
 import com.mgmtp.a12.dataservices.document.operation.internal.CopyDocumentOperation;
 import com.mgmtp.a12.dataservices.document.operation.internal.DeleteDocumentOperation;
 import com.mgmtp.a12.dataservices.document.operation.internal.GetDocumentOperation;
@@ -111,9 +110,13 @@ import com.mgmtp.a12.dataservices.rpc.RemoteOperation;
 
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
 
+import static com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants.CHECK_UNIQUENESS_OPERATION;
 import static com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants.ADD_DOCUMENT_OPERATION;
 import static com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants.ADD_LINK_OPERATION;
+import static com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants.CHECK_UNIQUENESS_OPERATION;
 import static com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants.COPY_DOCUMENT_OPERATION;
 import static com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants.DELETE_DOCUMENT_OPERATION;
 import static com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants.DELETE_LINK_OPERATION;
@@ -160,6 +163,7 @@ import static org.testng.Assert.assertTrue;
 	@Autowired private AddLinkOperation addLinkOperation;
 	@Autowired private DeleteLinkOperation deleteLinkOperation;
 	@Autowired private ModifyLinkOperation modifyLinkOperation;
+	@Autowired private CheckUniquenessOperation checkUniquenessOperation;
 	@Autowired private RelinkDocumentOperation relinkDocumentOperation;
 	@Autowired private ListModelsOperation listModelsOperation;
 	@Autowired private ListValidationCodesOperation listValidationCodesOperation;
@@ -205,8 +209,8 @@ import static org.testng.Assert.assertTrue;
 	@BeforeMethod public void setUp() {
 		documentationAspectAndEventListener.setActive(false);
 
-		contractDocumentReference = addDocumentOperation.rpc(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL, objectMapper.createObjectNode(), Locale.ENGLISH);
-		bpDocumentReference = addDocumentOperation.rpc(DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL, objectMapper.createObjectNode(), Locale.ENGLISH);
+		contractDocumentReference = addDocumentOperation.rpc(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL, JACKSON_2_OBJECT_MAPPER.createObjectNode(), Locale.ENGLISH).docRef();
+		bpDocumentReference = addDocumentOperation.rpc(DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL, JACKSON_2_OBJECT_MAPPER.createObjectNode(), Locale.ENGLISH).docRef();
 
 		attachment =
 			attachmentService.createAttachment(IOUtils.toInputStream("text\n", StandardCharsets.UTF_8), "fileName.txt",
@@ -319,13 +323,13 @@ import static org.testng.Assert.assertTrue;
 			.filter(m -> !calledRemoteMethods.remove(m))
 			.collect(Collectors.toSet());
 		assertTrue(CollectionUtils.isEmpty(rpcMethods),
-			String.format("RPC methods not called:%n  %s%nPlease add tests for it into the  %s test class.",
+			"RPC methods not called:%n  %s%nPlease add tests for it into the  %s test class.".formatted(
 				rpcMethods.stream()
 					.map(Method::toString)
 					.collect(Collectors.joining("%n  ")),
 				this.getClass().getCanonicalName()));
 		assertTrue(CollectionUtils.isEmpty(calledRemoteMethods),
-			String.format("Called methods are not RPC:%n  %s%nPLease check the %s class to fix the issue.",
+			"Called methods are not RPC:%n  %s%nPLease check the %s class to fix the issue.".formatted(
 				calledRemoteMethods.stream()
 					.map(Method::toString)
 					.collect(Collectors.joining("%n  ")),
@@ -333,46 +337,51 @@ import static org.testng.Assert.assertTrue;
 	}
 
 	@Test(description = ADD_DOCUMENT_OPERATION) public void document_addDocumentOperation() {
-		addDocumentOperation.rpc(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL, objectMapper.createObjectNode(), Locale.ENGLISH);
-		markMethodCalled(addDocumentOperation, "rpc", String.class, JsonNode.class, Locale.class);
+		addDocumentOperation.rpc(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL, JACKSON_2_OBJECT_MAPPER.createObjectNode(), Locale.ENGLISH);
+		markMethodCalled(addDocumentOperation, "rpc", String.class, tools.jackson.databind.JsonNode.class, Locale.class);
 	}
 
 	@Test(description = GET_DOCUMENT_OPERATION) public void document_getDocumentOperation() {
-		getDocumentOperation.rpc(contractDocumentReference);
-		markMethodCalled(getDocumentOperation, "rpc", DocumentReference.class);
+		getDocumentOperation.rpc(contractDocumentReference.toString());
+		markMethodCalled(getDocumentOperation, "rpc", String.class);
 	}
 
 	@Test(description = MODIFY_DOCUMENT_OPERATION) public void document_modifyDocumentOperation() {
-		modifyDocumentOperation.rpc(contractDocumentReference, objectMapper.createObjectNode(), Locale.ENGLISH);
-		markMethodCalled(modifyDocumentOperation, "rpc", DocumentReference.class, JsonNode.class, Locale.class);
+		modifyDocumentOperation.rpc(contractDocumentReference.toString(), JACKSON_2_OBJECT_MAPPER.createObjectNode(), Locale.ENGLISH);
+		markMethodCalled(modifyDocumentOperation, "rpc", String.class, tools.jackson.databind.JsonNode.class, Locale.class);
 	}
 
 	@Test(description = DELETE_DOCUMENT_OPERATION) public void document_deleteDocumentOperation() {
-		deleteDocumentOperation.rpc(contractDocumentReference, Locale.ENGLISH);
-		markMethodCalled(deleteDocumentOperation, "rpc", DocumentReference.class, Locale.class);
+		deleteDocumentOperation.rpc(contractDocumentReference.toString(), Locale.ENGLISH);
+		markMethodCalled(deleteDocumentOperation, "rpc", String.class, Locale.class);
 	}
 
 	@Test(description = MULTI_DELETE_DOCUMENTS_OPERATION) public void document_multiDeleteDocumentsOperation() {
-		multiDeleteDocumentsOperation.rpc(List.of(contractDocumentReference));
+		multiDeleteDocumentsOperation.rpc(List.of(contractDocumentReference.toString()));
 		markMethodCalled(multiDeleteDocumentsOperation, "rpc", Collection.class);
 	}
 
 	@Test(description = VALIDATE_DOCUMENT_OPERATION) public void document_validateDocumentOperation() {
-		validateDocumentOperation.rpc(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL, objectMapper.createObjectNode(), false, Locale.ENGLISH);
+		validateDocumentOperation.rpc(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL, JACKSON_2_OBJECT_MAPPER.createObjectNode(), false, Locale.ENGLISH);
 		markMethodCalled(validateDocumentOperation, "rpc", String.class, JsonNode.class, Boolean.class, Locale.class);
 	}
 
 	@Test(description = PARTIAL_MODIFY_DOCUMENT_OPERATION) public void document_partialModifyDocumentOperation() {
-		partialModifyDocumentOperation.rpc(contractDocumentReference, List.of(), Locale.ENGLISH);
-		markMethodCalled(partialModifyDocumentOperation, "rpc", DocumentReference.class, List.class, Locale.class);
+		partialModifyDocumentOperation.rpc(contractDocumentReference.toString(), List.of(), Locale.ENGLISH);
+		markMethodCalled(partialModifyDocumentOperation, "rpc", String.class, List.class, Locale.class);
 	}
 
 	@Test(description = COPY_DOCUMENT_OPERATION) public void document_copyDocumentOperation() {
-		copyDocumentOperation.rpc(contractDocumentReference, Locale.ENGLISH);
-		markMethodCalled(copyDocumentOperation, "rpc", DocumentReference.class, Locale.class);
+		copyDocumentOperation.rpc(contractDocumentReference.toString(), Locale.ENGLISH);
+		markMethodCalled(copyDocumentOperation, "rpc", String.class, Locale.class);
 	}
 
-	@Test(description = QUERY_OPERATION) public void document_queryOperation() throws JsonProcessingException {
+	@Test(description = CHECK_UNIQUENESS_OPERATION) public void document_checkUniqueOperation() {
+		checkUniquenessOperation.rpc(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL, JACKSON_2_OBJECT_MAPPER.createObjectNode(), contractDocumentReference);
+		markMethodCalled(checkUniquenessOperation, "rpc", String.class, tools.jackson.databind.JsonNode.class, DocumentReference.class);
+	}
+
+	@Test(description = QUERY_OPERATION) public void document_queryOperation() {
 		queryOperation.rpc(QueryRoot.builder()
 			.projectionName(DocumentProjectionImplementation.PROJECTION_NAME)
 			.targetDocumentModel(DocumentModelConstants.CONTRACT_DOCUMENT_MODEL)
@@ -385,13 +394,13 @@ import static org.testng.Assert.assertTrue;
 	}
 
 	@Test(description = LOAD_ATTACHMENT_HEADER_OPERATION) public void attachment_loadAttachmentHeaderOperation() {
-		loadAttachmentHeaderOperation.rpc(attachment.getAttachmentId(), contractDocumentReference);
-		markMethodCalled(loadAttachmentHeaderOperation, "rpc", String.class, DocumentReference.class);
+		loadAttachmentHeaderOperation.rpc(attachment.getAttachmentId(), contractDocumentReference.toString());
+		markMethodCalled(loadAttachmentHeaderOperation, "rpc", String.class, String.class);
 	}
 
 	@Test(description = LOAD_ATTACHMENT_URL_OPERATION) public void attachment_loadAttachmentUrlOperation() {
-		loadAttachmentUrlOperation.rpc(attachment.getAttachmentId(), contractDocumentReference);
-		markMethodCalled(loadAttachmentUrlOperation, "rpc", String.class, DocumentReference.class);
+		loadAttachmentUrlOperation.rpc(attachment.getAttachmentId(), contractDocumentReference.toString());
+		markMethodCalled(loadAttachmentUrlOperation, "rpc", String.class, String.class);
 	}
 
 	@Test(description = LOAD_THUMBNAIL_URL_OPERATION) public void attachment_loadThumbnailUrlOperation() {
@@ -402,7 +411,7 @@ import static org.testng.Assert.assertTrue;
 	@Test(description = ADD_LINK_OPERATION) public void link_addLinkOperation() {
 		addLinkOperation.rpc(new LinkDescriptor(RelationshipModelConstants.CONTRACT_BUSINESS_PARTNER_MODEL, List.of(
 			new RelationshipRoleSpec(RelationshipModelConstants.RoleConstants.CONTRACT_ROLE, contractDocumentReference),
-			new RelationshipRoleSpec(RelationshipModelConstants.RoleConstants.PARTNER_ROLE, bpDocumentReference))), null);
+			new RelationshipRoleSpec(RelationshipModelConstants.RoleConstants.PARTNER_ROLE, bpDocumentReference))), (JsonNode) null);
 		markMethodCalled(addLinkOperation, "rpc", LinkDescriptor.class, JsonNode.class);
 	}
 
@@ -412,7 +421,7 @@ import static org.testng.Assert.assertTrue;
 	}
 
 	@Test(description = MODIFY_LINK_OPERATION) public void link_modifyLinkOperation() {
-		modifyLinkOperation.rpc(link, null);
+		modifyLinkOperation.rpc(link, (JsonNode) null);
 		markMethodCalled(modifyLinkOperation, "rpc", RelationshipLinkSpec.class, JsonNode.class);
 	}
 

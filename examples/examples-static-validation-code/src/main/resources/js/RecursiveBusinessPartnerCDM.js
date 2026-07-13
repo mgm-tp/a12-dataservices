@@ -3007,7 +3007,7 @@ var Meta_recursivebusinesspartnercdm = (function () {
 		this._metaRegeln = new Meta_Regel_recursivebusinesspartnercdm();
 		this._unterstuetzteSprachen = ["en", "de"];
 		this._da = new Model_t(
-				"28.4.0", // Produkt-Version
+				"29.4.0", // Produkt-Version
 				".", // dezimaltrenner
 				["en", "de"], // unterstuetzte Sprachen
 				MetaDataHelper.createSetOfStrings(), //  Namen der Applikationsbedingungen
@@ -3040,7 +3040,7 @@ var Meta_recursivebusinesspartnercdm = (function () {
 		metaPlfFeldInfo
 			.addLokalePflichtFeldInfos(this._meta.getValue(IMetaKeysInternal.MODEL_ADDITIV_PFLICHTFELD));
 	}
-	Object.defineProperty(Meta_recursivebusinesspartnercdm, "RUNTIME_VERSION", { get: function () { return "30.8"; },
+	Object.defineProperty(Meta_recursivebusinesspartnercdm, "RUNTIME_VERSION", { get: function () { return "31.1"; },
 		enumerable: true,
 		configurable: true
 	});

@@ -31,18 +31,15 @@
  */
 package com.mgmtp.a12.dataservices.client.autoconfigure;
 
-import java.lang.reflect.Modifier;
-
-import org.reflections.Reflections;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.mgmtp.a12.connector.rest.RestDeleteConnector;
 import com.mgmtp.a12.connector.rest.RestGetConnector;
 import com.mgmtp.a12.connector.rest.RestPostConnector;
@@ -55,55 +52,64 @@ import com.mgmtp.a12.dataservices.client.model.ModelsClient;
 import com.mgmtp.a12.dataservices.client.model.rest.RestModelsClient;
 import com.mgmtp.a12.dataservices.client.relationship.RelationshipClient;
 import com.mgmtp.a12.dataservices.client.relationship.rest.RestRelationshipClient;
+import com.mgmtp.a12.dataservices.rpc.internal.marshalling.DataServicesJacksonModule;
 import com.mgmtp.a12.dataservices.client.rpc.RequestBuilderFactory;
 import com.mgmtp.a12.dataservices.client.rpc.RestRpcOperationsClient;
 import com.mgmtp.a12.dataservices.client.rpc.RpcOperationsClient;
-import com.mgmtp.a12.dataservices.query.annotation.QueryAggregationFunction;
-import com.mgmtp.a12.dataservices.query.annotation.QueryOperator;
+import com.mgmtp.a12.dataservices.query.internal.marshalling.QuerySubtypeProvider;
+
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Spring Boot auto-configuration for the Data Services client.
  *
- * Registers client beans (RPC, enumeration, relationship, models, attachments) and configures Jackson polymorphic subtypes
- * for {@link com.mgmtp.a12.dataservices.query.annotation.QueryOperator} and {@link com.mgmtp.a12.dataservices.query.annotation.QueryAggregationFunction}.
- * Scans packages from {@link com.mgmtp.a12.dataservices.client.configuration.ClientConfiguration#getQuery()} and registers discovered types with the provided {@link com.fasterxml.jackson.databind.ObjectMapper}.
+ * Registers client beans for RPC, enumeration, relationship, models, and attachments.
  */
+@AutoConfigureAfter(name = "com.mgmtp.a12.dataservices.autoconfigure.DataServicesCoreAutoconfiguration")
 @EnableConfigurationProperties(ClientProperties.class)
 @PropertySource("classpath:dataservices-client-default.properties")
 @Configuration public class ClientAutoConfiguration implements InitializingBean {
 
 	private final ClientProperties restProperties;
 	private final RestPostConnector postConnector;
+	@Deprecated(since = "39.0.0", forRemoval = true)
 	private final ObjectMapper objectMapper;
 
 	/**
 	 * Creates the auto-configuration with explicit {@link ClientProperties} and {@link com.mgmtp.a12.connector.rest.RestPostConnector}.
 	 *
-	 * The {@link com.fasterxml.jackson.databind.ObjectMapper} is not provided in this constructor and remains `null`.
-	 * Using {@link #afterPropertiesSet()} requires a non-null mapper; ensure the alternative constructor is used if subtype registration is needed.
-	 *
 	 * @param restProperties Data Services client properties; must not be null.
 	 * @param postConnector REST connector used for POST operations; must not be null.
 	 */
-	public ClientAutoConfiguration(ClientProperties restProperties, RestPostConnector postConnector) {
+	@Autowired public ClientAutoConfiguration(ClientProperties restProperties, RestPostConnector postConnector) {
 		this.restProperties = restProperties;
 		this.postConnector = postConnector;
 		this.objectMapper = null;
 	}
 
 	/**
-	 * Creates the auto-configuration with explicit {@link ClientProperties}, REST connectors, and an {@link com.fasterxml.jackson.databind.ObjectMapper}.
-	 * The mapper is used to register discovered query subtypes.
+	 * Creates the auto-configuration with explicit {@link ClientProperties}, REST connector, and {@link ObjectMapper}.
 	 *
 	 * @param restProperties Data Services client properties; must not be null.
 	 * @param postConnector REST connector used for POST operations; must not be null.
-	 * @param objectMapper Jackson {@link com.fasterxml.jackson.databind.ObjectMapper} used for subtype registration; must not be null.
+	 * @param objectMapper Jackson mapper used for registering query subtypes; must not be null.
+	 * @deprecated Use {@link #ClientAutoConfiguration(ClientProperties, RestPostConnector)} instead.
+	 *             Subtype registration is now handled by the `clientQueryTypesModule` bean.
 	 */
-	@Autowired
+	@Deprecated(since = "39.0.0", forRemoval = true)
 	public ClientAutoConfiguration(ClientProperties restProperties, RestPostConnector postConnector, ObjectMapper objectMapper) {
 		this.restProperties = restProperties;
 		this.postConnector = postConnector;
 		this.objectMapper = objectMapper;
+	}
+
+	/**
+	 * No-op implementation of {@link InitializingBean#afterPropertiesSet()}.
+	 *
+	 * Reserved for future post-property-set initialization; no action is taken at this time.
+	 */
+	@Override public void afterPropertiesSet() {
+		// No-op: intentionally kept empty to avoid breaking changes; reserved for future post-property-set initialization.
 	}
 
 	@Bean RequestBuilderFactory requestBuilderFactory(ObjectMapper objectMapper) {
@@ -168,25 +174,48 @@ import com.mgmtp.a12.dataservices.query.annotation.QueryOperator;
 	}
 
 	/**
-	 * {@inheritDoc}
-	 *
-	 * Scans the packages configured via {@link com.mgmtp.a12.dataservices.client.configuration.ClientConfiguration#getQuery()} and
-	 * registers discovered {@link com.mgmtp.a12.dataservices.query.annotation.QueryOperator} and
-	 * {@link com.mgmtp.a12.dataservices.query.annotation.QueryAggregationFunction} subtypes with the {@link com.fasterxml.jackson.databind.ObjectMapper}.
-	 * TODO: Clarify contract (uncertain behavior) — {@code objectMapper} must be non-null; otherwise subtype registration fails.
+	 * Nested configuration that exposes the `clientDataServicesJacksonModule` bean in isolation
+	 * from {@link ClientAutoConfiguration}. Declared static so Spring can instantiate it
+	 * before the outer class, avoiding a circular dependency between the `ObjectMapper` build
+	 * pipeline (which collects `JacksonModule` beans via `StandardJsonMapperBuilderCustomizer`)
+	 * and the infrastructure beans that `ClientAutoConfiguration` depends on.
 	 */
-	@Override public void afterPropertiesSet() {
-		Reflections reflections = new Reflections(restProperties.getConfiguration().getQuery().getScanPackages());
+	@Configuration
+	static class JacksonConfiguration {
 
-		reflections.getTypesAnnotatedWith(QueryOperator.class).stream()
-			.filter(c -> !Modifier.isAbstract(c.getModifiers()))
-			.map(c -> new NamedType(c, c.getAnnotation(QueryOperator.class).value()))
-			.forEach(objectMapper::registerSubtypes);
+		/**
+		 * Scans the packages configured in {@link ClientProperties} for classes annotated with
+		 * `@QueryOperator` and `@QueryAggregationFunction` and exposes them as a
+		 * {@link QuerySubtypeProvider} bean.
+		 *
+		 * Skipped when a `QuerySubtypeProvider` bean is already present (e.g. when the server
+		 * autoconfiguration is active in the same context).
+		 *
+		 * @param clientProperties client configuration providing the scan packages; must not be null.
+		 * @return the provider; never null.
+		 */
+		@Bean
+		public QuerySubtypeProvider clientQuerySubtypeProvider(ClientProperties clientProperties) {
+			return new QuerySubtypeProvider(
+				clientProperties.getConfiguration().getQuery().getScanPackages().toArray(new String[0])
+			);
+		}
 
-		reflections.getTypesAnnotatedWith(QueryAggregationFunction.class).stream()
-			.filter(c -> !Modifier.isAbstract(c.getModifiers()))
-			.map(c -> new NamedType(c, c.getAnnotation(QueryAggregationFunction.class).value()))
-			.forEach(objectMapper::registerSubtypes);
+		/**
+		 * Exposes a {@link DataServicesJacksonModule} bean so that Spring Boot's
+		 * `StandardJsonMapperBuilderCustomizer` registers `@QueryOperator` and
+		 * `@QueryAggregationFunction` subtypes during `ObjectMapper` construction.
+		 *
+		 * Skipped when a `DataServicesJacksonModule` bean is already present (e.g. when the server
+		 * autoconfiguration is active in the same context).
+		 *
+		 * @param clientQuerySubtypeProvider provider of discovered query operator and aggregation function subtypes.
+		 * @return a configured {@link DataServicesJacksonModule}; never null.
+		 */
+		@Bean
+		public DataServicesJacksonModule clientDataServicesJacksonModule(@Qualifier("clientQuerySubtypeProvider") QuerySubtypeProvider clientQuerySubtypeProvider) {
+			return new DataServicesJacksonModule(clientQuerySubtypeProvider.getSubtypes());
+		}
 	}
-}
 
+}

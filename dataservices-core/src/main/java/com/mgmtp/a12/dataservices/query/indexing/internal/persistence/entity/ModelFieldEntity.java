@@ -33,15 +33,12 @@ package com.mgmtp.a12.dataservices.query.indexing.internal.persistence.entity;
 
 import java.io.Serializable;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants;
 
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -54,7 +51,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @Builder(toBuilder = true) @AllArgsConstructor @NoArgsConstructor
-@Cacheable @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = QueryGeneratorConstants.TableNames.MODEL_FIELDS_TABLE_NAME)
 @Entity public class ModelFieldEntity implements Serializable {
 
@@ -73,8 +69,11 @@ import lombok.NoArgsConstructor;
 	@JdbcTypeCode(SqlTypes.JSON)
 	@Column(name = QueryGeneratorConstants.ColumnNames.DATA_COLUMN_NAME) JsonNode data;
 
-	// Empty builder for javadoc to find it.
-	// Lombok should override it when compiling.
-	public static class ModelFieldEntityBuilder {}
+	/**
+	 * Builder for {@link ModelFieldEntity}. Declared explicitly so that references to this type
+	 * are visible to the javadoc compiler, which does not run Lombok annotation processors.
+	 * Lombok populates the builder methods at compile time.
+	 */
+	public static class ModelFieldEntityBuilder {
+	}
 }
-

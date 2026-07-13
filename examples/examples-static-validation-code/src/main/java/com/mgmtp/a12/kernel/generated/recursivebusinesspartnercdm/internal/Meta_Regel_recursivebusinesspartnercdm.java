@@ -39,12 +39,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.mgmtp.a12.kernel.core.rt.a12internal.validation.IIdentifier;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.formatdef.Identifier_t;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.formatdef.Identifier_t.ReferenzTyp;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.formatdef.Regel_t;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.meta.util.MapBuilder;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.Constants;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.RtIdentifierTemplate;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.formatdef.Identifier_t;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.formatdef.Identifier_t.ReferenzTyp;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.formatdef.Regel_t;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.meta.util.MapBuilder;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.Constants;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.RtIdentifierTemplate;
 
 /*
  * Enthält Metadaten über die Regeln.
@@ -231,24 +231,24 @@ public class  Meta_Regel_recursivebusinesspartnercdm {
 
 	private void initRegelFehlertexte_0(){
 	// Init Daten zur Regel '/BusinessPartnerRoot/Attachment/AttachmentInternalFilenameRequired'
-	mehrsprachigeFehlertexte.get(0).put(new Locale("de"), "Internal Error: Field $internal_filename@-2@1@e@1$ of customType attachment is not filled.");
-	mehrsprachigeFehlertexte.get(0).put(new Locale("en"), "Internal Error: Field $internal_filename@-2@1@e@1$ of customType attachment is not filled.");
+	mehrsprachigeFehlertexte.get(0).put(Locale.of("de"), "Internal Error: Field $internal_filename@-2@1@e@1$ of customType attachment is not filled.");
+	mehrsprachigeFehlertexte.get(0).put(Locale.of("en"), "Internal Error: Field $internal_filename@-2@1@e@1$ of customType attachment is not filled.");
 
 	// Init Daten zur Regel '/BusinessPartnerRoot/Attachment/AttachmentMimeTypeRequired'
-	mehrsprachigeFehlertexte.get(1).put(new Locale("de"), "Internal Error: Field $mime_type@-2@1@e@1$ of customType attachment is not filled.");
-	mehrsprachigeFehlertexte.get(1).put(new Locale("en"), "Internal Error: Field $mime_type@-2@1@e@1$ of customType attachment is not filled.");
+	mehrsprachigeFehlertexte.get(1).put(Locale.of("de"), "Internal Error: Field $mime_type@-2@1@e@1$ of customType attachment is not filled.");
+	mehrsprachigeFehlertexte.get(1).put(Locale.of("en"), "Internal Error: Field $mime_type@-2@1@e@1$ of customType attachment is not filled.");
 
 	// Init Daten zur Regel '/BusinessPartnerRoot/Attachment/AttachmentIdOrContentFilled'
-	mehrsprachigeFehlertexte.get(2).put(new Locale("de"), "Internal Error: Either attachment_id or content must be filled in a customType attachment, but not both.");
-	mehrsprachigeFehlertexte.get(2).put(new Locale("en"), "Internal Error: Either attachment_id or content must be filled in a customType attachment, but not both.");
+	mehrsprachigeFehlertexte.get(2).put(Locale.of("de"), "Internal Error: Either attachment_id or content must be filled in a customType attachment, but not both.");
+	mehrsprachigeFehlertexte.get(2).put(Locale.of("en"), "Internal Error: Either attachment_id or content must be filled in a customType attachment, but not both.");
 
 	// Init Daten zur Regel '/BusinessPartnerRoot/Attachment/SizeOfContentFilled'
-	mehrsprachigeFehlertexte.get(3).put(new Locale("de"), "Internal Error: If the content is filled, the size must be also filled.");
-	mehrsprachigeFehlertexte.get(3).put(new Locale("en"), "Internal Error: If the content is filled, the size must be also filled.");
+	mehrsprachigeFehlertexte.get(3).put(Locale.of("de"), "Internal Error: If the content is filled, the size must be also filled.");
+	mehrsprachigeFehlertexte.get(3).put(Locale.of("en"), "Internal Error: If the content is filled, the size must be also filled.");
 
 	// Init Daten zur Regel '/BusinessPartnerRoot/Employment/TaxComputation'
-	mehrsprachigeFehlertexte.get(4).put(new Locale("de"), "Berechnungsfehler für TaxComputation");
-	mehrsprachigeFehlertexte.get(4).put(new Locale("en"), "Computation error for TaxComputation");
+	mehrsprachigeFehlertexte.get(4).put(Locale.of("de"), "Berechnungsfehler für TaxComputation");
+	mehrsprachigeFehlertexte.get(4).put(Locale.of("en"), "Computation error for TaxComputation");
 
 	}
 

@@ -29,9 +29,15 @@
  * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
  * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
  */
-import type { RestRequestPayload } from "@com.mgmtp.a12.utils/utils-connector/lib/main/index.js";
+import type { RestRequestPayload } from "@com.mgmtp.a12.utils/utils-connector";
 
-import { isNullableType, isObject } from "../common/TypeGuardUtils.js";
+import {
+	isNull,
+	isNumber,
+	isObject,
+	isOptionalFieldOfType,
+	isString
+} from "../common/TypeGuardUtils.js";
 
 /** @module json-rpc */
 export interface JsonRpc2Message {
@@ -45,10 +51,8 @@ export namespace JsonRpc2Message {
 			isObject(obj) &&
 			"jsonrpc" in obj &&
 			obj.jsonrpc === "2.0" &&
-			(!("id" in obj) ||
-				typeof obj.id === "string" ||
-				typeof obj.id === "number" ||
-				obj.id === null)
+			"id" in obj &&
+			(isString(obj.id) || isNumber(obj.id) || isNull(obj.id))
 		);
 	}
 }
@@ -59,39 +63,6 @@ export interface JsonRpc2Request extends JsonRpc2Message {
 }
 
 export namespace JsonRpc2Request {
-	/**
-	 * @deprecated since 38.1.0, API was used only in Solr search, which is now replaced by a Query API
-	 */
-	export interface PageSpec {
-		readonly offset?: number;
-		readonly limit?: number;
-	}
-
-	/**
-	 * @deprecated since 38.1.0, API was used only in Solr search, which is now replaced by a Query API
-	 */
-	export interface QueryPageSpec {
-		readonly pageNumber?: number;
-		readonly pageSize?: number;
-	}
-
-	/**
-	 * @deprecated since 38.1.0, API was used only in Solr search, which is now replaced by a Query API
-	 */
-	export interface FilterSpec {
-		readonly fulltext: string;
-		readonly filters: string[];
-		readonly lang: string;
-	}
-
-	/**
-	 * @deprecated since 38.1.0, API was used only in Solr search, which is now replaced by a Query API
-	 */
-	export interface SortSpec {
-		readonly order?: string;
-		readonly lang?: string;
-	}
-
 	export function build(request: JsonRpc2Request[]): RestRequestPayload {
 		return {
 			method: "POST",
@@ -105,7 +76,9 @@ export namespace JsonRpc2Request {
 	}
 
 	export function isInstance(obj: unknown): obj is JsonRpc2Request {
-		return JsonRpc2Message.isInstance(obj) && "method" in obj && typeof obj.method === "string";
+		return (
+			JsonRpc2Message.isInstance(obj) && "method" in obj && isString(obj.method) && "params" in obj
+		);
 	}
 }
 
@@ -120,6 +93,18 @@ export interface JsonRpc2Response extends JsonRpc2Message {
  */
 export type JsonRpc2ResponseError = Required<Omit<JsonRpc2Response, "result">>;
 export type JsonRpc2ResponseOK = Required<Omit<JsonRpc2Response, "error">>;
+
+/**
+ * A JSON-RPC error response narrowed to a unique-constraint error, where
+ * {@link JsonRpc2Response.JsonRpc2Error.data} is known to be a {@link JsonRpc2Response.Exception}.
+ * Use {@link JsonRpc2Response.uniqueConstraintViolationError.isInstance} (error code -32060)
+ * to narrow a response to this type.
+ */
+export type JsonRpc2UniqueConstraintErrorResponse = Omit<JsonRpc2ResponseError, "error"> & {
+	readonly error: Omit<JsonRpc2Response.JsonRpc2Error, "data"> & {
+		readonly data: JsonRpc2Response.Exception;
+	};
+};
 
 export namespace JsonRpc2Response {
 	export interface Exception {
@@ -136,13 +121,17 @@ export namespace JsonRpc2Response {
 		export function isInstance(error: unknown): error is Exception {
 			return (
 				isObject(error) &&
-				typeof error.level === "string" &&
+				"level" in error &&
+				isString(error.level) &&
+				"title" in error &&
 				LocalizableMessage.isInstance(error.title) &&
+				"description" in error &&
 				LocalizableMessage.isInstance(error.description) &&
-				(isNullableType(error.detail) || ExceptionDetails.isInstance(error.details)) &&
-				(isNullableType(error.source) || typeof error.source === "string") &&
-				(isNullableType(error.timestamp) || typeof error.timestamp === "string") &&
-				(isNullableType(error.logId) || typeof error.logId === "string")
+				"details" in error &&
+				ExceptionDetails.isInstance(error.details) &&
+				isOptionalFieldOfType(error, "source", isString) &&
+				isOptionalFieldOfType(error, "timestamp", isString) &&
+				isOptionalFieldOfType(error, "logId", isString)
 			);
 		}
 	}
@@ -156,7 +145,13 @@ export namespace JsonRpc2Response {
 	export namespace ExceptionDetails {
 		export function isInstance(error: unknown): error is ExceptionDetails {
 			return (
-				isObject(error) && typeof error.code === "string" && typeof error.subsystem === "string"
+				isObject(error) &&
+				"code" in error &&
+				isString(error.code) &&
+				"time" in error &&
+				isString(error.time) &&
+				"subsystem" in error &&
+				isString(error.subsystem)
 			);
 		}
 	}
@@ -168,22 +163,23 @@ export namespace JsonRpc2Response {
 
 	export namespace LocalizableMessage {
 		export function isInstance(error: unknown): error is LocalizableMessage {
-			return isObject(error) && typeof error.default === "string" && typeof error.key === "string";
+			return (
+				isObject(error) &&
+				"key" in error &&
+				isString(error.key) &&
+				"default" in error &&
+				isString(error.default)
+			);
 		}
 	}
 
 	export function isInstance(obj: unknown): obj is JsonRpc2Response {
-		return (
-			isObject(obj) &&
-			("result" in obj ||
-				("error" in obj && typeof obj.error === "object" && JsonRpc2Error.isInstance(obj.error))) &&
-			JsonRpc2Message.isInstance(obj)
-		);
+		return JsonRpc2Message.isInstance(obj);
 	}
 
 	export namespace ok {
 		export function isInstance(obj: unknown): obj is JsonRpc2ResponseOK {
-			return JsonRpc2Response.isInstance(obj) && "result" in obj;
+			return JsonRpc2Response.isInstance(obj) && "result" in obj && !("error" in obj);
 		}
 	}
 
@@ -191,9 +187,24 @@ export namespace JsonRpc2Response {
 		export function isInstance(obj: unknown): obj is JsonRpc2ResponseError {
 			return (
 				JsonRpc2Response.isInstance(obj) &&
+				!("result" in obj) &&
 				"error" in obj &&
-				typeof obj.error === "object" &&
 				JsonRpc2Error.isInstance(obj.error)
+			);
+		}
+	}
+
+	/**
+	 * Type guard for a unique-constraint violation error response (error code -32060).
+	 * Thrown when a document violates a named uniqueness constraint during ADD_DOCUMENT or MODIFY_DOCUMENT.
+	 * Narrows {@link JsonRpc2Response.JsonRpc2Error.data} to {@link Exception}.
+	 */
+	export namespace uniqueConstraintViolationError {
+		export function isInstance(obj: unknown): obj is JsonRpc2UniqueConstraintErrorResponse {
+			return (
+				JsonRpc2Response.error.isInstance(obj) &&
+				obj.error.code === JsonRpc2Error.UNIQUE_CONSTRAINT_VIOLATION &&
+				JsonRpc2Response.Exception.isInstance(obj.error.data)
 			);
 		}
 	}
@@ -218,14 +229,16 @@ export namespace JsonRpc2Response {
 		export const METHOD_NOT_FOUND = -32601;
 		export const INVALID_PARAMS = -32602;
 		export const INTERNAL_ERROR = -32603;
+		export const UNIQUE_CONSTRAINT_VIOLATION = -32060;
 
 		export function isInstance(obj: unknown): obj is JsonRpc2Response.JsonRpc2Error {
 			return (
 				isObject(obj) &&
 				"code" in obj &&
-				typeof obj.code === "number" &&
+				isNumber(obj.code) &&
 				"message" in obj &&
-				typeof obj.message === "string"
+				isString(obj.message) &&
+				"data" in obj
 			);
 		}
 	}

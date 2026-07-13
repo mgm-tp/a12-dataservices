@@ -34,11 +34,12 @@ package com.mgmtp.a12.dataservices.query;
 import java.util.Collection;
 
 import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * The query service is used to execute a query secure way. Validations, enrichments, and projections are applied to the input query
  */
-public interface QueryService {
+@OnlyForUsage public interface QueryService {
 
 	/**
 	 * Execute the query with all validations, projections, permission checks, and context enrichments.

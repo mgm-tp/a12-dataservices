@@ -40,7 +40,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.mgmtp.a12.dataservices.document.DocumentReference;
-import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.entity.LocalizedFieldEntity;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.entity.ModelFieldEntity;
 import com.mgmtp.a12.dataservices.search.customizer.SearchCustomizer;
 import com.mgmtp.a12.dataservices.search.customizer.SearchDataContext;
@@ -137,7 +136,7 @@ import lombok.extern.slf4j.Slf4j;
 	 * @param localizedFieldEntities map of localized field entities by locale and field path
 	 */
 	public void customizeModelFields(String modelName, String path, IField field, IFieldType effectiveFieldType,
-		ModelFieldEntity.ModelFieldEntityBuilder modelFieldEntityBuilder, Map<String, Map<String, LocalizedFieldEntity>> localizedFieldEntities) {
+		ModelFieldEntity.ModelFieldEntityBuilder modelFieldEntityBuilder, Map<String, Map<String, String>> localizedFieldEntities) {
 
 		if (hasCustomizers()) {
 			ModelFieldsContextImpl ctx =

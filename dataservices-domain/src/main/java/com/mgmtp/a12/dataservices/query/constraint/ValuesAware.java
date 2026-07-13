@@ -33,12 +33,14 @@ package com.mgmtp.a12.dataservices.query.constraint;
 
 import java.util.Collection;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Contract for constraints that carry multiple values used for matching or filtering.
  *
  * @param <T> type of the values exposed by the constraint.
  */
-public interface ValuesAware<T> {
+@OnlyForUsage public interface ValuesAware<T> {
 	/**
 	 * Returns the values carried by this constraint.
 	 *

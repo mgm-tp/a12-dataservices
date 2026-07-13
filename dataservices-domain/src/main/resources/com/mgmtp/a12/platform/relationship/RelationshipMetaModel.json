@@ -428,47 +428,6 @@
               },
               {
                 "type": "Field",
-                "id": "F5",
-                "name": "associationType",
-                "Field": {
-                  "fieldType": {
-                    "type": "EnumerationType",
-                    "EnumerationType": {
-                      "values": [
-                        {
-                          "value": "OWNED",
-                          "label": [
-                            {
-                              "locale": "en",
-                              "text": "Owned"
-                            }
-                          ]
-                        },
-                        {
-                          "value": "SHARED",
-                          "label": [
-                            {
-                              "locale": "en",
-                              "text": "Shared"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "label": [
-                    {
-                      "locale": "en",
-                      "text": "Association Type"
-                    }
-                  ],
-                  "requirednessConfig": {
-                    "mode": "absoluteOrRelativeToNextRepAncestor"
-                  }
-                }
-              },
-              {
-                "type": "Field",
                 "id": "F26",
                 "name": "linkDocumentModel",
                 "externalDescription": [
@@ -624,28 +583,6 @@
                       }
                     },
                     {
-                      "type": "Field",
-                      "id": "F14",
-                      "name": "navigable",
-                      "externalDescription": [
-                        {
-                          "locale": "en",
-                          "text": "Navigable is a hint, and Navigation can be further restricted outside of relation model, e.g. by permissions or use-cases."
-                        }
-                      ],
-                      "Field": {
-                        "fieldType": {
-                          "type": "BooleanType"
-                        },
-                        "label": [
-                          {
-                            "locale": "en",
-                            "text": "Navigable"
-                          }
-                        ]
-                      }
-                    },
-                    {
                       "type": "Group",
                       "id": "G15",
                       "name": "linkConstraints",
@@ -659,34 +596,6 @@
                             "Group": {
                               "repeatability": 1,
                               "elements": [
-                                {
-                                  "type": "Field",
-                                  "id": "F18",
-                                  "name": "lowerLimit",
-                                  "externalDescription": [
-                                    {
-                                      "locale": "en",
-                                      "text": "Must be >= 0."
-                                    }
-                                  ],
-                                  "Field": {
-                                    "fieldType": {
-                                      "type": "NumberType",
-                                      "NumberType": {
-                                        "minValue": 0
-                                      }
-                                    },
-                                    "label": [
-                                      {
-                                        "locale": "en",
-                                        "text": "Lower Limit"
-                                      }
-                                    ],
-                                    "requirednessConfig": {
-                                      "mode": "absoluteOrRelativeToNextRepAncestor"
-                                    }
-                                  }
-                                },
                                 {
                                   "type": "Field",
                                   "id": "F20",
@@ -759,158 +668,6 @@
                           }
                         ]
                       }
-                    },
-                    {
-                      "type": "Group",
-                      "id": "G21",
-                      "name": "candidateConstraints",
-                      "Group": {
-                        "repeatability": 1,
-                        "elements": [
-                          {
-                            "type": "Field",
-                            "id": "F22",
-                            "name": "population",
-                            "Field": {
-                              "fieldType": {
-                                "type": "TypeDefType",
-                                "TypeDefType": {
-                                  "typeDefinitionId": "typedef_0e82f6a0-560f-49ec-b1ea-c991ba1a3fcd"
-                                }
-                              },
-                              "label": [
-                                {
-                                  "locale": "en",
-                                  "text": "Population"
-                                }
-                              ]
-                            }
-                          },
-                          {
-                            "type": "Group",
-                            "id": "G23",
-                            "name": "populationParameters",
-                            "externalDescription": [
-                              {
-                                "locale": "en",
-                                "text": "Values for a population with parameters must be fully specified at the time the relation model is created and should not change.\n                            (E.g. $country = \"Germany\" in BrokersInCountry)"
-                              }
-                            ],
-                            "Group": {
-                              "repeatability": 100,
-                              "elements": [
-                                {
-                                  "type": "Field",
-                                  "id": "F24",
-                                  "name": "name",
-                                  "Field": {
-                                    "fieldType": {
-                                      "type": "StringType"
-                                    },
-                                    "label": [
-                                      {
-                                        "locale": "en",
-                                        "text": "Name"
-                                      }
-                                    ],
-                                    "requirednessConfig": {
-                                      "mode": "absoluteOrRelativeToNextRepAncestor"
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "Field",
-                                  "id": "F25",
-                                  "name": "value",
-                                  "Field": {
-                                    "fieldType": {
-                                      "type": "StringType"
-                                    },
-                                    "label": [
-                                      {
-                                        "locale": "en",
-                                        "text": "Value"
-                                      }
-                                    ],
-                                    "requirednessConfig": {
-                                      "mode": "absoluteOrRelativeToNextRepAncestor"
-                                    }
-                                  }
-                                }
-                              ]
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "Field",
-                "id": "F30",
-                "name": "storage",
-                "externalDescription": [
-                  {
-                    "locale": "en",
-                    "text": "Embedded: Allows to \"overlay\" a Picus group in the source model with relationship semantics.\n                    embeddedGroupPath is then required.\n\n                    External: Specific information of physical mapping is held outside of relation model to allow deployers to specify it without touching the relation model. (Like with populations.)"
-                  }
-                ],
-                "Field": {
-                  "fieldType": {
-                    "type": "EnumerationType",
-                    "EnumerationType": {
-                      "values": [
-                        {
-                          "value": "EMBEDDED",
-                          "label": [
-                            {
-                              "locale": "en",
-                              "text": "Embedded"
-                            }
-                          ]
-                        },
-                        {
-                          "value": "EXTERNAL",
-                          "label": [
-                            {
-                              "locale": "en",
-                              "text": "External"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  },
-                  "label": [
-                    {
-                      "locale": "en",
-                      "text": "Storage"
-                    }
-                  ],
-                  "requirednessConfig": {
-                    "mode": "absoluteOrRelativeToNextRepAncestor"
-                  }
-                }
-              },
-              {
-                "type": "Field",
-                "id": "F31",
-                "name": "embeddedGroupPath",
-                "externalDescription": [
-                  {
-                    "locale": "en",
-                    "text": "Picus group in the source model.\n                    Required if Storage is EMBEDDED."
-                  }
-                ],
-                "Field": {
-                  "fieldType": {
-                    "type": "StringType"
-                  },
-                  "label": [
-                    {
-                      "locale": "en",
-                      "text": "GroupPath when embedded"
                     }
                   ]
                 }

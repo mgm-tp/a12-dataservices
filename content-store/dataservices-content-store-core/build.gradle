@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
 
+	api libs.baseModelUtils
 	api project(':dataservices-common:dataservices-common-lib')
 	api project(':content-store:dataservices-content-store-domain')
 	api libs.springDataJpa
@@ -21,9 +22,7 @@ dependencies {
 	compileOnly libs.servletApi
 	implementation libs.h2
 
-	implementation libs.jacksonDatabind,
-			libs.jacksonAnnotations,
-			libs.commonsLang3,
+	implementation libs.commonsLang3,
 			libs.commonsCollections4,
 			libs.annotationApi,
 			libs.mgmModelApi,

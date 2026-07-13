@@ -33,7 +33,6 @@ package com.mgmtp.a12.dataservices;
 
 import com.mgmtp.a12.dataservices.document.internal.DefaultDataServicesDocumentFactory;
 import com.mgmtp.a12.dataservices.document.internal.DefaultDataServicesDocumentMetadataExtractor;
-import com.mgmtp.a12.dataservices.model.metadata.DocumentModelMetadataInjectorFactory;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -46,9 +45,6 @@ import lombok.NoArgsConstructor;
 
 	private final DefaultDataServicesDocumentFactory dataServicesDocumentFactory =
 		new DefaultDataServicesDocumentFactory(new DefaultDataServicesDocumentMetadataExtractor(), metadataUtils, documentUtils);
-
-	private final DocumentModelMetadataInjectorFactory documentModelMetadataInjectorFactory =
-		new DocumentModelMetadataInjectorFactory(documentModelJoiningService, documentFactory, documentModelService);
 
 	public static MetadataTestSupport getInstance() {
 		return INSTANCE;

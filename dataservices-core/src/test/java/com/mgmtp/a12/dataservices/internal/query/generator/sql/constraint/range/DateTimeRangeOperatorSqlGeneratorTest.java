@@ -37,6 +37,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
+import com.mgmtp.a12.dataservices.exception.query.QueryException;
 import com.mgmtp.a12.dataservices.internal.query.generator.sql.constraint.AbstractSqlGeneratorTest;
 import com.mgmtp.a12.dataservices.query.constraint.range.DateRangeOperator;
 import com.mgmtp.a12.dataservices.query.enrichement.Enrichments;
@@ -80,6 +81,7 @@ public class DateTimeRangeOperatorSqlGeneratorTest extends AbstractSqlGeneratorT
 					"p1", "core",
 					"p2", "2025-01-01T13:52:43"),
 			},
+
 			new Object[] { "Range containment", DateRangeOperator.builder().rangeType(true)
 				.field("/__meta/createdAt")
 				.from("2025-01-01T13:52:43")
@@ -93,6 +95,19 @@ public class DateTimeRangeOperatorSqlGeneratorTest extends AbstractSqlGeneratorT
 					"p2", "2025-01-01T13:52:43",
 					"p3", "2025-04-25T16:32:00"),
 			},
+
+			new Object[] { "Range containment", DateRangeOperator.builder().rangeType(true)
+				.field("/__meta/createdAt")
+				.value("2025-01-01T13:52:43")
+				.reverse(true)
+				.build(),
+				DATE_RANGE_FIELD_TYPE,
+				"en",
+				"EXISTS (SELECT * FROM document_fields AS document_fields WHERE document_fields.field_name = :p0 AND target_document.doc_ref = document_fields.doc_ref AND document_fields.source = :p1 AND (:p2 :: timestamp <@ document_fields.ts_range_value))",
+				Map.of("p0", "/__meta/createdAt",
+					"p1", "core",
+					"p2", "2025-01-01T13:52:43"),
+			},
 		};
 	}
 
@@ -105,9 +120,41 @@ public class DateTimeRangeOperatorSqlGeneratorTest extends AbstractSqlGeneratorT
 		queryContext.getEnrichments().getFieldDescriptor(op.getField()).setFieldType(type);
 		queryContext.getEnrichments().getOperatorEnrichment(op).put(Enrichments.FROM_PROPERTY, op.getFrom());
 		queryContext.getEnrichments().getOperatorEnrichment(op).put(Enrichments.TO_PROPERTY, op.getTo());
+		queryContext.getEnrichments().getOperatorEnrichment(op).put(Enrichments.VALUE_PROPERTY, op.getValue());
 
 		QueryGeneratorContext generatorContext = queryGeneratorContextFactory.createContext(queryContext);
 		assertEquals(generator.renderCondition(new StringBuilder(), op, generatorContext).toString(), expectation);
 		assertEquals(generatorContext.getParamHolder(), expectedParams);
+	}
+
+	@Test(expectedExceptions = QueryException.class, expectedExceptionsMessageRegExp = "For a range operator you can specify either \"from\" and \"to\" or \"value\", but not both.")
+	public void shouldThrowQueryExceptionWhenMixingValueWithFromTo() {
+		DateRangeOperator op = DateRangeOperator.builder().rangeType(true)
+			.field("/__meta/createdAt")
+			.from("2025-01-01T13:52:43")
+			.to("2025-04-25T16:32:00")
+			.value("2025-01-01T13:52:43")
+			.reverse(true)
+			.build();
+		DefaultQueryContext queryContext = newQueryContext();
+		queryContext.getEnrichments().getOperatorEnrichment(op).put(Enrichments.FROM_PROPERTY, op.getFrom());
+		queryContext.getEnrichments().getOperatorEnrichment(op).put(Enrichments.TO_PROPERTY, op.getTo());
+		queryContext.getEnrichments().getOperatorEnrichment(op).put(Enrichments.VALUE_PROPERTY, op.getValue());
+
+		QueryGeneratorContext generatorContext = queryGeneratorContextFactory.createContext(queryContext);
+		generator.renderCondition(new StringBuilder(), op, generatorContext);
+	}
+
+	@Test(expectedExceptions = QueryException.class, expectedExceptionsMessageRegExp = "By value you can search in range type only with reverse enabled.")
+	public void shouldThrowQueryExceptionWhenIsRangeTypeAndIsNotReverse() {
+		DateRangeOperator op = DateRangeOperator.builder().rangeType(true)
+			.field("/__meta/createdAt")
+			.value("2025-01-01T13:52:43")
+			.build();
+		DefaultQueryContext queryContext = newQueryContext();
+		queryContext.getEnrichments().getOperatorEnrichment(op).put(Enrichments.VALUE_PROPERTY, op.getValue());
+
+		QueryGeneratorContext generatorContext = queryGeneratorContextFactory.createContext(queryContext);
+		generator.renderCondition(new StringBuilder(), op, generatorContext);
 	}
 }

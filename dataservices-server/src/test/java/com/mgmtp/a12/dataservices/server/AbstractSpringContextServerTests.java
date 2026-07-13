@@ -32,27 +32,16 @@
 package com.mgmtp.a12.dataservices.server;
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
-
 import javax.sql.DataSource;
+import jakarta.persistence.EntityManagerFactory;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.ReactorContextTestExecutionListener;
 import org.springframework.security.test.context.support.TestExecutionEvent;
@@ -63,26 +52,27 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestExecutionListeners.MergeMode;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 
-import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import com.mgmtp.a12.dataservices.DocumentFunctions;
 import com.mgmtp.a12.dataservices.EmbeddedPostgresInitializer;
+import com.mgmtp.a12.dataservices.JsonFunctions;
+import com.mgmtp.a12.dataservices.LinksFunctions;
+import com.mgmtp.a12.dataservices.ModelsFunctions;
+import com.mgmtp.a12.dataservices.ResourceFunctions;
 import com.mgmtp.a12.dataservices.TestEnvironmentCleaner;
 import com.mgmtp.a12.dataservices.common.exception.UnexpectedException;
-import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
 import com.mgmtp.a12.dataservices.constants.UserConstants;
 import com.mgmtp.a12.dataservices.document.DocumentService;
-import com.mgmtp.a12.dataservices.model.GenericModel;
 import com.mgmtp.a12.dataservices.model.ModelService;
 import com.mgmtp.a12.dataservices.test.utils.UAASecurityBypassUtils;
 import com.mgmtp.a12.dataservices.uaa.UaaTestHelper;
-import com.mgmtp.a12.model.header.HeaderParser;
 import com.mgmtp.a12.uaa.authorization.SecurityFreeCallback;
 import com.mgmtp.a12.uaa.authorization.UAASecurityBypass;
 
-import lombok.SneakyThrows;
+import static com.mgmtp.a12.dataservices.constants.PathConstants.BUSINESS_PARTNER_LTD_MODEL_PATH;
 
 /**
  * Base test class with all necessary configurations to run repository/service tests
@@ -107,30 +97,32 @@ import lombok.SneakyThrows;
 @SpringBootTest(classes = { ServerConfiguration.class })
 public abstract class AbstractSpringContextServerTests extends AbstractTestNGSpringContextTests {
 
-	protected static final Predicate<String> ATTACHMENT_URL_PATTERN =
-		Pattern.compile("^http://localhost:8080/cs/download/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\?filename=([^&]*\\.[^&]+)$")
-			.asPredicate();
-	protected static final Predicate<String> THUMBNAIL_URL_PATTERN =
-		Pattern.compile("^http://localhost:8080/cs/download/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
-			.asPredicate();
+	@Autowired protected ResourceFunctions resourceFunctions;
+	@Autowired protected ModelsFunctions modelsFunctions;
+	@Autowired protected DocumentFunctions documentFunctions;
+	@Autowired protected LinksFunctions linksFunctions;
 
-	@Autowired protected ResourcePatternResolver resourcePatternResolver;
-	@Autowired protected ResourceLoader resourceLoader;
 	@Autowired protected CacheManager cacheManager;
-	@Autowired protected HeaderParser headerParser;
-	@Autowired protected ModelService modelService;
+
 	@Autowired protected UAASecurityBypass securityBypass;
 	@Autowired protected ObjectMapper objectMapper;
 	@Autowired @Qualifier("dsDataSource") private DataSource dataSource;
+	@Autowired @Qualifier("dsEntityManagerFactory") private EntityManagerFactory dsEntityManagerFactory;
+
 	@Autowired protected UserDetailsService userDetailsService;
+	@Autowired protected ModelService modelService;
 	@Autowired protected DocumentService documentService;
-	@Autowired protected DataServicesCoreProperties dataServicesCoreProperties;
 
 	private final TestEnvironmentCleaner testEnvironmentCleaner = new TestEnvironmentCleaner();
-	protected static final String RESOURCE_TEST_BASE = "src/test/resources/";
-	protected static final String MODEL_PATH_FOLDER = "/models/document/";
+
+	protected static final String ADMIN_ROLE_ONLY = "admin";
+	protected static final String COMMON_ROLES = "admin,guest";
+
 	protected static final String BUSINESS_PARTNER_DOCUMENT_FILE = "document/BusinessPartnerWith1Attachment.json";
-	protected static final String BUSINESS_PARTNER_MODEL_NAME = "BusinessPartner";
+
+	protected static final String PARTNER_DOCUMENT_FILE = "document/BusinessPartnerDocument.json";
+	protected static final String CONTRACT_DOCUMENT_FILE = "document/ContractDocument.json";
+	protected static final String COINSURED_DOCUMENT_FILE = "document/CoinsuredAdditionalFieldsDocument.json";
 
 	@BeforeClass
 	@Order(Ordered.HIGHEST_PRECEDENCE)
@@ -140,6 +132,7 @@ public abstract class AbstractSpringContextServerTests extends AbstractTestNGSpr
 
 	@BeforeClass
 	public void cleanUpTestEnvironment() {
+		dsEntityManagerFactory.getCache().evictAll();
 		testEnvironmentCleaner.cleanUpDatabase(dataSource);
 		testEnvironmentCleaner.cleanUpCache(cacheManager);
 	}
@@ -157,47 +150,51 @@ public abstract class AbstractSpringContextServerTests extends AbstractTestNGSpr
 		securityBypass.runWithSecurityBypass(code);
 	}
 
-	@SneakyThrows
-	protected String loadResourceFromClasspathAsString(final String relativePath) {
-		final Resource resource = resourcePatternResolver.getResource(String.format("classpath:%s", relativePath));
-		final Writer stringWriter = new StringWriter();
-		IOUtils.copy(resource.getInputStream(), stringWriter, StandardCharsets.UTF_8);
-		return stringWriter.toString();
+	protected void createModelWithRole(String path, String role) throws IOException {
+		String modelContent = resourceFunctions.loadResource(path);
+		modelContent = replaceRoles(modelContent, role);
+		modelsFunctions.createModelFromJson(modelContent);
 	}
 
-	protected String readFile(final String fileName) {
+	protected String loadModelWithRoles(String roles) throws IOException {
+		String modelContent = resourceFunctions.loadResource(BUSINESS_PARTNER_LTD_MODEL_PATH);
+		return replaceRoles(modelContent, roles);
+	}
+
+	protected void createModel(String modelContent) {
+		modelService.create(modelContent);
+	}
+
+	protected void updateModelRole(String modelName, String newRole) throws IOException {
+		changeUserInContext(UserConstants.ADMIN_USER);
+
+		String existingModelJson = objectMapper.writeValueAsString(modelService.load(modelName));
+		String updatedModelJson = replaceRoles(existingModelJson, newRole);
+		modelService.update(updatedModelJson);
+	}
+
+	protected String replaceRoles(String modelContent, String roles) throws IOException {
+		return JsonFunctions.replaceValue(modelContent, "/header/annotations/0/value", roles, true);
+	}
+
+	/**
+	 * Helper method to reduce boilerplate in authorization tests
+	 * Executes an operation and asserts whether AccessDeniedException is thrown correctly
+	 */
+	protected void assertAccessPermission(Runnable operation, boolean hasPermission, String operationDescription) {
 		try {
-			final byte[] encoded = Files.readAllBytes(Paths.get(RESOURCE_TEST_BASE + fileName));
-			return new String(encoded, StandardCharsets.UTF_8);
-		} catch (final IOException ex) {
-			throw new IllegalStateException("Resource " + fileName + " cannot be found");
+			operation.run();
+			Assert.assertTrue(hasPermission,
+					operationDescription + " should have been denied but was allowed");
+		} catch (AccessDeniedException e) {
+			Assert.assertFalse(hasPermission,
+					operationDescription + " should have been allowed but was denied: " + e.getMessage());
 		}
 	}
 
-	protected List<String> readLinesOfFile(final String fileName) {
-		try {
-			return Files.readAllLines(Paths.get(RESOURCE_TEST_BASE + fileName));
-		} catch (final IOException ex) {
-			throw new IllegalStateException("Resource " + fileName + " cannot be found");
-		}
+	private static String createPathToJsonFile(String prefixPath, String modelName) {
+		return "%s%s.json".formatted(prefixPath, modelName);
 	}
 
-	protected GenericModel createModel(String modelContent) {
-		return modelService.create(modelContent);
-	}
-
-	@SneakyThrows
-	protected <T> T jsonToObject(TreeNode node, TypeReference<T> type) {
-		return objectMapper
-			.treeAsTokens(node)
-			.readValueAs(type);
-	}
-
-	@SneakyThrows
-	protected <T> T jsonToObject(TreeNode node, Class<T> type) {
-		return objectMapper
-			.treeAsTokens(node)
-			.readValueAs(type);
-	}
 }
 

@@ -40,13 +40,13 @@ import com.mgmtp.a12.dataservices.common.anonymizing.Anonymizer;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.document.DocumentService;
 import com.mgmtp.a12.dataservices.document.events.DocumentAfterDeleteEvent;
+import com.mgmtp.a12.dataservices.rpc.internal.RpcDocRefParser;
 import com.mgmtp.a12.dataservices.document.events.DocumentAfterRepositoryLoadEvent;
 import com.mgmtp.a12.dataservices.document.events.DocumentBeforeDeleteEvent;
 import com.mgmtp.a12.dataservices.document.events.internal.DocumentAfterRepositoryDeleteEvent;
 import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
 import com.mgmtp.a12.dataservices.rpc.RemoteOperation;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -65,7 +65,7 @@ public class DeleteDocumentOperation extends AbstractDocumentOperation {
 	}
 
 	/**
-	 * @param docRef Reference to the document that should be updated in format `DocumentModel/DocumentId`.
+	 * @param docRef Reference to the document in format `DocumentModel/DocumentId`.
 	 * @param locale The locale against which the document will be validated.
 	 * @event {@link DocumentBeforeDeleteEvent}
 	 * @event {@link DocumentAfterDeleteEvent}
@@ -73,14 +73,15 @@ public class DeleteDocumentOperation extends AbstractDocumentOperation {
 	 * @event {@link DocumentAfterRepositoryLoadEvent}
 	 */
 	@Transactional
-	public void rpc(@NonNull @JsonRpcParam("docRef") DocumentReference docRef, @JsonRpcParam("locale") Locale locale) {
+	public void rpc(@JsonRpcParam("docRef") String docRef, @JsonRpcParam("locale") Locale locale) {
+		DocumentReference documentReference = RpcDocRefParser.parseDocRef(docRef);
 		log.debug("{} called with parameters [docRef={}, locale={}]",
 			CoreOperationConstants.DELETE_DOCUMENT_OPERATION,
-			anonymizer.apply(docRef.toString()),
+			anonymizer.apply(documentReference.toString()),
 			anonymizer.apply(locale != null ? locale.toString() : "")
 		);
 
-		documentService.delete(docRef);
+		documentService.delete(documentReference);
 	}
 
 }

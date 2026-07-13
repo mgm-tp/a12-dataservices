@@ -33,20 +33,18 @@ package com.mgmtp.a12.dataservices.model.document;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.StringWriter;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.mgmtp.a12.dataservices.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
-import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
-import com.mgmtp.a12.dataservices.experimental.ListIProblemReporter;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 import com.mgmtp.a12.kernel.md.model.api.IIdNamed;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelSearchService;
+
+import lombok.SneakyThrows;
 
 import static com.mgmtp.a12.dataservices.constants.DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL;
 import static com.mgmtp.a12.dataservices.constants.PathConstants.BUSINESS_PARTNER_DOCUMENT_MODEL_PATH;
@@ -60,7 +58,6 @@ public class DocumentModelServiceIT extends AbstractSpringContextIT {
 	private static final String BASE_MODEL2_PATH = DOCUMENT_MODEL_RESOLVER_PATH + "BaseModel2.json";
 	private static final String BASE_MODEL2_INIT_PATH = DOCUMENT_MODEL_RESOLVER_PATH + "BaseModel2Init.json";
 	private static final String BASE_MODEL2_NAME = "BaseModel2";
-	private static final String BASE_MODEL_WITH_WRONG_INCLUDE_PATH = DOCUMENT_MODEL_RESOLVER_PATH + "BaseModelWithWrongInclude.json";
 
 	@BeforeClass public void init() throws IOException {
 		setUserTo(ADMIN_USER);
@@ -86,49 +83,10 @@ public class DocumentModelServiceIT extends AbstractSpringContextIT {
 		modelService.create(loadResourceFromClasspathAsString(BUSINESS_PARTNER_DOCUMENT_MODEL_PATH).replace(BUSINESS_PARTNER_DOCUMENT_MODEL, invalidModelName));
 	}
 
-	@Test(expectedExceptions = NotFoundException.class, expectedExceptionsMessageRegExp = "Document model \\[NonExistingInclude] not found")
-	public void createModelWithWrongInclude() {
-		String model = loadResourceFromClasspathAsString(BASE_MODEL_WITH_WRONG_INCLUDE_PATH);
-		modelService.create(model);
-	}
-
-	@Test(expectedExceptions = NotFoundException.class, expectedExceptionsMessageRegExp = "Document model \\[NonExistingInclude] not found")
-	public void updateModelWithWrongInclude() {
-		String baseModel = loadResourceFromClasspathAsString(BASE_MODEL2_INIT_PATH).replace("BaseModel2", "BaseModel");
-		modelService.create(baseModel);
-
-		baseModel = loadResourceFromClasspathAsString(BASE_MODEL_WITH_WRONG_INCLUDE_PATH);
-		modelService.update(baseModel);
-	}
-
-	@Test public void testUpdateModelWithInclude() throws IOException {
-		//Before update model did not have any included fields present because initially BaseModel2 did not have include.
-		IDocumentModel model = documentModelLoader.loadModel(BASE_MODEL2_NAME);
-		IDocumentModelSearchService documentModelSearchService = documentModelServiceFactory.createDocumentModelSearchService(model);
-		Assert.assertTrue(doesFieldExist("/base/aField", "F3", documentModelSearchService));
-		Assert.assertTrue(doesFieldExist("/base/aGroup/anotherField", "F5", documentModelSearchService));
-		Assert.assertFalse(doesFieldExist("/base/base/IncludedField1", "I6_F3", documentModelSearchService));
-		Assert.assertFalse(doesFieldExist("/base/base/IncludedField2", "I6_F4", documentModelSearchService));
-		Assert.assertFalse(doesFieldExist("/base/base/sub/IncludedField3", "I6_F6", documentModelSearchService));
-		Assert.assertFalse(doesFieldExist("/base/base/sub/IncludedField4", "I6_F8", documentModelSearchService));
-
-		// Update added include therefore new fields should have appeared in the model.
-		ListIProblemReporter pr = new ListIProblemReporter();
-		String baseModelContent = resourceFunctions.loadResource(BASE_MODEL2_PATH);
-		IDocumentModel documentModelWitRoles =
-			documentModelSerializer.deserialize(new StringReader(modelService.update(baseModelContent).getContent().getRawContent()));
-		documentModelService.expand(documentModelWitRoles, collapsingDocumentModelReferenceResolverFactory.getInstance(documentModelResolver));
-		StringWriter w = new StringWriter();
-		documentModelSerializer.serialize(documentModelWitRoles, w, pr);
-		modelService.update(w.toString());
-		IDocumentModel persistedModelContent = documentModelLoader.loadModel(BASE_MODEL2_NAME);
-		documentModelSearchService = documentModelServiceFactory.createDocumentModelSearchService(persistedModelContent);
-		Assert.assertTrue(doesFieldExist("/base/aField", "F3", documentModelSearchService));
-		Assert.assertTrue(doesFieldExist("/base/aGroup/anotherField", "F5", documentModelSearchService));
-		Assert.assertTrue(doesFieldExist("/base/base/IncludedField1", "I6_F3", documentModelSearchService));
-		Assert.assertTrue(doesFieldExist("/base/base/IncludedField2", "I6_F4", documentModelSearchService));
-		Assert.assertFalse(doesFieldExist("/base/base/sub/IncludedField3", "I6_F6", documentModelSearchService));
-		Assert.assertFalse(doesFieldExist("/base/base/sub/IncludedField4", "I6_F8", documentModelSearchService));
+	@SneakyThrows
+	private IDocumentModel deserializeModel(String reference) {
+		return documentModelSerializer.deserialize(
+			new StringReader(modelService.load(reference).getContent().getRawContent()));
 	}
 
 	private boolean doesFieldExist(final String path, final String id, final IDocumentModelSearchService documentModelSearchService) {

@@ -29,7 +29,7 @@
  * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
  * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
  */
-import type { Header } from "@com.mgmtp.a12.base/base-model-api/lib/main/header/index.js";
+import type { Header } from "@com.mgmtp.a12.base/base-model-api";
 
 export interface RelationshipModel {
 	readonly header: Header;

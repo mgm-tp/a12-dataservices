@@ -34,6 +34,7 @@ package com.mgmtp.a12.dataservices.model.internal;
 import java.util.Optional;
 
 import com.mgmtp.a12.kernel.md.rt.api.IDocumentDynamicServiceConfig;
+import com.mgmtp.a12.kernel.md.rt.api.IDocumentModelIdProvider;
 import com.mgmtp.a12.kernel.md.rt.api.ILabelProvider;
 import com.mgmtp.a12.kernel.md.rt.api.IModelCodeCache;
 
@@ -43,18 +44,27 @@ import lombok.RequiredArgsConstructor;
 public class DataServicesDocumentDynamicServiceConfig implements IDocumentDynamicServiceConfig {
 	private final IModelCodeCache dataServicesModelCodeCache;
 
-	@Override
-	public IModelCodeCache getCache() {
+	@Override public IModelCodeCache getCache() {
 		return dataServicesModelCodeCache;
 	}
 
-	@Override
 	public Optional<String> getVariant() {
 		return Optional.empty();
 	}
 
-	@Override
-	public Optional<ILabelProvider> getLabelProvider() {
+	@Override public Optional<ILabelProvider> getLabelProvider() {
 		return Optional.empty();
+	}
+
+	/**
+	 * Provides a model ID provider that extracts the document model ID from the model header.
+	 *
+	 * This allows the kernel framework to build cache keys without deserializing complete document models,
+	 * improving memory usage and performance during model update and delete operations.
+	 *
+	 * @return Optional containing the model ID provider implementation
+	 */
+	@Override public Optional<IDocumentModelIdProvider> getModelIdProvider() {
+		return Optional.of((documentModel) -> documentModel.getHeader().getId());
 	}
 }

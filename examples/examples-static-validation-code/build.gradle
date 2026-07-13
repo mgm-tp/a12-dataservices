@@ -2,7 +2,7 @@ group = 'com.mgmtp.a12.dataservices'
 
 dependencies {
 	implementation libs.kernelRuntime
-	implementation libs.kernelMdA12internal
+	implementation libs.kernelMdFacade
 }
 
 bootJar{

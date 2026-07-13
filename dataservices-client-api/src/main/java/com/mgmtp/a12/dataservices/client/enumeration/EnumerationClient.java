@@ -33,11 +33,12 @@ package com.mgmtp.a12.dataservices.client.enumeration;
 
 import java.util.List;
 import com.mgmtp.a12.dataservices.enumeration.ExternalEnumeration;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Remote API to the `ExternalEnumerationService` that abstracts the transport protocol to the back end.
  */
-public interface EnumerationClient {
+@OnlyForUsage public interface EnumerationClient {
 
 	/**
 	 * Loads external enumerations associated with the specified model.

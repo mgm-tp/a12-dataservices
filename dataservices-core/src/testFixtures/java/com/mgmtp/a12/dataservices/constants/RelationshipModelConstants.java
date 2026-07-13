@@ -35,19 +35,17 @@ public interface RelationshipModelConstants {
 
 	String CONTRACT_BUSINESS_PARTNER_MODEL = "ContractBusinessPartner";
 	String CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL = "ContractCoInsuredPartner";
-	String CONTRACT_COINSURED_BUSINESS_PARTNER_INVALID_MODEL = "ContractCoInsuredPartnerWrongRoleName";
+	String CONTRACT_AMENDMENT_MODEL = "ContractAmendment";
 	String PARTNER_ADDRESSES_MODEL = "PartnerAddresses";
 	String PARTNER_POSTAL_ADDRESS_MODEL = "PartnerPostalAddress";
 	String PRODUCT_BRAND_RM = "ProductBrand";
 	String PRODUCT_BUNDLE_RM = "ProductBundle";
 	String CO_INSURED_ADDITIONAL_FIELDS_INVALID_RM = "+CoInsuredAdditionalFields";
 	String LEGACY_RM_INVALID = "LegacyRelationshipMetaModel";
-	// Relationship Model - Names
 	String PRODUCT_CAMPAIGN_RM = "ProductCampaign";
 
+	// Relationship's roles
 	interface RoleConstants {
-
-		// Relationships - Roles
 		String BUNDLE_ROLE = "BundleRole";
 		String PRODUCT_ROLE = "ProductRole";
 		String BRAND_ROLE = "BrandRole";

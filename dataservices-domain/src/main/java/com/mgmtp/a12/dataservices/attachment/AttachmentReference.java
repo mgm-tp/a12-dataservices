@@ -78,7 +78,7 @@ public class AttachmentReference<T extends GenericReference> {
 		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException |
 		         InvocationTargetException e) {
 			throw new InvalidInputException(
-				String.format("Could not initialise class of type %s => could not construct AttachmentReference.", type.getTypeClass().getCanonicalName()), e);
+				"Could not initialise class of type %s => could not construct AttachmentReference.".formatted(type.getTypeClass().getCanonicalName()), e);
 		}
 	}
 

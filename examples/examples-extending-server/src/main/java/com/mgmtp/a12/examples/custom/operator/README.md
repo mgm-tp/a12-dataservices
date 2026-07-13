@@ -26,7 +26,7 @@ This package demonstrates how to implement custom range operators for custom fie
    - Integrated into `DocumentSearchIndexBehaviour` for indexing
 
 5. **TaxIDSearchCustomizer** (this module)
-   - Extracts numeric component from TaxID values (format: "US12345678")
+   - Extracts numeric component from TaxID values (format: `([A-Z]{2})(\d{8})`)
    - Indexes 8-digit numeric part to `number_value` column
    - Source identifier: `tax_id_customizer`
 
@@ -36,7 +36,7 @@ This package demonstrates how to implement custom range operators for custom fie
 
 ### Configuration
 
-- Property-based activation: `com.mgmtp.a12.examples.custom-operator.enabled=true`
+- Property-based activation: `com.mgmtp.a12.examples.custom-operator.enabled=true` and `com.mgmtp.a12.examples.custom.type.enabled=true`
 - `RenamedTaxIDCustomFieldTypeFactory` and `TaxIDSearchCustomizer` use `@ConditionalOnProperty`
 
 ### Integration Tests
@@ -89,6 +89,11 @@ Returns documents with TaxID US90000000.
 }
 ```
 Returns documents with TaxID US10000000.
+
+### Restrictions
+As the validation pattern of the `TaxIdCustomFieldType` only postulates the first two characters of the tax ID to be letters, the implementation does not differentiate between tax IDs with different country codes. This means, a query from "US10000000" to "DE50000000" would return also "SK30000000".
+
+Nevertheless, the implementation could be improved to also take the country code into account, but this would require a more complex implementation of the `TaxNumberRangeOperatorSqlGenerator` and is not in scope of this example.
 
 ## Testing
 
@@ -161,10 +166,3 @@ Run integration tests:
 | `SearchCustomizerRegistry.java` | dataservices-core | Registry with auto-discovery |
 | `TaxIDSearchCustomizer.java` | examples-extending-server | Example implementation |
 | `TaxNumberRangeOperatorIT.java` | examples-extending-server | Integration tests |
-
-## References
-
-- Technical Analysis: `~/Downloads/index (62).pdf` (pages 24-31)
-- JIRA Ticket: A12S-6471
-- Documentation: `src/docs/asciidoc/query/custom_range_operators.adoc`
-- QFT Test Spec: `qa/regression_tests/src/main/qftest/dataservices/extension/03ext_Custom_Operator_TODO.md`

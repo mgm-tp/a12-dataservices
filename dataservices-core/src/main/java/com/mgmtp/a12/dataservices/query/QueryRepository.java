@@ -37,13 +37,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 import lombok.NonNull;
 
 /**
  * Repository for insecure executing of the Query.
  */
-public interface QueryRepository {
+@OnlyForUsage public interface QueryRepository {
 
 	/**
 	 * Returns a page of document tree entries according to the passed query and page request.

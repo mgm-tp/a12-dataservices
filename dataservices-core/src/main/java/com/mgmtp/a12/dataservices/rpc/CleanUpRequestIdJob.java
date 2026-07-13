@@ -36,17 +36,18 @@ import java.time.Instant;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mgmtp.a12.dataservices.rpc.internal.jpa.repository.RequestIdRepository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * A Quartz job that deletes old request IDs from the database. This is to prevent the request ID table from growing too large.
  *
  */
+@RequiredArgsConstructor
 @Slf4j
 public class CleanUpRequestIdJob implements Job {
 
@@ -56,7 +57,7 @@ public class CleanUpRequestIdJob implements Job {
 	 */
 	public static final String REQUEST_ID_EXPIRE_HOURS = "requestIdExpireHours";
 
-	@Autowired private RequestIdRepository requestIdRepository;
+	private final RequestIdRepository requestIdRepository;
 
 	/**
 	 * Deletes request IDs older than the configured threshold.

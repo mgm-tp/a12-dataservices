@@ -43,15 +43,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mgmtp.a12.model.header.Annotation;
 import com.mgmtp.a12.model.header.Header;
 import com.mgmtp.a12.model.header.Label;
 
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -69,7 +66,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
 @Table(name = "model_headers")
-@Cacheable @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @NoArgsConstructor @Data
 @Entity public class ModelHeaderEntity implements Header, Serializable {
 

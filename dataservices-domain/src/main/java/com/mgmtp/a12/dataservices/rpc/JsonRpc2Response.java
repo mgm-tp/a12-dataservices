@@ -31,8 +31,11 @@
  */
 package com.mgmtp.a12.dataservices.rpc;
 
+import java.io.Serial;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import tools.jackson.databind.JsonNode;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -46,7 +49,7 @@ import lombok.ToString;
 @Data @NoArgsConstructor @ToString @EqualsAndHashCode(callSuper = true)
 public class JsonRpc2Response extends JsonRpc2Message {
 
-	private static final long serialVersionUID = 1L;
+	@Serial private static final long serialVersionUID = 1L;
 
 	private JsonRpc2ResponseError error;
 	private JsonNode result;
@@ -65,6 +68,12 @@ public class JsonRpc2Response extends JsonRpc2Message {
 	 */
 	public JsonRpc2Response(JsonNode result) {
 		this.result = result;
+	}
+
+	@Override
+	@JsonInclude(JsonInclude.Include.ALWAYS)
+	public String getId() {
+		return super.getId();
 	}
 
 	/**

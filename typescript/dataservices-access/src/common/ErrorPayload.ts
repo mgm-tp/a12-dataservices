@@ -29,6 +29,8 @@
  * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
  * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
  */
+import { isObject, isOptionalFieldOfType, isString } from "./TypeGuardUtils.js";
+
 /** @module common */
 
 export interface ErrorPayload {
@@ -49,12 +51,13 @@ export namespace ErrorPayload {
 	// Server responds with error if provided password, token or email is empty in case of password change/reset
 	export const UNKNOWN = "UNKNOWN";
 
-	export function isInstance(obj: ErrorPayload | object): obj is ErrorPayload {
+	export function isInstance(obj: unknown): obj is ErrorPayload {
 		return (
+			isObject(obj) &&
 			"errorType" in obj &&
+			isString(obj.errorType) &&
 			"message" in obj &&
-			typeof obj.errorType === "string" &&
-			typeof obj.message === "string"
+			isString(obj.message)
 		);
 	}
 }
@@ -77,16 +80,47 @@ export namespace ErrorResponse {
 		readonly default: string;
 	}
 
+	export namespace LocalizedEntry {
+		export function isInstance(obj: unknown): obj is LocalizedEntry {
+			return (
+				isObject(obj) &&
+				"key" in obj &&
+				isString(obj.key) &&
+				"default" in obj &&
+				isString(obj.default)
+			);
+		}
+	}
+
 	export interface ErrorDetail {
 		readonly code: string;
 		readonly subsystem: string;
-		readonly time: {
-			readonly epochSecond: number;
-			readonly nano: number;
-		};
+		readonly time: string;
 	}
 
-	export function isInstance(obj: ErrorResponse | object): obj is ErrorResponse {
-		return "level" in obj && (obj.level === WARN || obj.level === ERROR);
+	export namespace ErrorDetail {
+		export function isInstance(obj: unknown): obj is ErrorDetail {
+			return (
+				isObject(obj) &&
+				"code" in obj &&
+				isString(obj.code) &&
+				"subsystem" in obj &&
+				isString(obj.subsystem) &&
+				"time" in obj &&
+				isString(obj.time)
+			);
+		}
+	}
+
+	export function isInstance(obj: unknown): obj is ErrorResponse {
+		return (
+			isObject(obj) &&
+			"level" in obj &&
+			(obj.level === WARN || obj.level === ERROR) &&
+			isOptionalFieldOfType(obj, "operationId", isString) &&
+			isOptionalFieldOfType(obj, "shortMessage", ErrorResponse.LocalizedEntry.isInstance) &&
+			isOptionalFieldOfType(obj, "longMessage", ErrorResponse.LocalizedEntry.isInstance) &&
+			isOptionalFieldOfType(obj, "errorDetail", ErrorResponse.ErrorDetail.isInstance)
+		);
 	}
 }

@@ -33,47 +33,15 @@ package com.mgmtp.a12.dataservices.utils.internal;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
 
 import com.mgmtp.a12.dataservices.document.DocumentPart;
-import com.mgmtp.a12.kernel.md.document.api.IEntityInstance;
-import com.mgmtp.a12.kernel.md.document.api.IFieldInstance;
 import com.mgmtp.a12.kernel.md.document.apiV2.DocumentPointer;
-import com.mgmtp.a12.kernel.md.document.apiV2.immutable.FieldInstanceV2;
-import com.mgmtp.a12.kernel.md.document.apiV2.services.IDocumentV1V2Converter;
-import com.mgmtp.a12.kernel.md.document.internal.service.implV2.DocumentV1V2ConverterImpl;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class KernelUtils {
-
-	public static String getRootNameFromPath(String path) {
-		return path.split("/")[1];
-	}
-
-	public static int[] concatRepetitions(int[]... repetitions) {
-		return Arrays.stream(repetitions)
-			.flatMapToInt(Arrays::stream)
-			.filter(i -> i > 0)
-			.toArray();
-	}
-
-	public static String concatPaths(String... paths) {
-		return Arrays.stream(paths)
-			.filter(StringUtils::isNotBlank)
-			.flatMap(p -> Arrays.stream(p.split(IEntityInstance.PATH_SEPARATOR)))
-			.filter(StringUtils::isNotBlank)
-			.collect(Collectors.joining(IEntityInstance.PATH_SEPARATOR, IEntityInstance.PATH_SEPARATOR, ""));
-	}
-
-	// This is used for get converter from document v1 to v2, will be remove in A12S-6428
-	public static IDocumentV1V2Converter getIDocumentV1V2Converter() {
-		return DocumentV1V2ConverterImpl.getInstance();
-	}
 
 	public static List<String> splitFieldPath(String path) {
 		if (path.startsWith("/")) {
@@ -82,22 +50,9 @@ public class KernelUtils {
 		return List.of(path.split("/"));
 	}
 
-	public static FieldInstanceV2 fromV1Value(IFieldInstance e) {
-		return FieldInstanceV2.ofV1Value(e.getValue().orElse(null));
-	}
-
 	public static DocumentPointer fromDocumentPart(DocumentPart part) {
 		return fromPathAndRepetitions(splitFieldPath(part.getPath()), part.getRepetitions());
 	}
-
-	public static DocumentPointer fromIEntityInstance(IEntityInstance iEntityInstance) {
-		return DocumentPointer.of(KernelUtils.splitFieldPath(iEntityInstance.getPath()), Arrays.stream(iEntityInstance.getRepetitions()).boxed().toList());
-	}
-
-	public static DocumentPointer fromPathAndRepetitions(String pathWithRepetitions) {
-		return DocumentPointer.of(pathWithRepetitions);
-	}
-
 
 	public static DocumentPointer fromPathAndRepetitions(String path, int[] repetitions) {
 		return fromPathAndRepetitions(splitFieldPath(path), repetitions);
@@ -109,5 +64,50 @@ public class KernelUtils {
 
 	public static DocumentPointer of(List<String> paths, List<Integer> repetitions) {
 		return DocumentPointer.of(paths, repetitions);
+	}
+
+	/**
+	 * Returns `true` when `repetitions` is non-null, non-empty, and its last element is `0` (the wildcard index).
+	 */
+	public static boolean isLastRepetitionWildcard(int[] repetitions) {
+		return repetitions != null && repetitions.length > 0 && repetitions[repetitions.length - 1] == 0;
+	}
+
+	/**
+	 * Returns `true` when any non-last element of `repetitions` is `0` (an intermediate wildcard).
+	 */
+	public static boolean hasIntermediateWildcard(int[] repetitions) {
+		if (repetitions == null || repetitions.length <= 1) {
+			return false;
+		}
+		for (int i = 0; i < repetitions.length - 1; i++) {
+			if (repetitions[i] == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns `true` when any element of `repetitions` is `0` (a wildcard index), whether intermediate or last.
+	 */
+	public static boolean hasAnyWildcard(int[] repetitions) {
+		if (repetitions == null) {
+			return false;
+		}
+		for (int repetition : repetitions) {
+			if (repetition == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Builds a `DocumentPointer` from the given path and repetitions, keeping a trailing wildcard `0`
+	 * as the last repetition index without normalizing or rejecting it.
+	 */
+	public static DocumentPointer pointerPreservingWildcard(String path, int[] repetitions) {
+		return fromPathAndRepetitions(splitFieldPath(path), repetitions);
 	}
 }

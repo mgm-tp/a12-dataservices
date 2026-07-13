@@ -39,7 +39,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mgmtp.a12.dataservices.client.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.client.document.SpelAwareDocumentReference;
 import com.mgmtp.a12.dataservices.client.rpc.internal.JsonRpc2RequestBuilder;
@@ -74,7 +73,7 @@ public class JsonRpc2ClientLinksIT extends AbstractSpringContextIT {
 	}
 
 	@Test
-	public void createDocumentsAndLink() throws JsonProcessingException {
+	public void createDocumentsAndLink() {
 		JsonRpc2RequestBuilder rpcBuilder = requestBuilderFactory.newJsonRpc2RequestBuilder();
 
 		String addContractId = "AddContractDocument";
@@ -99,18 +98,19 @@ public class JsonRpc2ClientLinksIT extends AbstractSpringContextIT {
 
 		List<JsonRpc2Response> responseList = rpcOperationsClient.invoke(rpcBuilder.build());
 		responseList.forEach(res -> {
-			Assert.assertNull(res.getError(), String.format("Response [%s] should not contain error", res.getId()));
-			Assert.assertNotNull(res.getResult(), String.format("Response [%s] should contain result", res.getId()));
+			Assert.assertNull(res.getError(), "Response [%s] should not contain error".formatted(res.getId()));
+			Assert.assertNotNull(res.getResult(), "Response [%s] should contain result".formatted(res.getId()));
 		});
 	}
 
 	@NonNull private static LinkDescriptor getLinkDescriptor(String addContractId, String addBusinessPartnerId) {
-		RelationshipRoleSpec entitySpec1 = new RelationshipRoleSpec("Contract", new SpelAwareDocumentReference(String.format("#{#%s.metadata.docRef}", addContractId)));
-		entitySpec1.setModelName(String.format("#{#%s.metadata.docRef.documentModelName}", addContractId));
+		RelationshipRoleSpec entitySpec1 =
+			new RelationshipRoleSpec("Contract", new SpelAwareDocumentReference("#{#%s.metadata.docRef}".formatted(addContractId)));
+		entitySpec1.setModelName("#{#%s.metadata.docRef.documentModelName}".formatted(addContractId));
 
-		RelationshipRoleSpec entitySpec2 = new RelationshipRoleSpec("Partner", new SpelAwareDocumentReference(String.format("#{#%s.metadata.docRef}",
+		RelationshipRoleSpec entitySpec2 = new RelationshipRoleSpec("Partner", new SpelAwareDocumentReference("#{#%s.metadata.docRef}".formatted(
 			addBusinessPartnerId)));
-		entitySpec2.setModelName(String.format("#{#%s.metadata.docRef.documentModelName}", addBusinessPartnerId));
+		entitySpec2.setModelName("#{#%s.metadata.docRef.documentModelName}".formatted(addBusinessPartnerId));
 
 		return new LinkDescriptor(CONTRACT_CO_INSURED_PARTNER_MODEL_NAME, Arrays.asList(entitySpec1, entitySpec2));
 	}

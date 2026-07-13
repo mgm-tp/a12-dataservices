@@ -56,7 +56,7 @@ import lombok.extern.slf4j.Slf4j;
  * which is then processed to load thumbnails.
  */
 @Slf4j
-@RemoteOperation(name = CoreOperationConstants.LOAD_THUMBNAIL_URLS_INTERNAL_OPERATION, group = CoreOperationConstants.A12_INTERNAL_OPERATIONS_GROUP)
+@RemoteOperation(name = CoreOperationConstants.LOAD_THUMBNAIL_URLS_INTERNAL_OPERATION, group = CoreOperationConstants.A12_INTERNAL_OPERATIONS_GROUP, isMutation = false)
 @RequiredArgsConstructor
 public class LoadThumbnailUrlsOperation {
 

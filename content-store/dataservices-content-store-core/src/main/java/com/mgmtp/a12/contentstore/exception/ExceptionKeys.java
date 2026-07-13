@@ -31,10 +31,12 @@
  */
 package com.mgmtp.a12.contentstore.exception;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * All localization keys for exception messages of the content store are defined here.
  */
-public interface ExceptionKeys {
+@OnlyForUsage public interface ExceptionKeys {
 
 	/**
 	 * Prefix for all content store localization keys used in error messages.

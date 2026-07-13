@@ -88,7 +88,7 @@ public class RestModelGraphClientIT extends AbstractSpringContextIT {
 		Assert.assertTrue(documentModelNames.contains(BUSINESS_PARTNER_SUPER_MODEL_NAME));
 		Assert.assertTrue(documentModelNames.contains(CO_INSURED_ADDITIONAL_FIELD_MODEL_NAME));
 
-		JSONAssert.assertEquals(relationshipModels.get(0), readFile(CONTRACT_CO_INSURED_PARTNER_RELATIONSHIP_MODEL_VALID_JSON), false);
+		JSONAssert.assertEquals(relationshipModels.getFirst(), readFile(CONTRACT_CO_INSURED_PARTNER_RELATIONSHIP_MODEL_VALID_JSON), false);
 	}
 
 }

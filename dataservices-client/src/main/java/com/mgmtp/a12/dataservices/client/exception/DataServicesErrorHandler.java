@@ -32,61 +32,64 @@
 package com.mgmtp.a12.dataservices.client.exception;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpMessage;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.web.client.DefaultResponseErrorHandler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mgmtp.a12.connector.rest.ResponseErrorHandler;
 import com.mgmtp.a12.dataservices.exception.RequestIdConflictException;
 
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 /**
  * Convert exceptions from server into client exceptions. And read server side exception message from header `+exception+`
  */
+@RequiredArgsConstructor
 @Slf4j
-public class DataServicesErrorHandler extends DefaultResponseErrorHandler {
+public class DataServicesErrorHandler implements ResponseErrorHandler {
 
-	@Autowired ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 	private static final String HEADER_EXCEPTION = "exception";
 
-	/**
-	 * Maps HTTP error responses to Data Services client exceptions.
-	 *
-	 * Translates common HTTP statuses into domain-specific exceptions and attempts to parse 409 conflicts into {@link RequestIdConflictException}.
-	 * Falls back to {@link DefaultResponseErrorHandler} for unhandled statuses.
-	 *
-	 * @param response the HTTP response containing the error; never `null`.
-	 * @throws IOException if reading the response fails.
-	 */
-	@Override public void handleError(ClientHttpResponse response) throws IOException {
-		HttpStatus statusCode = (HttpStatus) response.getStatusCode();
+	@Override public void handleError(HttpRequest httpRequest, ClientHttpResponse clientHttpResponse) throws IOException {
+		@NonNull HttpStatusCode statusCode = clientHttpResponse.getStatusCode();
 		switch (statusCode) {
 		case NOT_FOUND:
-			throw new MissingDataException(getExceptionHeader(response, "Data not found"), makeErrorDetail(statusCode, response));
+			throw new MissingDataException(getExceptionHeader(clientHttpResponse, "Data not found"), makeErrorDetail(statusCode, clientHttpResponse));
 		case FORBIDDEN:
-			throw new MissingAccessRightException(getExceptionHeader(response, "Forbidden"), makeErrorDetail(statusCode, response));
+			throw new MissingAccessRightException(getExceptionHeader(clientHttpResponse, "Forbidden"), makeErrorDetail(statusCode, clientHttpResponse));
 		case BAD_REQUEST:
-			throw new BadRequest(getExceptionHeader(response, "BadRequest"), makeErrorDetail(statusCode, response));
+			throw new BadRequest(getExceptionHeader(clientHttpResponse, "BadRequest"), makeErrorDetail(statusCode, clientHttpResponse));
 		case UNAUTHORIZED:
-			throw new MissingAccessRightException(getExceptionHeader(response, "Unauthorized"), makeErrorDetail(statusCode, response));
+			throw new MissingAccessRightException(getExceptionHeader(clientHttpResponse, "Unauthorized"), makeErrorDetail(statusCode, clientHttpResponse));
 		case CONFLICT:
-			RestErrorDetail errorDetail = makeErrorDetail(statusCode, response);
+			RestErrorDetail errorDetail = makeErrorDetail(statusCode, clientHttpResponse);
 			try {
 				throw objectMapper.readValue(errorDetail.getResponse(), RequestIdConflictException.class);
-			} catch (JsonProcessingException e) {
-				throw new ConflictException(getExceptionHeader(response, "Conflict"), errorDetail);
+			} catch (JacksonException e) {
+				throw new ConflictException(getExceptionHeader(clientHttpResponse, "Conflict"), errorDetail);
 			}
 		default:
+			throw new GenericErrorException(
+				getExceptionHeader(clientHttpResponse, "Server error"),
+				makeErrorDetail(statusCode, clientHttpResponse));
 		}
-		super.handleError(response);
 	}
 
 	private static String getExceptionHeader(@NonNull ClientHttpResponse response, String fallback) {
@@ -96,8 +99,12 @@ public class DataServicesErrorHandler extends DefaultResponseErrorHandler {
 			.orElse(fallback);
 	}
 
-	private RestErrorDetail makeErrorDetail(HttpStatusCode statusCode, ClientHttpResponse response) {
-		RestErrorDetail restErrorDetail = new RestErrorDetail(statusCode.value(), new String(getResponseBody(response)));
+	private RestErrorDetail makeErrorDetail(HttpStatusCode statusCode, ClientHttpResponse response) throws IOException {
+		InputStream body = response.getBody();
+		String message = body == null
+			? response.getStatusText()
+			: IOUtils.toString(body, StandardCharsets.UTF_8);
+		RestErrorDetail restErrorDetail = new RestErrorDetail(statusCode.value(), message);
 		log.debug("Request failed: {}", restErrorDetail);
 		return restErrorDetail;
 	}

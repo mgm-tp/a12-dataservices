@@ -63,11 +63,11 @@ public class LoadThumbnailUrlsOperationTest {
 	@BeforeMethod void init() throws IllegalAccessException {
 		FieldUtils.writeField(loadThumbnailUrlsOperation, "thumbnailUtilOpt", Optional.of(thumbnailUtil), true);
 	}
+
 	@Test public void testLoadThumbnailUrls_success() {
 		try (MockedStatic<LoadedDocumentReferencesContextHolder> mockedLoadedDocumentReferencesContextHolder = Mockito.mockStatic(
 			LoadedDocumentReferencesContextHolder.class)) {
-			Mockito.when(LoadedDocumentReferencesContextHolder.getAllDocumentReferences())
-				.thenReturn(Set.of(new DocumentReference("BusinessPartner", "1")));
+			mockedLoadedDocumentReferencesContextHolder.when(() -> LoadedDocumentReferencesContextHolder.getAllDocumentReferences()).thenReturn(Set.of(new DocumentReference("BusinessPartner", "1")));
 
 			loadThumbnailUrlsOperation.rpc();
 
@@ -75,6 +75,7 @@ public class LoadThumbnailUrlsOperationTest {
 			Mockito.verify(attachmentReferenceJpaRepository, Mockito.times(1)).findAllByTypeAndReference(Mockito.any(), Mockito.any());
 		}
 	}
+
 	@Test public void testHasNoThumbnailUtilBean_returnEmpty() throws IllegalAccessException {
 		FieldUtils.writeField(loadThumbnailUrlsOperation, "thumbnailUtilOpt", Optional.empty(), true);
 

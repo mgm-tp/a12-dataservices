@@ -54,7 +54,7 @@ public class RelationshipRoleNameNotFoundException extends RelationshipValidatio
 	public RelationshipRoleNameNotFoundException(String relationshipModelName, String roleName) {
 		super(new RelationshipValidationException.Builder(ExceptionCodes.RELATIONSHIP_ROLE_NAME_NOT_FOUND_EXCEPTION_CODE,
 			ExceptionKeys.RELATIONSHIP_LINK_ROLE_MISSING_ERROR_KEY, "Missing Role in Model",
-			String.format("Requested role [%s] has not been found in the model [%s].", roleName, relationshipModelName)));
+			"Requested role [%s] has not been found in the model [%s].".formatted(roleName, relationshipModelName)));
 		this.relationshipModelName = relationshipModelName;
 		this.roleName = roleName;
 	}

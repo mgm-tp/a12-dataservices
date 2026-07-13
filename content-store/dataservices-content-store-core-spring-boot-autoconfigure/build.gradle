@@ -5,18 +5,15 @@ plugins {
 dependencies {
 	api project(':content-store:dataservices-content-store-core')
 	api project(':dataservices-common:dataservices-common-lib')
-	api libs.springBootAutoconfigure
-	api libs.springBootConfigurationProcessor
-	api libs.springBootStarterDataJpa
+	api libs.springBootAutoconfigure, libs.springBootConfigurationProcessor, libs.springBootStarterLiquibase,
+			libs.springBootStarterDataJpa, libs.springBootStarterCache
 	// TODO A12S-5284: Remove spring-web from all not web artifacts
 	api libs.springBootStarterWeb
-	api libs.liquibaseCore
 	api libs.embeddedPostgres
 	api platform(libs.embeddedPostgresServer)
 	compileOnly libs.servletApi
 	runtimeOnly libs.springBootPropertiesMigrator
-	implementation libs.hazelcast, libs.hazelcastSpring
-
+	implementation libs.springBootStarterLiquibase
 
 	testImplementation libs.springTest
 	testImplementation libs.springBootTest

@@ -31,10 +31,12 @@
  */
 package com.mgmtp.a12.dataservices.model;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Constants related to model identification and classification.
  */
-public interface ModelConstants {
+@OnlyForUsage public interface ModelConstants {
 	/**
 	 * Model type identifier used to mark document models in metadata.
 	 */

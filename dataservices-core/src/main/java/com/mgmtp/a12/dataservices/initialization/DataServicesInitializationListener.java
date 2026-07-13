@@ -34,7 +34,6 @@ package com.mgmtp.a12.dataservices.initialization;
 import java.io.Closeable;
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.Lifecycle;
@@ -44,19 +43,20 @@ import org.springframework.core.annotation.Order;
 import com.mgmtp.a12.dataservices.common.events.CommonDataServicesEventListener;
 import com.mgmtp.a12.dataservices.initialization.events.DataServicesInitializationFinishedEvent;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * Data Services Initialization Listener class. Listens to the {@link ContextRefreshedEvent} and triggers the data services initialization.
  *
  */
+@RequiredArgsConstructor
 @Slf4j
 public class DataServicesInitializationListener {
 
-	@Autowired private ApplicationContext applicationContext;
-	@Autowired private ApplicationEventPublisher applicationEventPublisher;
-	@Autowired private InitializationService initializationService;
-
+	private final ApplicationContext applicationContext;
+	private final ApplicationEventPublisher applicationEventPublisher;
+	private final InitializationService initializationService;
 
 	/**
 	 * Handles application initialization on {@link ContextRefreshedEvent}.
@@ -67,8 +67,8 @@ public class DataServicesInitializationListener {
 	 */
 	@Order(100)
 	@CommonDataServicesEventListener public void onApplicationInitialization(ContextRefreshedEvent event) throws IOException {
-		if (applicationContext.equals(event.getApplicationContext())) {
-			ApplicationContext context = event.getApplicationContext();
+		ApplicationContext context = event.getApplicationContext();
+		if (applicationContext.equals(context)) {
 			try {
 				initializationService.runInitialization();
 				// Fire event announcing that system is initialized and also preload of caches is requested.
@@ -76,16 +76,14 @@ public class DataServicesInitializationListener {
 
 			} catch (Throwable t) {
 				log.error("System initialization failed: {}. Exiting.", t.getMessage(), t);
-				if (context instanceof Lifecycle) {
-					((Lifecycle) context).stop();
+				if (context instanceof Lifecycle lifecycle) {
+					lifecycle.stop();
 				}
-				if (context instanceof Closeable) {
-					((Closeable) context).close();
+				if (context instanceof Closeable closeable) {
+					closeable.close();
 				}
 				throw t;
 			}
 		}
 	}
-
-
 }

@@ -31,18 +31,20 @@
  */
 package com.mgmtp.a12.dataservices.examples;
 
-import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldType;
-import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldTypeCheckError;
-import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldTypeConversionResult;
-import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldTypeValidationParam;
-import lombok.AllArgsConstructor;
-
-import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TaxIDCustomFieldType implements ICustomFieldType {
+import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldTypeCheckError;
+import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldTypeConversionResult;
+import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldTypeValidationParam;
+import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldValidator;
+
+
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+
+public class TaxIDCustomFieldType implements ICustomFieldValidator {
 	private static final String OUTPUT_FORMAT_INTERNAL = "%s%s";
 	private static final String OUTPUT_FORMAT_DISPLAY = "%s-%s";
 	private static final String INTERNAL_PATTERN = "([A-Z]{2})(\\d{8})";
@@ -51,7 +53,10 @@ public class TaxIDCustomFieldType implements ICustomFieldType {
 	public static final String ERROR_MSG_INTERNAL_VALUE = "Tax ID must have country code (2 upper letters) followed by 8 digits";
 	public static final String ERROR_KEY = "error.taxId.invalid";
 
-	@Override public Optional<ICustomFieldTypeCheckError> validate(String value, ICustomFieldTypeValidationParam valParam, boolean isDisplayValue, Map<String, Object> configData) {
+	@Override
+	public @NonNull Optional<ICustomFieldTypeCheckError> validate(@NonNull String value, @NonNull ICustomFieldTypeValidationParam valParam,
+		boolean isDisplayValue) {
+
 		return value.matches(INTERNAL_PATTERN)
 			? Optional.empty()
 			: Optional.of(new ICustomFieldTypeCheckError() {
@@ -68,16 +73,16 @@ public class TaxIDCustomFieldType implements ICustomFieldType {
 	}
 
 	@Override
-	public ICustomFieldTypeConversionResult convertDisplay2Internal(String displayValue, Map<String, Object> configData) {
+	public ICustomFieldTypeConversionResult convertDisplay2Internal(String displayValue) {
 		return new TaxIDCustomFieldTypeConversionResult(
-				displayValue, DISPLAY_PATTERN, ERROR_MSG_DISPLAY_VALUE, OUTPUT_FORMAT_INTERNAL
+			displayValue, DISPLAY_PATTERN, ERROR_MSG_DISPLAY_VALUE, OUTPUT_FORMAT_INTERNAL
 		);
 	}
 
 	@Override
-	public ICustomFieldTypeConversionResult convertInternal2Display(String internalValue, Map<String, Object> configData) {
+	public ICustomFieldTypeConversionResult convertInternal2Display(String internalValue) {
 		return new TaxIDCustomFieldTypeConversionResult(
-				internalValue, INTERNAL_PATTERN, ERROR_MSG_INTERNAL_VALUE, OUTPUT_FORMAT_DISPLAY
+			internalValue, INTERNAL_PATTERN, ERROR_MSG_INTERNAL_VALUE, OUTPUT_FORMAT_DISPLAY
 		);
 	}
 
@@ -96,8 +101,8 @@ public class TaxIDCustomFieldType implements ICustomFieldType {
 		@Override
 		public Optional<String> getErrorMessage() {
 			return canConvert()
-					? Optional.empty()
-					: Optional.of(errorMsg);
+				? Optional.empty()
+				: Optional.of(errorMsg);
 		}
 
 		private boolean canConvert() {
@@ -107,7 +112,7 @@ public class TaxIDCustomFieldType implements ICustomFieldType {
 		private String convert() {
 			Matcher matcher = Pattern.compile(pattern).matcher(value);
 			if (matcher.find()) {
-				return String.format(outputFormat, matcher.group(1), matcher.group(2));
+				return outputFormat.formatted(matcher.group(1), matcher.group(2));
 			} else {
 				throw new IllegalArgumentException();
 			}

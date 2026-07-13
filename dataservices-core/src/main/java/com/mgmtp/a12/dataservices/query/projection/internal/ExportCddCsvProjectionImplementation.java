@@ -127,7 +127,7 @@ import static com.mgmtp.a12.dataservices.utils.internal.ComposeDocumentModelUtil
 
 	private static String createAttachment(String baseDocumentModel, String format, InputStream inputStream, String contentType,
 		IAttachmentRepository attachmentRepository, AttachmentHeaderRepository attachmentHeaderRepository) {
-		String fileName = String.format("export_%s.%s", baseDocumentModel, format);
+		String fileName = "export_%s.%s".formatted(baseDocumentModel, format);
 		AttachmentHeader attachmentHeader = AttachmentHelper.prepareAttachmentHeader(fileName, new ArrayList<>());
 
 		AttachmentPersistenceResult persistenceResult =

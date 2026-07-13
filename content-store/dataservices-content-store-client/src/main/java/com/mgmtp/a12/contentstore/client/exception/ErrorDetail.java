@@ -33,11 +33,13 @@ package com.mgmtp.a12.contentstore.client.exception;
 
 import java.io.Serializable;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * All HTTP errors published by DS Content Store REST API have a common structure. This way clients can easily parse
  * and handle errors. This interface is a marker interface for all error detail implementations.
  *
  */
-public interface ErrorDetail extends Serializable {
+@OnlyForUsage public interface ErrorDetail extends Serializable {
 
 }

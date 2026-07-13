@@ -100,7 +100,7 @@ import static com.mgmtp.a12.contentstore.utils.Constants.PERSISTENT_TYPE_PUBLIC;
 				PERSISTENT_TYPE_PRIVATE)
 			)
 			.orElseThrow(() -> new NotFoundException(ExceptionKeys.CONTENT_NOT_FOUND_ERROR_KEY,
-				String.format(Constants.CANNOT_FIND_CONTENT_BY_ID_PATTERN, contentId)));
+			Constants.CANNOT_FIND_CONTENT_BY_ID_PATTERN.formatted(contentId)));
 		return UrlUtils.renderContentUrl(contentStoreProperties, ticketInfoEntity.getTicketId());
 	}
 
@@ -116,7 +116,6 @@ import static com.mgmtp.a12.contentstore.utils.Constants.PERSISTENT_TYPE_PUBLIC;
 		ContentStream.ContentStreamBuilder builder = ContentStream.builder();
 		// Found ticket by id, return InputStream for private content
 		// Ticket is not found, try to return InputStream for public content
-		// A12S-3659: InputStream not closed
 		return ticketService.findTicket(id)
 			.map(ticket -> getPrivateContent(ticket, builder))
 			.orElseGet(() -> getPublicContent(id, builder));
@@ -142,7 +141,7 @@ import static com.mgmtp.a12.contentstore.utils.Constants.PERSISTENT_TYPE_PUBLIC;
 	private ContentStream getPublicContent(String id, ContentStream.ContentStreamBuilder builder) {
 		ContentHeaderEntity headerEntity = contentService.findByContentIdAndPersistentType(id, PERSISTENT_TYPE_PUBLIC)
 			.orElseThrow(() -> new NotFoundException(ExceptionKeys.CONTENT_NOT_FOUND_ERROR_KEY,
-				String.format(Constants.CANNOT_FIND_PUBLIC_CONTENT_BY_CONTENT_ID_PATTERN, id)));
+			Constants.CANNOT_FIND_PUBLIC_CONTENT_BY_CONTENT_ID_PATTERN.formatted(id)));
 		return beforeDownloadEvent(builder.isPublic(true), headerEntity);
 
 	}
@@ -151,7 +150,7 @@ import static com.mgmtp.a12.contentstore.utils.Constants.PERSISTENT_TYPE_PUBLIC;
 		if (ticketValidator.isAvailableTicket(ticket)) {
 			ContentHeaderEntity headerEntity = contentService.findByContentIdAndPersistentType(ticket.getContentId(), PERSISTENT_TYPE_PRIVATE)
 				.orElseThrow(() -> new NotFoundException(ExceptionKeys.CONTENT_NOT_FOUND_ERROR_KEY,
-					String.format(Constants.CONTENT_BY_TICKET_ID_NOT_EXIST_IN_STORAGE_SYSTEM_PATTERN, ticket.getContentId())));
+				Constants.CONTENT_BY_TICKET_ID_NOT_EXIST_IN_STORAGE_SYSTEM_PATTERN.formatted(ticket.getContentId())));
 
 			ticket.setDownloaded(true);
 			ticketService.update(ticket);
@@ -162,7 +161,7 @@ import static com.mgmtp.a12.contentstore.utils.Constants.PERSISTENT_TYPE_PUBLIC;
 			return contentStream;
 		} else {
 			throw new TicketNotFoundException(ExceptionKeys.TICKET_UNAVAILABLE_ERROR_KEY,
-				String.format(Constants.TICKET_WITH_ID_IS_NOT_AVAILABLE_PATTERN, ticket.getTicketId()));
+				Constants.TICKET_WITH_ID_IS_NOT_AVAILABLE_PATTERN.formatted(ticket.getTicketId()));
 		}
 	}
 
@@ -217,7 +216,7 @@ import static com.mgmtp.a12.contentstore.utils.Constants.PERSISTENT_TYPE_PUBLIC;
 		// TODO A12S-4250 Analyze an option to incude other persistent types in the future.
 		if (!Arrays.asList(ACCEPTABLE_PERSISTENT_TYPES).contains(persistentType)) {
 			throw new InvalidTypeException(ExceptionKeys.INVALID_PERSISTENT_TYPE_ERROR_KEY,
-				String.format(Constants.INVALID_TYPE_ERROR_PATTEN, persistentType)
+				Constants.INVALID_TYPE_ERROR_PATTEN.formatted(persistentType)
 			);
 		}
 

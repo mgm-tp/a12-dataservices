@@ -11,7 +11,6 @@
 				"value" : "ContractBusinessPartner"
 			}
 		],
-		"associationType": "SHARED",
 		"linkDocumentModel": "AdditionalFieldsModel",
 		"duplicatesAllowed": false,
 		"entityCharacteristics": [
@@ -25,22 +24,11 @@
 				],
 				"documentModel": "Partner",
 				"ordered": false,
-				"navigable": true,
 				"linkConstraints": {
 					"multiplicity": {
-						"lowerLimit": 0,
 						"unbounded": false,
 						"upperLimit": 1
 					}
-				},
-				"candidateConstraints": {
-					"population": "",
-					"populationParameters": [
-						{
-							"name": "requiredField",
-							"value": "requiredField"
-						}
-					]
 				}
 			},
 			{
@@ -53,26 +41,13 @@
 				],
 				"documentModel": "Contract",
 				"ordered": false,
-				"navigable": true,
 				"linkConstraints": {
 					"multiplicity": {
-						"lowerLimit": 0,
 						"unbounded": true,
 						"upperLimit": null
 					}
-				},
-				"candidateConstraints": {
-					"population": "",
-					"populationParameters": [
-						{
-							"name": "requiredField",
-							"value": "requiredField"
-						}
-					]
 				}
 			}
-		],
-		"storage": "EXTERNAL",
-		"embeddedGroupPath": ""
+		]
 	}
 }

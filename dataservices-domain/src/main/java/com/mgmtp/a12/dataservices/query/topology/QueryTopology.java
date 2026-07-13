@@ -39,6 +39,7 @@ import com.mgmtp.a12.dataservices.internal.DocumentationDiagram;
 import com.mgmtp.a12.dataservices.query.ConstraintAware;
 import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
 import com.mgmtp.a12.dataservices.query.fields.aggregation.AggregationProjector;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Represents the topology of a query structure, serving as a backbone for query design,
@@ -61,7 +62,7 @@ import com.mgmtp.a12.dataservices.query.fields.aggregation.AggregationProjector;
  * as constraints during query execution.
  */
 @DocumentationDiagram
-public interface QueryTopology extends ConstraintAware {
+@OnlyForUsage public interface QueryTopology extends ConstraintAware {
 
 	/**
 	 * Determines whether the current query topology involves aggregation.

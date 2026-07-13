@@ -62,12 +62,10 @@ public class RpcAddLinkOperationIT extends AbstractLinkIT {
 
 	@Autowired private DefaultRelationshipLinkRepository defaultRelationshipLinkRepository;
 
-	@Test
 	@Transactional
-	public void checkAddOperation() throws Exception {
+	@Test public void checkAddOperation() throws Exception {
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "add/add_links_request.json");
-		request = String.format(
-				request, partner1DocRef, contract1DocRef,
+		request = request.formatted(partner1DocRef, contract1DocRef,
 			partner2DocRef, contract1DocRef,
 			partner3DocRef, contract2DocRef,
 			partner4DocRef, contract2DocRef,
@@ -76,11 +74,12 @@ public class RpcAddLinkOperationIT extends AbstractLinkIT {
 			partner1DocRef, contract3DocRef);
 
 		List<RelationshipLinkSpec> addResponseObject = sendRpcRequest(request).stream()
-				.map(e -> convertResponse(e.getResult().toString(), RelationshipLinkSpec.class))
-				.toList();
+			.map(e -> convertResponse(e.getResult().toString(), RelationshipLinkSpec.class))
+			.toList();
 
 		Assert.assertEquals(addResponseObject.size(), 7);
-		addResponseObject.forEach(result -> LinkTestUtils.assertContractBusinessPartnerLinkRef(RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL, result));
+		addResponseObject.forEach(
+			result -> LinkTestUtils.assertContractBusinessPartnerLinkRef(RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL, result));
 
 		checkEntityRelation(partner1DocRef, RoleConstants.PARTNER_ROLE, 2);
 		checkEntityRelation(partner2DocRef, RoleConstants.PARTNER_ROLE, 1);
@@ -92,8 +91,8 @@ public class RpcAddLinkOperationIT extends AbstractLinkIT {
 		checkEntityRelation(contract3DocRef, RoleConstants.CONTRACT_ROLE, 1);
 	}
 
-	@Test @Transactional
-	public void checkSaveRelationShipWithoutGenerateId() {
+	@Transactional
+	@Test public void checkSaveRelationShipWithoutGenerateId() {
 		RelationshipLinkEntity entity = RelationshipLinkEntity.builder()
 			.id("100")
 			.relationshipModel("ContractCoInsuredPartner")
@@ -129,14 +128,14 @@ public class RpcAddLinkOperationIT extends AbstractLinkIT {
 			.createdAt(Instant.now())
 			.build();
 
-			entity2.addRole(
-				RelationshipRoleEntity.builder()
-					.name(CONTRACT_DOCUMENT_MODEL)
-					.docRef(contract1DocRef)
-					.order("123445678")
-					.build()
-			);
-		RelationshipLink result2  = defaultRelationshipLinkRepository.create(
+		entity2.addRole(
+			RelationshipRoleEntity.builder()
+				.name(CONTRACT_DOCUMENT_MODEL)
+				.docRef(contract1DocRef)
+				.order("123445678")
+				.build()
+		);
+		RelationshipLink result2 = defaultRelationshipLinkRepository.create(
 			entity2
 		);
 
@@ -148,8 +147,7 @@ public class RpcAddLinkOperationIT extends AbstractLinkIT {
 	public void checkAddOperationWithUpperLimit() throws Exception {
 		try {
 			String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "add/add_links_request_upper_limit.json");
-			request = String.format(
-					request, partner1DocRef, contract1DocRef,
+			request = request.formatted(partner1DocRef, contract1DocRef,
 				partner2DocRef, contract1DocRef,
 				partner3DocRef, contract1DocRef,
 				partner4DocRef, contract1DocRef,
@@ -163,7 +161,8 @@ public class RpcAddLinkOperationIT extends AbstractLinkIT {
 		} catch (RpcException e) {
 			OperationError operationError = e.getOperationError();
 			Assert.assertEquals(operationError.getShortMessage().getDefaultMessage(), "Upper Limit Reached");
-			Assert.assertEquals(operationError.getLongMessage().getDefaultMessage(), "Upper limit reached for role [Partner] in relationship model [ContractCoInsuredPartner]");
+			Assert.assertTrue(operationError.getLongMessage().getDefaultMessage().
+					contains("Upper limit reached for role [Partner] in relationship model [ContractCoInsuredPartner]. Document "));
 		}
 	}
 
@@ -173,7 +172,7 @@ public class RpcAddLinkOperationIT extends AbstractLinkIT {
 		Assert.assertFalse(response.isSuccess());
 		OperationError operationError = createOperationError(response);
 		OperationError expectedError = createErrorTemplate(ExceptionKeys.RELATIONSHIP_LINK_ADD_DOCUMENT_BAD_MODEL_ERROR_KEY, "Bad Document Model",
-			String.format("Document [%s] should have been defined for models [Contract], found [BusinessPartner] instead", partner2DocRef),
+			"Document [%s] should have been defined for models [Contract], found [BusinessPartner] instead".formatted(partner2DocRef),
 			"");
 		assertExceptions(expectedError, operationError);
 	}
@@ -184,21 +183,21 @@ public class RpcAddLinkOperationIT extends AbstractLinkIT {
 		Assert.assertFalse(response.isSuccess());
 		OperationError operationError = createOperationError(response);
 		OperationError expectedError = createErrorTemplate(ExceptionKeys.RELATIONSHIP_LINK_ADD_DOCUMENT_NOT_FOUND_ERROR_KEY, "Missing Link Documents",
-				"Requested document for link ContractCoInsuredPartner in role Partner is missing: BusinessPartnerSuper/-999999",
-				"");
+			"Requested document for link ContractCoInsuredPartner in role Partner is missing: BusinessPartnerSuper/-999999",
+			"");
 		assertExceptions(expectedError, operationError);
 	}
 
 	@Test
 	public void checkAddOperationBadRole() throws Exception {
-		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "add/bad_add_link_request.json").replace(": \"Partner",": \"Partner_GOGO");
-		request = String.format(request, partner1DocRef, contract1DocRef);
+		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "add/bad_add_link_request.json").replace(": \"Partner", ": \"Partner_GOGO");
+		request = request.formatted(partner1DocRef, contract1DocRef);
 
 		JsonRpc2Response response = sendRpcRequest(request).getFirst();
 		Assert.assertFalse(response.isSuccess());
 		OperationError operationError = createOperationError(response);
-		OperationError expectedError =  createErrorTemplate(ExceptionKeys.RELATIONSHIP_LINK_ROLE_MISSING_ERROR_KEY, "Missing Role in Model",
-				"Requested role [Partner_GOGO] has not been found in the model [ContractCoInsuredPartner].", "");
+		OperationError expectedError = createErrorTemplate(ExceptionKeys.RELATIONSHIP_LINK_ROLE_MISSING_ERROR_KEY, "Missing Role in Model",
+			"Requested role [Partner_GOGO] has not been found in the model [ContractCoInsuredPartner].", "");
 		assertExceptions(expectedError, operationError);
 	}
 
@@ -208,12 +207,12 @@ public class RpcAddLinkOperationIT extends AbstractLinkIT {
 		Assert.assertFalse(response.isSuccess());
 		OperationError operationError = createOperationError(response);
 		OperationError expectedError = createErrorTemplate(ExceptionKeys.RELATIONSHIP_LINK_ADD_DOCUMENT_NOT_FOUND_ERROR_KEY, "Missing Link Documents",
-			"Requested document for link ContractCoInsuredPartner in role Contract is missing: Contract/-88888888","");
+			"Requested document for link ContractCoInsuredPartner in role Contract is missing: Contract/-88888888", "");
 		assertExceptions(expectedError, operationError);
 	}
 
 	private List<JsonRpc2Response> dispatchBadAddLinkRequests(String docRef, String docRefValue) throws IOException {
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "add/bad_add_link_request.json");
-		return sendRpcRequest(String.format(request, docRef, docRefValue));
+		return sendRpcRequest(request.formatted(docRef, docRefValue));
 	}
 }

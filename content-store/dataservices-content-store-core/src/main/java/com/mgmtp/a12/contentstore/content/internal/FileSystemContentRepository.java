@@ -59,14 +59,14 @@ public class FileSystemContentRepository implements ContentRepository {
 		this.contentLocation = contentDirectory;
 		if (!this.contentLocation.mkdirs() && !this.contentLocation.isDirectory()) {
 			throw new UnexpectedException(ExceptionKeys.INVALID_CONTENT_LOCATION_ERROR_KEY,
-				String.format(Constants.CONTENT_LOCATION_UNAVAILABLE_ERROR_PATTERN, this.contentLocation.getName()));
+				Constants.CONTENT_LOCATION_UNAVAILABLE_ERROR_PATTERN.formatted(this.contentLocation.getName()));
 		}
 	}
 
 	@Override public Optional<byte[]> findBinaryContentById(String id) {
 		Path contentPath = FileSystemContentUtil.getContentPath(contentLocation, id);
 		if (Files.notExists(contentPath)) {
-			throw new NotFoundException(ExceptionKeys.CONTENT_NOT_FOUND_ERROR_KEY, String.format(Constants.CANNOT_FIND_PHYSICAL_CONTENT_BY_ID_PATTERN, id));
+			throw new NotFoundException(ExceptionKeys.CONTENT_NOT_FOUND_ERROR_KEY, Constants.CANNOT_FIND_PHYSICAL_CONTENT_BY_ID_PATTERN.formatted(id));
 		}
 
 		try (InputStream inputStream = Files.newInputStream(contentPath)) {
@@ -87,10 +87,10 @@ public class FileSystemContentRepository implements ContentRepository {
 				.mkdirs();
 			return Files.copy(in, contentPath, REPLACE_EXISTING);
 		} catch (IOException e) {
-			log.error(String.format(Constants.CANNOT_PERSIST_CONTENT_TO_FS_ERROR_PATTERN, contentId), e);
+			log.error(Constants.CANNOT_PERSIST_CONTENT_TO_FS_ERROR_PATTERN.formatted(contentId), e);
 			FileUtils.deleteQuietly(contentPath.toFile());
 			throw new UnexpectedException(ExceptionKeys.UNEXPECTED_ERROR_KEY,
-				String.format(Constants.CANNOT_PERSIST_CONTENT_TO_FS_ERROR_PATTERN, contentId));
+				Constants.CANNOT_PERSIST_CONTENT_TO_FS_ERROR_PATTERN.formatted(contentId));
 		}
 	}
 

@@ -35,12 +35,13 @@ import java.time.Instant;
 import java.util.Map;
 
 import com.mgmtp.a12.dataservices.document.DocumentReference;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Relationship Link interface. Contains only references to the documents. The actual documents need to be loaded separately.
  *
  */
-public interface RelationshipLink {
+@OnlyForUsage public interface RelationshipLink {
 
 	/**
 	 * Gets the unique identifier of this relationship link.

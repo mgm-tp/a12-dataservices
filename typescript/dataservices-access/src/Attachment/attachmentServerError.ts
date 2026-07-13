@@ -29,14 +29,11 @@
  * NON-INFRINGEMENT, EXCEPT WHERE SUCH DISCLAIMERS ARE HELD TO BE
  * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
  */
-import type {
-	Localizable,
-	LocalizationTreeMap
-} from "@com.mgmtp.a12.utils/utils-localization/lib/main/index.js";
+import type { Localizable, LocalizationTreeMap } from "@com.mgmtp.a12.utils/utils-localization";
 import {
 	initializeKeys,
 	localizableFromLocalizationTreeMap
-} from "@com.mgmtp.a12.utils/utils-localization/lib/main/index.js";
+} from "@com.mgmtp.a12.utils/utils-localization";
 
 /**
  * Attachment errors, that are thrown by the A12 server.

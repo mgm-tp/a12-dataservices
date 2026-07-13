@@ -31,17 +31,19 @@
  */
 package com.mgmtp.a12.dataservices.common.events.internal;
 
+import java.lang.reflect.Method;
+import java.util.Objects;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.ApplicationListenerMethodAdapter;
 import org.springframework.context.event.EventListener;
 import org.springframework.context.event.GenericApplicationListener;
-import org.springframework.lang.NonNull;
-
-import java.lang.reflect.Method;
-import java.util.Objects;
 
 import com.mgmtp.a12.dataservices.common.events.CommonDataServicesEventListener;
+
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * {@link GenericApplicationListener} adapter that delegates the processing of
@@ -51,14 +53,15 @@ import com.mgmtp.a12.dataservices.common.events.CommonDataServicesEventListener;
  *
  * @see CommonDataServicesEventListener
  */
+@Slf4j
 public class CommonDataServicesListenerMethodAdapter extends ApplicationListenerMethodAdapter {
 	private final ApplicationContext applicationContext;
 
 	public CommonDataServicesListenerMethodAdapter(
-			String beanName,
-			Class<?> targetClass,
-			Method method,
-			ApplicationContext applicationContext
+		String beanName,
+		Class<?> targetClass,
+		Method method,
+		ApplicationContext applicationContext
 	) {
 		super(beanName, targetClass, method);
 		this.applicationContext = applicationContext;
@@ -68,8 +71,8 @@ public class CommonDataServicesListenerMethodAdapter extends ApplicationListener
 		if (Objects.nonNull(applicationContext) && applicationContext.equals(event.getSource())) {
 			super.onApplicationEvent(event);
 		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("The event is not from the same context - skipping " + event);
+			if (log.isDebugEnabled()) {
+				log.debug("The event is not from the same context - skipping " + event);
 			}
 		}
 	}

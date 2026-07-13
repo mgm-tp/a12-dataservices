@@ -39,8 +39,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.client.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.client.rpc.internal.JsonRpc2RequestBuilder;
 import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
@@ -48,18 +46,18 @@ import com.mgmtp.a12.dataservices.exception.RequestIdConflictException;
 import com.mgmtp.a12.dataservices.rpc.JsonRpc2Response;
 import com.mgmtp.a12.dataservices.rpc.JsonRpc2ResponseError;
 
+import tools.jackson.databind.ObjectMapper;
+
 import static com.mgmtp.a12.dataservices.rpc.JsonRpc2ResponseError.INVALID_PARAMS;
 import static com.mgmtp.a12.dataservices.rpc.JsonRpc2ResponseError.METHOD_NOT_FOUND;
-import static com.mgmtp.a12.dataservices.rpc.JsonRpc2ResponseError.PARSE_ERROR;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-
 
 public class JsonRpc2ClientErrorsIT extends AbstractSpringContextIT {
 
 	@Autowired private ObjectMapper objectMapper;
 
-	@BeforeClass public void setUp() throws JsonProcessingException {
+	@BeforeClass public void setUp() {
 		createModelFromFile(CONTRACT_MODEL_FILE);
 		createModelFromFile(BUSINESS_PARTNER_MODEL_FILE);
 		createModelFromFile(CO_INSURED_ADDITIONAL_FIELD_MODEL_FILE);
@@ -96,8 +94,8 @@ public class JsonRpc2ClientErrorsIT extends AbstractSpringContextIT {
 		List<JsonRpc2Response> responseList = rpcOperationsClient.invoke("ID1", requestBuilder.build());
 
 		responseList.forEach(res -> {
-			Assert.assertNull(res.getError(), String.format("Response [%s] should not contain error", res.getId()));
-			Assert.assertNotNull(res.getResult(), String.format("Response [%s] should contain result", res.getId()));
+			Assert.assertNull(res.getError(), "Response [%s] should not contain error".formatted(res.getId()));
+			Assert.assertNotNull(res.getResult(), "Response [%s] should contain result".formatted(res.getId()));
 		});
 
 		rpcOperationsClient.invoke("ID1", requestBuilder.build());
@@ -112,7 +110,7 @@ public class JsonRpc2ClientErrorsIT extends AbstractSpringContextIT {
 		List<JsonRpc2Response> results = rpcOperationsClient.invoke("ID2", requestBuilder.build());
 
 		assertEquals(results.size(), 1);
-		JsonRpc2Response response = results.get(0);
+		JsonRpc2Response response = results.getFirst();
 		assertFalse(response.isSuccess());
 
 		rpcOperationsClient.invoke("ID2", requestBuilder.build());
@@ -126,7 +124,7 @@ public class JsonRpc2ClientErrorsIT extends AbstractSpringContextIT {
 		List<JsonRpc2Response> results = rpcOperationsClient.invoke(requestBuilder.build());
 
 		assertEquals(results.size(), 1);
-		JsonRpc2Response response = results.get(0);
+		JsonRpc2Response response = results.getFirst();
 		assertFalse(response.isSuccess());
 		JsonRpc2ResponseError error = response.getError();
 		assertEquals(error.getCode(), METHOD_NOT_FOUND);
@@ -145,7 +143,7 @@ public class JsonRpc2ClientErrorsIT extends AbstractSpringContextIT {
 		List<JsonRpc2Response> results = rpcOperationsClient.invoke(rpcRequest.build());
 
 		assertEquals(results.size(), 1);
-		JsonRpc2Response response = results.get(0);
+		JsonRpc2Response response = results.getFirst();
 		assertFalse(response.isSuccess());
 		JsonRpc2ResponseError error = response.getError();
 		assertEquals(error.getCode(), INVALID_PARAMS);
@@ -159,10 +157,10 @@ public class JsonRpc2ClientErrorsIT extends AbstractSpringContextIT {
 			.addParameter(3);
 		List<JsonRpc2Response> results = rpcOperationsClient.invoke(rpcRequest.build());
 		assertEquals(results.size(), 1);
-		JsonRpc2Response response = results.get(0);
+		JsonRpc2Response response = results.getFirst();
 		assertFalse(response.isSuccess());
 		JsonRpc2ResponseError error = response.getError();
-		assertEquals(error.getCode(), PARSE_ERROR);
-		assertEquals(error.getMessage(), "JSON parse error");
+		assertEquals(error.getCode(), INVALID_PARAMS);
+		assertEquals(error.getMessage(), "Failed to read method parameter at index 0");
 	}
 }

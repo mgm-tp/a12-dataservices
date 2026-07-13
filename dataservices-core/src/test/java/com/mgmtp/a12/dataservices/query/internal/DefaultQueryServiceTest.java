@@ -65,18 +65,19 @@ import com.mgmtp.a12.dataservices.exception.query.QueryInvalidInputException;
 import com.mgmtp.a12.dataservices.model.internal.DefaultModelTypeService;
 import com.mgmtp.a12.dataservices.query.DocumentTreeNodeType;
 import com.mgmtp.a12.dataservices.query.DocumentTreeResult;
+import com.mgmtp.a12.dataservices.query.DirectFieldOrder;
 import com.mgmtp.a12.dataservices.query.Order;
 import com.mgmtp.a12.dataservices.query.Paging;
 import com.mgmtp.a12.dataservices.query.QueryContext;
 import com.mgmtp.a12.dataservices.query.QueryContextFactory;
 import com.mgmtp.a12.dataservices.query.enrichment.QueryEnricher;
 import com.mgmtp.a12.dataservices.query.generator.sql.internal.DefaultQueryGeneratorContext;
+import com.mgmtp.a12.dataservices.query.internal.marshalling.QuerySubtypeProvider;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.DocumentModelFieldsIndexer;
-import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.repository.LocalizedFieldsJpaRepository;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.repository.ModelFieldsJpaRepository;
 import com.mgmtp.a12.dataservices.query.projection.IQueryProjection;
+import com.mgmtp.a12.dataservices.query.projection.internal.CddProjectionImplementation;
 import com.mgmtp.a12.dataservices.query.projection.internal.DocumentProjectionImplementation;
-import com.mgmtp.a12.dataservices.query.projection.internal.JsonbCddProjectionImplementation;
 import com.mgmtp.a12.dataservices.query.security.IQueryResultAuthorization;
 import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
 import com.mgmtp.a12.dataservices.query.validation.internal.FieldsValidator;
@@ -86,7 +87,6 @@ import com.mgmtp.a12.dataservices.query.validation.internal.ValidationResult;
 import com.mgmtp.a12.dataservices.relationship.internal.RelationshipUtils;
 import com.mgmtp.a12.dataservices.request.internal.QueryPagingHelper;
 import com.mgmtp.a12.dataservices.rpc.query.PagedResultSet;
-import com.mgmtp.a12.dataservices.search.customizer.internal.SearchCustomizerRegistry;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 import com.mgmtp.a12.kernel.md.document.api.services.DocumentSerializationConfig;
 import com.mgmtp.a12.kernel.md.document.apiV2.services.IDocumentV2Serializer;
@@ -125,29 +125,25 @@ public class DefaultQueryServiceTest extends AbstractQueryContextAwareTest {
 	@Spy private DataServicesCoreProperties.Query.PageRequest pageRequestProperties = mock(DataServicesCoreProperties.Query.PageRequest.class);
 	@Spy private DocumentModelUtils documentModelUtils = new DocumentModelUtils(documentModelServiceFactory, documentModelSerializer, headerParser);
 	@Spy private Collection<IQueryProjection<?>> documentGraphProjections;
-	@Spy private final DocumentTreeHelper documentTreeHelper = new DocumentTreeHelper(documentFactory, objectMapper, documentModelUtils,
-		documentModelServiceFactory);
+	@Spy private final DocumentTreeHelper documentTreeHelper = new DocumentTreeHelper(objectMapper);
 	@Captor ArgumentCaptor<QueryRoot> queryRootCaptor;
 	@Mock private final DefaultModelTypeService modelTypeService = mock(DefaultModelTypeService.class);
 	@Spy private RelationshipUtils relationshipUtils = new RelationshipUtils(modelTypeService);
 	@Spy private final LinkAwareValidator linkAwareValidator = new LinkAwareValidator(modelTypeService, dataServicesCoreProperties, relationshipUtils);
 	@Mock private final DefaultDocumentModelPermissionEvaluator documentModelPermissionEvaluator = mock(DefaultDocumentModelPermissionEvaluator.class);
 	@Mock private final ModelFieldsJpaRepository modelFieldsJpaRepository = mock(ModelFieldsJpaRepository.class);
-	@Mock private final LocalizedFieldsJpaRepository localizedFieldsJpaRepository = mock(LocalizedFieldsJpaRepository.class);
 	@Spy private QueryContextFactory queryContextFactory = mock(DefaultQueryContextFactory.class);
-	@Mock private final SearchCustomizerRegistry searchCustomizerRegistry = mock(SearchCustomizerRegistry.class);
 	@Spy DocumentModelFieldsIndexer documentModelFieldsIndexer =
-		new DocumentModelFieldsIndexer(documentModelUtils, iDocumentModelService, modelFieldsJpaRepository,
-			localizedFieldsJpaRepository, searchCustomizerRegistry, objectMapper);
+		new DocumentModelFieldsIndexer(documentModelUtils, iDocumentModelService, modelFieldsJpaRepository, objectMapper);
 	@Spy private final QueryValidator queryValidator = spy(new QueryValidator(dataServicesCoreProperties, documentModelPermissionEvaluator, linkAwareValidator,
-		relationshipModelLoader, mock(FieldsValidator.class)));
+		relationshipModelLoader, mock(FieldsValidator.class), mock(com.mgmtp.a12.dataservices.query.validation.internal.OrderValidator.class)));
 	private final DefaultQueryService queryService =
 		new DefaultQueryService(documentModelResolver, relationshipModelLoader, documentModelServiceFactory, documentPermissionEvaluator,
 			projectionProvider, queryValidator, dataServicesCoreProperties, defaultQueryRepository, queryEnricher, Optional.of(queryResultAuthorization),
 			applicationEventPublisher, queryContextHelper, indexedModelFieldCache);
 
 	@BeforeClass public void setUpClass() {
-		new DefaultQueryGeneratorContext.QueryGeneratorContextFactory(objectMapper, mock(ApplicationContext.class)).init();
+		new DefaultQueryGeneratorContext.QueryGeneratorContextFactory(objectMapper, mock(ApplicationContext.class), mock(QuerySubtypeProvider.class)).init();
 		when(documentModelPermissionEvaluator.hasModelReadPermission(any(String.class))).thenReturn(true);
 		when(documentModelPermissionEvaluator.hasModelReadPermission(any(Header.class))).thenReturn(true);
 		when(documentModelPermissionEvaluator.hasModelReadPermission(any(IDocumentModel.class))).thenReturn(true);
@@ -158,7 +154,7 @@ public class DefaultQueryServiceTest extends AbstractQueryContextAwareTest {
 		when(queryContextFactory.createContext(Mockito.anyString())).thenReturn(newQueryContext());
 
 		IQueryProjection jsonbCddProjectionImplementation =
-			new JsonbCddProjectionImplementation(iDocumentModelService, documentModelServiceFactory, dataServicesCoreProperties, objectMapper,
+			new CddProjectionImplementation(iDocumentModelService, documentModelServiceFactory, dataServicesCoreProperties, objectMapper,
 				documentTreeHelper, Optional.of(kernelDocumentService), documentSupport, cdmHelper);
 
 		IQueryProjection documentProjectionImplementation =
@@ -191,12 +187,12 @@ public class DefaultQueryServiceTest extends AbstractQueryContextAwareTest {
 
 	@DataProvider public Object[][] sortingData() {
 		return new Object[][] {
-			{ List.of(new Order("sortField", Order.Direction.ASC, Order.NullHandling.NATIVE)) },
-			{ List.of(new Order("sortField", Order.Direction.DESC, Order.NullHandling.NULLS_FIRST)) },
-			{ List.of(new Order("sortField", Order.Direction.DESC)) },
-			{ List.of(new Order("sortField")) },
-			{ List.of(new Order("sortField1", Order.Direction.ASC, Order.NullHandling.NATIVE),
-				new Order("sortField2", Order.Direction.DESC, Order.NullHandling.NULLS_LAST)) },
+			{ List.<Order>of(new DirectFieldOrder("sortField", DirectFieldOrder.Direction.ASC, DirectFieldOrder.NullHandling.NATIVE)) },
+			{ List.<Order>of(new DirectFieldOrder("sortField", DirectFieldOrder.Direction.DESC, DirectFieldOrder.NullHandling.NULLS_FIRST)) },
+			{ List.<Order>of(new DirectFieldOrder("sortField", DirectFieldOrder.Direction.DESC)) },
+			{ List.<Order>of(new DirectFieldOrder("sortField")) },
+			{ List.<Order>of(new DirectFieldOrder("sortField1", DirectFieldOrder.Direction.ASC, DirectFieldOrder.NullHandling.NATIVE),
+				new DirectFieldOrder("sortField2", DirectFieldOrder.Direction.DESC, DirectFieldOrder.NullHandling.NULLS_LAST)) },
 		};
 	}
 
@@ -284,10 +280,11 @@ public class DefaultQueryServiceTest extends AbstractQueryContextAwareTest {
 		Mockito.verify(defaultQueryRepository).query(queryRootCaptor.capture(), any(), any());
 		QueryRoot passedQueryRoot = queryRootCaptor.getValue();
 		for (int i = 0; i < passedQueryRoot.getSort().size(); i++) {
-			Order order = passedQueryRoot.getSort().get(i);
-			Assert.assertEquals(sort.get(i).field(), order.field());
-			Assert.assertEquals(sort.get(i).direction() != null ? sort.get(i).direction() : Order.Direction.ASC, order.direction());
-			Assert.assertEquals(sort.get(i).nullHandling() != null ? sort.get(i).nullHandling() : Order.NullHandling.NATIVE, order.nullHandling());
+			DirectFieldOrder order = (DirectFieldOrder) passedQueryRoot.getSort().get(i);
+			DirectFieldOrder expected = (DirectFieldOrder) (sort.get(i));
+			Assert.assertEquals(expected.field(), order.field());
+			Assert.assertEquals(expected.direction() != null ? expected.direction() : DirectFieldOrder.Direction.ASC, order.direction());
+			Assert.assertEquals(expected.nullHandling() != null ? expected.nullHandling() : DirectFieldOrder.NullHandling.NATIVE, order.nullHandling());
 		}
 	}
 

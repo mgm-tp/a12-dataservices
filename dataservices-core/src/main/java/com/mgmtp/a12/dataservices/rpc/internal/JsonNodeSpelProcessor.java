@@ -32,6 +32,8 @@
 package com.mgmtp.a12.dataservices.rpc.internal;
 
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,22 +43,24 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.TextNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.StringNode;
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.utils.OperationContextHolder;
-import com.mgmtp.a12.dataservices.utils.internal.JsonUtils;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class JsonNodeSpelProcessor {
 
 	public static final Pattern PATTERN_FOR_REPLACEMENT_WITH_OBJECT = Pattern.compile("^#\\{(#[0-9a-zA-Z._]*)}$");
 	private final ExpressionParser expressionParser = new SpelExpressionParser();
-	private final JsonUtils jsonUtils;
 
-	public JsonNodeSpelProcessor(JsonUtils jsonUtils) {
-		this.jsonUtils = jsonUtils;
-	}
+	private final ObjectMapper objectMapper;
 
 	/**
 	 * This method doesn't modify the json node on input, but returns copy of it with SpEL expressions evaluated.
@@ -65,7 +69,7 @@ public class JsonNodeSpelProcessor {
 	 * @return JSON node with SpEL evaluated
 	 */
 	public JsonNode evaluateSpel(JsonNode jsonNode) {
-		return jsonUtils.copyNode(jsonNode, JsonNode::isTextual, sourceNode -> new TextNode(evaluateSpelInternal(sourceNode.textValue())));
+		return copyNode(jsonNode, JsonNode::isTextual, sourceNode -> StringNode.valueOf(evaluateSpelInternal(sourceNode.textValue())));
 	}
 
 	private String evaluateSpelInternal(String jsonNode) {
@@ -86,4 +90,33 @@ public class JsonNodeSpelProcessor {
 		}
 	}
 
+	public JsonNode copyNode(JsonNode sourceNode, Predicate<? super JsonNode> condition, Function<? super JsonNode, ? extends JsonNode> convertor) {
+		if (condition.test(sourceNode)) {
+			return convertor.apply(sourceNode);
+		} else if (sourceNode.isContainer()) {
+			if (sourceNode.isObject()) {
+				return cloneObjectNode(sourceNode, condition, convertor);
+			} else if (sourceNode.isArray()) {
+				return cloneArrayNode(sourceNode, condition, convertor);
+			} else {
+				throw new IllegalStateException(String.format("Unexpected container node type %s", sourceNode.getNodeType()));
+			}
+		} else if (sourceNode.isValueNode()) {
+			return sourceNode.deepCopy();
+		} else {
+			throw new IllegalStateException(String.format("Unexpected node type %s", sourceNode.getNodeType()));
+		}
+	}
+
+	private ArrayNode cloneArrayNode(JsonNode sourceNode, Predicate<? super JsonNode> condition, Function<? super JsonNode, ? extends JsonNode> convertor) {
+		ArrayNode targetNode = objectMapper.createArrayNode();
+		sourceNode.forEach(e -> targetNode.add(copyNode(e, condition, convertor)));
+		return targetNode;
+	}
+
+	private ObjectNode cloneObjectNode(JsonNode sourceNode, Predicate<? super JsonNode> condition, Function<? super JsonNode, ? extends JsonNode> convertor) {
+		ObjectNode targetNode = objectMapper.createObjectNode();
+		sourceNode.properties().forEach(e -> targetNode.set(e.getKey(), copyNode(e.getValue(), condition, convertor)));
+		return targetNode;
+	}
 }

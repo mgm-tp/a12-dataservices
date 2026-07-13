@@ -50,7 +50,7 @@ import com.mgmtp.a12.dataservices.cdd.jms.internal.ComposeDocumentModel;
 import com.mgmtp.a12.dataservices.exception.query.QueryInvalidInputException;
 import com.mgmtp.a12.dataservices.exception.query.QueryNotFoundException;
 import com.mgmtp.a12.dataservices.model.document.persistence.DocumentModelReadRepository;
-import com.mgmtp.a12.dataservices.model.document.persistence.internal.DocumentModelLoader;
+import com.mgmtp.a12.dataservices.model.document.persistence.internal.DefaultDocumentModelLoader;
 import com.mgmtp.a12.dataservices.model.internal.IndexedModelFieldCache;
 import com.mgmtp.a12.dataservices.model.persistence.IModelLoader;
 import com.mgmtp.a12.dataservices.model.relationship.persistence.RelationshipModelLoader;
@@ -102,7 +102,7 @@ public class DocumentGraphProjectionImplementationTest extends AbstractDataServi
 	@BeforeMethod
 	void setup() {
 		documentModelLoader =
-			new DocumentModelLoader(documentModelPermissionEvaluator, eventPublisher, documentModelReadRepository);
+			new DefaultDocumentModelLoader(documentModelPermissionEvaluator, eventPublisher, documentModelReadRepository);
 		queryContext = new DefaultQueryContext(documentModelLoader, mock(RelationshipModelLoader.class),
 			queryMethod, documentModelServiceFactory, queryContextHelper, indexedModelFieldCache, null, null);
 		documentGraphProjection = new DocumentGraphProjectionImplementation(

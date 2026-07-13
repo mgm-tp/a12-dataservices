@@ -33,14 +33,16 @@ package com.mgmtp.a12.dataservices.model.relationship.persistence;
 
 import java.util.function.Predicate;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Repository;
 
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.model.internal.ModelCacheManager;
 import com.mgmtp.a12.dataservices.model.persistence.AbstractModelReadRepository;
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity.ModelHeaderEntity;
+import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.repository.ModelHeaderJpaRepository;
+import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.repository.ModelJpaRepository;
 import com.mgmtp.a12.dataservices.relationship.model.RelationshipModel;
 import com.mgmtp.a12.dataservices.relationship.model.RelationshipModelSerializer;
 import com.mgmtp.a12.dataservices.utils.internal.DataServicesIOUtils;
@@ -57,7 +59,14 @@ import static com.mgmtp.a12.dataservices.relationship.model.RelationshipModel.RE
  */
 @Repository public class RelationshipModelReadRepository extends AbstractModelReadRepository<RelationshipModel> {
 
-	@Autowired private RelationshipModelSerializer relationshipModelSerializer;
+	private final RelationshipModelSerializer relationshipModelSerializer;
+
+	public RelationshipModelReadRepository(ModelJpaRepository modelJpaRepository,
+		ModelHeaderJpaRepository modelHeaderJpaRepository,
+		ApplicationEventPublisher eventPublisher, RelationshipModelSerializer relationshipModelSerializer) {
+		super(modelJpaRepository, modelHeaderJpaRepository, eventPublisher);
+		this.relationshipModelSerializer = relationshipModelSerializer;
+	}
 
 	@Cacheable(value = ModelCacheManager.RELATIONSHIP_MODEL_READ_CACHE)
 	@Override public RelationshipModel readModel(@NonNull String modelId) {

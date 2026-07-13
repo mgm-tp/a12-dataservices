@@ -41,14 +41,14 @@ import com.mgmtp.a12.dataservices.common.exception.mapping.GenericThrowableMappe
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 
 /**
- * Mapper provides default error messages when users upload an empty file.
+ * Mapper provides default error messages when the HTTP message could not be read.
  */
 public class HttpMessageNotReadableExceptionMapper extends GenericThrowableMapper<HttpMessageNotReadableException> {
 
 	/**
-	 * Default English message used when the uploaded file is empty.
+	 * Default English message used when something went wrong in reading the HTTP request.
 	 */
-	public static final String EMPTY_FILE_UPLOAD_DEFAULT = "The selected file is empty. Please select a different file.";
+	public static final String HTTP_MESSAGE_NOT_READABLE_DEFAULT = "The HTTP message could not be processed. Possibly the request body is empty or malformed.";
 
 	/**
 	 * {@inheritDoc}
@@ -60,11 +60,11 @@ public class HttpMessageNotReadableExceptionMapper extends GenericThrowableMappe
 	@Override public Object getEntity(HttpMessageNotReadableException exception) {
 		return new BaseError() {
 			@Override public LocalizedEntry getShortMessage() {
-				return new LocalizedEntry(ExceptionKeys.ATTACHMENT_EMPTY_FILE_ERROR_KEY, EMPTY_FILE_UPLOAD_DEFAULT);
+				return new LocalizedEntry(ExceptionKeys.HTTP_MESSAGE_NOT_READABLE_ERROR_KEY, HTTP_MESSAGE_NOT_READABLE_DEFAULT);
 			}
 
 			@Override public LocalizedEntry getLongMessage() {
-				return new LocalizedEntry(ExceptionKeys.ATTACHMENT_EMPTY_FILE_ERROR_KEY, EMPTY_FILE_UPLOAD_DEFAULT);
+				return new LocalizedEntry(ExceptionKeys.HTTP_MESSAGE_NOT_READABLE_ERROR_KEY, HTTP_MESSAGE_NOT_READABLE_DEFAULT);
 			}
 
 			@Override public ErrorDetail getErrorDetail() {

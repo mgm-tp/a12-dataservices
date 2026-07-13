@@ -31,12 +31,14 @@
  */
 package com.mgmtp.a12.dataservices.query.constraint;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Contract for constraints that carry a single value used for matching or filtering.
  *
  * @param <T> type of the value exposed by the constraint.
  */
-public interface ValueAware<T> {
+@OnlyForUsage public interface ValueAware<T> {
 	/**
 	 * Returns the value carried by this constraint.
 	 *

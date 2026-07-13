@@ -31,18 +31,18 @@
  */
 package com.mgmtp.a12.dataservices;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.document.DocumentService;
 import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 
 @Component public class DocumentFunctions {
 
@@ -60,6 +60,18 @@ import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 		Writer writer = new StringWriter();
 		documentSupport.convertDocumentToJSON(document.getKernelDocument(), writer);
 		return writer.toString();
+	}
+
+	/**
+	 * Creates a DataServicesDocument from raw JSON content for a given model.
+	 *
+	 * @param modelName the name of the document model the JSON conforms to
+	 * @param jsonContent the JSON content representing the document
+	 * @return The created DataServicesDocument.
+	 */
+	public DataServicesDocument createDocumentFromJson(final String modelName, final String jsonContent) {
+		DocumentV2 document = documentSupport.convertJSONToDocument(modelName, new StringReader(jsonContent));
+		return createDocumentFromKernelDocumentInternal(document);
 	}
 
 	/**
@@ -83,7 +95,8 @@ import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 	 * @throws IOException If an I/O error occurs while reading the file.
 	 */
 	public DataServicesDocument createDocumentFromFile(final String modelName, final String fileName) throws IOException {
-		return createDocumentFromFileInternal(modelName, fileName);
+		DocumentV2 document = getKernelDocumentFromFile(modelName, fileName);
+		return createDocumentFromKernelDocumentInternal(document);
 	}
 
 	/**
@@ -95,11 +108,10 @@ import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 	 * @throws IOException If an I/O error occurs while reading the file.
 	 */
 	public DocumentReference createDocumentFromFileAndGetDocRef(final String modelName, final String fileName) throws IOException {
-		return createDocumentFromFileInternal(modelName, fileName).getMetadata().getDocRef();
+		return createDocumentFromFile(modelName, fileName).getMetadata().getDocRef();
 	}
 
-	private DataServicesDocument createDocumentFromFileInternal(final String modelName, final String fileName) throws IOException {
-	return documentService.create(
-			documentSupport.convertJSONToDocument(modelName, resourceFunctions.loadResourceAsReader(fileName)), null);
+	private DataServicesDocument createDocumentFromKernelDocumentInternal(DocumentV2 document) {
+		return documentService.create(document, null);
 	}
 }

@@ -4,15 +4,15 @@ plugins {
 }
 
 dependencies {
-	api project(':dataservices-domain')
+	api project(':dataservices-modelgraph-common-lib')
 	api project(':dataservices-security-user-api')
 	api project(':dataservices-common:dataservices-common-lib')
-	api project(':dataservices-core-metadata')
+	api libs.rmc
 	api project(':content-store:dataservices-content-store-client')
 	api project(':content-store:dataservices-content-store-core')
 	api libs.uaaAuthorization
 	api libs.uaaAuthenticationBackend
-	api libs.freemarker
+	api libs.baseModelUtils
 	api libs.springDataJpa
 	api libs.springCore
 	api libs.springContextSupport
@@ -26,19 +26,12 @@ dependencies {
 	api libs.mgmModelApi
 	api libs.modelMarshalling
 	api libs.baseModelConsistency
-	api libs.kernelDocumentService,
-			libs.kernelMdFacade,
-			libs.kernelMdModel,
-			libs.kernelMdJoin
+	api libs.kernelMdFacade
 	api libs.jaxb2BasicsRuntime
-	api libs.jacksonAnnotations
-	api libs.jacksonDatabind
 	api libs.jacksonDataformatSmile
 	api libs.jacksonDataformatXml
-	api libs.jacksonDatatypeJdk8
-	api libs.jacksonDatatypeJsr310
-	api libs.jacksonJaxrsJsonProvider
-	api libs.julToSlf4j
+	api libs.jacksonDatabindV2
+	api libs.slf4jJul
 	api libs.transactionApi
 	api libs.liquibaseCore
 	api libs.semver4j
@@ -54,20 +47,20 @@ dependencies {
 	api libs.persistenceApi
 	api libs.commonsIo
 	api libs.resilience4jRetry
-	api libs.baseModelMigrationApi
 	implementation libs.jacksonDataformatCsv
-	implementation libs.hazelcast, libs.hazelcastSpring
 	implementation libs.httpclient
 	implementation libs.httpmime
 	implementation libs.postgresql
 	implementation libs.indriya
 	implementation libs.jsonpath
 	implementation libs.bundles.imageIOExtension
+	implementation libs.springBootStarterRestClient
 	compileOnly libs.servletApi
 
 	testFixturesImplementation libs.jmh
 	testFixturesImplementation libs.mockitoTestNG
 	testFixturesImplementation libs.springTest
+	testFixturesImplementation libs.springBootStarterRestClient
 	testFixturesAnnotationProcessor libs.jmhAnnprocessor
 
 	testImplementation libs.mockitoTestNG
@@ -86,6 +79,8 @@ dependencies {
 	testImplementation libs.xmlunitCore
 	testImplementation libs.xmlunitMatchers
 	testImplementation libs.xmlunitAssertj
+	testImplementation libs.archunit
+	testImplementation libs.javaParser
 }
 
 

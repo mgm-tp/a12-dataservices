@@ -52,6 +52,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 
 public class RequestIdManagerTest {
 
@@ -78,8 +79,8 @@ public class RequestIdManagerTest {
 			.isInstanceOf(RequestIdConflictException.class)
 			.satisfies(e -> {
 				RequestIdConflictException exception = (RequestIdConflictException) e;
-				assert exception.getState() == SUCCESS;
-				assert exception.getRequestId().equals(REQUEST_ID);
+				assertEquals(exception.getState(), SUCCESS);
+				assertEquals(exception.getRequestId(), REQUEST_ID);
 			});
 	}
 
@@ -109,8 +110,8 @@ public class RequestIdManagerTest {
 			.isInstanceOf(RequestIdConflictException.class)
 			.satisfies(e -> {
 				RequestIdConflictException exception = (RequestIdConflictException) e;
-				assert exception.getState() == PENDING;
-				assert exception.getRequestId().equals(REQUEST_ID);
+				assertEquals(exception.getState(), PENDING);
+				assertEquals(exception.getRequestId(), REQUEST_ID);
 			});
 	}
 
@@ -167,8 +168,8 @@ public class RequestIdManagerTest {
 			.isInstanceOf(RequestIdConflictException.class)
 			.satisfies(e -> {
 				RequestIdConflictException exception = (RequestIdConflictException) e;
-				assert exception.getState() == SUCCESS;
-				assert exception.getRequestId().equals(REQUEST_ID);
+				assertEquals(exception.getState(), SUCCESS);
+				assertEquals(exception.getRequestId(), REQUEST_ID);
 			});
 	}
 }

@@ -63,7 +63,6 @@ public class KernelConfigurationTest {
 			assertThat(documentSerializationConfig.isSkipTransientFields()).isEqualTo(!dataServicesCoreProperties.getDocuments().getPersistTransientFields().isEnabled());
 
 			assertThat(documentDeserializationConfig.getFormat()).isEqualTo(DocumentSerializationConfig.Format.JSON);
-			assertThat(documentDeserializationConfig.isAddTransientFields()).isEqualTo(dataServicesCoreProperties.getDocuments().getPersistTransientFields().isEnabled());
 		});
 	}
 
@@ -78,10 +77,8 @@ public class KernelConfigurationTest {
 
 				assertThat(documentSerializationConfig.getFormat()).isEqualTo(DocumentSerializationConfig.Format.JSON);
 				assertThat(documentSerializationConfig.isSkipTransientFields()).isFalse();
-				assertThat(documentSerializationConfig.isFailIfUnreadableXML()).isTrue();
 
 				assertThat(documentDeserializationConfig.getFormat()).isEqualTo(DocumentSerializationConfig.Format.JSON);
-				assertThat(documentDeserializationConfig.isAddTransientFields()).isTrue();
 				assertThat(documentDeserializationConfig.isRemoveEmptyFieldsAndGroups()).isFalse();
 		});
 	}
@@ -101,7 +98,6 @@ public class KernelConfigurationTest {
 		@Bean public DocumentDeserializationConfig documentJsonDeserializationConfig( ) {
 			return DocumentDeserializationConfig.builder()
 				.format(DocumentSerializationConfig.Format.JSON)
-				.addTransientFields(true)
 				.removeEmptyFieldsAndGroups(false)
 				.build();
 		}
@@ -110,7 +106,6 @@ public class KernelConfigurationTest {
 			return DocumentSerializationConfig.builder()
 				.format(DocumentSerializationConfig.Format.JSON)
 				.skipTransientFields(false)
-				.failIfUnreadableXML(true)
 				.build();
 		}
 	}

@@ -117,7 +117,7 @@ public class DefaultContentServiceTest extends AbstractContentStoreTest {
 		Assert.assertEquals(actualResult.getSize(), size);
 
 		if (PERSISTENT_TYPE_PUBLIC.equals(persistentType)) {
-			String expectedUrl = String.format(CONTENT_STORE_DOWNLOAD_URL_PATTERN, BASE_URL, contentStoreProperties.getServer().getContextPath(), thisContentId);
+			String expectedUrl = CONTENT_STORE_DOWNLOAD_URL_PATTERN.formatted(BASE_URL, contentStoreProperties.getServer().getContextPath(), thisContentId);
 			Assert.assertTrue(actualResult.getUrl().isPresent());
 			Assert.assertEquals(actualResult.getUrl().get(), expectedUrl);
 		} else {

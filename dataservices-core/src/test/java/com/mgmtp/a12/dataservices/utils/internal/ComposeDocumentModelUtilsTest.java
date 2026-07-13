@@ -32,7 +32,6 @@
 package com.mgmtp.a12.dataservices.utils.internal;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -57,7 +56,7 @@ public class ComposeDocumentModelUtilsTest extends AbstractCdmTest {
 					makeCddSkeletonGroup("CoInsurer", "contract", "businessPartner", "BusinessPartner-document"),
 					makeCddSkeletonGroup("Location", "businessPartner", "address", "Address-document"),
 					makeCddSkeletonGroup("PostAddress", "businessPartner", "address", "Address-document"));
-			assertGroups(groups.collect(Collectors.toList()), expectations);
+			assertGroups(groups.toList(), expectations);
 		});
 	}
 
@@ -88,7 +87,7 @@ public class ComposeDocumentModelUtilsTest extends AbstractCdmTest {
 		withCdm(CONTRACTCDM_FILE, cdm -> {
 			List<ImmutablePair<String, String>> groups = ComposeDocumentModelUtils.getAllGroups(cdm.getContent().getDocumentModelRoot())
 				.map(g -> new ImmutablePair<>(g.getId(), g.getName()))
-				.collect(Collectors.toList());
+				.toList();
 			assertEquals(groups, expected);
 		});
 	}

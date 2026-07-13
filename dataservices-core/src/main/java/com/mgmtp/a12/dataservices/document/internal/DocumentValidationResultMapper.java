@@ -32,8 +32,10 @@
 package com.mgmtp.a12.dataservices.document.internal;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.mgmtp.a12.dataservices.document.DocumentValidationResult;
+import com.mgmtp.a12.kernel.md.document.apiV2.PartiallyKnownDocumentMultiPointer;
 import com.mgmtp.a12.kernel.md.rt.api.IDocumentValidationResult;
 import com.mgmtp.a12.kernel.md.rt.api.IMessage;
 
@@ -49,19 +51,44 @@ public class DocumentValidationResultMapper {
 			.toList();
 	}
 
-	private static DocumentValidationResult toDocumentValidationResult(IMessage message) {
-		List<String> referencedFields = message.getReferencedFields().stream()
-			.map(Object::toString)
-			.toList();
+	public static DocumentValidationResult toDocumentValidationResult(IMessage message) {
 
-		return DocumentValidationResult.builder()
-			.errorText(message.getErrorText())
-			.errorCode(message.getErrorCode())
-			.messageType(String.valueOf(message.getMessageType()))
-			.rulePath(String.valueOf(message.getRulePath()))
-			.referencedFields(referencedFields)
-			.severityType(String.valueOf(message.getSeverity()))
-			.entityInstance(String.valueOf(message.getEntityInstance()))
-			.build();
+		Optional<IMessage> messageOpt = Optional.of(message);
+		DocumentValidationResult.DocumentValidationResultBuilder bld = DocumentValidationResult.builder();
+		messageOpt
+			.map(IMessage::getErrorText)
+			.ifPresent(bld::errorText);
+		messageOpt
+			.map(IMessage::getErrorCode)
+			.ifPresent(bld::errorCode);
+		messageOpt
+			.map(IMessage::getMessageType)
+			.map(String::valueOf)
+			.ifPresent(bld::messageType);
+		messageOpt
+			.flatMap(IMessage::getRulePath)
+			.ifPresent(bld::rulePath);
+		messageOpt
+			.map(IMessage::getReferencedFieldsPointers)
+			.map(p -> p.stream()
+				.map(PartiallyKnownDocumentMultiPointer::fullName)
+				.toList())
+			.ifPresent(bld::referencedFieldsPointers);
+		messageOpt
+			.map(IMessage::getSeverity)
+			.map(Enum::name)
+			.ifPresent(bld::severityType);
+		messageOpt
+			.map(IMessage::getErrorFieldPointer)
+			.map(PartiallyKnownDocumentMultiPointer::fullName)
+			.ifPresent(bld::errorFieldPointer);
+		messageOpt
+			.map(IMessage::getRefOmissionErrorResponsiblePointers)
+			.map(x -> x.stream()
+				.map(PartiallyKnownDocumentMultiPointer::fullName)
+				.toList())
+			.ifPresent(bld::refOmissionErrorResponsiblePointers);
+		return bld.build();
 	}
+
 }

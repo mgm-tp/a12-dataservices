@@ -80,7 +80,7 @@ public class MigrationRunnerWrongVersionIT extends AbstractMigrationIT {
 
 		//method ordering is not guaranteed so we can check only single method steps
 
-		MigrationStepEntity migrationStepEntity = allMigrations.get(0);
+		MigrationStepEntity migrationStepEntity = allMigrations.getFirst();
 		MatcherAssert.assertThat("Task Name", migrationStepEntity.getTask(), Matchers.equalTo("migrateData3"));
 		MatcherAssert.assertThat("Version", migrationStepEntity.getVersion(), Matchers.equalTo("BadVersion"));
 		MatcherAssert.assertThat("Author", migrationStepEntity.getAuthor(), Matchers.equalTo("SuperAuthor"));

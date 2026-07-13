@@ -32,7 +32,7 @@
 package com.mgmtp.a12.dataservices.configuration.internal.validation.condition.contentstore;
 
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
-import com.mgmtp.a12.dataservices.configuration.internal.validation.condition.AbstractDataServicesCondition;
+import com.mgmtp.a12.dataservices.configuration.condition.internal.AbstractDataServicesCondition;
 import com.mgmtp.a12.dataservices.configuration.validation.internal.ConfigurationMessage;
 
 public abstract class AbstractContentStoreModeCondition extends AbstractDataServicesCondition {
@@ -44,7 +44,7 @@ public abstract class AbstractContentStoreModeCondition extends AbstractDataServ
 	}
 
 	@Override protected ConfigurationMessage validate(DataServicesCoreProperties dataServicesCoreProperties) {
-		return makeValidMessage(String.format("Content store running in mode: %s", getMode()), CONTENT_STORE_MODE_PROPERTY);
+		return makeValidMessage("Content store running in mode: %s".formatted(getMode()), CONTENT_STORE_MODE_PROPERTY);
 	}
 
 	protected abstract String getMode();

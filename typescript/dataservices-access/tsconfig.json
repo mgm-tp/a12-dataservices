@@ -4,6 +4,7 @@
 	"include": ["src"],
 	"compilerOptions": {
 		"types": ["mocha", "node"],
+		"rootDir": "./src",
 		"outDir": "./lib"
 	},
 	"compileOnSave": true,

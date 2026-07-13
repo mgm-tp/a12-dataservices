@@ -39,7 +39,7 @@ import org.springframework.util.MimeTypeUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.common.events.ContentTypeDetectedEvent;
 
 public class JsonContentTypeListenerTest {

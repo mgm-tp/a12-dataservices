@@ -37,6 +37,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mgmtp.a12.dataservices.common.LocalizedEntry;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Base error payload interface exposed by Data Services.
@@ -46,7 +47,7 @@ import com.mgmtp.a12.dataservices.common.LocalizedEntry;
 	getterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE,
 	setterVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
-public interface BaseError extends Serializable {
+@OnlyForUsage public interface BaseError extends Serializable {
 
 	/**
 	 * Returns the severity level associated with this error payload.

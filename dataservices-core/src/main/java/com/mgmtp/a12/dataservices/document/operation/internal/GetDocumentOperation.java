@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.mgmtp.a12.dataservices.common.anonymizing.Anonymizer;
+import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.document.DocumentService;
@@ -46,12 +47,11 @@ import com.mgmtp.a12.dataservices.document.operation.events.GetDocumentAfterEven
 import com.mgmtp.a12.dataservices.document.operation.events.GetDocumentBeforeEvent;
 import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
-import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
 import com.mgmtp.a12.dataservices.rpc.RemoteOperation;
+import com.mgmtp.a12.dataservices.rpc.internal.RpcDocRefParser;
 import com.mgmtp.a12.dataservices.utils.OperationContextHolder;
 import com.mgmtp.a12.dataservices.utils.internal.LoadedDocumentReferencesContextHolder;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -59,7 +59,7 @@ import lombok.extern.slf4j.Slf4j;
  * This operation is designed especially for getting the content of a single document.
  */
 @Slf4j
-@RemoteOperation(name = CoreOperationConstants.GET_DOCUMENT_OPERATION, group = CoreOperationConstants.DOCUMENT_OPERATIONS_GROUP)
+@RemoteOperation(isMutation = false, name = CoreOperationConstants.GET_DOCUMENT_OPERATION, group = CoreOperationConstants.DOCUMENT_OPERATIONS_GROUP)
 public class GetDocumentOperation extends AbstractDocumentOperation {
 
 	private final DocumentSupport documentSupport;
@@ -82,12 +82,13 @@ public class GetDocumentOperation extends AbstractDocumentOperation {
 	 * @event {@link DocumentAfterLoadEvent}
 	 */
 	@Transactional(readOnly = true)
-	public DocumentSpec rpc(@NonNull @JsonRpcParam("docRef") DocumentReference docRef) {
-		log.debug("{} called with parameters [docRef={}]", CoreOperationConstants.GET_DOCUMENT_OPERATION, anonymizer.anonymize(docRef));
-		GetDocumentBeforeEvent beforeEvent = new GetDocumentBeforeEvent(docRef);
+	public DocumentSpec rpc(@JsonRpcParam("docRef") String docRef) {
+		DocumentReference documentReference = RpcDocRefParser.parseDocRef(docRef);
+		log.debug("{} called with parameters [docRef={}]", CoreOperationConstants.GET_DOCUMENT_OPERATION, anonymizer.anonymize(documentReference));
+		GetDocumentBeforeEvent beforeEvent = new GetDocumentBeforeEvent(documentReference);
 		eventPublisher.publishEvent(beforeEvent);
-		DataServicesDocument dataServicesDocument = documentService.load(docRef)
-			.orElseThrow(() -> new NotFoundException(ExceptionKeys.DOCUMENT_NOT_FOUND_ERROR_KEY, String.format("Document [%s] not found", docRef)));
+		DataServicesDocument dataServicesDocument = documentService.load(documentReference)
+			.orElseThrow(() -> new NotFoundException(ExceptionKeys.DOCUMENT_NOT_FOUND_ERROR_KEY, "Document [%s] not found".formatted(documentReference)));
 		OperationContextHolder.put(dataServicesDocument);
 		DocumentSpec documentSpec = documentSupport.convertToDocumentSpec(dataServicesDocument);
 		LoadedDocumentReferencesContextHolder.addDocumentReference(documentSpec);

@@ -31,7 +31,9 @@
  */
 package com.mgmtp.a12.dataservices.rpc;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.io.Serial;
+
+import tools.jackson.databind.JsonNode;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,7 +48,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true) @Data @ToString @SuperBuilder @NoArgsConstructor @AllArgsConstructor
 public class JsonRpc2Request extends JsonRpc2Message {
 
-	private static final long serialVersionUID = 1L;
+	@Serial private static final long serialVersionUID = 1L;
 
 	/** HTTP header used to propagate a stable request correlation ID across services. */
 	public static final String REQUEST_ID_HEADER = "Request-Id";

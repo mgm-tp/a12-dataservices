@@ -116,6 +116,8 @@ package "BusinessPartnerSuper" as BusinessPartnerSuper <<Frame>> {
 	group_36405 -- field_d6580
 	field('"StartOfRelationship" as field_663d2 <<DateType>>')
 	group_36405 -- field_663d2
+	field('"EndOfRelationship" as field_663d3 <<DateTimeType>>')
+	group_36405 -- field_663d3
 	field('"CustomerDiscount" as field_74a24 <<EnumerationType>>')
 	group_36405 -- field_74a24
 	group('"Employment" as G2')
@@ -129,10 +131,33 @@ computes: ../tax
 	G2 -- computation_8a180
 
 	group_36405 ||--o| "0..1" G2
+	field('"accountNumber" as field_5dsk4 <<NumberType>>')
+	group_36405 -- field_5dsk4
 	field('"PersonOrEntity" as field_114de <<StringType>>')
 	group_36405 -- field_114de
 
 	BusinessPartnerSuperDocumentRoot ||--o| "0..1" group_36405
+
+	group('"__meta" as abc6a6767a60488754aace2accb73824_group_8f4b1')
+	field('"docRef" as abc6a6767a60488754aace2accb73824_field_1169c <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_1169c
+	field('"modelReference" as abc6a6767a60488754aace2accb73824_field_cfb40 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_cfb40
+	field('"modelVersion" as abc6a6767a60488754aace2accb73824_field_17e3b <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_17e3b
+	field('"creator" as abc6a6767a60488754aace2accb73824_field_cdaf9 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_cdaf9
+	field('"createdAt" as abc6a6767a60488754aace2accb73824_field_65672 <<DateTimeType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_65672
+	field('"modifier" as abc6a6767a60488754aace2accb73824_field_1fa32 <<StringType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_1fa32
+	field('"modifiedAt" as abc6a6767a60488754aace2accb73824_field_5cd66 <<DateTimeType>>')
+	abc6a6767a60488754aace2accb73824_group_8f4b1 -- abc6a6767a60488754aace2accb73824_field_5cd66
+	group('"extensions" as abc6a6767a60488754aace2accb73824_group_4c9a1')
+
+	abc6a6767a60488754aace2accb73824_group_8f4b1 ||--o| "0..1" abc6a6767a60488754aace2accb73824_group_4c9a1
+
+	BusinessPartnerSuperDocumentRoot ||--o| "0..1" abc6a6767a60488754aace2accb73824_group_8f4b1
 
 }
 @enduml

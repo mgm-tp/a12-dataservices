@@ -35,11 +35,16 @@ import type {
 } from "../Attachment/attachment.js";
 import type {
 	AddDocumentJsonRpc2Response,
+	CheckUniquenessJsonRpc2Response,
 	DocumentJsonRpc2Request,
 	GetDocumentJsonRpc2Response,
 	ModifyJsonRpc2Response
 } from "../Document/index.js";
-import type { JsonRpc2Response, JsonRpc2ResponseOK } from "../json-rpc/index.js";
+import type {
+	JsonRpc2Response,
+	JsonRpc2ResponseError,
+	JsonRpc2ResponseOK
+} from "../json-rpc/index.js";
 import type {
 	ListModelsJsonRpc2Response,
 	ListValidationsJsonRpc2Response,
@@ -101,6 +106,10 @@ export type SupportedMethodMap = {
 		Req: DocumentJsonRpc2Request.ValidateJsonRpc2Request;
 		Res: JsonRpc2ResponseOK;
 	};
+	CHECK_UNIQUENESS: {
+		Req: DocumentJsonRpc2Request.CheckUniquenessJsonRpc2Request;
+		Res: CheckUniquenessJsonRpc2Response;
+	};
 
 	// Link/Relationship-related methods
 	ADD_LINK: {
@@ -160,3 +169,28 @@ export type ResponseFor<Request extends SupportedRequest> = {
 			? SupportedMethodMap[K]["Res"]
 			: never;
 }[Request["method"]];
+
+/**
+ * Successful outcome of a single request within a {@link Dispatcher.rpcSettled} batch.
+ */
+export interface RpcFulfilledResult<Request extends SupportedRequest> {
+	readonly status: "fulfilled";
+	readonly value: ResponseFor<Request>;
+}
+
+/**
+ * Failed outcome of a single request within a {@link Dispatcher.rpcSettled} batch.
+ * `reason` holds the server-returned JSON-RPC error response for this request.
+ */
+export interface RpcRejectedResult {
+	readonly status: "rejected";
+	readonly reason: JsonRpc2ResponseError;
+}
+
+/**
+ * Per-request outcome returned by {@link Dispatcher.rpcSettled}, so callers can inspect
+ * each request independently without losing successful responses when another request
+ * in the batch fails.
+ */
+export type RpcSettledResult<Request extends SupportedRequest> =
+	RpcFulfilledResult<Request> | RpcRejectedResult;

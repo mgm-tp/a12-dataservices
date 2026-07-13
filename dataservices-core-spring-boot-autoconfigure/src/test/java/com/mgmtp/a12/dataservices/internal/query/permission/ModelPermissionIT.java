@@ -32,6 +32,7 @@
 package com.mgmtp.a12.dataservices.internal.query.permission;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -91,7 +92,7 @@ public class ModelPermissionIT extends AbstractSpringContextIT {
 		assertEquals(queryResultPage.getContent().stream().toList().size(), 0);
 	}
 
-	@Test(expectedExceptions = QueryValidationException.class, expectedExceptionsMessageRegExp = ".*Access Denied.*")
+	@Test(expectedExceptions = AccessDeniedException.class, expectedExceptionsMessageRegExp = ".*Access Denied.*")
 	public void testNoPermissionToTargetDocumentModel() {
 		QueryRoot queryRoot = QueryRoot.builder()
 			.projectionName(DocumentProjectionImplementation.PROJECTION_NAME)
@@ -103,6 +104,19 @@ public class ModelPermissionIT extends AbstractSpringContextIT {
 			.build();
 		// guest user does not have access right to model BusinessPartnerSuperAdminOnly
 		setUserTo(UserConstants.GUEST_USER);
+		queryService.query(queryRoot, null);
+	}
+
+	@Test(expectedExceptions = QueryValidationException.class, expectedExceptionsMessageRegExp = ".*Target document model \\[BusinessPartnerNotFound] not found.*")
+	public void testNoPermissionUnknownModel() {
+		QueryRoot queryRoot = QueryRoot.builder()
+			.projectionName(DocumentProjectionImplementation.PROJECTION_NAME)
+			.targetDocumentModel("BusinessPartnerNotFound")
+			.paging(Paging.builder()
+				.pageSize(10)
+				.pageNumber(0)
+				.build())
+			.build();
 		queryService.query(queryRoot, null);
 	}
 }

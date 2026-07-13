@@ -73,7 +73,7 @@ import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.QUERY_LINKS_LIM
 @RequiredArgsConstructor
 @Repository public class DefaultQueryRepository implements QueryRepository {
 
-	@PersistenceContext private EntityManager entityManager;
+	@PersistenceContext(unitName = "dsPersistenceUnit") private EntityManager entityManager;
 	private final DefaultQueryGeneratorContext.QueryGeneratorContextFactory queryGeneratorContextFactory;
 	private final DocumentTreeMapper documentTreeMapper;
 	private final DataServicesCoreProperties dataServicesCoreProperties;

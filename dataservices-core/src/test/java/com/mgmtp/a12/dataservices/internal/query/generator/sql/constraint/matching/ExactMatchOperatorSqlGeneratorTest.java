@@ -31,6 +31,7 @@
  */
 package com.mgmtp.a12.dataservices.internal.query.generator.sql.constraint.matching;
 
+import java.util.List;
 import java.util.Map;
 
 import org.mockito.Mockito;
@@ -40,6 +41,7 @@ import org.testng.annotations.Test;
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
 import com.mgmtp.a12.dataservices.exception.query.QueryInvalidInputException;
 import com.mgmtp.a12.dataservices.internal.query.generator.sql.constraint.AbstractSqlGeneratorTest;
+import com.mgmtp.a12.dataservices.model.metadata.DocumentMetadataConstants;
 import com.mgmtp.a12.dataservices.query.constraint.matching.ExactMatchOperator;
 import com.mgmtp.a12.dataservices.query.enrichement.Enrichments;
 import com.mgmtp.a12.dataservices.query.enrichement.FieldDescriptor;
@@ -71,7 +73,7 @@ public class ExactMatchOperatorSqlGeneratorTest extends AbstractSqlGeneratorTest
 				"en"
 				, "(target_document.search_data ~ :p0 AND target_document.search_data ~ :p1)",
 				Map.of("p0", "~IT~/",
-					"p1", "(?:^|~)/ContractRoot/Type\\[en\\]~IT~/"),
+					"p1", "(?:^|~)/ContractRoot/Type~IT~/"),
 			},
 			new Object[] { "Enum without language",
 				ExactMatchOperator.<String>builder()
@@ -152,6 +154,63 @@ public class ExactMatchOperatorSqlGeneratorTest extends AbstractSqlGeneratorTest
 				null,
 				"(target_document.original_value @> :p0 :: JSONB)",
 				Map.of("p0", "{ \"ContractRoot\" : { \"DateFragment\" : \"01-25\"}}"),
+			},
+			new Object[] { "Multiple values — String",
+				ExactMatchOperator.<String>builder()
+					.field("/ContractRoot/Name")
+					.values(List.of("Insurance", "Finance"))
+					.build(),
+				STRING_FIELD_TYPE,
+				"Insurance|Finance",
+				null,
+				"(target_document.search_data ~ :p0 AND target_document.search_data ~ :p1)",
+				Map.of("p0", "~(?:Insurance|Finance)~/",
+					"p1", "(?:^|~)/ContractRoot/Name~(?:Insurance|Finance)~/"),
+			},
+			new Object[] { "Multiple values — Docref (OR of equality conditions)",
+				ExactMatchOperator.<String>builder()
+					.field(DocumentMetadataConstants.DOCREF_METADATA_PATH)
+					.values(List.of("ref-001", "ref-002"))
+					.build(),
+				STRING_FIELD_TYPE,
+				null,
+				null,
+				"(doc_ref = :p0 OR doc_ref = :p1)",
+				Map.of("p0", "ref-001", "p1", "ref-002"),
+			},
+			new Object[] { "Single value — Docref (plain equality)",
+				ExactMatchOperator.<String>builder()
+					.field(DocumentMetadataConstants.DOCREF_METADATA_PATH)
+					.value("ref-001")
+					.build(),
+				STRING_FIELD_TYPE,
+				null,
+				null,
+				"doc_ref = :p0",
+				Map.of("p0", "ref-001"),
+			},
+			new Object[] { "Multiple values — Number",
+				ExactMatchOperator.<String>builder()
+					.field("/ContractRoot/Price")
+					.values(List.of("10.00", "20.00"))
+					.build(),
+				NUMBER_FIELD_TYPE,
+				"10.00|20.00",
+				null,
+				"(target_document.search_data ~ :p0 AND target_document.search_data ~ :p1)",
+				Map.of("p0", "~(?:10\\.00|20\\.00)~/",
+					"p1", "(?:^|~)/ContractRoot/Price~(?:10\\.00|20\\.00)~/"),
+			},
+			new Object[] { "Single-element values",
+				ExactMatchOperator.<String>builder()
+					.field("/ContractRoot/Name")
+					.values(List.of("Insurance"))
+					.build(),
+				STRING_FIELD_TYPE,
+				"Insurance",
+				null,
+				"(target_document.original_value @> :p0 :: JSONB)",
+				Map.of("p0", "{ \"ContractRoot\" : { \"Name\" : \"Insurance\"}}"),
 			}
 		};
 	}
@@ -184,6 +243,18 @@ public class ExactMatchOperatorSqlGeneratorTest extends AbstractSqlGeneratorTest
 		QueryGeneratorContext queryGeneratorContext = Mockito.mock(QueryGeneratorContext.class);
 		ExactMatchOperator exactMatchOperator = ExactMatchOperator.builder()
 			.value("valueLongLongLong")
+			.build();
+		generator.renderCondition(sb, exactMatchOperator, queryGeneratorContext);
+		dataServicesCoreProperties.getQuery().getExactMatch().setMaxInputValueLength(100);
+	}
+
+	@Test(expectedExceptions = QueryInvalidInputException.class, expectedExceptionsMessageRegExp = "Please reduce the input value length to a value lower than 10 for the exact_match operator.")
+	void testRenderCondition_throwErrorWhenValuesContainsTooLongEntry() {
+		dataServicesCoreProperties.getQuery().getExactMatch().setMaxInputValueLength(10);
+		StringBuilder sb = new StringBuilder();
+		QueryGeneratorContext queryGeneratorContext = Mockito.mock(QueryGeneratorContext.class);
+		ExactMatchOperator<String> exactMatchOperator = ExactMatchOperator.<String>builder()
+			.values(List.of("short", "valueLongLongLong"))
 			.build();
 		generator.renderCondition(sb, exactMatchOperator, queryGeneratorContext);
 		dataServicesCoreProperties.getQuery().getExactMatch().setMaxInputValueLength(100);

@@ -32,7 +32,7 @@
 import { strictEqual } from "node:assert/strict";
 
 import { Attachment, AttachmentHeader } from "../Attachment/index.js";
-import { AttachmentAnnotation, ThumbnailUrl } from "../Attachment/attachment.js";
+import { AttachmentAnnotation, ThumbnailUrl } from "../Attachment/index.js";
 
 import { replaceAtPath } from "./utils/ObjectUtils.js";
 
@@ -122,7 +122,7 @@ suite("Attachments suite", () => {
 			strictEqual(
 				AttachmentHeader.isInstance({ ...attachmentHeaderBase, attachmentId: 123456 }),
 				false,
-				"Checke with number type"
+				"Check with number type"
 			);
 		});
 
@@ -149,6 +149,29 @@ suite("Attachments suite", () => {
 				AttachmentHeader.isInstance(annotationWithoutValue),
 				false,
 				"Check with annotation without value"
+			);
+		});
+
+		test("Attachment Header - Missing filename", () => {
+			const { filename, ...attachment } = attachmentHeaderBase;
+			strictEqual(
+				AttachmentHeader.isInstance(attachment),
+				true,
+				"Check with missing filename (filename is optional and can be null)"
+			);
+
+			const attachmentWithNullFilename = { ...attachmentHeaderBase, filename: null };
+			strictEqual(
+				AttachmentHeader.isInstance(attachmentWithNullFilename),
+				false,
+				"Check with null filename (filename is optional and can be null)"
+			);
+
+			const attachmentWithNumberFilename = { ...attachmentHeaderBase, filename: 123456 };
+			strictEqual(
+				AttachmentHeader.isInstance(attachmentWithNumberFilename),
+				false,
+				"Check with number type filename (filename should be string or null)"
 			);
 		});
 	});

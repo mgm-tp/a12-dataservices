@@ -50,6 +50,7 @@ import com.mgmtp.a12.dataservices.document.DocumentService;
 import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.rpc.RemoteOperation;
+import com.mgmtp.a12.dataservices.rpc.internal.RpcDocRefParser;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +61,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RequiredArgsConstructor
-@RemoteOperation(name = CoreOperationConstants.LOAD_ATTACHMENT_HEADER_OPERATION, group = CoreOperationConstants.ATTACHMENT_OPERATIONS_GROUP)
+@RemoteOperation(isMutation = false, name = CoreOperationConstants.LOAD_ATTACHMENT_HEADER_OPERATION, group = CoreOperationConstants.ATTACHMENT_OPERATIONS_GROUP)
 public class LoadAttachmentHeaderOperation {
 
 	private final AttachmentHeaderService attachmentHeaderService;
@@ -74,15 +75,16 @@ public class LoadAttachmentHeaderOperation {
 	 * @return Object of type {@link AttachmentHeader}.
 	 */
 	@Transactional(readOnly = true)
-	public AttachmentHeaderSpec rpc(@NonNull @JsonRpcParam("attachmentId") String attachmentId, @NonNull @JsonRpcParam("docRef") DocumentReference docRef) {
-		log.debug("{} called with parameters attachmentId=[{}], docRef=[{}]", CoreOperationConstants.LOAD_ATTACHMENT_HEADER_OPERATION, attachmentId, docRef);
+	public AttachmentHeaderSpec rpc(@NonNull @JsonRpcParam("attachmentId") String attachmentId, @JsonRpcParam("docRef") String docRef) {
+		DocumentReference documentReference = RpcDocRefParser.parseDocRef(docRef);
+		log.debug("{} called with parameters attachmentId=[{}], docRef=[{}]", CoreOperationConstants.LOAD_ATTACHMENT_HEADER_OPERATION, attachmentId, documentReference);
 
 		Optional<AttachmentHeader> attachmentHeaderOptional = attachmentHeaderService.load(attachmentId)
-			.filter(ah -> ah.getReferences().contains(AttachmentReference.fromDocRef(docRef)));
+			.filter(ah -> ah.getReferences().contains(AttachmentReference.fromDocRef(documentReference)));
 
 		//document needs to be loaded because of security, Security details should not be displayed to the user, header is either loadable or not
-		if (documentService.load(docRef).isEmpty()) {
-			log.debug("Document [{}] is not found for attachment with id [{}]", docRef, attachmentId);
+		if (documentService.load(documentReference).isEmpty()) {
+			log.debug("Document [{}] is not found for attachment with id [{}]", documentReference, attachmentId);
 			throw constructNotFoundException(attachmentId);
 		}
 
@@ -95,6 +97,6 @@ public class LoadAttachmentHeaderOperation {
 	}
 
 	private static NotFoundException constructNotFoundException(String attachmentId) {
-		return new NotFoundException(ExceptionKeys.ATTACHMENT_NOT_FOUND_ERROR_KEY, String.format("Attachment [%s] not found", attachmentId));
+		return new NotFoundException(ExceptionKeys.ATTACHMENT_NOT_FOUND_ERROR_KEY, "Attachment [%s] not found".formatted(attachmentId));
 	}
 }

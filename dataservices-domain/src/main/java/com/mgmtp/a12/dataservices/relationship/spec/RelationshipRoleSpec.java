@@ -33,12 +33,11 @@ package com.mgmtp.a12.dataservices.relationship.spec;
 
 import java.io.Serializable;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
-import com.mgmtp.a12.dataservices.marshalling.DocumentReferenceToStringConverter;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 /**
  * Specification of a role within a relationship, including the document model name and document reference.
@@ -51,20 +50,17 @@ public class RelationshipRoleSpec implements Serializable {
 	private String role;
 	private String modelName;
 
-	@JsonSerialize(converter = DocumentReferenceToStringConverter.class)
 	private DocumentReference docRef;
 
 	/**
 	 * Creates a role specification bound to a document reference.
 	 *
 	 * @param role role name within the relationship; must not be null.
-	 * @param documentReference reference of the document that fulfills the role; may be null.
+	 * @param documentReference reference of the document that fulfills the role; must not be null.
 	 */
-	public RelationshipRoleSpec(String role, DocumentReference documentReference) {
+	public RelationshipRoleSpec(@NonNull String role, @NonNull DocumentReference documentReference) {
 		this.role = role;
 		this.docRef = documentReference;
-		if (this.docRef != null) {
-			this.modelName = this.docRef.getDocumentModelName();
-		}
+		this.modelName = this.docRef.getDocumentModelName();
 	}
 }

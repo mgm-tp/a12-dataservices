@@ -31,41 +31,44 @@
  */
 package com.mgmtp.a12.dataservices.document.operation.internal;
 
-import java.io.StringReader;
 import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.mgmtp.a12.dataservices.common.LocalizedEntry;
 import com.mgmtp.a12.dataservices.common.anonymizing.Anonymizer;
 import com.mgmtp.a12.dataservices.common.exception.BaseException;
 import com.mgmtp.a12.dataservices.common.exception.BaseException.MessagePriority;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
-import com.mgmtp.a12.dataservices.document.DocumentReference;
+import com.mgmtp.a12.dataservices.document.exception.DataServicesDocumentSerializationException;
+import com.mgmtp.a12.dataservices.utils.internal.DataServicesDocumentProblemReporterException;
+import com.mgmtp.a12.dataservices.document.DocumentReferenceResult;
 import com.mgmtp.a12.dataservices.document.DocumentService;
 import com.mgmtp.a12.dataservices.document.events.DocumentAfterCreateEvent;
 import com.mgmtp.a12.dataservices.document.events.DocumentBeforeCreateEvent;
 import com.mgmtp.a12.dataservices.document.events.DocumentBeforeRepositorySaveEvent;
 import com.mgmtp.a12.dataservices.document.events.internal.DocumentAfterRepositoryCreateEvent;
 import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
-import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
-import com.mgmtp.a12.dataservices.exception.ExceptionCodes;
-import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.rpc.RemoteOperation;
 import com.mgmtp.a12.dataservices.rpc.RpcExceptionSupport;
 import com.mgmtp.a12.dataservices.utils.OperationContextHolder;
-import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import static com.mgmtp.a12.dataservices.exception.ExceptionCodes.ACCESS_DENIED_EXCEPTION_CODE;
+import static com.mgmtp.a12.dataservices.exception.ExceptionCodes.RPC_ERROR_EXCEPTION_CODE;
+import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.ADD_DOCUMENT_ERROR_KEY;
+import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.SECURITY_NOT_AUTHORIZED_ERROR_KEY;
+
 /**
  * Create a new document of particular model. The handling of the document could vary depending on the model, where
  * the {@link com.mgmtp.a12.dataservices.document.DocumentService} will find all implementations of
- * the {@link com.mgmtp.a12.dataservices.document.persistence.IDocumentRepository} and take the first one which  supports the document
+ * the {@link com.mgmtp.a12.dataservices.document.persistence.IDocumentRepository} and take the first one which supports the document
  * model of the persisted document.
  *
  * The operation fires the following events during document creation: <<events,`DocumentBeforeCreateEvent,DocumentAfterCreateEvent`>>.
@@ -78,11 +81,10 @@ import lombok.extern.slf4j.Slf4j;
 public class AddDocumentOperation extends AbstractDocumentOperation {
 
 	private static final String COULD_NOT_CREATE_DOCUMENT_MESSAGE = "Could not create document";
-	private final DocumentSupport documentSupport;
+	private static final String ADD_DOCUMENT_OPERATION_FAILED = "ADD_DOCUMENT operation failed with the following exception";
 
-	public AddDocumentOperation(DocumentService documentService, Anonymizer anonymizer, DocumentSupport documentSupport) {
+	public AddDocumentOperation(DocumentService documentService, Anonymizer anonymizer) {
 		super(documentService, anonymizer);
-		this.documentSupport = documentSupport;
 	}
 
 	/**
@@ -96,7 +98,7 @@ public class AddDocumentOperation extends AbstractDocumentOperation {
 	 * @event {@link DocumentAfterRepositoryCreateEvent}
 	 */
 	@Transactional
-	public DocumentReference rpc(@NonNull @JsonRpcParam("documentModelName") String documentModelName,
+	public DocumentReferenceResult rpc(@NonNull @JsonRpcParam("documentModelName") String documentModelName,
 		@NonNull @JsonRpcParam("document") JsonNode documentContent,
 		@JsonRpcParam("locale") Locale locale) {
 		log.debug("{} called with parameters [documentModelName={}, locale={}]",
@@ -105,25 +107,29 @@ public class AddDocumentOperation extends AbstractDocumentOperation {
 			anonymizer.apply(locale != null ? locale.toString() : "")
 		);
 
-		try (StringReader jsonDocument = new StringReader(documentContent.toString())) {
-			DocumentV2 document = documentSupport.convertJSONToDocument(documentModelName, jsonDocument);
-			try {
-				DataServicesDocument result = documentService.create(document, locale);
-				OperationContextHolder.put(result);
-				return result.getMetadata().getDocRef();
-			} catch (BaseException e) {
-				log.info("ADD_DOCUMENT operation failed with the following exception", e);
-				e.updateShortMessage(ExceptionKeys.ADD_DOCUMENT_ERROR_KEY, COULD_NOT_CREATE_DOCUMENT_MESSAGE, MessagePriority.LOW);
-				if (e.getLongMessage() == null || StringUtils.isBlank(e.getLongMessage().getKey())) {
-					e.setLongMessage(new LocalizedEntry(ExceptionKeys.ADD_DOCUMENT_ERROR_KEY, COULD_NOT_CREATE_DOCUMENT_MESSAGE), MessagePriority.LOW);
-				}
-				throw e;
-			} catch (Exception e) {
-				log.info("ADD_DOCUMENT operation failed with the following exception", e);
-				throw RpcExceptionSupport.createException(ExceptionCodes.RPC_ERROR_EXCEPTION_CODE, ExceptionKeys.ADD_DOCUMENT_ERROR_KEY,
-					COULD_NOT_CREATE_DOCUMENT_MESSAGE, e.getMessage(), RemoteOperation.RemoteOperationHelper.getOperationId(this.getClass()), e);
+		try {
+			DataServicesDocument result = documentService.create(documentModelName, documentContent, locale);
+			OperationContextHolder.put(result);
+			return new DocumentReferenceResult(result.getMetadata().getDocRef());
+		} catch (DataServicesDocumentProblemReporterException | DataServicesDocumentSerializationException e) {
+			// Propagate conversion/deserialization exceptions without message modification (required for batch rollback format)
+			log.info(ADD_DOCUMENT_OPERATION_FAILED, e);
+			throw e;
+		} catch (BaseException e) {
+			log.info(ADD_DOCUMENT_OPERATION_FAILED, e);
+			e.updateShortMessage(ADD_DOCUMENT_ERROR_KEY, COULD_NOT_CREATE_DOCUMENT_MESSAGE, MessagePriority.LOW);
+			if (e.getLongMessage() == null || StringUtils.isBlank(e.getLongMessage().getKey())) {
+				e.setLongMessage(new LocalizedEntry(ADD_DOCUMENT_ERROR_KEY, COULD_NOT_CREATE_DOCUMENT_MESSAGE), MessagePriority.LOW);
 			}
-
+			throw e;
+		} catch (AccessDeniedException e) {
+			log.info(ADD_DOCUMENT_OPERATION_FAILED, e);
+			throw RpcExceptionSupport.createException(ACCESS_DENIED_EXCEPTION_CODE, SECURITY_NOT_AUTHORIZED_ERROR_KEY,
+				COULD_NOT_CREATE_DOCUMENT_MESSAGE, e.getMessage(), RemoteOperation.RemoteOperationHelper.getOperationId(this.getClass()), e);
+		} catch (Exception e) {
+			log.info(ADD_DOCUMENT_OPERATION_FAILED, e);
+			throw RpcExceptionSupport.createException(RPC_ERROR_EXCEPTION_CODE, ADD_DOCUMENT_ERROR_KEY,
+				COULD_NOT_CREATE_DOCUMENT_MESSAGE, e.getMessage(), RemoteOperation.RemoteOperationHelper.getOperationId(this.getClass()), e);
 		}
 	}
 

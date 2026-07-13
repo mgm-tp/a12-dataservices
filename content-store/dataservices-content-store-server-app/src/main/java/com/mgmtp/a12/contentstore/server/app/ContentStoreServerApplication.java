@@ -72,7 +72,7 @@ import lombok.extern.slf4j.Slf4j;
 	}
 
 	@Import({ ContentStoreServerAutoConfiguration.class })
-	@Configuration static class PropertySourcesConfiguration { }
+	@Configuration static class PropertySourcesConfiguration {}
 
 	/**
 	 * {@inheritDoc}

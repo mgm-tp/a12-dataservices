@@ -42,9 +42,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.jsonrpc4j.JsonRpcBasicServer;
 import com.mgmtp.a12.dataservices.attachment.AttachmentService;
 import com.mgmtp.a12.dataservices.attachment.header.AttachmentHeaderService;
@@ -62,6 +62,7 @@ import com.mgmtp.a12.dataservices.configuration.internal.validation.condition.at
 import com.mgmtp.a12.dataservices.document.DocumentService;
 import com.mgmtp.a12.dataservices.document.internal.kernel.KernelDocumentService;
 import com.mgmtp.a12.dataservices.document.operation.internal.AddDocumentOperation;
+import com.mgmtp.a12.dataservices.document.operation.internal.CheckUniquenessOperation;
 import com.mgmtp.a12.dataservices.document.operation.internal.CopyDocumentOperation;
 import com.mgmtp.a12.dataservices.document.operation.internal.DeleteDocumentOperation;
 import com.mgmtp.a12.dataservices.document.operation.internal.GetDocumentOperation;
@@ -72,6 +73,7 @@ import com.mgmtp.a12.dataservices.document.operation.internal.MultiDeleteDocumen
 import com.mgmtp.a12.dataservices.document.operation.internal.PartialModifyDocumentOperation;
 import com.mgmtp.a12.dataservices.document.operation.internal.ValidateDocumentOperation;
 import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
+import com.mgmtp.a12.dataservices.document.uniqueconstraint.internal.UniqueConstraintValidator;
 import com.mgmtp.a12.dataservices.export.internal.csv.CsvDocumentExporter;
 import com.mgmtp.a12.dataservices.export.internal.helper.ExportHelper;
 import com.mgmtp.a12.dataservices.initialization.internal.JsonRpcInitializer;
@@ -85,13 +87,14 @@ import com.mgmtp.a12.dataservices.relationship.operation.internal.AddLinkOperati
 import com.mgmtp.a12.dataservices.relationship.operation.internal.DeleteLinkOperation;
 import com.mgmtp.a12.dataservices.relationship.operation.internal.ModifyLinkOperation;
 import com.mgmtp.a12.dataservices.relationship.operation.internal.RelinkDocumentOperation;
+import com.mgmtp.a12.dataservices.internal.TransactionHandler;
 import com.mgmtp.a12.dataservices.rpc.internal.JsonRpcOperationDispatcher;
-import com.mgmtp.a12.dataservices.utils.internal.JsonUtils;
 import com.mgmtp.a12.kernel.md.document.api.services.DocumentDeserializationConfig;
 import com.mgmtp.a12.kernel.md.document.apiV2.services.IDocumentV2Serializer;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelService;
 
 import lombok.RequiredArgsConstructor;
+import tools.jackson.databind.ObjectMapper;
 
 @Conditional(OnEnabledRpcCondition.class)
 @RequiredArgsConstructor
@@ -105,7 +108,6 @@ import lombok.RequiredArgsConstructor;
 		ResourcePatternResolver resourcePatternResolver) {
 		List<String> paths = properties.getInitialization().getScripts().getJsonRpc().getPaths();
 
-
 		if (CollectionUtils.isNotEmpty(paths)) {
 			return new JsonRpcInitializer(server, objectMapper, paths, resourcePatternResolver);
 		}
@@ -114,10 +116,25 @@ import lombok.RequiredArgsConstructor;
 		return new JsonRpcInitializer(server, objectMapper, Collections.emptyList(), resourcePatternResolver);
 	}
 
-	@Bean public JsonRpcBasicServer jsonRpcOperationServer(RelationshipLinkValidationListener linkValidator,
-		ApplicationEventPublisher applicationEventPublisher, ObjectMapper objectMapper, DataServicesCoreProperties dataServicesCoreProperties, JsonUtils jsonUtils) {
-		return new JsonRpcOperationDispatcher(getAllowedOperations(), linkValidator, applicationEventPublisher,
-			objectMapper, dataServicesCoreProperties, isSpelAllowed(), jsonUtils, debugRpcResponses);
+	@Bean
+	public JsonRpcBasicServer jsonRpcOperationServer(
+		RelationshipLinkValidationListener linkValidator,
+		ApplicationEventPublisher applicationEventPublisher,
+		DataServicesCoreProperties dataServicesCoreProperties,
+		ObjectMapper objectMapper,
+		TransactionHandler transactionHandler,
+		Environment environment) {
+
+		return new JsonRpcOperationDispatcher(
+			getAllowedOperations(),
+			linkValidator,
+			applicationEventPublisher,
+			objectMapper,
+			dataServicesCoreProperties,
+			isSpelAllowed(),
+			debugRpcResponses,
+			transactionHandler,
+			environment);
 	}
 
 	@Bean public GetDocumentOperation getDocumentOperation(DocumentService documentService, Anonymizer anonymizer, DocumentSupport documentSupport,
@@ -125,8 +142,8 @@ import lombok.RequiredArgsConstructor;
 		return new GetDocumentOperation(documentService, anonymizer, documentSupport, applicationEventPublisher);
 	}
 
-	@Bean public AddDocumentOperation addDocumentOperation(DocumentService documentService, Anonymizer anonymizer, DocumentSupport documentSupport) {
-		return new AddDocumentOperation(documentService, anonymizer, documentSupport);
+	@Bean public AddDocumentOperation addDocumentOperation(DocumentService documentService, Anonymizer anonymizer) {
+		return new AddDocumentOperation(documentService, anonymizer);
 	}
 
 	@Bean public CopyDocumentOperation copyDocumentOperation(DocumentService documentService, Anonymizer anonymizer) {
@@ -141,6 +158,11 @@ import lombok.RequiredArgsConstructor;
 		KernelDocumentService kernelDocumentService, DocumentDeserializationConfig documentJsonDeserializationConfig,
 		IDocumentV2Serializer documentV2Serializer) {
 		return new ValidateDocumentOperation(documentService, anonymizer, kernelDocumentService, documentJsonDeserializationConfig, documentV2Serializer);
+	}
+
+	@Bean public CheckUniquenessOperation checkUniquenessOperation(DocumentService documentService, Anonymizer anonymizer,
+		UniqueConstraintValidator uniqueConstraintValidator, DocumentSupport documentSupport) {
+		return new CheckUniquenessOperation(documentService, anonymizer, uniqueConstraintValidator, documentSupport);
 	}
 
 	@Bean public PartialModifyDocumentOperation partialModifyDocumentOperation(DocumentService documentService, Anonymizer anonymizer) {
@@ -211,7 +233,8 @@ import lombok.RequiredArgsConstructor;
 	}
 
 	@Conditional({ OnEnabledAttachmentCondition.class })
-	@Bean public CsvDocumentExporter csvDocumentExporter(ExportHelper exportHelper, DataServicesCoreProperties dataServicesCoreProperties, Anonymizer anonymizer) {
+	@Bean
+	public CsvDocumentExporter csvDocumentExporter(ExportHelper exportHelper, DataServicesCoreProperties dataServicesCoreProperties, Anonymizer anonymizer) {
 		return new CsvDocumentExporter(exportHelper, dataServicesCoreProperties.getCdd().getExport().getCsv().getDelimiter(),
 			anonymizer, dataServicesCoreProperties.getCdd().getExport().getCharset());
 	}

@@ -33,10 +33,6 @@ package com.mgmtp.a12.dataservices.attachment.internal.jpa.entity;
 
 import java.io.Serializable;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -55,7 +51,6 @@ import lombok.NoArgsConstructor;
  */
 @Table(name = "ATTACHMENT_ANNOTATION")
 @SequenceGenerator(name = "attachment_annotation_seq", sequenceName = "ATTACHMENT_ANNOTATION_SEQ", allocationSize = 1)
-@Cacheable @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Data @NoArgsConstructor @AllArgsConstructor(access = AccessLevel.PRIVATE) @Builder(toBuilder = true)
 @Entity public class AttachmentAnnotationEntity implements Serializable {
 

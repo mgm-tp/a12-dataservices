@@ -33,19 +33,20 @@ package com.mgmtp.a12.dataservices;
 
 import java.io.InputStream;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.apache.commons.io.IOUtils;
 
 import lombok.SneakyThrows;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 public abstract class AbstractSerializationTest {
-	protected ObjectMapper objectMapper = new ObjectMapper().registerModules(new JavaTimeModule()).registerModule(new Jdk8Module());
+	protected ObjectMapper objectMapper = JsonMapper.builder().build();
 
 	@SneakyThrows
 	protected <T> T deserializeResource(String resource, Class<T> type) {
 		try (InputStream is = getClass().getResourceAsStream(resource)) {
-			return objectMapper.readValue(is, type);
+			String content = IOUtils.toString(is);
+			return objectMapper.readValue(content, type);
 		}
 	}
 }

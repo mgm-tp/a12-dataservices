@@ -67,7 +67,7 @@ public class LinkCteGenerator extends AbstractCteGenerator<QueryLink> {
 			.append(QueryGeneratorConstants.SELECT_KEYWORD);
 
 		getFinalSelectColumnGenerator()
-			.renderColumns(sb, generatorContext)
+			.renderColumns(sb, getGeneratorContext())
 			.append(QueryGeneratorConstants.FROM_KEYWORD)
 			.append(tableAlias)
 			.append(QueryGeneratorConstants.AS_KEYWORD)
@@ -95,11 +95,11 @@ public class LinkCteGenerator extends AbstractCteGenerator<QueryLink> {
 
 		// apply QueryRoot pagination onto links in case `exclude` is `true`.
 		// TODO A12S-6000: Support for pagination on multiple links
-		if (this.generatorContext.isExclude() && DocumentTreeNodeType.CHILD == this.type) {
+		if (this.getGeneratorContext().isExclude() && DocumentTreeNodeType.CHILD == this.type) {
 			sb.append(QueryGeneratorConstants.OFFSET_KEYWORD)
-				.append(this.generatorContext.getPageOffset())
+				.append(this.getGeneratorContext().getPageOffset())
 				.append(QueryGeneratorConstants.LIMIT_KEYWORD)
-				.append(this.generatorContext.getPageLimit());
+				.append(this.getGeneratorContext().getPageLimit());
 		}
 
 		sb.append(QueryGeneratorConstants.CLOSING_BRACKET);
@@ -172,10 +172,10 @@ public class LinkCteGenerator extends AbstractCteGenerator<QueryLink> {
 
 		sb.append(QueryGeneratorConstants.SELECT_KEYWORD);
 		SelectColumns innerCols = addInnerSelectColumns();
-		innerCols.renderColumns(sb, generatorContext);
+		innerCols.renderColumns(sb, getGeneratorContext());
 
 		sb.append(QueryGeneratorConstants.FROM_KEYWORD);
-		innerCols.renderTables(sb, generatorContext);
+		innerCols.renderTables(sb, getGeneratorContext());
 
 		renderWhere(sb);
 
@@ -213,10 +213,10 @@ public class LinkCteGenerator extends AbstractCteGenerator<QueryLink> {
 	}
 
 	@Override protected void renderLinksCte(StringBuilder sb) {
-		Optional.ofNullable(query.getLinks()).stream()
+		Optional.ofNullable(getQuery().getLinks()).stream()
 			.flatMap(Collection::stream)
 			.map(l -> getBuilder().query(l))
-			.map(b -> b.generatorContext(generatorContext))
+			.map(b -> b.generatorContext(getGeneratorContext()))
 			.map(b -> b.parent(this))
 			.map(LinkCteGenerator.LinkCteGeneratorBuilder::build)
 			.forEach(c -> {
@@ -242,11 +242,11 @@ public class LinkCteGenerator extends AbstractCteGenerator<QueryLink> {
 		cols.withTable(getAlias(), false)
 			.end();
 		cols
-			.renderColumns(sb, generatorContext);
+			.renderColumns(sb, getGeneratorContext());
 
 		sb.append(QueryGeneratorConstants.FROM_KEYWORD);
 
-		cols.renderTables(sb, generatorContext);
+		cols.renderTables(sb, getGeneratorContext());
 
 		sb.append(QueryGeneratorConstants.WHERE_KEYWORD)
 
@@ -270,14 +270,14 @@ public class LinkCteGenerator extends AbstractCteGenerator<QueryLink> {
 	}
 
 	private void renderWhereInternal(StringBuilder sb) {
-		SqlGeneratorHelpersInternal.linkWhere(sb, getQuery(), generatorContext);
+		SqlGeneratorHelpersInternal.linkWhere(sb, getQuery(), getGeneratorContext());
 
 		SqlGeneratorHelpersInternal.renderExistsConstraint(sb, getQuery().getConstraint(),
 			new StringBuilder().append(TableNames.TARGET_ROLE_TABLE_ALIAS).append(QueryGeneratorConstants.DOT_JOINER)
 				.append(ColumnNames.ROLE_DOCREF_COLUMN_NAME), getGeneratorContext(),
 			true);
 
-		generatorContext.registerNewTargetDocRef
+		getGeneratorContext().registerNewTargetDocRef
 			(TableNames.LINK_TABLE_ALIAS + QueryGeneratorConstants.DOT_JOINER
 				+ ColumnNames.LINK_DOCUMENT_DOCREF_COLUMN_NAME);
 		SqlGeneratorHelpersInternal.renderExistsConstraint(sb, getQuery().getLinkDocumentConstraint(),
@@ -285,7 +285,7 @@ public class LinkCteGenerator extends AbstractCteGenerator<QueryLink> {
 				.append(ColumnNames.LINK_DOCUMENT_DOCREF_COLUMN_NAME),
 			getGeneratorContext(),
 			true);
-		generatorContext.unregisterTargetDocRef();
+		getGeneratorContext().unregisterTargetDocRef();
 	}
 
 	protected SelectColumns addInnerSelectColumns() {
@@ -324,8 +324,8 @@ public class LinkCteGenerator extends AbstractCteGenerator<QueryLink> {
 	}
 
 	@Override public boolean isRecursive() {
-		return Objects.equals(generatorContext.getEnrichments().getTargetDocumentModel(getParent().getQuery()),
-			generatorContext.getEnrichments().getTargetDocumentModel(getQuery()));
+		return Objects.equals(getGeneratorContext().getEnrichments().getTargetDocumentModel(getParent().getQuery()),
+			getGeneratorContext().getEnrichments().getTargetDocumentModel(getQuery()));
 	}
 
 	protected void renderOrderBy(StringBuilder sb) {
@@ -379,5 +379,6 @@ public class LinkCteGenerator extends AbstractCteGenerator<QueryLink> {
 		return (B) (DocumentTreeNodeType.LINK.equals(type) ? LinkDocumentColumnsGenerator.builder() : LinkColumnsGenerator.builder());
 	}
 
-	public abstract static class LinkCteGeneratorBuilder<C extends LinkCteGenerator, B extends LinkCteGeneratorBuilder<C, B>> extends AbstractCteGenerator.AbstractCteGeneratorBuilder<QueryLink, C, B> {}
+	public abstract static class LinkCteGeneratorBuilder<C extends LinkCteGenerator, B extends LinkCteGeneratorBuilder<C, B>>
+		extends AbstractCteGenerator.AbstractCteGeneratorBuilder<QueryLink, C, B> {}
 }

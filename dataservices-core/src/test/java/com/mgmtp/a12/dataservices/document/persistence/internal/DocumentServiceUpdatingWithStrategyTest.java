@@ -279,7 +279,8 @@ public class DocumentServiceUpdatingWithStrategyTest extends AbstractDefaultDocu
 				DocumentValidationStrategy.DEFAULT_CONFIGURATION, DocumentComputationStrategy.DEFAULT_CONFIGURATION));
 
 		verify(documentRepository, never()).update(any());
-		verifyNoInteractions(eventPublisher, modelPermissionEvaluator, documentPermissionEvaluator, kernelDocumentService,
+		verify(documentPermissionEvaluator, times(1)).checkDocumentUpdatePermissionByModel(testModelName);
+		verifyNoInteractions(eventPublisher, modelPermissionEvaluator, kernelDocumentService,
 			attachmentHandler, attachmentSupport);
 	}
 
@@ -370,6 +371,7 @@ public class DocumentServiceUpdatingWithStrategyTest extends AbstractDefaultDocu
 		verify(documentRepository, never()).update(any());
 		verifyNoMoreInteractions(documentPermissionEvaluator, documentRepository, eventPublisher, modelPermissionEvaluator);
 	}
+
 	@Test
 	public void testDocumentPartialUpdate_success() {
 		Locale locale = Locale.GERMANY;
@@ -379,7 +381,7 @@ public class DocumentServiceUpdatingWithStrategyTest extends AbstractDefaultDocu
 				loadDocumentV2(DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL, DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL + ".json"),
 				docRef,
 				"admin",
-				Instant.now(),
+				Instant.now().minusSeconds(1),
 				null
 			);
 
@@ -412,8 +414,9 @@ public class DocumentServiceUpdatingWithStrategyTest extends AbstractDefaultDocu
 			DocumentValidationStrategy.DEFAULT_CONFIGURATION, DocumentComputationStrategy.DEFAULT_CONFIGURATION));
 
 		verify(documentRepository, times(0)).update(any());
-		verifyNoInteractions(documentPermissionEvaluator, modelPermissionEvaluator, eventPublisher, modelHeaderRepository,
-			documentServiceFactory, documentFactory, documentUtils);
+		verify(documentPermissionEvaluator, times(1)).checkDocumentPartialUpdatePermissionByModel(testModelName);
+		verifyNoInteractions(modelPermissionEvaluator, eventPublisher, modelHeaderRepository,
+			documentServiceFactory, documentUtils);
 	}
 
 	@Test
@@ -430,13 +433,14 @@ public class DocumentServiceUpdatingWithStrategyTest extends AbstractDefaultDocu
 				DocumentValidationStrategy.DEFAULT_CONFIGURATION, DocumentComputationStrategy.DEFAULT_CONFIGURATION));
 
 		verify(documentPermissionEvaluator).checkDocumentPartialUpdatePermission(any(), any(), any());
-		verifyNoInteractions(modelPermissionEvaluator, eventPublisher, modelHeaderRepository, documentFactory, documentUtils);
+		verifyNoInteractions(modelPermissionEvaluator, eventPublisher, modelHeaderRepository, documentUtils);
 	}
 
 	@Test(expectedExceptions = InvalidInputException.class, expectedExceptionsMessageRegExp = "Invalid documentPart for partial modify document")
 	public void testDocumentPartialUpdate_modifyDocument_throwException() {
 		DocumentReference docRef = new DocumentReference(testModelName, "documentId");
-		DocumentPart documentPart = new DocumentPart(RandomStringUtils.secure().nextAlphabetic(10), RandomStringUtils.secure().nextAlphabetic(12), new int[] { 1 });
+		DocumentPart documentPart =
+			new DocumentPart(RandomStringUtils.secure().nextAlphabetic(10), RandomStringUtils.secure().nextAlphabetic(12), new int[] { 1 });
 
 		when(documentRepository.findByDocumentReference(any())).thenReturn(Optional.of(createDataServicesDocument(docRef, null)));
 		when(documentRepository.supports(any())).thenReturn(true);

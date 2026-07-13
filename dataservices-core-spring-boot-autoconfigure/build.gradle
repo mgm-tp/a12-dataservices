@@ -10,17 +10,17 @@ dependencies {
 	api project(':dataservices-core')
 	api project(':dataservices-common:dataservices-common-api')
 	implementation project(':content-store:dataservices-content-store-core-spring-boot-autoconfigure')
-	api libs.springBootAutoconfigure
-	api libs.springBootConfigurationProcessor
 	// TODO A12S-5284: Remove spring-web from all not web artifacts
 	api libs.springBootStarterWeb
+	api libs.springBootAutoconfigure, libs.springBootConfigurationProcessor, libs.springBootStarterLiquibase,
+			libs.springBootStarterQuartz, libs.springBootStarterCache
 	api libs.uaaAuthenticationBackendSpringBootAutoconfigure
-	api libs.springBootStarterQuartz
 	api libs.javaxElApi
 	runtimeOnly libs.jsr181
-	implementation libs.hazelcast
 	implementation libs.jsonrpc4j
 	implementation libs.jimFs
+	implementation libs.springBootStarterRestClient
+
 	api libs.embeddedPostgres
 	api platform(libs.embeddedPostgresServer)
 
@@ -30,6 +30,7 @@ dependencies {
 
 	testAnnotationProcessor libs.mapsturctAnnotationProcessor
 	testImplementation libs.servletApi
+	testImplementation libs.springBootStarterActuator
 	testImplementation files("${projectDir}/src/test/resources/util/models.jar")
 	testImplementation project(':dataservices-test-resources')
 	testImplementation libs.uaaAuthorizationSpringBootAutoconfigure
@@ -41,7 +42,8 @@ dependencies {
 	testImplementation libs.springBootStarterLogging
 	testImplementation libs.xmlunitCore
 	testImplementation libs.xmlunitMatchers
-	testImplementation libs.testng
+	implementation libs.infinispanSpringBoot4StarterEmbedded
+	testImplementation libs.testng, libs.mockitoTestNG
 	testImplementation libs.hamcrest
 	testImplementation libs.hamcrestOptional
 	testImplementation libs.annotations
@@ -61,11 +63,11 @@ dependencies {
 	testFixturesImplementation libs.springBootStarterSecurity
 	testFixturesImplementation libs.springSecurityTest
 	testFixturesImplementation libs.jacksonDataformatYaml
-	testFixturesImplementation libs.sqlworkbench
 	testFixturesImplementation libs.mockitoCore
 
 	testFixturesImplementation 'org.pygments:pygments:1.6'
 	testFixturesImplementation 'org.python:jython-standalone:2.7.3'
+	testFixturesImplementation libs.springBootStarterRestClient
 	testFixturesImplementation 'com.github.vertical-blank:sql-formatter:2.0.5'
 }
 
@@ -103,25 +105,5 @@ test {
 		excludeGroups 'embeddedPostgres'
 	}
 }
-processTestResources {
-	from "${project(':dataservices-test-resources').projectDir}/src/main/resources/models-bulkload"
-}
-
-TaskProvider<Task> prepareBulkImportData = tasks.register('prepareBulkImportData') {
-	group = BUILD_GROUP
-	dependsOn {
-		['models', 'modelsDuplicate', 'modelsMultiError'].collectMany { baseName ->
-			[Zip, Jar].collect { Class<? extends Zip> type ->
-				tasks.register("prepareBulkImport${baseName}${type.simpleName}", type) {
-					group = BUILD_GROUP
-					archiveFileName = "${baseName}.${type.simpleName.toLowerCase()}"
-					destinationDirectory = file("$projectDir/build/resources/test/bulkload")
-					from "${project(':dataservices-test-resources').projectDir}/src/main/resources/models-bulkload/bulkload/$baseName"
-				}
-			}
-		}
-	}
-}
-tasks.processTestResources.dependsOn prepareBulkImportData
 
 description = 'Spring Boot AutoConfiguration for Data Services core'

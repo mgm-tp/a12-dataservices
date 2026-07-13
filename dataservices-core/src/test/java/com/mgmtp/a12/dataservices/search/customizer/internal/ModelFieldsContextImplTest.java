@@ -37,13 +37,13 @@ import java.util.Map;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.entity.LocalizedFieldEntity;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.entity.ModelFieldEntity;
 import com.mgmtp.a12.dataservices.search.customizer.ModelFieldsContext;
 import com.mgmtp.a12.kernel.md.model.api.IField;
 import com.mgmtp.a12.kernel.md.model.api.fieldtypes.IFieldType;
+
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
@@ -56,7 +56,7 @@ public class ModelFieldsContextImplTest {
 	private IField field;
 	private IFieldType effectiveFieldType;
 	private ModelFieldEntity.ModelFieldEntityBuilder modelFieldEntityBuilder;
-	private Map<String, Map<String, LocalizedFieldEntity>> localizedFieldEntities;
+	private Map<String, Map<String, String>> localizedFieldEntities;
 	private ModelFieldsContextImpl context;
 	private ObjectMapper objectMapper;
 
@@ -90,9 +90,7 @@ public class ModelFieldsContextImplTest {
 	}
 
 	@Test public void testGetOriginalLocalizedValueWhenExists() {
-		localizedFieldEntities.put("cs", Map.of("label", LocalizedFieldEntity.builder()
-			.localizedValue("Testovací hodnota")
-			.build()));
+		localizedFieldEntities.put("cs", new HashMap<>(Map.of("label", "Testovací hodnota")));
 		assertEquals(context.getOriginalLocalizedValue("cs", "label"), "Testovací hodnota");
 	}
 
@@ -107,17 +105,13 @@ public class ModelFieldsContextImplTest {
 
 	@Test public void testPutLocalizedValue() {
 
-		LocalizedFieldEntity entity = LocalizedFieldEntity.builder()
-			.localizedValue("Original Value")
-			.build();
-
-		localizedFieldEntities.put("en", Map.of("label", entity));
+		localizedFieldEntities.put("en", new HashMap<>(Map.of("label", "Original Value")));
 
 		ModelFieldsContext result = context.putLocalizedValue("en", "label", "New Value");
 
 		assertNotNull(result);
 		assertSame(result, context);
-		assertEquals(entity.getLocalizedValue(), "New Value");
+		assertEquals(context.getOriginalLocalizedValue("en", "label"), "New Value");
 	}
 
 	@Test public void testPutLocalizedValueForNonExistingLocale() {
@@ -185,16 +179,12 @@ public class ModelFieldsContextImplTest {
 
 	@Test public void testMultipleOperations() throws Exception {
 
-		LocalizedFieldEntity entity = LocalizedFieldEntity.builder()
-			.localizedValue("Original")
-			.build();
-
-		localizedFieldEntities.put("en", Map.of("label", entity));
+		localizedFieldEntities.put("en", new HashMap<>(Map.of("label", "Original")));
 
 		context.putLocalizedValue("en", "label", "Updated");
 		context.setFieldValue("TEXT", objectMapper.readTree("{\"value\":\"test\"}"));
 
-		assertEquals(entity.getLocalizedValue(), "Updated");
+		assertEquals(context.getOriginalLocalizedValue("en", "label"), "Updated");
 		ModelFieldEntity modelFieldEntity = modelFieldEntityBuilder.build();
 		assertEquals(modelFieldEntity.getFieldType(), "TEXT");
 		assertNotNull(modelFieldEntity.getData());

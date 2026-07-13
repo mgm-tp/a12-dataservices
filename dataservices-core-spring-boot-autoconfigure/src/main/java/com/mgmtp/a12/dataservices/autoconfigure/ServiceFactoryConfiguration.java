@@ -43,6 +43,7 @@ import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -55,17 +56,18 @@ import com.mgmtp.a12.dataservices.configuration.internal.validation.condition.On
 import com.mgmtp.a12.dataservices.document.internal.kernel.KernelDocumentService;
 import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
 import com.mgmtp.a12.dataservices.document.support.internal.DefaultDocumentSupport;
-import com.mgmtp.a12.dataservices.initialization.BusinessModelInitializer;
+import com.mgmtp.a12.dataservices.initialization.internal.BusinessModelInitializer;
 import com.mgmtp.a12.dataservices.initialization.DataServicesInitializationListener;
 import com.mgmtp.a12.dataservices.initialization.InitializationService;
 import com.mgmtp.a12.dataservices.initialization.internal.DataServicesInitializationService;
 import com.mgmtp.a12.dataservices.initialization.internal.JsonRpcInitializer;
-import com.mgmtp.a12.dataservices.query.indexing.QueryIndexManager;
 import com.mgmtp.a12.dataservices.migration.internal.MigrationRunner;
+import com.mgmtp.a12.dataservices.query.indexing.QueryIndexManager;
 import com.mgmtp.a12.dataservices.relationship.internal.ranks.DefragmentRanksJob;
 import com.mgmtp.a12.dataservices.relationship.internal.ranks.RelationshipRankService;
 import com.mgmtp.a12.dataservices.rpc.CleanUpRequestIdJob;
 import com.mgmtp.a12.dataservices.rpc.internal.RequestIdService;
+import com.mgmtp.a12.dataservices.rpc.internal.jpa.repository.RequestIdRepository;
 import com.mgmtp.a12.kernel.core.customfieldtype.ICustomFieldTypeFactory;
 import com.mgmtp.a12.kernel.md.document.api.services.DocumentDeserializationConfig;
 import com.mgmtp.a12.kernel.md.document.api.services.DocumentSerializationConfig;
@@ -103,12 +105,15 @@ public class ServiceFactoryConfiguration {
 	/**
 	 * Registers a listener that reacts to DataServices initialization events.
 	 *
+	 * @param applicationContext The application context.
+	 * @param applicationEventPublisher Publishes application events.
+	 * @param initializationService The initialization service.
 	 * @return The {@link DataServicesInitializationListener}.
 	 */
-	@Bean public DataServicesInitializationListener dataServicesInitializationListener() {
-		return new DataServicesInitializationListener();
+	@Bean public DataServicesInitializationListener dataServicesInitializationListener(ApplicationContext applicationContext,
+		ApplicationEventPublisher applicationEventPublisher, InitializationService initializationService) {
+		return new DataServicesInitializationListener(applicationContext, applicationEventPublisher, initializationService);
 	}
-
 
 	/**
 	 * Provides the {@link InitializationService} orchestrating migrations, model initialization and index setup.
@@ -119,18 +124,16 @@ public class ServiceFactoryConfiguration {
 	 * @param backendAuthenticationService Performs backend authentication for privileged operations.
 	 * @param requestIdService Manages request IDs used by RPC.
 	 * @param jsonRpcInitializer Optional initializer for JSON-RPC endpoints.
-	 * @param customConditionFactories Additional custom condition factories.
-	 * @param customFieldTypeFactories Additional custom field type factories.
-	 * @param queryIndexManager Manages query index updates.
+	 * @param queryIndexManager Optional query index manager for index updates. Not present when search indexing is disabled.
 	 * @return The configured {@link InitializationService}.
 	 */
 	@Bean public InitializationService dataServicesInitializationService(MigrationRunner migrationRunner,
 		BusinessModelInitializer businessModelInitializer, ApplicationEventPublisher applicationEventPublisher,
 		BackendAuthenticationService backendAuthenticationService, RequestIdService requestIdService, Optional<JsonRpcInitializer> jsonRpcInitializer,
-		List<ICustomConditionFactory> customConditionFactories, List<ICustomFieldTypeFactory> customFieldTypeFactories, QueryIndexManager queryIndexManager) {
+		Optional<QueryIndexManager> queryIndexManager) {
 
 		return new DataServicesInitializationService(dataServicesCoreProperties, migrationRunner, businessModelInitializer,
-			applicationEventPublisher, backendAuthenticationService, requestIdService, jsonRpcInitializer, customConditionFactories, customFieldTypeFactories,
+			applicationEventPublisher, backendAuthenticationService, requestIdService, jsonRpcInitializer,
 			queryIndexManager);
 	}
 
@@ -176,11 +179,12 @@ public class ServiceFactoryConfiguration {
 	/**
 	 * Exposes the {@link CleanUpRequestIdJob} bean.
 	 *
+	 * @param requestIdRepository Repository for managing request IDs.
 	 * @return A new instance of {@link CleanUpRequestIdJob}.
 	 */
 	@Conditional(OnEnabledJobCondition.class)
-	@Bean public CleanUpRequestIdJob cleanUpRequestIdJob() {
-		return new CleanUpRequestIdJob();
+	@Bean public CleanUpRequestIdJob cleanUpRequestIdJob(RequestIdRepository requestIdRepository) {
+		return new CleanUpRequestIdJob(requestIdRepository);
 	}
 
 	/**
@@ -267,16 +271,20 @@ public class ServiceFactoryConfiguration {
 	 *
 	 * @param rtService Runtime service for document computation and validation.
 	 * @param documentModelResolver Resolves document models by identifier.
+	 * @param customConditionFactories Additional custom condition factories.
+	 * @param customFieldTypeFactories Additional custom field type factories.
 	 * @return The configured {@link KernelDocumentService}.
 	 */
 	@Conditional(KernelDocumentServiceCondition.class)
-	@Bean public KernelDocumentService kernelDocumentService(IDocumentRtService rtService, IDocumentModelResolver documentModelResolver) {
+	@Bean public KernelDocumentService kernelDocumentService(IDocumentRtService rtService, IDocumentModelResolver documentModelResolver,
+		List<ICustomConditionFactory> customConditionFactories, List<ICustomFieldTypeFactory> customFieldTypeFactories) {
 		final DataServicesCoreProperties.Document documentProperties = dataServicesCoreProperties.getDocuments();
 		DataServicesCoreProperties.Document.Validation validation = documentProperties.getValidation();
 		DataServicesCoreProperties.Document.Computation computation = documentProperties.getComputation();
 
-		return new KernelDocumentService(validation.isEnabled(), validation.getPartialForModels(), validation.getSkipForModels(),
-			computation.getEnabledForModels(),
+		return new KernelDocumentService(validation.isEnabled(), validation.getPartialForModels(),
+			customConditionFactories, customFieldTypeFactories,
+			validation.getSkipForModels(), computation.getEnabledForModels(),
 			rtService, documentModelResolver, computation.getCleanupErrorAndNotComputedValue().isEnabled());
 	}
 

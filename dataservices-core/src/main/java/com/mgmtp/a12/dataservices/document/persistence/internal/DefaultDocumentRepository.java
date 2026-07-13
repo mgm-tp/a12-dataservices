@@ -49,6 +49,7 @@ import com.mgmtp.a12.dataservices.common.exception.UnexpectedException;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
 import com.mgmtp.a12.dataservices.document.DocumentMapper;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
+import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.document.events.DocumentAfterRepositoryLoadEvent;
 import com.mgmtp.a12.dataservices.document.events.DocumentBeforeRepositorySaveEvent;
 import com.mgmtp.a12.dataservices.document.exception.DataServicesDocumentSerializationException;
@@ -216,7 +217,7 @@ import lombok.extern.slf4j.Slf4j;
 
 	private DocumentEntity findDocumentForUpdate(DataServicesDocument dataServicesDocument) {
 		return documentJpaRepository.findById(dataServicesDocument.getMetadata().getDocRef().getDocumentId())
-			.orElseThrow(() -> new NotFoundException(String.format("Document [%s] not found", dataServicesDocument.getMetadata().getDocRef())));
+			.orElseThrow(() -> new NotFoundException(ExceptionKeys.DOCUMENT_NOT_FOUND_ERROR_KEY, "Document [%s] not found".formatted(dataServicesDocument.getMetadata().getDocRef())));
 	}
 
 }

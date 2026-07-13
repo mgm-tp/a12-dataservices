@@ -1,7 +1,7 @@
 {
 	"docRef": "BusinessPartner/bc1fef55-13cc-4fde-84bd-9edfaea8fcd7",
-	"sourceDocRef": "BlankDocumentReference",
-	"targetDocRef": "BlankDocumentReference",
+	"sourceDocRef": "BusinessPartner/9c816c40-ea29-41b9-ba15-339c28a50d94",
+	"targetDocRef": "BusinessPartner/e992f4d2-687c-4ae2-b10b-6332c61d6831",
 	"document": {
 		"BusinessPartnerRoot": {
 			"Attachment": [

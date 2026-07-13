@@ -47,6 +47,7 @@ import com.mgmtp.a12.dataservices.query.generator.sql.columns.internal.Recursive
 import com.mgmtp.a12.dataservices.query.topology.QueryLink;
 import com.mgmtp.a12.dataservices.query.topology.QueryTopology;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
@@ -54,11 +55,11 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public abstract class AbstractCteGenerator<Q extends QueryTopology> {
 
-	@Getter protected final @NonNull Q query;
+	@Getter(AccessLevel.PROTECTED) private final @NonNull Q query;
 
-	@Getter protected final QueryGeneratorContext generatorContext;
+	@Getter(AccessLevel.PROTECTED) private final QueryGeneratorContext generatorContext;
 
-	@Getter protected final Collection<DocumentTreeNodeType> types;
+	@Getter(AccessLevel.PROTECTED) private final Collection<DocumentTreeNodeType> types;
 
 	protected String alias;
 

@@ -32,6 +32,7 @@
 package com.mgmtp.a12.examples.document.extension.document;
 
 import java.io.IOException;
+import java.io.StringWriter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -44,6 +45,7 @@ import com.mgmtp.a12.dataservices.common.events.CommonDataServicesEventListener;
 import com.mgmtp.a12.dataservices.document.DataServicesDocumentFactory;
 import com.mgmtp.a12.dataservices.document.events.DocumentBeforeIndexEvent;
 import com.mgmtp.a12.dataservices.document.operation.internal.AddDocumentOperation;
+import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
 import com.mgmtp.a12.dataservices.query.Paging;
 import com.mgmtp.a12.dataservices.query.constraint.matching.ExactMatchOperator;
 import com.mgmtp.a12.dataservices.query.operation.internal.QueryOperation;
@@ -58,13 +60,16 @@ public class AddDocumentIT extends AbstractITBase {
 
 	@Autowired private AddDocumentOperation addDocumentOperation;
 	@Autowired private QueryOperation queryOperation;
+	@Autowired private DocumentSupport documentSupport;
 
 	@Test void addDocument_testDocumentBeforeIndexEvent() throws IOException {
 		modelsFunctions.createModels("/model/document/" + BUSINESS_PARTNER_DOCUMENT_MODEL_NAME + ".json");
 
 		DocumentV2 document = documentFunctions.getKernelDocumentFromFile(BUSINESS_PARTNER_DOCUMENT_MODEL_NAME, "link/BusinessPartnerSuper.json");
 		document = document.withFieldValue("/businessPartner/name", "NeedUpdateValue");
-		addDocumentOperation.rpc(BUSINESS_PARTNER_DOCUMENT_MODEL_NAME, objectMapper.valueToTree(document), null);
+		StringWriter writer = new StringWriter();
+		documentSupport.convertDocumentToJSON(document, writer);
+		addDocumentOperation.rpc(BUSINESS_PARTNER_DOCUMENT_MODEL_NAME, JACKSON_2_OBJECT_MAPPER.readTree(writer.toString()), null);
 
 		PagedResultSet<Object> result = queryOperation.rpc(
 			QueryRoot.builder()

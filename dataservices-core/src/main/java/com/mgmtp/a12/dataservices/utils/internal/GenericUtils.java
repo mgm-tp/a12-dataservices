@@ -32,10 +32,8 @@
 package com.mgmtp.a12.dataservices.utils.internal;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 import org.springframework.context.ApplicationContext;
@@ -43,30 +41,20 @@ import org.springframework.core.annotation.AnnotationUtils;
 
 import com.mgmtp.a12.dataservices.DataServicesApplication;
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
+import com.mgmtp.a12.dataservices.utils.ConfigurationParsingUtils;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-
-import static com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties.MATCH_ALL;
 
 @Slf4j
 @UtilityClass public class GenericUtils {
 
 	public static boolean isSingleAsterisk(Collection<String> inputList) {
-		return Objects.equals(inputList, List.of(MATCH_ALL));
+		return ConfigurationParsingUtils.isSingleAsterisk(inputList);
 	}
 
 	public static boolean matchOrAll(String value, Collection<String> inputList) {
-		if (CollectionUtils.isEmpty(inputList)) {
-			return false;
-		} else if (isSingleAsterisk(inputList)) {
-			return true;
-		} else if (inputList.contains(MATCH_ALL)) {
-			log.warn(
-				"There is '{}' in the list of the supported values, but it is considered to be exact value instead of wildcard because there are more values in the list.",
-				MATCH_ALL);
-		}
-		return inputList.contains(value);
+		return ConfigurationParsingUtils.matchOrAll(value, inputList);
 	}
 
 	@NotNull public static Reflections getApplicationReflections(ApplicationContext applicationContext) {

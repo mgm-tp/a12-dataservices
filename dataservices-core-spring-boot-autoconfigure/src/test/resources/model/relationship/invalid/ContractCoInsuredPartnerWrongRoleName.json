@@ -2,7 +2,7 @@
   "header": {
     "id": "ContractCoInsuredPartnerWrongRoleName",
     "modelType": "relationship",
-    "modelVersion": "3.0.0",
+    "modelVersion": "4.0.0",
     "locales": [
       {
         "code": "en"
@@ -46,8 +46,6 @@
   },
   "content": {
     "duplicatesAllowed": false,
-    "associationType": "SHARED",
-    "storage": "EXTERNAL",
     "labels": [
       {
         "locale": "en",
@@ -58,15 +56,12 @@
     "entityCharacteristics": [
       {
         "ordered": false,
-        "navigable": true,
         "linkConstraints": {
           "multiplicity": {
-            "lowerLimit": 0,
             "unbounded": true,
             "upperLimit": null
           }
         },
-        "candidateConstraints": {},
         "labels": [
           {
             "locale": "en",
@@ -78,15 +73,12 @@
       },
       {
         "ordered": false,
-        "navigable": true,
         "linkConstraints": {
           "multiplicity": {
-            "lowerLimit": 0,
             "unbounded": true,
             "upperLimit": null
           }
         },
-        "candidateConstraints": {},
         "labels": [
           {
             "locale": "en",

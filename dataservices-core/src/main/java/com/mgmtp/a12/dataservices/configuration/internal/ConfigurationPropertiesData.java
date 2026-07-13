@@ -45,6 +45,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.aop.support.AopUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 
@@ -81,28 +82,28 @@ public class ConfigurationPropertiesData {
 		Map<String, Object> configurationBeans = applicationContext.getBeansWithAnnotation(ExposePropertiesToActuator.class);
 
 		for (Map.Entry<String, Object> entry : configurationBeans.entrySet()) {
-			Class<?> beanClass = entry.getValue().getClass();
+			Class<?> targetClass = AopUtils.getTargetClass(entry.getValue());
 			ConfigurationProperties configurationProperties = applicationContext.findAnnotationOnBean(entry.getKey(), ConfigurationProperties.class);
 
 			try {
 				if (configurationProperties != null) {
 					String configurationPrefix = configurationProperties.prefix().concat(".");
-					Object newBeanInstance = beanClass.getConstructors()[0].newInstance();
+					Object newBeanInstance = targetClass.getConstructors()[0].newInstance();
 
 					Map<String, Map<String, String>> result =
-						processBean(configurationPrefix, beanClass, newBeanInstance, entry.getValue(), beanClass.getName());
+						processBean(configurationPrefix, targetClass, newBeanInstance, entry.getValue(), targetClass.getName());
 					changedConfiguration.putAll(result);
 				} else {
-					changedConfiguration.put(beanClass.getName(), "Unable to resolve configuration. Class is not annotated with @ConfigurationProperties");
+					changedConfiguration.put(targetClass.getName(), "Unable to resolve configuration. Class is not annotated with @ConfigurationProperties");
 				}
 			} catch (IllegalAccessException e) {
-				changedConfiguration.put(beanClass.getName(), "Unable to resolve configuration. Class doesn't have public default constructor");
+				changedConfiguration.put(targetClass.getName(), "Unable to resolve configuration. Class doesn't have public default constructor");
 			} catch (InstantiationException e) {
-				changedConfiguration.put(beanClass.getName(), "Unable to resolve configuration. Cannot create instance of abstract class");
+				changedConfiguration.put(targetClass.getName(), "Unable to resolve configuration. Cannot create instance of abstract class");
 			} catch (InvocationTargetException e) {
-				changedConfiguration.put(beanClass.getName(), "Unable to resolve configuration. Exception occurred during instantiation");
+				changedConfiguration.put(targetClass.getName(), "Unable to resolve configuration. Exception occurred during instantiation");
 			} catch (IntrospectionException e) {
-				changedConfiguration.put(beanClass.getName(), "Unable to resolve configuration. Exception occurred during bean introspection");
+				changedConfiguration.put(targetClass.getName(), "Unable to resolve configuration. Exception occurred during bean introspection");
 			}
 		}
 

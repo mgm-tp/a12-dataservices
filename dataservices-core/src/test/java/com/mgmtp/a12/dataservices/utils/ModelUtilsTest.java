@@ -35,7 +35,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.testng.annotations.Test;
@@ -98,7 +97,7 @@ public class ModelUtilsTest {
 	@Test public void testModelInheritanceIterator() {
 		List<String> result = StreamSupport.stream(TOP_MODEL.spliterator(), false)
 			.map(ModelSubtypes::getModelName)
-			.collect(Collectors.toList());
+			.toList();
 		assertEquals(result, List.of(MODEL_1_NAME, MODEL_3_NAME, MODEL_5_NAME, MODEL_4_NAME, MODEL_6_NAME,
 			MODEL_2_NAME, MODEL_4_NAME, MODEL_6_NAME, MODEL_2_NAME, MODEL_4_NAME, MODEL_6_NAME));
 	}

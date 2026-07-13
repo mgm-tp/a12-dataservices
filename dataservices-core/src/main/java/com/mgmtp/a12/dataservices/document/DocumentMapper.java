@@ -35,18 +35,19 @@ import java.io.StringReader;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mgmtp.a12.dataservices.document.internal.entity.DocumentEntity;
 import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 
+import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+
 /**
  * Mapper for mapping between {@link DataServicesDocument} and {@link DocumentEntity}.
  *
  */
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = SPRING)
 public abstract class DocumentMapper {
 
 	@Autowired protected DocumentSupport documentSupport;

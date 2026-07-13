@@ -3,11 +3,17 @@ plugins {
 }
 
 dependencies {
+	api platform(project(':content-store'))
 	implementation project(':content-store:dataservices-content-store-server-app')
-	implementation project(':content-store:dataservices-content-store-server-spring-boot-autoconfigure')
-	implementation project(':content-store:dataservices-content-store-server')
-	implementation project(':content-store:dataservices-content-store-core')
-	implementation project(':content-store:dataservices-content-store-core-spring-boot-autoconfigure')
+
+//	In your external project, you should also specify Content Store BOM by specifying:
+//      api platform("com.mgmtp.a12.dataservices.contentstore:content-store-parent:{VERSION}")
+//	Then you can omit version for ContentStore artifacts like:
+//		implementation 'com.mgmtp.a12.dataservices.contentstore:dataservices-content-store-server-app'
+//
+	testImplementation libs.springTest
+	testImplementation libs.testng
+	testImplementation libs.mockitoCore
 }
 
 springBoot {

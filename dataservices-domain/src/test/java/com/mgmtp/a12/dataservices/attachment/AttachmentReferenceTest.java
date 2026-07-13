@@ -45,8 +45,11 @@ public class AttachmentReferenceTest extends AbstractSerializationTest {
 
 	@SneakyThrows @Test
 	public void testSerialization() {
-		assertEquals(objectMapper.writeValueAsString(AttachmentReference.parse(DOCUMENT, "Contract/14")),
-			"{\"type\":\"DOCUMENT\",\"reference\":{\"docRef\":\"Contract/14\"}}");
+		AttachmentReference<DocumentReference> original = AttachmentReference.parse(DOCUMENT, "Contract/14");
+		String json = objectMapper.writeValueAsString(original);
+		AttachmentReference<?> deserialized = objectMapper.readValue(json, AttachmentReference.class);
+		assertEquals(deserialized.getType(), original.getType());
+		assertEquals(deserialized.getReference(), original.getReference());
 	}
 
 	@SneakyThrows @Test

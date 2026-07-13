@@ -126,7 +126,7 @@ public class RpcDocumentRollbackIT extends AbstractSpringContextIT {
 
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "document_rollbacks/request_modify_documents_fail.json");
 		String partner2 = loadResourceFromClasspathAsString(PathConstants.RPC_DOCUMENTS_PATH + "BusinessPartner-2.json");
-		request = String.format(request, businessPartner1.getMetadata().getDocRef(), partner2);
+		request = request.formatted(businessPartner1.getMetadata().getDocRef(), partner2);
 
 		List<JsonRpc2Response> responses = sendRpcRequest(request);
 		assertTrue(responses.stream().anyMatch(e -> !e.isSuccess()));
@@ -159,8 +159,7 @@ public class RpcDocumentRollbackIT extends AbstractSpringContextIT {
 
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "document_rollbacks/request_delete_documents_fail.json");
 
-		request = String.format(
-			request,
+		request = request.formatted(
 			DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL, businessPartner1.getMetadata().getDocRef().getDocumentId(),
 			DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL, businessPartner2.getMetadata().getDocRef().getDocumentId()
 		);
@@ -207,8 +206,7 @@ public class RpcDocumentRollbackIT extends AbstractSpringContextIT {
 
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "document_rollbacks/request_add_delete_document_fail.json");
 
-		request = String.format(
-			request,
+		request = request.formatted(
 			businessPartner1.getMetadata().getDocRef()
 		);
 

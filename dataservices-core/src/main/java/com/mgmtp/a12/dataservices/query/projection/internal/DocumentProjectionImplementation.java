@@ -46,10 +46,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mgmtp.a12.dataservices.common.exception.UnexpectedException;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
 import com.mgmtp.a12.dataservices.document.persistence.internal.AggregatedDocumentRepository;
 import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
@@ -68,6 +64,8 @@ import com.mgmtp.a12.dataservices.utils.internal.LoadedDocumentReferencesContext
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 import static com.mgmtp.a12.dataservices.model.ModelConstants.FIELD_SEPARATOR;
 import static com.mgmtp.a12.dataservices.query.projection.internal.DocumentProjectionImplementation.PROJECTION_NAME;
@@ -143,11 +141,7 @@ import static com.mgmtp.a12.dataservices.query.projection.internal.DocumentProje
 			return objectMapper.nullNode();
 		}
 
-		try {
-			return objectMapper.readTree(
-				DataServicesIOUtils.writeString(sw -> documentSupport.convertDocumentToJSON(dataServicesDocument.getKernelDocument(), sw)));
-		} catch (JsonProcessingException e) {
-			throw new UnexpectedException(e.getMessage(), e).withAnonymityMessage("Convert document to JSON failed.");
-		}
+		return objectMapper.readTree(
+			DataServicesIOUtils.writeString(sw -> documentSupport.convertDocumentToJSON(dataServicesDocument.getKernelDocument(), sw)));
 	}
 }

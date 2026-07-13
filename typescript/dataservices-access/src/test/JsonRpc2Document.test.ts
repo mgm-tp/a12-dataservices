@@ -31,11 +31,12 @@
  */
 import { strictEqual } from "node:assert/strict";
 
-import { LoadAttachmentUrlJsonRpc2 } from "../Attachment/attachment.js";
+import { LoadAttachmentUrlJsonRpc2 } from "../Attachment/index.js";
 import {
 	AddDocumentJsonRpc2Response,
 	DocumentJsonRpc2Request,
 	GetDocumentJsonRpc2Response,
+	ModifyJsonRpc2Response,
 	ValidateDocumentJsonRpc2Response
 } from "../Document/index.js";
 import { JsonRpc2Request } from "../json-rpc/index.js";
@@ -82,12 +83,35 @@ suite("JSON-RPC Document Tests", () => {
 				"Check operation response recognized"
 			);
 
-			// TODO A12S-6532: Fix that the isInstance check passes even if docRef is missing
 			const invalidResponse = omitAtPath(rpcResponse, ["result", "docRef"]);
 			strictEqual(
 				AddDocumentJsonRpc2Response.isInstance(invalidResponse),
-				true,
+				false,
 				"Check invalid response (no docRef)"
+			);
+
+			const responseWithoutResult = { jsonrpc: "2.0", id: "AddDocument" };
+			strictEqual(
+				AddDocumentJsonRpc2Response.isInstance(responseWithoutResult),
+				false,
+				"Add Document response without result field should not be valid"
+			);
+
+			const responseWithWrongDocRefType = replaceAtPath(rpcResponse, ["result", "docRef"], 123);
+			strictEqual(
+				AddDocumentJsonRpc2Response.isInstance(responseWithWrongDocRefType),
+				false,
+				"Add Document response with wrong docRef type should not be valid"
+			);
+
+			const responseWithError = {
+				...rpcResponse,
+				error: { code: -1, message: "Error", data: {} }
+			};
+			strictEqual(
+				AddDocumentJsonRpc2Response.isInstance(responseWithError),
+				false,
+				"Add Document response should not be valid with both result and error fields"
 			);
 		});
 	});
@@ -126,6 +150,37 @@ suite("JSON-RPC Document Tests", () => {
 				"Check with 'docRef' omitted"
 			);
 		});
+
+		test("Response", () => {
+			const rpcResponse = {
+				jsonrpc: "2.0",
+				id: "ModifyDocument",
+				result: {}
+			};
+
+			strictEqual(
+				ModifyJsonRpc2Response.isInstance(rpcResponse),
+				true,
+				"Modify Document response was not recognized!"
+			);
+
+			const responseWithoutResult = { jsonrpc: "2.0", id: "ModifyDocument" };
+			strictEqual(
+				ModifyJsonRpc2Response.isInstance(responseWithoutResult),
+				false,
+				"Modify Document response without result was incorrectly recognized!"
+			);
+
+			const responseWithError = {
+				...rpcResponse,
+				error: { code: -1, message: "Error", data: {} }
+			};
+			strictEqual(
+				ModifyJsonRpc2Response.isInstance(responseWithError),
+				false,
+				"Modify Document response should not be valid with both result and error fields!"
+			);
+		});
 	});
 
 	suite("Partial Modify Document Operation", () => {
@@ -144,6 +199,42 @@ suite("JSON-RPC Document Tests", () => {
 				}),
 				false,
 				"Check with 'docRef' omitted"
+			);
+		});
+
+		test("shouldAcceptGroupObjectValueAndWildcardRepetitionsInPartialModifyRequest", () => {
+			const groupObjectValue = {
+				original_filename: "appended.pdf",
+				internal_filename: "abc123"
+			};
+
+			const documentPart = {
+				path: "/BusinessPartnerRoot/Attachment",
+				value: groupObjectValue,
+				repetitions: [1, 0]
+			};
+
+			strictEqual(
+				DocumentJsonRpc2Request.DocumentPart.isInstance(documentPart),
+				true,
+				"DocumentPart with object value and wildcard repetitions should be recognized"
+			);
+
+			const request = {
+				jsonrpc: "2.0",
+				id: "PartialModifyGroup",
+				method: "PARTIAL_MODIFY_DOCUMENT",
+				params: {
+					docRef: "BusinessPartner/1",
+					documentPart: [documentPart],
+					locale: "en"
+				}
+			};
+
+			strictEqual(
+				DocumentJsonRpc2Request.PartialModifyJsonRpc2Request.isInstance(request),
+				true,
+				"PartialModifyJsonRpc2Request with group object value and wildcard repetitions should be recognized"
 			);
 		});
 	});
@@ -209,7 +300,12 @@ suite("JSON-RPC Document Tests", () => {
 				result: {
 					validationErrors: [
 						{
-							errorText: "Field name cannot be empty"
+							errorText: "Field name cannot be empty",
+							errorCode: "VALIDATION_ERROR",
+							messageType: "ERROR",
+							rulePath: "/ContractRoot/ContractName",
+							referencedFields: ["/ContractRoot/ContractName"],
+							severityType: "ERROR"
 						}
 					]
 				}
@@ -225,6 +321,47 @@ suite("JSON-RPC Document Tests", () => {
 				ValidateDocumentJsonRpc2Response.isInstance({ ...validateDocumentResponse, result: {} }),
 				false,
 				"Check invalid response (no validationErrors)"
+			);
+
+			const responseWithoutResult = { jsonrpc: "2.0", id: "ValidateDocument" };
+			strictEqual(
+				ValidateDocumentJsonRpc2Response.isInstance(responseWithoutResult),
+				false,
+				"Validate Document response without result field should not be valid"
+			);
+
+			const responseWithWrongValidationErrorsType = {
+				...validateDocumentResponse,
+				result: { validationErrors: "not an array" }
+			};
+			strictEqual(
+				ValidateDocumentJsonRpc2Response.isInstance(responseWithWrongValidationErrorsType),
+				false,
+				"Validate Document response with wrong validationErrors type should not be valid"
+			);
+
+			const responseWithInvalidValidationError = {
+				...validateDocumentResponse,
+				result: {
+					validationErrors: [
+						{ errorText: "Missing fields" } // Missing required fields
+					]
+				}
+			};
+			strictEqual(
+				ValidateDocumentJsonRpc2Response.isInstance(responseWithInvalidValidationError),
+				false,
+				"Validate Document response with invalid validation error should not be valid"
+			);
+
+			const responseWithError = {
+				...validateDocumentResponse,
+				error: { code: -1, message: "Error", data: {} }
+			};
+			strictEqual(
+				ValidateDocumentJsonRpc2Response.isInstance(responseWithError),
+				false,
+				"Validate Document response should not be valid with both result and error fields"
 			);
 		});
 	});
@@ -296,6 +433,56 @@ suite("JSON-RPC Document Tests", () => {
 				GetDocumentJsonRpc2Response.isInstance(responseWithoutDocumentModelName),
 				false,
 				"Check invalid response (no documentModelName)"
+			);
+
+			const responseWithoutResult = { jsonrpc: "2.0", id: "GetDocument" };
+			strictEqual(
+				GetDocumentJsonRpc2Response.isInstance(responseWithoutResult),
+				false,
+				"Get Document response without result field should not be valid"
+			);
+
+			const responseWithWrongDocRefType = replaceAtPath(
+				getDocumentResponse,
+				["result", "docRef"],
+				123
+			);
+			strictEqual(
+				GetDocumentJsonRpc2Response.isInstance(responseWithWrongDocRefType),
+				false,
+				"Get Document response with wrong docRef type should not be valid"
+			);
+
+			const responseWithWrongDocumentModelNameType = replaceAtPath(
+				getDocumentResponse,
+				["result", "documentModelName"],
+				123
+			);
+			strictEqual(
+				GetDocumentJsonRpc2Response.isInstance(responseWithWrongDocumentModelNameType),
+				false,
+				"Get Document response with wrong documentModelName type should not be valid"
+			);
+
+			const responseWithWrongDocumentType = replaceAtPath(
+				getDocumentResponse,
+				["result", "document"],
+				"not an object"
+			);
+			strictEqual(
+				GetDocumentJsonRpc2Response.isInstance(responseWithWrongDocumentType),
+				false,
+				"Get Document response with wrong document type should not be valid"
+			);
+
+			const responseWithError = {
+				...getDocumentResponse,
+				error: { code: -1, message: "Error", data: {} }
+			};
+			strictEqual(
+				GetDocumentJsonRpc2Response.isInstance(responseWithError),
+				false,
+				"Get Document response should not be valid with both result and error fields"
 			);
 		});
 	});

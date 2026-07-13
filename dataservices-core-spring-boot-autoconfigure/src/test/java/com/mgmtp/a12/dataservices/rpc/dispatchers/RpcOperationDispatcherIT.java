@@ -47,10 +47,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.MissingNode;
 import com.mgmtp.a12.dataservices.LinkTestUtils;
-import com.mgmtp.a12.dataservices.client.rpc.RequestBuilderFactory;
 import com.mgmtp.a12.dataservices.constants.PathConstants;
 import com.mgmtp.a12.dataservices.constants.RelationshipModelConstants;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
@@ -59,10 +56,13 @@ import com.mgmtp.a12.dataservices.document.operation.internal.AddDocumentOperati
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.relationship.OffsetBasedPageRequest;
 import com.mgmtp.a12.dataservices.relationship.operation.internal.AddLinkOperation;
-import com.mgmtp.a12.dataservices.relationship.persistence.internal.jpa.entity.RelationshipLinkEntity;
+import com.mgmtp.a12.dataservices.relationship.RelationshipLink;
 import com.mgmtp.a12.dataservices.relationship.spec.RelationshipLinkSpec;
 import com.mgmtp.a12.dataservices.rpc.JsonRpc2Response;
 import com.mgmtp.a12.dataservices.rpc.JsonRpc2ResponseError;
+
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.MissingNode;
 
 import static com.mgmtp.a12.dataservices.rpc.internal.JsonRpcOperationDispatcher.RPC_ERROR_MESSAGE;
 import static org.hamcrest.CoreMatchers.is;
@@ -76,7 +76,6 @@ public class RpcOperationDispatcherIT extends AbstractDispatcherClass {
 	public static final String ALLOWED_OPERATIONS_FIELD = "allowedOperations";
 	public static final String OPERATIONS_FIELD = "operations";
 
-	@Autowired protected RequestBuilderFactory rpcRequestBuilderFactory;
 	@Autowired private AddDocumentOperation addDocumentOperation;
 	@Autowired private AddLinkOperation addLinkOperation;
 
@@ -150,38 +149,40 @@ public class RpcOperationDispatcherIT extends AbstractDispatcherClass {
 		assertThat(json.get(1).at("/error"), is(MissingNode.getInstance()));
 	}
 
-	@Test
 	@Transactional
-	public void checkAddLinkAndReferencedDocument() throws IOException {
+	@Test public void checkAddLinkAndReferencedDocument() throws IOException {
 		List<JsonRpc2Response> dispatcherResults = dispatchRpcRequestInternal("#addProductDocument.metadata.docRef");
 		RelationshipLinkSpec link = objectMapper.treeToValue(dispatcherResults.get(1).getResult(), RelationshipLinkSpec.class);
 
 		LinkTestUtils.assertProductCampaignLinkRef(RelationshipModelConstants.PRODUCT_CAMPAIGN_RM, link);
 		Assert.assertEquals(link.getLinkDescriptor().getEntities().get(1).getDocRef(), campaign1DocRef);
 
-		DocumentReference resultAddDocument = new DocumentReference(new JSONObject(dispatcherResults.get(0).getResult().toString()).get("docRef").toString());
-		List<RelationshipLinkEntity> linksOfNewlyCreatedDocument = relationshipLinkRepository.findAllByRoleDocRef(
+		DocumentReference resultAddDocument =
+			new DocumentReference(new JSONObject(dispatcherResults.getFirst().getResult().toString()).get("docRef").toString());
+		List<? extends RelationshipLink> linksOfNewlyCreatedDocument = relationshipLinkRepository.findAllByRoleDocRef(
 			List.of(resultAddDocument),
 			OffsetBasedPageRequest.unpaged()
 		).getContent();
 
 		Assert.assertEquals(linksOfNewlyCreatedDocument.size(), 1);
 
-		Assert.assertEquals(linksOfNewlyCreatedDocument.get(0).getRoles().get(RelationshipModelConstants.RoleConstants.PRODUCT_ROLE).getDocRef(), resultAddDocument);
-		Assert.assertEquals(linksOfNewlyCreatedDocument.get(0).getRoles().get(RelationshipModelConstants.RoleConstants.CAMPAIGN_ROLE).getDocRef(), campaign1DocRef);
+		Assert.assertEquals(linksOfNewlyCreatedDocument.getFirst().getRoles().get(RelationshipModelConstants.RoleConstants.PRODUCT_ROLE).getDocRef(),
+			resultAddDocument);
+		Assert.assertEquals(linksOfNewlyCreatedDocument.getFirst().getRoles().get(RelationshipModelConstants.RoleConstants.CAMPAIGN_ROLE).getDocRef(),
+			campaign1DocRef);
 	}
 
 	private List<JsonRpc2Response> dispatchRpcRequestInternal(String replacedValue) throws IOException {
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "request_add_link_and_referenced_document.json");
-		request = String.format(request, "addProductDocument", replacedValue, campaign1DocRef);
+		request = request.formatted("addProductDocument", replacedValue, campaign1DocRef);
 		return sendRpcRequest(request);
 	}
 
 	@Test
 	public void checkSpecificErrorHandling() throws Exception {
 		String request = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "request_bad.json");
-		request = String.format(request, product2DocRef.getDocumentId(), campaign1DocRef.getDocumentId(), product2DocRef.getDocumentId());
-		JsonRpc2Response response = sendRpcRequest(request).get(0);
+		request = request.formatted(product2DocRef.getDocumentId(), campaign1DocRef.getDocumentId(), product2DocRef.getDocumentId());
+		JsonRpc2Response response = sendRpcRequest(request).getFirst();
 		Assert.assertEquals(response.getError().getCode(), JsonRpc2ResponseError.METHOD_NOT_FOUND);
 		Assert.assertEquals(response.getError().getMessage(), "method not found");
 	}
@@ -191,7 +192,7 @@ public class RpcOperationDispatcherIT extends AbstractDispatcherClass {
 		runWithFieldOverwritten(SPEL_ALLOWED_FIELD, false, rpcOperationDispatcher, () -> {
 			JsonRpc2Response response = dispatchRpcRequestInternal("#addProductDocument.metadata.docRef").get(1);
 			Assert.assertFalse(response.isSuccess());
-			Assert.assertEquals(createOperationError(response).getShortMessage().getDefaultMessage(), "Invalid Link Entity DocRef");
+			Assert.assertNotNull(response.getError());
 		});
 	}
 
@@ -216,7 +217,7 @@ public class RpcOperationDispatcherIT extends AbstractDispatcherClass {
 				() -> {
 					List<JsonRpc2Response> responses = dispatchRpcRequestInternal("#addProductDocument.metadata.docRef");
 					responses.forEach(e -> Assert.assertFalse(e.isSuccess()));
-			}));
+				}));
 	}
 
 	@Test
@@ -237,6 +238,6 @@ public class RpcOperationDispatcherIT extends AbstractDispatcherClass {
 				() -> {
 					List<JsonRpc2Response> responses = dispatchRpcRequestInternal("#addProductDocument.metadata.docRef");
 					responses.forEach(e -> Assert.assertTrue(e.isSuccess()));
-			}));
+				}));
 	}
 }

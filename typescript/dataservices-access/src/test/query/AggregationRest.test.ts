@@ -45,10 +45,12 @@ suite("Aggregation Rest Tests", () => {
 
 		strictEqual(request.method, "POST");
 		strictEqual(request.relativeUrl, "/aggregation");
-		strictEqual(request.customHeaders?.length, 1);
+		strictEqual(request.customHeaders?.length, 2);
 		strictEqual(request.customHeaders?.[0][0], "Accept");
 		strictEqual(request.customHeaders?.[0][1], "application/json");
-		strictEqual(request.body, queryRoot);
+		strictEqual(request.customHeaders?.[1][0], "Content-Type");
+		strictEqual(request.customHeaders?.[1][1], "application/json;charset=utf8");
+		strictEqual(request.body, JSON.stringify(queryRoot));
 	});
 
 	test("Response", () => {
@@ -77,8 +79,47 @@ suite("Aggregation Rest Tests", () => {
 
 		strictEqual(
 			Aggregation.Response.isInstance([["Health", "Insurance", 2, 5]]),
-			false,
+			true,
 			"Invalid aggregation response was incorrectly recognized!"
+		);
+
+		strictEqual(
+			Aggregation.Response.isInstance([["basketball", "black", 4399.0, 1200.0, 1999.0]]),
+			true,
+			"Invalid aggregation response was incorrectly recognized!"
+		);
+
+		strictEqual(
+			Aggregation.Response.isInstance([
+				[null, 3, 1350000.0],
+				["Household", 1, 50000.0]
+			]),
+			true,
+			"Invalid aggregation response was incorrectly recognized!"
+		);
+
+		strictEqual(
+			Aggregation.Response.isInstance([1, 2, 3]),
+			false,
+			"Array of numbers was incorrectly recognized as aggregation response!"
+		);
+
+		strictEqual(
+			Aggregation.Response.isInstance([["Health", "Insurance"], ["Life"]]),
+			false,
+			"Aggregation response with invalid tuples was incorrectly recognized!"
+		);
+
+		strictEqual(
+			Aggregation.Response.isInstance("not an array"),
+			false,
+			"String was incorrectly recognized as aggregation response!"
+		);
+
+		strictEqual(
+			Aggregation.Response.isInstance({}),
+			false,
+			"Object was incorrectly recognized as aggregation response!"
 		);
 	});
 });

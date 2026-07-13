@@ -51,7 +51,7 @@ public class RelationshipLinkDocumentMissingException extends RelationshipValida
 	public RelationshipLinkDocumentMissingException(String linkDocumentModelName) {
 		super(new RelationshipValidationException.Builder(ExceptionCodes.RELATIONSHIP_LINK_DOCUMENT_MISSING_EXCEPTION_CODE,
 			ExceptionKeys.RELATIONSHIP_LINK_VALIDATION_DOCUMENT_NOT_FOUND_ERROR_KEY, MISSING_LINK_MODEL_WARN,
-			String.format("Link Model is present [%s] but document is blank.", linkDocumentModelName)));
+			"Link Model is present [%s] but document is blank.".formatted(linkDocumentModelName)));
 		this.linkDocumentModelName = linkDocumentModelName;
 	}
 

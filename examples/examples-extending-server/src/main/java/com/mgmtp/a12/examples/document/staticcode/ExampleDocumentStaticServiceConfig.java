@@ -47,7 +47,6 @@ public class ExampleDocumentStaticServiceConfig implements IDocumentStaticServic
 	 *
 	 * @return an empty {@link java.util.Optional} because variants are not supported.
 	 */
-	@Override
 	public Optional<String> getVariant() {
 		// not supported in A12
 		return Optional.empty();

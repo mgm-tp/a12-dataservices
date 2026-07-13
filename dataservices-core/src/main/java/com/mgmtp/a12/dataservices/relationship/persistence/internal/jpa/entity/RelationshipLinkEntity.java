@@ -35,18 +35,13 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.mgmtp.a12.dataservices.document.DocumentReference;
+import com.mgmtp.a12.dataservices.document.internal.entity.DocumentReferenceConverter;
 import com.mgmtp.a12.dataservices.relationship.RelationshipLink;
 import com.mgmtp.a12.dataservices.relationship.RelationshipRole;
 import com.mgmtp.a12.dataservices.relationship.persistence.internal.jpa.id.CustomUuid;
 
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -66,7 +61,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data @EqualsAndHashCode(of = { "id", "relationshipModel", "createdAt" }) @ToString @NoArgsConstructor @AllArgsConstructor(access = AccessLevel.PRIVATE) @Builder
-@Cacheable @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "RELATIONSHIP_LINK")
 @Entity public class RelationshipLinkEntity implements RelationshipLink, Serializable {
 
@@ -80,7 +74,7 @@ import lombok.ToString;
 
 	@Column private Instant createdAt;
 
-	@Column(name = "LINK_DOCUMENT_DOCREF") @Convert(converter = DocRefConverter.class)
+	@Column(name = "LINK_DOCUMENT_DOCREF") @Convert(converter = DocumentReferenceConverter.class)
 	private DocumentReference linkDocumentDocRef;
 
 	@Builder.Default
@@ -105,18 +99,4 @@ import lombok.ToString;
 		roles.put(role.getName(), roleEntity);
 	}
 
-	public static class DocRefConverter implements AttributeConverter<DocumentReference, String> {
-
-		@Override public String convertToDatabaseColumn(DocumentReference attribute) {
-			return Optional.ofNullable(attribute)
-				.map(DocumentReference::toString)
-				.orElse(null);
-		}
-
-		@Override public DocumentReference convertToEntityAttribute(String dbData) {
-			return Optional.ofNullable(dbData)
-				.map(DocumentReference::new)
-				.orElse(null);
-		}
-	}
 }

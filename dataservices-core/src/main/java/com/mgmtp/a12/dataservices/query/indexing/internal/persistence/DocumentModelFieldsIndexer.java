@@ -31,64 +31,53 @@
  */
 package com.mgmtp.a12.dataservices.query.indexing.internal.persistence;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.document.internal.attachment.AttachmentSupport;
 import com.mgmtp.a12.dataservices.model.GenericModel;
-import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.entity.LocalizedFieldEntity;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.entity.ModelFieldEntity;
-import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.repository.LocalizedFieldsJpaRepository;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.repository.ModelFieldsJpaRepository;
 import com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper;
-import com.mgmtp.a12.dataservices.search.customizer.internal.SearchCustomizerRegistry;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 import com.mgmtp.a12.kernel.md.model.a12internal.Element;
 import com.mgmtp.a12.kernel.md.model.a12internal.Field;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 import com.mgmtp.a12.kernel.md.model.api.IField;
 import com.mgmtp.a12.kernel.md.model.api.IGroup;
-import com.mgmtp.a12.kernel.md.model.api.fieldtypes.IEnumerationType;
 import com.mgmtp.a12.kernel.md.model.api.fieldtypes.IFieldType;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelService;
 import com.mgmtp.a12.kernel.md.model.api.visitor.DocumentModelVisitor;
 import com.mgmtp.a12.kernel.md.model.api.visitor.DocumentModelWalker;
 import com.mgmtp.a12.model.header.Header;
 
-import lombok.NonNull;
+import tools.jackson.databind.ObjectMapper;
 
 import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.ExecutionPhase.QUERY_INDEXING;
 import static com.mgmtp.a12.dataservices.model.ModelConstants.DOCUMENT_MODEL_TYPE;
 import static com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper.getEffectiveFieldType;
+
 @Component public class DocumentModelFieldsIndexer {
 
 	public static final String INDEXED_FIELD_ANNOTATION = "indexed";
 	private final DocumentModelUtils documentModelUtils;
 	private final IDocumentModelService modelService;
 	private final ModelFieldsJpaRepository modelFieldsJpaRepository;
-	private final LocalizedFieldsJpaRepository localizedFieldsJpaRepository;
 	private final ObjectMapper jsonMapper;
-	private final SearchCustomizerRegistry searchCustomizerRegistry;
 
 	public DocumentModelFieldsIndexer(DocumentModelUtils documentModelUtils, IDocumentModelService modelService,
-		ModelFieldsJpaRepository modelFieldsJpaRepository, LocalizedFieldsJpaRepository localizedFieldsJpaRepository,
-		SearchCustomizerRegistry searchCustomizerRegistry, ObjectMapper jsonMapper) {
+		ModelFieldsJpaRepository modelFieldsJpaRepository, ObjectMapper jsonMapper) {
 		this.documentModelUtils = documentModelUtils;
 		this.modelService = modelService;
 		this.modelFieldsJpaRepository = modelFieldsJpaRepository;
-		this.localizedFieldsJpaRepository = localizedFieldsJpaRepository;
-		this.searchCustomizerRegistry = searchCustomizerRegistry;
-		this.jsonMapper = jsonMapper.copy()
-			.addMixIn(IField.class, IFieldJsonHints.class);
+		this.jsonMapper = jsonMapper.rebuild()
+			.addMixIn(IField.class, IFieldJsonHints.class)
+			.build();
 	}
 
 	public void indexDocumentModelFieldsOnCreate(GenericModel updatedModel) {
@@ -126,77 +115,24 @@ import static com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper.getE
 	private void updateNewFields(IDocumentModel updatedModel) {
 		String modelName = updatedModel.getHeader().getId();
 
-		new DocumentModelWalker().acceptDocumentModel(updatedModel, new DocumentModelVisitor() {
+		new DocumentModelWalker().acceptDocumentModel(
+			updatedModel, new DocumentModelVisitor() {
 
-			@Override public DocumentModelWalker.VisitProcess visitField(@NonNull IField field) {
-				IFieldType effectiveFieldType = getEffectiveFieldType(field, QUERY_INDEXING);
-				if (isIndexable(field)) {
-					String path = modelService.getPath(field);
+				@Override public DocumentModelWalker.VisitProcess visitField(@NotNull IField field) {
+					IFieldType effectiveFieldType = getEffectiveFieldType(field, QUERY_INDEXING);
+					if (isIndexable(field)) {
+						String path = modelService.getPath(field);
+						modelFieldsJpaRepository.save(ModelFieldEntity.builder()
+							.modelName(modelName)
+							.fieldName(path)
+							.fieldType(QueryTopologyHelper.fieldTypeAsString(effectiveFieldType))
+							.data(jsonMapper.valueToTree(field))
+							.build());
+					}
 
-					ModelFieldEntity.ModelFieldEntityBuilder modelFieldEntityBuilder = ModelFieldEntity.builder()
-						.modelName(modelName)
-						.fieldName(path)
-						.fieldType(QueryTopologyHelper.fieldTypeAsString(effectiveFieldType))
-						.data(jsonMapper.valueToTree(field));
-					Map<String, Map<String, LocalizedFieldEntity>> localizedFieldEntities = prepareLocalizedEntities(effectiveFieldType, path, modelName);
-					searchCustomizerRegistry.customizeModelFields(modelName, path, field, effectiveFieldType, modelFieldEntityBuilder, localizedFieldEntities);
-					modelFieldsJpaRepository.save(modelFieldEntityBuilder.build());
-					processLocalizations(localizedFieldEntities);
+					return super.visitField(field);
 				}
-				return super.visitField(field);
-			}
-		});
-	}
-
-	private void processLocalizations(Map<String, Map<String, LocalizedFieldEntity>> localizedFieldEntities) {
-		if (localizedFieldEntities.isEmpty()) {
-			return;
-		}
-
-		// Collect all entities efficiently
-		Set<LocalizedFieldEntity> localizedEntities = localizedFieldEntities.values().stream()
-			.flatMap(innerMap -> innerMap.values().stream())
-			.collect(Collectors.toSet());
-		
-		// Batch save all entities
-		// Note: deleteOldFields() already deleted all localized fields for the model
-		localizedFieldsJpaRepository.saveAll(localizedEntities);
-		
-	}
-
-	private static @NonNull Map<String, Map<String, LocalizedFieldEntity>> prepareLocalizedEntities(IFieldType effectiveFieldType,
-		String path, String modelName) {
-
-		if (!(effectiveFieldType instanceof IEnumerationType enumerationType)) {
-			return new HashMap<>();
-		}
-
-		// Optimized: Use pre-sized HashMap and avoid nested streams
-		Map<String, Map<String, LocalizedFieldEntity>> result = new HashMap<>();
-		
-		for (var value : enumerationType.getValues()) {
-			String originalValue = value.getValue();
-			
-			for (var labelEntry : value.getLabel().entrySet()) {
-				String locale = labelEntry.getKey().toString();
-				String localizedValue = labelEntry.getValue();
-				
-				// Create entity once with all values
-				LocalizedFieldEntity entity = LocalizedFieldEntity.builder()
-					.locale(locale)
-					.localizedValue(localizedValue)
-					.originalValue(originalValue)
-					.modelName(modelName)
-					.fieldName(path)
-					.build();
-				
-				// Use computeIfAbsent to avoid multiple lookups
-				result.computeIfAbsent(locale, k -> new HashMap<>())
-					.put(originalValue, entity);
-			}
-		}
-		
-		return result;
+			});
 	}
 
 	private IDocumentModel genericToDocumentModel(GenericModel updatedModel) {
@@ -204,10 +140,7 @@ import static com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper.getE
 	}
 
 	private void deleteOldFields(String modelName) {
-		// Delete model field entities and their corresponding localized fields
-		// This removes all indexed fields, which will then be recreated for fields that are still indexable
 		modelFieldsJpaRepository.deleteByModelName(modelName);
-		localizedFieldsJpaRepository.deleteByModelName(modelName);
 		modelFieldsJpaRepository.flush();
 	}
 

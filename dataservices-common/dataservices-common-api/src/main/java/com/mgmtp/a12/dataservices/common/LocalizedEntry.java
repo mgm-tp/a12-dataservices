@@ -31,6 +31,7 @@
  */
 package com.mgmtp.a12.dataservices.common;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -48,7 +49,7 @@ import lombok.NoArgsConstructor;
 @Data @AllArgsConstructor @NoArgsConstructor @EqualsAndHashCode
 public class LocalizedEntry implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	@Serial private static final long serialVersionUID = 1L;
 
 	private String key;
 

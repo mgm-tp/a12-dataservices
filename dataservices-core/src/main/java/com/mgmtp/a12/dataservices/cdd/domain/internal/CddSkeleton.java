@@ -39,10 +39,8 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mgmtp.a12.dataservices.cdd.jms.internal.ComposeDocumentModel;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
-import com.mgmtp.a12.dataservices.marshalling.DocumentReferenceToStringConverter;
 import com.mgmtp.a12.model.header.Annotation;
 import com.mgmtp.a12.model.header.Header;
 
@@ -73,7 +71,6 @@ public class CddSkeleton implements ICddSkeletonNode {
 		return targetDocRef;
 	}
 
-	@JsonSerialize(converter = DocumentReferenceToStringConverter.class)
 	public DocumentReference getDocRef() {
 		return getModelName() == null ? null : Optional.ofNullable(getTargetDocRef())
 			.map(t -> new DocumentReference(getModelName(), t.toString()))

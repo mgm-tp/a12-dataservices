@@ -1,0 +1,8 @@
+{
+  "BusinessPartnerRoot": {
+    "Name": "Foo",
+    "Industry": "Legal",
+    "CustomerDiscount": "80%",
+    "StartOfRelationship": "2012-12-12"
+  }
+}

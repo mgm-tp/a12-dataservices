@@ -31,15 +31,12 @@
  */
 package com.mgmtp.a12.dataservices.relationship.persistence.internal.jpa.entity;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
+import com.mgmtp.a12.dataservices.document.internal.entity.DocumentReferenceConverter;
 import com.mgmtp.a12.dataservices.relationship.RelationshipRole;
 import com.mgmtp.a12.dataservices.relationship.persistence.internal.jpa.id.CustomUuid;
 
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -58,7 +55,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data @EqualsAndHashCode @ToString @NoArgsConstructor @AllArgsConstructor(access = AccessLevel.PRIVATE) @Builder
-@Cacheable @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "RELATIONSHIP_ROLE") @SecondaryTable(name = "RELATIONSHIP_ORDER")
 @Entity public class RelationshipRoleEntity implements RelationshipRole {
 
@@ -73,7 +69,7 @@ import lombok.ToString;
 
 	@Column(name = "ROLE_NAME") private String name;
 
-	@Column(name = "ROLE_DOCREF") @Convert(converter = RelationshipLinkEntity.DocRefConverter.class)
+	@Column(name = "ROLE_DOCREF") @Convert(converter = DocumentReferenceConverter.class)
 	private DocumentReference docRef;
 
 	@Column(table = "RELATIONSHIP_ORDER", name = "ROLE_ORDER") private String order;

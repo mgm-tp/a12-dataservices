@@ -46,9 +46,9 @@ public class LinkTestUtils {
 		Assert.assertNotNull(link.getId());
 		Assert.assertNotNull(link.getLinkDescriptor());
 		Assert.assertEquals(link.getLinkDescriptor().getEntities().size(), 2);
-		Assert.assertNotNull(link.getLinkDescriptor().getEntities().get(0).getDocRef());
-		Assert.assertEquals(link.getLinkDescriptor().getEntities().get(0).getRole(), "ProductRole");
-		Assert.assertNotNull(link.getLinkDescriptor().getEntities().get(0).getDocRef());
+		Assert.assertNotNull(link.getLinkDescriptor().getEntities().getFirst().getDocRef());
+		Assert.assertEquals(link.getLinkDescriptor().getEntities().getFirst().getRole(), "ProductRole");
+		Assert.assertNotNull(link.getLinkDescriptor().getEntities().getFirst().getDocRef());
 		Assert.assertEquals(link.getLinkDescriptor().getEntities().get(1).getRole(), "CampaignRole");
 	}
 
@@ -57,9 +57,9 @@ public class LinkTestUtils {
 		Assert.assertNotNull(link.getId());
 		Assert.assertNotNull(link.getLinkDescriptor());
 		Assert.assertEquals(link.getLinkDescriptor().getEntities().size(), 2);
-		Assert.assertNotNull(link.getLinkDescriptor().getEntities().get(0).getDocRef());
-		Assert.assertEquals(link.getLinkDescriptor().getEntities().get(0).getRole(), "Partner");
-		Assert.assertNotNull(link.getLinkDescriptor().getEntities().get(0).getDocRef());
+		Assert.assertNotNull(link.getLinkDescriptor().getEntities().getFirst().getDocRef());
+		Assert.assertEquals(link.getLinkDescriptor().getEntities().getFirst().getRole(), "Partner");
+		Assert.assertNotNull(link.getLinkDescriptor().getEntities().getFirst().getDocRef());
 		Assert.assertEquals(link.getLinkDescriptor().getEntities().get(1).getRole(), "Contract");
 	}
 
@@ -68,9 +68,9 @@ public class LinkTestUtils {
 		Assert.assertNotNull(link.getId());
 		Assert.assertNotNull(link.getLinkDescriptor());
 		Assert.assertEquals(link.getLinkDescriptor().getEntities().size(), 2);
-		Assert.assertNotNull(link.getLinkDescriptor().getEntities().get(0).getDocRef());
-		Assert.assertEquals(link.getLinkDescriptor().getEntities().get(0).getRole(), "Partner");
-		Assert.assertNotNull(link.getLinkDescriptor().getEntities().get(0).getDocRef());
+		Assert.assertNotNull(link.getLinkDescriptor().getEntities().getFirst().getDocRef());
+		Assert.assertEquals(link.getLinkDescriptor().getEntities().getFirst().getRole(), "Partner");
+		Assert.assertNotNull(link.getLinkDescriptor().getEntities().getFirst().getDocRef());
 		Assert.assertEquals(link.getLinkDescriptor().getEntities().get(1).getRole(), "Address");
 	}
 }

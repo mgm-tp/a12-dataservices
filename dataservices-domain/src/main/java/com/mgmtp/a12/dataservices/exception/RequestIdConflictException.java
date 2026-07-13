@@ -42,7 +42,6 @@ import com.mgmtp.a12.dataservices.common.exception.ErrorLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-
 /**
  * Reports a conflict with a previously used request identifier (idempotency violation).
  * Carries the conflicting request id and its {@link RequestIdState}.
@@ -66,9 +65,9 @@ public class RequestIdConflictException extends BaseException {
 	 * @param errorDetail structured error detail; may be null.
 	 */
 	@JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-	public RequestIdConflictException(int code, String requestId, RequestIdState state, LocalizedEntry longMessage,
+	public RequestIdConflictException(Integer code, String requestId, RequestIdState state, LocalizedEntry longMessage,
 		LocalizedEntry shortMessage, String anonymityMessage, ErrorLevel errorLevel, ErrorDetail errorDetail) {
-		super(code);
+		super(extractCode(code, errorDetail));
 		this.requestId = requestId;
 		this.state = state;
 		setLongMessage(longMessage);
@@ -78,6 +77,16 @@ public class RequestIdConflictException extends BaseException {
 			setErrorLevel(errorLevel);
 		}
 		setErrorDetail(errorDetail);
+	}
+
+	private static int extractCode(Integer code, ErrorDetail errorDetail) {
+		if (code == null) {
+			try {
+				code = Integer.parseInt(errorDetail.getCode());
+			} catch (Exception ignored) {
+			}
+		}
+		return code == null ? ExceptionCodes.REQUEST_ID_CONFLICT_EXCEPTION_CODE : code;
 	}
 
 	/**
@@ -151,7 +160,7 @@ public class RequestIdConflictException extends BaseException {
 	 */
 	@Override public String getMessage() {
 		String message = super.getMessage();
-		return message == null ? String.format("Request of ID %s is in state %s", getRequestId(), getState()) : message;
+		return message == null ? "Request of ID %s is in state %s".formatted(getRequestId(), getState()) : message;
 	}
 }
 

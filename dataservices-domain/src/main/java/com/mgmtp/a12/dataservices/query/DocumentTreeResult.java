@@ -33,32 +33,32 @@ package com.mgmtp.a12.dataservices.query;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.internal.DocumentationDiagram;
-import com.mgmtp.a12.dataservices.marshalling.DocumentReferenceToStringConverter;
 import com.mgmtp.a12.dataservices.query.topology.QueryTopology;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
-
+import lombok.NoArgsConstructor;
+import tools.jackson.databind.JsonNode;
 /**
  * Single document in the document graph result.
  */
 @DocumentationDiagram
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-@Data @Builder @RequiredArgsConstructor @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_ABSENT)
+@JsonIgnoreProperties(value = { "fieldsProjection", "internalId" })
+@JsonAutoDetect(creatorVisibility = JsonAutoDetect.Visibility.NONE)
+@Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class DocumentTreeResult {
 
 	/**
 	 * Document reference of the document.
 	 */
-	@JsonSerialize(converter = DocumentReferenceToStringConverter.class)
 	private DocumentReference docRef;
 	/**
 	 * Relationship link model if linked.
@@ -71,7 +71,6 @@ public class DocumentTreeResult {
 	/**
 	 * Source document reference if linked.
 	 */
-	@JsonSerialize(converter = DocumentReferenceToStringConverter.class)
 	private DocumentReference sourceDocRef;
 	/**
 	 * Target role of the link if linked.
@@ -80,7 +79,6 @@ public class DocumentTreeResult {
 	/**
 	 * Target document reference if linked.
 	 */
-	@JsonSerialize(converter = DocumentReferenceToStringConverter.class)
 	private DocumentReference targetDocRef;
 	/**
 	 * Content of the document.
@@ -112,7 +110,8 @@ public class DocumentTreeResult {
 	/**
 	 * Depth of the tree structure.
 	 */
-	private int depth;
+
+	private Integer depth;
 	/**
 	 * To indicate that this node should be used for fields projection or not.
 	 * In case of fields projection this node will be used to construct document with selected projection fields.
@@ -127,4 +126,3 @@ public class DocumentTreeResult {
 		return docRef.getDocumentModelName();
 	}
 }
-

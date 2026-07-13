@@ -42,7 +42,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.dataservices.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.constants.PathConstants;
 import com.mgmtp.a12.dataservices.constants.UserConstants;
@@ -119,7 +119,7 @@ public class RpcHeterogeneousOperationsIT extends AbstractSpringContextIT {
 
 	private void assertLink(String listLinksTemplate, String addDocOperationIdForSourceDocRef, String sourceModel, String targetRole,
 		String addDocOperationIdForResult1, String addDocOperationIdForResult2) throws IOException {
-		JsonRpc2Response response = sendRpcRequest(prepareRequest(listLinksTemplate, addDocOperationIdForSourceDocRef, sourceModel, targetRole)).get(0);
+		JsonRpc2Response response = sendRpcRequest(prepareRequest(listLinksTemplate, addDocOperationIdForSourceDocRef, sourceModel, targetRole)).getFirst();
 		List<DocumentTreeResult> linkResults = new ArrayList<>();
 		response.getResult().get("links").forEach(e -> linkResults.add(convertObject(e, DocumentTreeResult.class)));
 		Assert.assertEquals(linkResults.size(), 2);

@@ -31,13 +31,12 @@
  */
 package com.mgmtp.a12.dataservices.document.operation.internal;
 
-import java.util.Optional;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.testng.MockitoTestNGListener;
+import org.springframework.security.access.AccessDeniedException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -76,7 +75,7 @@ public class CopyDocumentOperationTest {
 	@BeforeMethod
 	public void setUp() {
 		openMocks = MockitoAnnotations.openMocks(documentMetadata);
-		dataServicesDocument = new DefaultDataServicesDocument( kernelDocument, documentMetadata);
+		dataServicesDocument = new DefaultDataServicesDocument(kernelDocument, documentMetadata);
 	}
 
 	@AfterMethod
@@ -87,35 +86,30 @@ public class CopyDocumentOperationTest {
 	}
 
 	@Test public void testCopyDocument_success() {
-		Mockito.when(documentService.load(documentReference)).thenReturn(Optional.of(dataServicesDocument));
-		Mockito.when(kernelDocument.withId(null)).thenReturn(kernelDocument);
-		Mockito.when(documentService.create(Mockito.any(), Mockito.any())).thenReturn(dataServicesDocument);
+		Mockito.when(documentService.copy(documentReference, null)).thenReturn(dataServicesDocument);
 		Mockito.when(documentMetadata.getDocRef()).thenReturn(documentReference);
 
-		copyDocumentOperation.rpc(documentReference, null);
+		copyDocumentOperation.rpc(documentReference.toString(), null);
 
-		Mockito.verify(documentService, Mockito.times(1)).load(Mockito.any());
-		Mockito.verify(documentService, Mockito.times(1)).create(Mockito.any(), Mockito.any());
+		Mockito.verify(documentService, Mockito.times(1)).copy(documentReference, null);
 	}
 
 	@Test(expectedExceptions = NotFoundException.class)
 	public void testCopyDocument_documentNotFound() {
-		Mockito.when(documentService.load(documentReference)).thenReturn(Optional.empty());
+		Mockito.when(documentService.copy(documentReference, null))
+			.thenThrow(new NotFoundException("document.not.found", "Document not found"));
 
-		copyDocumentOperation.rpc(documentReference, null);
-
-		Mockito.verify(documentService, Mockito.times(1)).load(Mockito.any());
-		Mockito.verify(documentService, Mockito.times(0)).create(Mockito.any(), Mockito.any());
+		copyDocumentOperation.rpc(documentReference.toString(), null);
 	}
 
 	@Test
 	public void testCopyDocument_baseException() {
 		Mockito.doThrow(DocumentValidationException.class)
 			.when(documentService)
-			.load(Mockito.any());
+			.copy(Mockito.any(), Mockito.any());
 
 		try {
-			copyDocumentOperation.rpc(documentReference, null);
+			copyDocumentOperation.rpc(documentReference.toString(), null);
 			fail("Expected BaseException");
 		} catch (BaseException e) {
 			assertEquals(e.getShortMessage().getDefaultMessage(), "Could not copy document");
@@ -128,15 +122,29 @@ public class CopyDocumentOperationTest {
 	public void testCopyDocument_unknownException() {
 		Mockito.doThrow(RuntimeException.class)
 			.when(documentService)
-			.load(Mockito.any());
+			.copy(Mockito.any(), Mockito.any());
 
 		try {
-			copyDocumentOperation.rpc(documentReference, null);
+			copyDocumentOperation.rpc(documentReference.toString(), null);
 			fail("Expected RpcException");
 		} catch (RpcException e) {
 			assertEquals(e.getOperationError().getOperationId(), RemoteOperation.RemoteOperationHelper.getOperationId(CopyDocumentOperation.class));
 		} catch (Exception e) {
 			fail("Expected RpcException");
+		}
+	}
+
+	@Test(description = "Should throw RpcException with access denied code when service denies permission")
+	public void shouldThrowAccessDeniedWhenNoCreatePermission() {
+		Mockito.doThrow(new AccessDeniedException("Access Denied"))
+			.when(documentService)
+			.copy(Mockito.any(), Mockito.any());
+
+		try {
+			copyDocumentOperation.rpc(documentReference.toString(), null);
+			fail("Expected RpcException");
+		} catch (RpcException e) {
+			Mockito.verify(documentService, Mockito.times(1)).copy(documentReference, null);
 		}
 	}
 }

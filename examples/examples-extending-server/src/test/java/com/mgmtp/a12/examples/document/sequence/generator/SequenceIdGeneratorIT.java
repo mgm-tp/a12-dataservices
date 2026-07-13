@@ -42,6 +42,8 @@ import com.mgmtp.a12.examples.AbstractITBase;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 
 import static org.mockito.ArgumentMatchers.any;
+import static com.mgmtp.a12.dataservices.constants.DocumentModelConstants.CONTRACT_DOCUMENT_MODEL;
+import static com.mgmtp.a12.dataservices.constants.PathConstants.CONTRACT_DOCUMENT_MODEL_PATH;
 
 @TestPropertySource(properties = "com.mgmtp.a12.examples.documents.sequence-id-generator.enabled=true")
 public class SequenceIdGeneratorIT extends AbstractITBase {
@@ -49,8 +51,8 @@ public class SequenceIdGeneratorIT extends AbstractITBase {
 	@MockitoSpyBean private SequenceIdGenerator sequenceIdGenerator;
 
 	@Test public void testDocumentReference() throws IOException {
-		createModel(SRC_MAIN_RESOURCES_PATH + MODEL_PATH + DOCUMENT_PATH, CONTRACT_DOCUMENT_MODEL_NAME + ".json");
-		createDocument(CONTRACT_DOCUMENT_MODEL_NAME, SRC_TEST_RESOURCES_PATH + DOCUMENT_PATH + "Contract.json");
+		modelsFunctions.createModel(CONTRACT_DOCUMENT_MODEL_PATH);
+		documentFunctions.createDocumentFromFileAndGetDocRef(CONTRACT_DOCUMENT_MODEL, CONTRACT_DOCUMENT_FILE);
 
 		// verify custom bean was called
 		Mockito.verify(sequenceIdGenerator, Mockito.times(1)).generateId(any(DocumentV2.class));

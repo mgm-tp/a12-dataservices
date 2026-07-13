@@ -63,12 +63,15 @@ import com.mgmtp.a12.examples.AbstractITBase;
 import static com.mgmtp.a12.dataservices.constants.DocumentModelConstants.SearchConstants.EN_LOCALE;
 
 @Test
-@TestPropertySource(properties = "com.mgmtp.a12.examples.custom-operator.enabled=true")
+@TestPropertySource(properties = {
+	"com.mgmtp.a12.examples.custom-operator.enabled=true",
+	"com.mgmtp.a12.examples.custom.type.enabled=true"
+})
 public class TaxNumberRangeOperatorIT extends AbstractITBase {
 
 	private static final String FIELD_NAME = "/Person/TaxIDCustomFieldType";
 
-	public static final String RESOURCE_ROOT_DIR = "file:src/main/resources/profile_specific/example_custom_type_profile/";
+	public static final String RESOURCE_ROOT_DIR = "profile_specific/example_custom_type_profile/";
 	private static final String PERSON_A = "document/PersonTaxNumber_A.json";
 	private static final String PERSON_B = "document/PersonTaxNumber_B.json";
 	private static final String PERSON_C = "document/PersonTaxNumber_C.json";
@@ -85,10 +88,10 @@ public class TaxNumberRangeOperatorIT extends AbstractITBase {
 
 	@BeforeClass
 	public void init() throws IOException {
-		createModel(SRC_MAIN_RESOURCES_PATH + MODEL_PATH + DOCUMENT_PATH, PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME + ".json");
-		personAId = createDocument(PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME, RESOURCE_ROOT_DIR + PERSON_A);
-		personBId = createDocument(PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME, RESOURCE_ROOT_DIR + PERSON_B);
-		personCId = createDocument(PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME, RESOURCE_ROOT_DIR + PERSON_C);
+		modelsFunctions.createModel(MODEL_PATH + DOCUMENT_PATH + PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME + ".json");
+		personAId = documentFunctions.createDocumentFromFileAndGetDocRef(PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME, RESOURCE_ROOT_DIR + PERSON_A);
+		personBId = documentFunctions.createDocumentFromFileAndGetDocRef(PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME, RESOURCE_ROOT_DIR + PERSON_B);
+		personCId = documentFunctions.createDocumentFromFileAndGetDocRef(PERSON_WITH_CUSTOM_TYPE_DOCUMENT_MODEL_NAME, RESOURCE_ROOT_DIR + PERSON_C);
 	}
 
 	@Test(description = "Should find documents with tax numbers in range 10000000-50000000")
@@ -201,7 +204,6 @@ public class TaxNumberRangeOperatorIT extends AbstractITBase {
 			Collections.emptyList());
 		filterAndExpect(queryRoot, Lists.newArrayList(personAId.toString()));
 	}
-
 
 	private void verifyIndexedValue(DocumentReference docRef, String expectedValue, BigDecimal expectedNumberValue) {
 		List<DocumentFieldEntity> fields = documentFieldsRepository.findAll().stream()

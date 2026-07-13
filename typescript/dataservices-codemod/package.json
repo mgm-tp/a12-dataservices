@@ -1,9 +1,9 @@
 {
 	"name": "@com.mgmtp.a12.dataservices/dataservices-codemod",
-	"version": "38.4.3-SNAPSHOT",
+	"version": "39.0.2",
 	"description": "Codemod for Data Services",
 	"author": "mgm technology partners",
-	"license": "(EUPL-1.2 OR LicenseRef-commercial)",
+	"license": "UNLICENSED",
 	"bin": "lib/cli.js",
 	"type": "module",
 	"scripts": {
@@ -19,28 +19,33 @@
 		"setVersion": "npm version"
 	},
 	"dependencies": {
-		"@com.mgmtp.a12.devtools/codemod": "^2.0.0"
+		"@com.mgmtp.a12.devtools/codemod": "2.2.2"
 	},
 	"devDependencies": {
-		"@com.mgmtp.a12.devtools/tsconfig": "^1.1.0",
-		"@com.mgmtp.a12.devtools/eslint-config": "^3.1.0",
-		"@com.mgmtp.a12.devtools/prettier-config": "^1.1.0",
+		"@com.mgmtp.a12.devtools/tsconfig": "2.0.1",
+		"@com.mgmtp.a12.devtools/eslint-config": "3.1.2",
+		"@com.mgmtp.a12.devtools/prettier-config": "^1.0.0",
+		"@cyclonedx/cyclonedx-npm": "^4.1.2",
 		"@types/node": "^24.10.1",
 		"eslint": "^9.23.0",
 		"eslint-plugin-notice": "^1.0.0",
 		"npm-run-all": "^4.1.5",
-		"prettier": "^3.5.3",
+		"prettier": "3.9.1",
 		"rimraf": "^6.1.2",
-		"typescript": "5.8.2",
+		"typescript": "6.0.2",
 		"vitest": "^4.0.16"
+	},
+	"overrides": {
+		"glob": "^13.0.0"
 	},
 	"files": [
 		"lib",
+		"src",
+		"!**/__tests__",
 		"LICENSE",
 		"NOTICE",
 		"THIRD_PARTY_NOTICES",
-		"licenses",
-		"src",
-		"!**/__tests__"
-	]
+		"licenses"
+	],
+	"exports": null
 }

@@ -1,0 +1,681 @@
+{
+  "header": {
+    "id": "RelationshipMetaModel",
+    "modelType": "document",
+    "modelVersion": "29.2.0",
+    "locales": [
+      {
+        "code": "en"
+      }
+    ],
+    "labels": [],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "guest,admin,systemAdmin"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "RelationshipMetaModel",
+      "immutable": false
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "typeDefinitions": [
+      {
+        "id": "typedef_0e82f6a0-560f-49ec-b1ea-c991ba1a3fcd",
+        "name": "ModelReference",
+        "fieldType": {
+          "type": "StringType",
+          "StringType": {
+            "errorMessage": [
+              {
+                "locale": "en",
+                "text": "model name must be string of length between 1 and 100 characters and matching the pattern /[_a-zA-Z][-_.a-zA-Z0-9]*/"
+              }
+            ],
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "[_a-zA-Z][-_.a-zA-Z0-9]*"
+          }
+        }
+      },
+      {
+        "id": "typedef_2c9ca77c-2985-4108-a61a-c3407387e880",
+        "name": "MultilingualLabel",
+        "fieldType": {
+          "type": "StringType"
+        }
+      },
+      {
+        "id": "typedef_50975f9b-9f72-499c-a49a-148d792fc9c2",
+        "name": "RoleName",
+        "fieldType": {
+          "type": "StringType",
+          "StringType": {
+            "errorMessage": [
+              {
+                "locale": "en",
+                "text": "Use only letters, digits, hyphens, underscores and periods. Furthermore, the name may only start with a letter or underscore."
+              }
+            ],
+            "minLength": 1,
+            "maxLength": 85,
+            "pattern": "[_a-zA-Z][-_.a-zA-Z0-9]*"
+          }
+        }
+      }
+    ],
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "group_28aa9",
+          "name": "header",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_ee057",
+                "name": "id",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Name"
+                    }
+                  ],
+                  "requirednessConfig": {
+                    "mode": "absoluteOrRelativeToNextRepAncestor"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_16757",
+                "name": "modelType",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Model"
+                    }
+                  ],
+                  "requirednessConfig": {
+                    "mode": "absoluteOrRelativeToNextRepAncestor"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_d9f53",
+                "name": "modelVersion",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Model Version"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_29c22",
+                "name": "locales",
+                "Group": {
+                  "repeatability": 9999,
+                  "indexFieldName": "code",
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "field_3ae95",
+                      "name": "code",
+                      "externalDescription": [
+                        {
+                          "locale": "en",
+                          "text": "en, de, fr, en_GB, en_US, ..."
+                        }
+                      ],
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Code"
+                          }
+                        ],
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Rule",
+                "id": "rule_e366c",
+                "name": "mustHaveAtLeastOneLocale",
+                "Rule": {
+                  "errorEntityRelPath": "../modelType",
+                  "errorCode": "Error rule_e366c",
+                  "errorCondition": "NoGroupFilled(locales*/code) and FieldFilled(modelType)",
+                  "severity": "ERROR",
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "Locales must not be empty"
+                    }
+                  ],
+                  "guiPatterns": {
+                    "dynamicEnumerationRule": "false"
+                  }
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_2dd22",
+                "name": "labels",
+                "Group": {
+                  "repeatability": 9999,
+                  "indexFieldName": "locale",
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "field_35526",
+                      "name": "locale",
+                      "internalDescription": [
+                        {
+                          "locale": "en",
+                          "text": "en, de, fr, en_GB, en_US, ..."
+                        }
+                      ],
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Locale"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_08106",
+                      "name": "text",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType",
+                          "StringType": {
+                            "lineBreaksPermitted": true
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Text"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_f36fe",
+                "name": "annotations",
+                "Group": {
+                  "repeatability": 9999,
+                  "indexFieldName": "name",
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "field_3ab7e",
+                      "name": "name",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Name"
+                          }
+                        ],
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_3b24b",
+                      "name": "value",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Value"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "group_ac3c4",
+                "name": "modelReferences",
+                "Group": {
+                  "repeatability": 9999,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "field_54930",
+                      "name": "alias",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Alias"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_95894",
+                      "name": "purpose",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Purpose"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_85329",
+                      "name": "modelType",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Model Type"
+                          }
+                        ],
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "field_dd7f2",
+                      "name": "reference",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Reference"
+                          }
+                        ],
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "id": "G2",
+          "name": "content",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Group",
+                "id": "G8",
+                "name": "labels",
+                "Group": {
+                  "repeatability": 9999,
+                  "indexFieldName": "locale",
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F81",
+                      "name": "locale",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Locale"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F82",
+                      "name": "text",
+                      "Field": {
+                        "fieldType": {
+                          "type": "StringType",
+                          "StringType": {
+                            "lineBreaksPermitted": true
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Text"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F26",
+                "name": "linkDocumentModel",
+                "externalDescription": [
+                  {
+                    "locale": "en",
+                    "text": "For additional fields"
+                  }
+                ],
+                "Field": {
+                  "fieldType": {
+                    "type": "TypeDefType",
+                    "TypeDefType": {
+                      "typeDefinitionId": "typedef_0e82f6a0-560f-49ec-b1ea-c991ba1a3fcd"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "DocumentModel for link document"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "F32",
+                "name": "duplicatesAllowed",
+                "Field": {
+                  "fieldType": {
+                    "type": "BooleanType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Duplicates Allowed"
+                    }
+                  ],
+                  "requirednessConfig": {
+                    "mode": "absoluteOrRelativeToNextRepAncestor"
+                  }
+                }
+              },
+              {
+                "type": "Group",
+                "id": "G6",
+                "name": "entityCharacteristics",
+                "Group": {
+                  "repeatability": 2,
+                  "elements": [
+                    {
+                      "type": "Field",
+                      "id": "F8",
+                      "name": "role",
+                      "Field": {
+                        "fieldType": {
+                          "type": "TypeDefType",
+                          "TypeDefType": {
+                            "typeDefinitionId": "typedef_50975f9b-9f72-499c-a49a-148d792fc9c2"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Role"
+                          }
+                        ],
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "G37",
+                      "name": "labels",
+                      "Group": {
+                        "repeatability": 999,
+                        "elements": [
+                          {
+                            "type": "Field",
+                            "id": "F38",
+                            "name": "locale",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Locale"
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "type": "Field",
+                            "id": "F39",
+                            "name": "text",
+                            "Field": {
+                              "fieldType": {
+                                "type": "StringType"
+                              },
+                              "label": [
+                                {
+                                  "locale": "en",
+                                  "text": "Label"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F12",
+                      "name": "documentModel",
+                      "Field": {
+                        "fieldType": {
+                          "type": "TypeDefType",
+                          "TypeDefType": {
+                            "typeDefinitionId": "typedef_0e82f6a0-560f-49ec-b1ea-c991ba1a3fcd"
+                          }
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "DocumentModel"
+                          }
+                        ],
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Field",
+                      "id": "F13",
+                      "name": "ordered",
+                      "Field": {
+                        "fieldType": {
+                          "type": "BooleanType"
+                        },
+                        "label": [
+                          {
+                            "locale": "en",
+                            "text": "Ordered"
+                          }
+                        ],
+                        "requirednessConfig": {
+                          "mode": "absoluteOrRelativeToNextRepAncestor"
+                        }
+                      }
+                    },
+                    {
+                      "type": "Group",
+                      "id": "G15",
+                      "name": "linkConstraints",
+                      "Group": {
+                        "repeatability": 1,
+                        "elements": [
+                          {
+                            "type": "Group",
+                            "id": "G16",
+                            "name": "multiplicity",
+                            "Group": {
+                              "repeatability": 1,
+                              "elements": [
+                                {
+                                  "type": "Field",
+                                  "id": "F20",
+                                  "name": "unbounded",
+                                  "externalDescription": [
+                                    {
+                                      "locale": "en",
+                                      "text": "If true, then there is no upper limit."
+                                    }
+                                  ],
+                                  "Field": {
+                                    "fieldType": {
+                                      "type": "BooleanType"
+                                    },
+                                    "label": [
+                                      {
+                                        "locale": "en",
+                                        "text": "Unbounded"
+                                      }
+                                    ],
+                                    "requirednessConfig": {
+                                      "mode": "absoluteOrRelativeToNextRepAncestor"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "Field",
+                                  "id": "F17",
+                                  "name": "upperLimit",
+                                  "externalDescription": [
+                                    {
+                                      "locale": "en",
+                                      "text": "If Unbounded is false then this value specifies the upper value (included). Example: lower = 0, upper = 3, then 0,1,2,3 are valid, but not 4."
+                                    }
+                                  ],
+                                  "Field": {
+                                    "fieldType": {
+                                      "type": "NumberType",
+                                      "NumberType": {
+                                        "minValue": 0
+                                      }
+                                    },
+                                    "label": [
+                                      {
+                                        "locale": "en",
+                                        "text": "Upper Limit"
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "type": "Rule",
+                                  "id": "rule_3ce1d",
+                                  "name": "whenNotUnboundedUpperLimitShouldBeSet",
+                                  "Rule": {
+                                    "errorEntityRelPath": "../upperLimit",
+                                    "errorCode": "Error rule_3ce1d",
+                                    "errorCondition": "[unbounded] == False And FieldNotFilled(upperLimit)",
+                                    "severity": "ERROR",
+                                    "errorMessage": [
+                                      {
+                                        "locale": "en",
+                                        "text": "When not unbounded, upperLimit must have a value"
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

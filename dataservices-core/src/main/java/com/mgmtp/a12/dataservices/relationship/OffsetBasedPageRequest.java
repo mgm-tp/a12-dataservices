@@ -34,8 +34,6 @@ package com.mgmtp.a12.dataservices.relationship;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-import com.mgmtp.a12.dataservices.rpc.query.PageSpec;
-
 import lombok.NonNull;
 
 /**
@@ -43,6 +41,10 @@ import lombok.NonNull;
  * The `pageNumber` is calculated from `offset` via `offset` / `pageSize`.
  */
 public class OffsetBasedPageRequest extends PageRequest {
+
+	private static final long NO_OFFSET = 0;
+
+	public static final int DEFAULT_MAX_RESULTS = 100;
 
 	private final long offset;
 
@@ -105,10 +107,10 @@ public class OffsetBasedPageRequest extends PageRequest {
 	/**
 	 * Creates an unpaged request with default maximum limit and no sorting.
 	 *
-	 * @return An {@link OffsetBasedPageRequest} with offset {@link PageSpec#NO_OFFSET} and default limit.
+	 * @return An {@link OffsetBasedPageRequest} with offset 0 and default limit.
 	 */
 	public static OffsetBasedPageRequest unpaged() {
-		return new OffsetBasedPageRequest(PageSpec.NO_OFFSET, PageSpec.MAX_RESULTS.getLimit(), Sort.unsorted());
+		return new OffsetBasedPageRequest(NO_OFFSET, DEFAULT_MAX_RESULTS, Sort.unsorted());
 	}
 
 	/**
@@ -118,7 +120,7 @@ public class OffsetBasedPageRequest extends PageRequest {
 	 * @return An {@link OffsetBasedPageRequest} with default limit and the given sort.
 	 */
 	public static OffsetBasedPageRequest unpaged(Sort sort) {
-		return new OffsetBasedPageRequest(PageSpec.NO_OFFSET, PageSpec.MAX_RESULTS.getLimit(), sort);
+		return new OffsetBasedPageRequest(NO_OFFSET, DEFAULT_MAX_RESULTS, sort);
 	}
 }
 

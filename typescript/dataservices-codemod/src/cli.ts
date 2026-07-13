@@ -38,7 +38,7 @@ import { preferTopLevelImportsRecipe } from "./recipes/prefer-top-level-imports.
 
 createCodemodCLI({
 	name: "data-services-codemod",
-	description: "Codemod tooling for assisting migrations of A12 Data Services",
 	version: packageJson.version,
+	description: "Codemod tooling for assisting migrations of A12 Data Services",
 	recipes: [preferTopLevelImportsRecipe]
 });

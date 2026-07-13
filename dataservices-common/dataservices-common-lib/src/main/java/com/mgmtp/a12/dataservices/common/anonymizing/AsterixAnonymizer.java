@@ -33,6 +33,8 @@ package com.mgmtp.a12.dataservices.common.anonymizing;
 
 import org.apache.commons.lang3.StringUtils;
 
+import lombok.NonNull;
+
 /**
  * An {@link Anonymizer} that masks text by replacing characters with asterisks.
  * The masking length is controlled by the constructor parameter:
@@ -76,10 +78,10 @@ public class AsterixAnonymizer implements Anonymizer {
 	/**
 	 * Masks the input string with asterisks according to the configured rule.
 	 *
-	 * @param s input string; TODO A12S-6443: Clarify contract (uncertain behavior) for `null`.
+	 * @param s input string; must not be `null`.
 	 * @return	masked string consisting of asterisks.
 	 */
-	@Override public String apply(String s) {
+	@Override public String apply(@NonNull String s) {
 		return StringUtils.repeat(DEFAULT_CHAR, length >= 0 ? length : s.length());
 	}
 }

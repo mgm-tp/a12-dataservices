@@ -35,12 +35,11 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
-import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
+import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.model.events.ModelAfterRepositoryLoadEvent;
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity.ModelEntity;
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity.ModelHeaderEntity;
@@ -50,18 +49,20 @@ import com.mgmtp.a12.model.Model;
 import com.mgmtp.a12.model.header.Header;
 
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * Abstract base implementation of {@link IModelReadRepository}.
  *
  */
+@RequiredArgsConstructor
 @Slf4j
 public abstract class AbstractModelReadRepository<T extends Model> implements IModelReadRepository<T> {
 
-	@Autowired private ModelJpaRepository modelJpaRepository;
-	@Autowired private ModelHeaderJpaRepository modelHeaderJpaRepository;
-	@Autowired private ApplicationEventPublisher eventPublisher;
+	protected final ModelJpaRepository modelJpaRepository;
+	protected final ModelHeaderJpaRepository modelHeaderJpaRepository;
+	protected final ApplicationEventPublisher eventPublisher;
 
 	/**
 	 * Reads a model by its identifier from the persistent store.
@@ -74,7 +75,7 @@ public abstract class AbstractModelReadRepository<T extends Model> implements IM
 	public T readModel(@NonNull String modelId) {
 		if (StringUtils.isBlank(modelId)) {
 			throw new InvalidInputException(ExceptionKeys.MODEL_ID_NOT_VALID_ERROR_KEY,
-				String.format("%s shouldn't be blank or null", getModelTypeForMessage()));
+				"%s shouldn't be blank or null".formatted(getModelTypeForMessage()));
 		}
 		StopWatch stopWatch = StopWatch.createStarted();
 		return modelHeaderJpaRepository
@@ -89,7 +90,7 @@ public abstract class AbstractModelReadRepository<T extends Model> implements IM
 
 			})
 			.orElseThrow(() -> new NotFoundException(getModelNotFoundErrorKey(),
-				String.format("%s [%s] not found", getModelTypeForMessage(), modelId)));
+			"%s [%s] not found".formatted(getModelTypeForMessage(), modelId)));
 	}
 
 	/**
@@ -101,7 +102,7 @@ public abstract class AbstractModelReadRepository<T extends Model> implements IM
 	 */
 	protected String getContent(Header h) {
 		ModelEntity modelEntity = modelJpaRepository.findById(h.getId())
-			.orElseThrow(() -> new IllegalStateException(String.format("Model not found for existing header %s", h.getId())));
+			.orElseThrow(() -> new IllegalStateException("Model not found for existing header %s".formatted(h.getId())));
 		return modelEntity.getContent();
 	}
 

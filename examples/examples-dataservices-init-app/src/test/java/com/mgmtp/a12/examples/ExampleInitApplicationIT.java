@@ -92,8 +92,8 @@ public class ExampleInitApplicationIT extends AbstractTestNGSpringContextTests {
 		int step3Index = stepIndices.get(step3Msg);
 
 		Assert.assertTrue(step1Index < step2Index,
-			String.format("Step1 (index %d) should come before Step2 (index %d)", step1Index, step2Index));
+			"Step1 (index %d) should come before Step2 (index %d)".formatted(step1Index, step2Index));
 		Assert.assertTrue(step2Index < step3Index,
-			String.format("Step2 (index %d) should come before Step3 (index %d)", step2Index, step3Index));
+			"Step2 (index %d) should come before Step3 (index %d)".formatted(step2Index, step3Index));
 	}
 }

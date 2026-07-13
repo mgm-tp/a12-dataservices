@@ -31,11 +31,13 @@
  */
 package com.mgmtp.a12.dataservices.initialization;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Defines the contract for application initialization that runs after the Spring context is fully refreshed.
  * Implementations perform one-time startup tasks required before the server announces readiness.
  */
-public interface InitializationService {
+@OnlyForUsage public interface InitializationService {
 
 	/**
 	 * Triggers the application initialization steps.

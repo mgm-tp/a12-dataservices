@@ -30,7 +30,8 @@
  * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
  */
 import { type Reducer } from "redux";
-import { actionCreatorFactory } from "typescript-fsa";
+
+import { actionCreatorFactory } from "@com.mgmtp.a12.client/typescript-fsa-redux-5-compat";
 
 import {
 	DATASERVICES_CONFIG_SLICE,

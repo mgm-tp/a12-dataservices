@@ -50,6 +50,7 @@ import com.mgmtp.a12.dataservices.query.constraint.FieldAwareOperator;
 import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
 import com.mgmtp.a12.dataservices.query.constraint.NestingOperator;
 import com.mgmtp.a12.dataservices.query.constraint.VariadicOperator;
+import com.mgmtp.a12.dataservices.query.enrichement.internal.FieldPathValidator;
 import com.mgmtp.a12.dataservices.query.fields.AliasedFieldItem;
 import com.mgmtp.a12.dataservices.query.fields.ProjectionField;
 import com.mgmtp.a12.dataservices.query.fields.aggregation.AggregationProjector;
@@ -58,13 +59,19 @@ import com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper;
 import com.mgmtp.a12.dataservices.query.topology.QueryTopology;
 import com.mgmtp.a12.dataservices.query.validation.ValidationItem;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
-import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 
 import lombok.RequiredArgsConstructor;
 
 import static com.mgmtp.a12.dataservices.exception.ExceptionKeys.ExecutionPhase.QUERY_VALIDATION;
 import static com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper.getEffectiveFieldType;
 
+/**
+ * Validates fields, aggregations and constraints in query topologies.
+ *
+ * This validator handles validation for both standard queries and QueryLink operations.
+ * For QueryLink operations, the targetDocumentModel may be null during initial validation
+ * and will be determined later by the query validator.
+ */
 @RequiredArgsConstructor
 @Component public class FieldsValidator {
 
@@ -80,6 +87,15 @@ import static com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper.getE
 	public static final String AGGREGATION_FIELD_NOT_SEARCHABLE_MESSAGE_PATTERN =
 		"Aggregation field %s is not searchable (or doesn't exists in model %s at all).";
 
+	/**
+	 * Validates fields and aggregations in the given query topology.
+	 * @param topology The query topology to validate.
+	 * @param targetDocumentModel The target document model name, maybe null for QueryLink operations.
+	 * @param path The path in the query structure for error reporting.
+	 * @param context The query context containing enrichments and model information.
+	 * @param result The validation result to populate.
+	 * @param validationEnabled Flag indicating whether validation is enabled.
+	 */
 	public void validateFieldsAndAggregations(QueryTopology topology, String targetDocumentModel, String[] path, QueryContext context, ValidationResult result,
 		boolean validationEnabled) {
 		if (validationEnabled) {
@@ -96,17 +112,20 @@ import static com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper.getE
 				result.addResult(
 					ValidationItem.invalid(new String[] { FIELDS_FIELD_NAME }, "Either enter a non-empty list for fields, or do not enter it at all."));
 			} else {
-				checkIsIndexed(fields.stream(), path, targetDocumentModel, FIELD_NOT_SEARCHABLE_MESSAGE_PATTERN, context, result);
+				fields.stream()
+					.filter(field -> !FieldPathValidator.isValidFieldPath(field))
+					.forEach(field -> rejectInvalidFieldPath(field, new String[] { FIELDS_FIELD_NAME }, result));
+				checkIsIndexed(fields.stream().filter(FieldPathValidator::isValidFieldPath), path, targetDocumentModel, FIELD_NOT_SEARCHABLE_MESSAGE_PATTERN, context, result);
 			}
 		}
 	}
 
 	private void validateConstraintFields(String targetDocumentModel, QueryTopology topology, String[] path, QueryContext context, ValidationResult result) {
 		ILogicOperator operator = topology.getConstraint();
-		Stream.Builder<String> builder = Stream.builder();
+		Stream.Builder<String> fieldPathsBuilder = Stream.builder();
 
 		if (operator instanceof FieldAwareOperator fieldAwareOperator && fieldAwareOperator.getField() != null) {
-			builder.add(fieldAwareOperator.getField());
+			fieldPathsBuilder.add(fieldAwareOperator.getField());
 		}
 
 		if (operator instanceof VariadicOperator variadicOperator && variadicOperator.getOperands() != null) {
@@ -115,66 +134,73 @@ import static com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper.getE
 				.map(FieldAwareOperator.class::cast)
 				.map(FieldAwareOperator::getField)
 				.filter(Objects::nonNull)
-				.forEach(builder::add);
+				.forEach(fieldPathsBuilder::add);
 		}
 
-		if (operator instanceof NestingOperator nestingOperator
-			&& nestingOperator.getOperand() instanceof FieldAwareOperator fieldAwareOperator) {
-			builder.add(fieldAwareOperator.getField());
+		if (operator instanceof NestingOperator nestingOperator && nestingOperator.getOperand() instanceof FieldAwareOperator fieldAwareOperator) {
+			fieldPathsBuilder.add(fieldAwareOperator.getField());
 		}
 
-		checkIsIndexed(builder.build(), path, targetDocumentModel, FIELD_NOT_SEARCHABLE_MESSAGE_PATTERN, context, result);
+		List<String> constraintFieldPaths = fieldPathsBuilder.build().toList();
+		constraintFieldPaths.stream()
+			.filter(field -> !FieldPathValidator.isValidFieldPath(field))
+			.forEach(field -> rejectInvalidFieldPath(field, path, result));
+		checkIsIndexed(constraintFieldPaths.stream().filter(FieldPathValidator::isValidFieldPath), path, targetDocumentModel, FIELD_NOT_SEARCHABLE_MESSAGE_PATTERN, context,
+			result);
 	}
 
 	private void validateAggregations(String targetDocumentModel, QueryTopology topology, String[] path, QueryContext context, ValidationResult result) {
 		AggregationProjector aggregation = topology.getAggregation();
+		if (aggregation == null) {
+			result.addResult(ValidationItem.valid(ArrayUtils.add(path, AGGREGATION_FIELD_NAME), "Aggregations validated"));
+			return;
+		}
+
 		boolean isValid = true;
-		if (aggregation != null) {
-			if (CollectionUtils.isNotEmpty(topology.getLinks())) {
-				result.addResult(ValidationItem.invalid(path, "Invalid aggregations: links together with aggregations are not supported."));
+		if (CollectionUtils.isNotEmpty(topology.getLinks())) {
+			result.addResult(ValidationItem.invalid(path, "Invalid aggregations: links together with aggregations are not supported."));
+			isValid = false;
+		}
+		if (CollectionUtils.isEmpty(aggregation.getAggregations())) {
+			result.addResult(ValidationItem.invalid(ArrayUtils.addAll(path, AGGREGATION_FIELD_NAME),
+				"Either enter a non-empty list for aggregations, or do not enter it at all."));
+			isValid = false;
+		} else {
+			if (topology.getFields() != null) {
+				result.addResult(
+					ValidationItem.invalid(path, "Properties '" + FIELDS_FIELD_NAME + "' and '" + AGGREGATION_FIELD_NAME + "' are mutually exclusive."));
 				isValid = false;
 			}
-			if (CollectionUtils.isEmpty(aggregation.getAggregations())) {
-				result.addResult(ValidationItem.invalid(ArrayUtils.addAll(path, AGGREGATION_FIELD_NAME),
-					"Either enter a non-empty list for aggregations, or do not enter it at all."));
-				isValid = false;
-			} else {
-				if (topology.getFields() != null) {
-					result.addResult(
-						ValidationItem.invalid(path, "Properties '" + FIELDS_FIELD_NAME + "' and '" + AGGREGATION_FIELD_NAME + "' are mutually exclusive."));
-					isValid = false;
-				}
 
-				checkIsIndexed(Optional.of(aggregation)
-						.map(AggregationProjector::getGroup)
-						.stream()
-						.flatMap(Collection::stream)
-						.map(ProjectionField::getField),
-					path, targetDocumentModel, GROUPING_FIELD_NOT_SEARCHABLE_MESSAGE_PATTERN, context, result);
+			checkIsIndexed(Optional.of(aggregation)
+					.map(AggregationProjector::getGroup)
+					.stream()
+					.flatMap(Collection::stream)
+					.map(ProjectionField::getField),
+				path, targetDocumentModel, GROUPING_FIELD_NOT_SEARCHABLE_MESSAGE_PATTERN, context, result);
 
-				checkIsIndexed(aggregation.getAggregations().stream().map(AliasedFieldItem::getField),
-					path, targetDocumentModel, AGGREGATION_FIELD_NOT_SEARCHABLE_MESSAGE_PATTERN, context, result);
+			checkIsIndexed(aggregation.getAggregations().stream().map(AliasedFieldItem::getField),
+				path, targetDocumentModel, AGGREGATION_FIELD_NOT_SEARCHABLE_MESSAGE_PATTERN, context, result);
 
-				IDocumentModel documentModel = context.getDocumentModel(targetDocumentModel);
-				aggregation.getAggregations().forEach(aggregationFunction ->
-					checkAggregationFunction(aggregationFunction, ArrayUtils.addAll(path, AGGREGATION_FIELD_NAME, AGGREGATIONS_FIELD_NAME), documentModel,
-						context, result)
+			// Note: targetDocumentModel can be null at this stage for QueryLink operations,
+			// field validation will be performed when the target model is determined by the validator.
+			aggregation.getAggregations().forEach(aggregationFunction ->
+				checkAggregationFunction(aggregationFunction, ArrayUtils.addAll(path, AGGREGATION_FIELD_NAME, AGGREGATIONS_FIELD_NAME), targetDocumentModel,
+					context, result)
+			);
+
+			if (CollectionUtils.isNotEmpty(aggregation.getGroup())) {
+				aggregation.getGroup().forEach(aggregationGroup ->
+					checkAggregationGroup(aggregationGroup, ArrayUtils.addAll(path, AGGREGATION_FIELD_NAME, GROUP_FIELD_NAME), result)
 				);
-
-				if (CollectionUtils.isNotEmpty(aggregation.getGroup())) {
-					aggregation.getGroup().forEach(aggregationGroup ->
-						checkAggregationGroup(aggregationGroup, ArrayUtils.addAll(path, AGGREGATION_FIELD_NAME, GROUP_FIELD_NAME), result)
-					);
-				}
 			}
 		}
 		if (isValid) {
 			result.addResult(ValidationItem.valid(ArrayUtils.add(path, AGGREGATION_FIELD_NAME), "Aggregations validated"));
 		}
-
 	}
 
-	private void checkAggregationFunction(IAggregationFunction aggregationFunction, String[] path, IDocumentModel documentModel, QueryContext context,
+	private void checkAggregationFunction(IAggregationFunction aggregationFunction, String[] path, String targetDocumentModel, QueryContext context,
 		ValidationResult result) {
 		// Check for existing function attribute in each aggregation function.
 		if (aggregationFunction.getFunction() == null) {
@@ -195,10 +221,12 @@ import static com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper.getE
 		if (aggregationFunction.getField() == null) {
 			result.addResult(ValidationItem.invalid(path,
 				"Aggregation function '%s' must have a field specified.".formatted(aggregationFunction.getFunction())));
+		} else if (!FieldPathValidator.isValidFieldPath(aggregationFunction.getField())) {
+			rejectInvalidFieldPath(aggregationFunction.getField(), path, result);
 		} else {
 			result.addResult(ValidationItem.valid(path, "Aggregation function '%s' has field specified.".formatted(
 				aggregationFunction.getFunction())));			// Check for correct field types for aggregation functions.
-			extractFieldType(context, documentModel, aggregationFunction.getField())
+			extractFieldType(context, targetDocumentModel, aggregationFunction.getField())
 				.ifPresentOrElse(fieldType -> {
 					context.getEnrichments().getFieldDescriptor(aggregationFunction.getField()).setFieldType(fieldType);
 					if (!aggregationFunction.isSuitableForFieldType(fieldType)) {
@@ -218,15 +246,27 @@ import static com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper.getE
 		if (aggregationGroup.getField() == null) {
 			result.addResult(ValidationItem.invalid(path,
 				"Aggregation group must have a field specified."));
+		} else if (!FieldPathValidator.isValidFieldPath(aggregationGroup.getField())) {
+			rejectInvalidFieldPath(aggregationGroup.getField(), path, result);
 		} else {
 			result.addResult(ValidationItem.valid(path, "Group has field %s specified.".formatted(aggregationGroup.getField())));
 		}
 	}
 
-	private Optional<String> extractFieldType(QueryContext context, IDocumentModel documentModel, String path) {
-		String documentModelName = documentModel.getHeader().getId();
+	/**
+	 * Extracts the field type from the document model.
+	 *
+	 * @param context the query context containing document models
+	 * @param documentModelName the document model name, may be null
+	 * @param path the field path to extract type for
+	 * @return Optional containing field type, or empty if model is null or field not found.
+	 */
+	private Optional<String> extractFieldType(QueryContext context, String documentModelName, String path) {
 		context.getEnrichments().computeModelSubtypes(documentModelName, modelTypeService::findAllSubtypes);
 
+		if (documentModelName == null) {
+			return Optional.empty();
+		}
 		Set<String> modelSubtypes = context.getEnrichments().getModelSubtypes(documentModelName);
 		modelSubtypes.add(documentModelName);
 		return modelSubtypes.stream()
@@ -237,15 +277,26 @@ import static com.mgmtp.a12.dataservices.query.internal.QueryTopologyHelper.getE
 			.findAny();
 	}
 
+	private static void rejectInvalidFieldPath(String field, String[] path, ValidationResult result) {
+		result.addResult(FieldPathValidationSupport.invalidFieldPathItem(field, path));
+	}
+
+	/**
+	 * Checks if the given field paths are indexed in the target document model. If the target document model is null,
+	 * the check is skipped.
+	 *
+	 * @param fieldPaths The stream of field paths to check.
+	 * @param path The path in the query structure for error reporting.
+	 * @param targetDocumentModel The target document model name, may be null.
+	 * @param message The message pattern for invalid fields.
+	 * @param context The query context containing enrichments and model information.
+	 * @param result The validation result to populate.
+	 */
 	private void checkIsIndexed(Stream<String> fieldPaths, String[] path, String targetDocumentModel, String message, QueryContext context,
 		ValidationResult result) {
 
-		if (StringUtils.isBlank(targetDocumentModel)) {
-			return;
-		}
-
 		fieldPaths
-			.filter(Objects::nonNull)
+			.filter(fp -> Objects.nonNull(fp) && StringUtils.isNotBlank(targetDocumentModel))
 			.forEach(fieldPath -> {
 				try {
 					context.getEnrichments().computeModelSubtypes(targetDocumentModel, modelTypeService::findAllSubtypes);

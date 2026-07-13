@@ -37,13 +37,12 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mgmtp.a12.dataservices.client.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.client.rpc.internal.JsonRpc2RequestBuilder;
 import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
-import com.mgmtp.a12.dataservices.query.topology.QueryLink;
-import com.mgmtp.a12.dataservices.query.constraint.matching.ExactMatchOperator;
 import com.mgmtp.a12.dataservices.query.Paging;
+import com.mgmtp.a12.dataservices.query.constraint.matching.ExactMatchOperator;
+import com.mgmtp.a12.dataservices.query.topology.QueryLink;
 import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
 import com.mgmtp.a12.dataservices.rpc.JsonRpc2Response;
 
@@ -52,7 +51,7 @@ public class JsonRpc2ClientQueryIT extends AbstractSpringContextIT {
 	private static final String DOCUMENT_PROJECTION = "document";
 	private static final String QUERY_PARAM = "query";
 
-	@BeforeClass void init() throws JsonProcessingException {
+	@BeforeClass void init() {
 		createModelFromFile(BUSINESS_PARTNER_MODEL_FILE);
 		createModelFromFile(BUSINESS_PARTNER_SUPER_MODEL_FILE);
 		createModelFromFile(CONTRACT_MODEL_FILE);
@@ -84,7 +83,7 @@ public class JsonRpc2ClientQueryIT extends AbstractSpringContextIT {
 			);
 		List<JsonRpc2Response> results = rpcOperationsClient.invoke(rpcRequest.build());
 		Assert.assertEquals(results.size(), 1);
-		Assert.assertNull(results.get(0).getError());
+		Assert.assertNull(results.getFirst().getError());
 	}
 
 	@Test
@@ -113,7 +112,7 @@ public class JsonRpc2ClientQueryIT extends AbstractSpringContextIT {
 			);
 		List<JsonRpc2Response> results = rpcOperationsClient.invoke(rpcRequest.build());
 		Assert.assertEquals(results.size(), 1);
-		Assert.assertNull(results.get(0).getError());
+		Assert.assertNull(results.getFirst().getError());
 	}
 
 	@Test
@@ -128,9 +127,8 @@ public class JsonRpc2ClientQueryIT extends AbstractSpringContextIT {
 
 		List<JsonRpc2Response> results = rpcOperationsClient.invoke(rpcRequest.build());
 		Assert.assertEquals(results.size(), 1);
-		Assert.assertNotNull(results.get(0).getError());
+		Assert.assertNotNull(results.getFirst().getError());
 	}
-
 
 	@Test void testFieldsProjection_alwaysReturnDocumentFields() {
 		JsonRpc2RequestBuilder rpcRequest = requestBuilderFactory.newJsonRpc2RequestBuilder();

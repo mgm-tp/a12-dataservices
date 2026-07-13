@@ -125,8 +125,8 @@ public class MigrationStepTest {
 
 			List<ILoggingEvent> logs = logAppender.list;
 			assertEquals(logs.size(), 1, "Should have exactly one log entry");
-			assertEquals(logs.get(0).getLevel(), Level.INFO);
-			assertEquals(logs.get(0).getFormattedMessage(), logMessage);
+			assertEquals(logs.getFirst().getLevel(), Level.INFO);
+			assertEquals(logs.getFirst().getFormattedMessage(), logMessage);
 		} finally {
 			logger.detachAppender(logAppender);
 		}

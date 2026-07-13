@@ -53,7 +53,7 @@ public class DeleteDocumentOperationTest {
 	private final DocumentReference documentReference = new DocumentReference("BusinessPartner", "1");
 
 	@Test public void deleteDocument_success() {
-		deleteDocumentOperation.rpc(documentReference, null);
+		deleteDocumentOperation.rpc(documentReference.toString(), null);
 		Mockito.verify(documentService, Mockito.times(1)).delete(documentReference);
 	}
 }

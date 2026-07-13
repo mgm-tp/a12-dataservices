@@ -43,11 +43,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.client.exception.A12ClientException;
 import com.mgmtp.a12.dataservices.client.exception.ErrorDetail;
 import com.mgmtp.a12.dataservices.client.exception.GenericErrorException;
@@ -59,26 +54,31 @@ import com.mgmtp.a12.dataservices.client.rpc.RpcOperationsClient;
 import com.mgmtp.a12.dataservices.client.rpc.internal.JsonRpc2RequestBuilder;
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
-import com.mgmtp.a12.dataservices.document.DocumentSpec;
 import com.mgmtp.a12.dataservices.document.operation.CoreOperationConstants;
+import com.mgmtp.a12.dataservices.query.DocumentTreeResult;
 import com.mgmtp.a12.dataservices.query.Paging;
 import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
 import com.mgmtp.a12.dataservices.relationship.model.RelationshipModel;
+import com.mgmtp.a12.dataservices.rpc.JsonRpc2Request;
 import com.mgmtp.a12.dataservices.rpc.JsonRpc2Response;
-import com.mgmtp.a12.dataservices.rpc.query.ResultSet;
+import com.mgmtp.a12.dataservices.rpc.query.PagedResultSet;
 import com.mgmtp.a12.model.header.Header;
 import com.mgmtp.a12.model.header.HeaderParseException;
 import com.mgmtp.a12.model.header.HeaderParser;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Base test class with all necessary configurations to run repository/service tests
  */
 
 @Slf4j
-@SpringBootTest( classes = { ITConfiguration.class } )
+@SpringBootTest(classes = { ITConfiguration.class })
 public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContextTests {
 	protected static final String RELATIONSHIP_MODEL_PATH = "models/relationship/";
 	protected static final String CONTRACT_MODEL_NAME = "Contract";
@@ -128,8 +128,8 @@ public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContex
 	@SneakyThrows
 	protected void cleanUpByDocumentModel(final String documentModel) {
 		JsonRpc2RequestBuilder rpcRequestBuilder = requestBuilderFactory.newJsonRpc2RequestBuilder();
-		listDocumentsByQuery(documentModel, null, 1000, 0, null).getEntries().stream()
-			.map(DocumentSpec::getDocRef)
+		listDocumentsByModel(documentModel).getEntries().stream()
+			.map(DocumentTreeResult::getDocRef)
 			.map(DocumentReference::toString)
 			.forEach(ds -> rpcRequestBuilder
 				.addMethodCall(CoreOperationConstants.DELETE_DOCUMENT_OPERATION)
@@ -148,59 +148,44 @@ public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContex
 		return Optional.empty();
 	}
 
-	protected ResultSet<DocumentSpec> listDocumentsByQuery(String documentModel, String fullText, int limit, int offset, String lang)
-		throws JsonProcessingException {
-		JsonRpc2RequestBuilder rpcRequestBuilder = requestBuilderFactory.newJsonRpc2RequestBuilder();
-		rpcRequestBuilder.addMethodCall(CoreOperationConstants.QUERY_OPERATION)
+	protected PagedResultSet<DocumentTreeResult> listDocumentsByModel(String documentModel) throws JacksonException {
+
+		List<JsonRpc2Request> rpcRequest = requestBuilderFactory.newJsonRpc2RequestBuilder()
+			.addMethodCall(CoreOperationConstants.QUERY_OPERATION)
 			.id("listByModel")
 			.putParameter("query", QueryRoot.builder()
 				.targetDocumentModel(documentModel)
 				.projectionName("document")
 				.paging(Paging.builder().pageSize(100).pageNumber(0).build())
-				.build()
-			)
-		;
+				.build())
+			.back()
+			.build();
 
-		List<JsonRpc2Response> results = rpcOperationsClient.invoke(rpcRequestBuilder.build());
+		List<JsonRpc2Response> results = rpcOperationsClient.invoke(rpcRequest);
 		log.info("RPC results: {}", new ObjectMapper().writeValueAsString(results));
-		Optional<JsonRpc2Response> jsonRpc2ResponseStream = results.stream()
+		Optional<JsonRpc2Response> listByModelResponse = results.stream()
 			.filter(rs -> "listByModel".equals(rs.getId()))
 			.findAny();
-		jsonRpc2ResponseStream
+
+		listByModelResponse
 			.map(JsonRpc2Response::getError)
 			.ifPresent(e -> {
 				throw new RuntimeException(e.toString());
 			});
-		Optional<JsonNode> operationResult = jsonRpc2ResponseStream
+
+		Optional<JsonNode> listByModelResults = listByModelResponse
 			.map(JsonRpc2Response::getResult);
-		logOpt("ListDocumentsByQuery result", operationResult);
-		Optional<ResultSet<DocumentSpec>> result = operationResult
-			.map(this::getDocumentSpecResultSet);
+		logOpt("ListDocumentsByQuery result", listByModelResults);
+		Optional<PagedResultSet<DocumentTreeResult>> result = listByModelResults
+			.map(node -> objectMapper
+				.treeAsTokens(node)
+				.readValueAs(new TypeReference<>() {}));
 
 		logOpt("Operation result", result);
 		return result.orElse(null);
 	}
 
-	@SneakyThrows
-	private ResultSet<DocumentSpec> getDocumentSpecResultSet(JsonNode node) {
-		return jsonToObject(node, new TypeReference<>() {});
-	}
-
-	@SneakyThrows
-	protected <T> T jsonToObject(TreeNode node, TypeReference<T> type) {
-		return objectMapper
-			.treeAsTokens(node)
-			.readValueAs(type);
-	}
-
-	@SneakyThrows
-	protected <T> T jsonToObject(TreeNode node, Class<T> type) {
-		return objectMapper
-			.treeAsTokens(node)
-			.readValueAs(type);
-	}
-
-	private void logOpt(String s, Optional<? extends Object> object) throws JsonProcessingException {
+	private void logOpt(String s, Optional<? extends Object> object) throws JacksonException {
 
 		String className = object
 			.map(Object::getClass)
@@ -245,7 +230,7 @@ public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContex
 		return modelsClient.createModel(new StringReader(modelContent));
 	}
 
-	protected DocumentReference createDocumentFromJson(String documentModel, String document) throws JsonProcessingException {
+	protected DocumentReference createDocumentFromJson(String documentModel, String document) {
 		JsonRpc2RequestBuilder rpcRequestBuilder = requestBuilderFactory.newJsonRpc2RequestBuilder();
 		rpcRequestBuilder
 			.addMethodCall(CoreOperationConstants.ADD_DOCUMENT_OPERATION)
@@ -271,12 +256,8 @@ public abstract class AbstractSpringContextIT extends AbstractTestNGSpringContex
 			.map(JsonRpc2Response::getError)
 			.filter(Objects::nonNull)
 			.forEach(e -> {
-					try {
-						log.error("RPC error:\n{}", objectMapper.writeValueAsString(e));
-						throw new GenericErrorException(e.getMessage(), objectMapper.treeAsTokens(e.getData()).readValueAs(ErrorDetail.class));
-					} catch (IOException ex) {
-						throw new RuntimeException(ex);
-					}
+					log.error("RPC error:\n{}", objectMapper.writeValueAsString(e));
+					throw new GenericErrorException(e.getMessage(), objectMapper.treeAsTokens(e.getData()).readValueAs(ErrorDetail.class));
 				}
 			);
 	}

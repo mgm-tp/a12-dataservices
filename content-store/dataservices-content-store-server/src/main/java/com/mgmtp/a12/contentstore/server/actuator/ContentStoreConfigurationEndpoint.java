@@ -65,7 +65,7 @@ import lombok.extern.slf4j.Slf4j;
 	public static final String WARNINGS = "warnings";
 	/** Actuator endpoint identifier for Content Store configuration introspection. */
 	public static final String CONFIGURATION_ENDPOINT = "contentStoreConfiguration";
-	private final Map<String, ?> configData;
+	private final Map<String, Object> configData;
 
 	/**
 	 * Creates the configuration endpoint backed by a snapshot of differences and warnings.
@@ -85,7 +85,7 @@ import lombok.extern.slf4j.Slf4j;
 	 * @return a map containing {@link #CHANGES} and {@link #WARNINGS} sections.
 	 */
 	@ReadOperation
-	public Map<String, ?> all() {
+	public Map<String, Object> all() {
 		return configData;
 	}
 

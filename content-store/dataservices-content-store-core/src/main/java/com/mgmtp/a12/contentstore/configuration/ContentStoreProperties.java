@@ -90,12 +90,15 @@ public class ContentStoreProperties {
 	 * If Content Store is deployed on a cluster behind a load balancer, please make sure that this host is pointing to your Content Store public domain name.
 	 * This base-url is required, for setting up relative path please use "/".
 	 * This property is mandatory for starting up Content Store application:
+	 *
 	 * 1. For embedded mode by default this base-url property is set to localhost:8080 which works well for development mode,
 	 * please be aware of setting this property properly in your production.
-	 * Because this property is used to construct downloadable URLs for content, this means end users will never be able to download the content by using the default property localhost:8080.
+	 * Because this property is used to construct downloadable URLs for content, this means end users will never be able to download the content by using the
+	 * default property localhost:8080.
 	 * Please set this property by using your public domain which points to Data Services server and can be accessed from the internet.
 	 *
-	 * 2. For the standalone mode please consider the same situation. Set base-url property by using your public domain which points to Content Store server and can be accessed from the internet.
+	 * 2. For the standalone mode please consider the same situation. Set base-url property by using your public domain which points to Content Store server
+	 * and can be accessed from the internet.
 	 *
 	 * @important This property is mandatory for starting up Content Store application.
 	 * @topic contentstore
@@ -108,6 +111,8 @@ public class ContentStoreProperties {
 	 * @event ContentBeforeDownloadEvent
 	 * @see ContentBeforeDownloadEvent
 	 * @topic contentstore
+	 *
+	 * @default `10_000`
 	 */
 	private long contentWaitReadyTimeout = 10_000L;
 
@@ -117,6 +122,7 @@ public class ContentStoreProperties {
 	 *
 	 * @event ContentBeforeDownloadEvent
 	 * @see ContentBeforeDownloadEvent
+	 * @default `true`
 	 * @topic contentstore
 	 */
 	private boolean enableDefaultDownloadListener = true;
@@ -249,7 +255,7 @@ public class ContentStoreProperties {
 		 * Can be one of `FS` for filesystem storage, `DB` for database storage or `OTHER` - in this case none
 		 * of the bundled content storages is used, and you must provide your own implementation.
 		 *
-		 * @default 'FS' content will be persisted to file system.
+		 * @default 'FS'
 		 */
 		private BundledContentImplementations contentStorage = BundledContentImplementations.FS;
 

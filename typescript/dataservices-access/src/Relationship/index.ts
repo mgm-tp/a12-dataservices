@@ -49,34 +49,22 @@ export namespace RelationshipJsonRpc2response {
 		readonly result: Relationship.LinkRefResponse;
 	}
 
-	export interface RelinkDocumentResult extends JsonRpc2Response {
-		readonly result: Relationship.LinkRefResponse;
-	}
-
 	export namespace AddLinkJsonRpc2Response {
 		export function isInstance(obj: unknown): obj is AddLinkJsonRpc2Response {
 			return (
-				JsonRpc2Response.ok.isInstance(obj) &&
-				"result" in obj &&
-				typeof obj.result === "object" &&
-				"linkDescriptor" in obj.result &&
-				typeof obj.result.linkDescriptor === "object" &&
-				"id" in obj.result &&
-				typeof obj.result.id === "string"
+				JsonRpc2Response.ok.isInstance(obj) && Relationship.LinkRefResponse.isInstance(obj.result)
 			);
 		}
+	}
+
+	export interface RelinkDocumentResult extends JsonRpc2Response {
+		readonly result: Relationship.LinkRefResponse;
 	}
 
 	export namespace RelinkDocumentJsonRpc2Response {
 		export function isInstance(obj: unknown): obj is RelinkDocumentResult {
 			return (
-				JsonRpc2Response.ok.isInstance(obj) &&
-				"result" in obj &&
-				typeof obj.result === "object" &&
-				"linkDescriptor" in obj.result &&
-				typeof obj.result.linkDescriptor === "object" &&
-				"id" in obj.result &&
-				typeof obj.result.id === "string"
+				JsonRpc2Response.ok.isInstance(obj) && Relationship.LinkRefResponse.isInstance(obj.result)
 			);
 		}
 	}

@@ -37,23 +37,25 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.testng.MockitoTestNGListener;
+import org.springframework.security.access.AccessDeniedException;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import com.mgmtp.a12.dataservices.common.anonymizing.Anonymizer;
 import com.mgmtp.a12.dataservices.common.exception.BaseException;
+import com.mgmtp.a12.dataservices.common.exception.NotFoundException;
 import com.mgmtp.a12.dataservices.document.DataServicesDocument;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.document.DocumentService;
 import com.mgmtp.a12.dataservices.document.exception.DocumentValidationException;
 import com.mgmtp.a12.dataservices.document.internal.DefaultDataServicesDocument;
 import com.mgmtp.a12.dataservices.document.internal.DefaultDocumentMetadata;
-import com.mgmtp.a12.dataservices.document.support.DocumentSupport;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.exception.IntegrityException;
 import com.mgmtp.a12.dataservices.rpc.RemoteOperation;
@@ -67,7 +69,6 @@ public class AddDocumentOperationTest {
 
 	@InjectMocks private AddDocumentOperation addDocumentOperation;
 
-	@Mock private DocumentSupport documentSupport;
 	@Mock private DocumentService documentService;
 	@Mock private Anonymizer anonymizer;
 	@Mock private DefaultDocumentMetadata documentMetadata;
@@ -94,20 +95,35 @@ public class AddDocumentOperationTest {
 	}
 
 	@Test public void testAddDocument_success() {
-		Mockito.when(documentService.create(Mockito.any(), Mockito.any())).thenReturn(dataServicesDocument);
+		Mockito.when(documentService.create(Mockito.anyString(), Mockito.any(JsonNode.class), Mockito.any())).thenReturn(dataServicesDocument);
 		Mockito.when(documentMetadata.getDocRef()).thenReturn(new DocumentReference("BusinessPartner", "1"));
 
 		addDocumentOperation.rpc(testDocumentModelName, jsonDocument, null);
 
-		Mockito.verify(documentSupport, Mockito.times(1)).convertJSONToDocument(Mockito.any(), Mockito.any());
-		Mockito.verify(documentService, Mockito.times(1)).create(Mockito.any(), Mockito.any());
+		Mockito.verify(documentService, Mockito.times(1)).create(testDocumentModelName, jsonDocument, null);
+	}
+
+	@Test(expectedExceptions = NotFoundException.class,
+		description = "Should wrap NotFoundException with 'Could not create document' message")
+	public void testAddDocument_notFoundExceptionWrappedWithMessage() {
+		Mockito.doThrow(new NotFoundException("model.not.found", "Model not found"))
+			.when(documentService)
+			.create(Mockito.anyString(), Mockito.any(JsonNode.class), Mockito.any());
+
+		try {
+			addDocumentOperation.rpc(testDocumentModelName, jsonDocument, null);
+			fail("Expected NotFoundException");
+		} catch (NotFoundException e) {
+			assertEquals(e.getShortMessage().getDefaultMessage(), "Could not create document");
+			throw e;
+		}
 	}
 
 	@Test
 	public void testAddDocument_baseException() {
 		Mockito.doThrow(DocumentValidationException.class)
 			.when(documentService)
-			.create(Mockito.any(), Mockito.any());
+			.create(Mockito.anyString(), Mockito.any(JsonNode.class), Mockito.any());
 
 		try {
 			addDocumentOperation.rpc(testDocumentModelName, jsonDocument, null);
@@ -123,7 +139,7 @@ public class AddDocumentOperationTest {
 	public void testAddDocument_unknownException() {
 		Mockito.doThrow(RuntimeException.class)
 			.when(documentService)
-			.create(Mockito.any(), Mockito.any());
+			.create(Mockito.anyString(), Mockito.any(JsonNode.class), Mockito.any());
 
 		try {
 			addDocumentOperation.rpc(testDocumentModelName, jsonDocument, null);
@@ -140,7 +156,7 @@ public class AddDocumentOperationTest {
 		String errorMessage = RandomStringUtils.randomAlphabetic(20);
 		Mockito.doThrow(new IntegrityException(errorMessage))
 			.when(documentService)
-			.create(Mockito.any(), Mockito.any());
+			.create(Mockito.anyString(), Mockito.any(JsonNode.class), Mockito.any());
 
 		try {
 			addDocumentOperation.rpc(testDocumentModelName, jsonDocument, null);
@@ -153,6 +169,20 @@ public class AddDocumentOperationTest {
 			Assert.assertNotNull(e.getLongMessage());
 			Assert.assertEquals(e.getLongMessage().getKey(), ExceptionKeys.ADD_DOCUMENT_ERROR_KEY);
 			Assert.assertEquals(e.getLongMessage().getDefaultMessage(), "Could not create document");
+		}
+	}
+
+	@Test(description = "Should throw RpcException with access denied code when service denies permission")
+	public void shouldThrowAccessDeniedWhenNoCreatePermission() {
+		Mockito.doThrow(new AccessDeniedException("Access Denied"))
+			.when(documentService)
+			.create(Mockito.anyString(), Mockito.any(JsonNode.class), Mockito.any());
+
+		try {
+			addDocumentOperation.rpc(testDocumentModelName, jsonDocument, null);
+			fail("Expected RpcException");
+		} catch (RpcException e) {
+			Mockito.verify(documentService, Mockito.times(1)).create(testDocumentModelName, jsonDocument, null);
 		}
 	}
 }

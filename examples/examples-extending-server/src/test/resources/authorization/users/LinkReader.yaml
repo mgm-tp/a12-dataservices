@@ -1,0 +1,7 @@
+username: "LinkReader"
+password: "LinkReader"
+authorities:
+  - "LinkRead"
+email: linkreader@mgm-tp.com
+firstname: Foo
+lastname: Bar

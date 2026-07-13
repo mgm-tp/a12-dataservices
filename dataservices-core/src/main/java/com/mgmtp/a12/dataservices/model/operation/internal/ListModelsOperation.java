@@ -55,7 +55,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RequiredArgsConstructor
-@RemoteOperation(name = CoreOperationConstants.LIST_MODELS_INTERNAL_OPERATION, group = CoreOperationConstants.A12_INTERNAL_OPERATIONS_GROUP)
+@RemoteOperation(name = CoreOperationConstants.LIST_MODELS_INTERNAL_OPERATION, group = CoreOperationConstants.A12_INTERNAL_OPERATIONS_GROUP, isMutation = false)
 public class ListModelsOperation {
 
 	private final ModelService modelService;
@@ -68,9 +68,10 @@ public class ListModelsOperation {
 	 */
 	public ListModelsResponse rpc(@NonNull @JsonRpcParam("modelNames") Collection<String> modelNames) {
 
-		if (modelNames.size() > dataServicesCoreProperties.getModels().getList().getHardLimit()) {
+		int limit = dataServicesCoreProperties.getModels().getList().getHardLimit();
+		if (modelNames.size() > limit) {
 			throw new InvalidInputException(ExceptionCodes.HARD_LIMIT_EXCEEDED_EXCEPTION_CODE, ExceptionKeys.HARD_LIMIT_EXCEEDED_ERROR_KEY,
-				"Maximum result size limit reached.");
+				"Maximum result size limit reached. Requested [%d] but limit is [%d]".formatted(modelNames.size(), limit));
 		}
 
 		return ListModelsResponse.builder()

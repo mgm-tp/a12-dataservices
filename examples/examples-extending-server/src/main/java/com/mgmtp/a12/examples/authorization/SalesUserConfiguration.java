@@ -38,9 +38,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.mgmtp.a12.uaa.authentication.user.LocalUserLoader;
+
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.dataformat.yaml.YAMLMapper;
 
 /**
  * Sales User Configuration class. This class specifies additional properties of a Sales user.
@@ -55,7 +56,7 @@ public class SalesUserConfiguration {
 	 */
 	public static final String DATASERVICES_EXAMPLE_AUTHORIZATION_ENV = "dataservices-example-authorization_env";
 
-	private final ObjectMapper usersDeserializer = new ObjectMapper(new YAMLFactory());
+	private final ObjectMapper usersDeserializer = YAMLMapper.builder().build();
 
 	/**
 	 * Provides a loader for {@link SalesUser} instances deserialized from YAML resources.
@@ -69,7 +70,7 @@ public class SalesUserConfiguration {
 				try {
 					return usersDeserializer.readValue(resource.getInputStream(), SalesUser.class);
 				} catch (Exception e) {
-					LOGGER.error(String.format("Unable to load user from resource [%s]", resource.getFilename()), e);
+					LOGGER.error("Unable to load user from resource [%s]".formatted(resource.getFilename()), e);
 					return null;
 				}
 			}

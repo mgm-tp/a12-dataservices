@@ -31,11 +31,13 @@
  */
 package com.mgmtp.a12.dataservices.document.operation;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Constants for all DS core operations and operation groups.
  *
  */
-public interface CoreOperationConstants {
+@OnlyForUsage public interface CoreOperationConstants {
 
 	/** Operation identifier for retrieving a single document. */
 	String GET_DOCUMENT_OPERATION = "GET_DOCUMENT";
@@ -109,4 +111,7 @@ public interface CoreOperationConstants {
 
 	/** Operation group identifier for attachment operations. */
 	String ATTACHMENT_OPERATIONS_GROUP = "ATTACHMENT_OPERATIONS";
+
+	/** Operation identifier for checking uniqueness of a value combination. */
+	String CHECK_UNIQUENESS_OPERATION = "CHECK_UNIQUENESS";
 }

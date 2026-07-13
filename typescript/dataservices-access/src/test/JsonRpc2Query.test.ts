@@ -74,10 +74,9 @@ suite("JSON-RPC Query Tests", () => {
 				strictEqual(Query.QueryRoot.isInstance(paramsWithoutPaging), false);
 			});
 
-			// TODO A12S-6532: Fix that targetDocumentModel should be mandatory
 			test("Query Params - Missing Target DocumentModel", () => {
 				const { targetDocumentModel, ...paramsWithoutTargetDocumentModel } = queryParams;
-				strictEqual(Query.QueryRoot.isInstance(paramsWithoutTargetDocumentModel), true);
+				strictEqual(Query.QueryRoot.isInstance(paramsWithoutTargetDocumentModel), false);
 			});
 		});
 
@@ -229,7 +228,6 @@ suite("JSON-RPC Query Tests", () => {
 							);
 						});
 
-						// TODO A12S-6532: Fix that when missing operands it should not be instances
 						test(`Logic Operator (${operator}) - Missing Operands`, () => {
 							strictEqual(
 								expectedInstance.isInstance(andOperatorBase),
@@ -263,6 +261,14 @@ suite("JSON-RPC Query Tests", () => {
 					const { value, ...exactMatchWithoutValue } = exactMatchBase;
 					strictEqual(Query.ExactMatchOperator.isInstance(exactMatchWithoutValue), true);
 				});
+
+				test("Exact Match Operator - With Values Array", () => {
+					const exactMatchWithValues = {
+						...exactMatchBase,
+						values: ["Value1", "Value2"]
+					};
+					strictEqual(Query.ExactMatchOperator.isInstance(exactMatchWithValues), true);
+				});
 			});
 
 			suite("Undefined Match Operator", () => {
@@ -275,7 +281,6 @@ suite("JSON-RPC Query Tests", () => {
 					strictEqual(Query.UndefinedMatchOperator.isInstance(undefinedMatchBase), true);
 				});
 
-				// TODO A12S-6532: Fix that when missing field it should not be instance
 				test("Undefined Match Operator - Missing Field", () => {
 					const { field, ...undefinedMatchWithoutField } = undefinedMatchBase;
 					strictEqual(Query.UndefinedMatchOperator.isInstance(undefinedMatchWithoutField), true);
@@ -296,7 +301,6 @@ suite("JSON-RPC Query Tests", () => {
 					strictEqual(Query.NotOperator.isInstance(notOperatorBase), true);
 				});
 
-				// TODO A12S-6532: Fix that when missing operand it should not be instance
 				test("Not Operator - Missing Operand", () => {
 					const { operand, ...notOperatorWithoutOperand } = notOperatorBase;
 					strictEqual(Query.NotOperator.isInstance(notOperatorWithoutOperand), true);
@@ -364,7 +368,6 @@ suite("JSON-RPC Query Tests", () => {
 							);
 						});
 
-						// TODO A12S-6532: Make this test failing as 'from' and 'to' values are not present
 						test(`Range Operator (${operator}) - Missing From & To`, () => {
 							const { from, to, ...rangeOperatorWithoutFromTo } = rangeOperatorBase;
 							strictEqual(
@@ -373,6 +376,32 @@ suite("JSON-RPC Query Tests", () => {
 								`${operator} operator missing from and to should not be instance`
 							);
 						});
+					});
+				});
+
+				suite(`Date range operator with reverse range`, () => {
+					const rangeOperatorBase = {
+						operator: "date_range",
+						field: "/some/date_range_field",
+						value: "2023-01-01",
+						reverse: true
+					};
+
+					test(`Date Range Operator`, () => {
+						strictEqual(
+							Query.DateRangeOperator.isInstance(rangeOperatorBase),
+							true,
+							`Date Range operator with value should be instance`
+						);
+					});
+
+					test(`Date Range Operator - missing reverse`, () => {
+						const { reverse, ...rangeOperatorWithoutReverse } = rangeOperatorBase;
+						strictEqual(
+							Query.DateRangeOperator.isInstance(rangeOperatorWithoutReverse),
+							true,
+							`Date Range operator without reverse should not be instance`
+						);
 					});
 				});
 			});
@@ -399,7 +428,6 @@ suite("JSON-RPC Query Tests", () => {
 					strictEqual(Query.SimpleSearchOperator.isInstance(simpleSearchWithoutValue), true);
 				});
 
-				// TODO A12S-6532: Fix that when neither 'value' nor 'values' is present object is not instance
 				test("Simple Search Operator - Missing Value & Values", () => {
 					const { value, values, ...simpleSearchWithoutValue } = simpleSearchBase;
 					strictEqual(Query.SimpleSearchOperator.isInstance(simpleSearchWithoutValue), true);
@@ -419,21 +447,18 @@ suite("JSON-RPC Query Tests", () => {
 				strictEqual(Query.Order.isInstance(orderObject), true);
 			});
 
-			// TODO A12S-6532: Fix that invalid direction values should not be instances
 			["ASC", "DESC", "OTHER"].forEach(item => {
 				test(`Order - Direction (${item})`, () => {
 					const orderWithDirection = { ...orderObject, direction: item };
-					const shouldBeInstance = item === "ASC" || item === "DESC" || item === "OTHER";
+					const shouldBeInstance = item === "ASC" || item === "DESC";
 					strictEqual(Query.Order.isInstance(orderWithDirection), shouldBeInstance);
 				});
 			});
 
-			// TODO A12S-6532: Fix that invalid nullHandling values should not be instances
 			["NULLS_FIRST", "NULLS_LAST", "NONE"].forEach(item => {
 				test(`Order - Null Handling (${item})`, () => {
 					const orderWithNullHandling = { ...orderObject, nullHandling: item };
-					const shouldBeInstance =
-						item === "NULLS_FIRST" || item === "NULLS_LAST" || item === "NONE";
+					const shouldBeInstance = item === "NULLS_FIRST" || item === "NULLS_LAST";
 					strictEqual(Query.Order.isInstance(orderWithNullHandling), shouldBeInstance);
 				});
 			});
@@ -448,6 +473,11 @@ suite("JSON-RPC Query Tests", () => {
 				strictEqual(Query.Order.isInstance(orderWithoutDirection), false);
 			});
 
+			test("Order - Invalid Direction", () => {
+				const orderWithInvalidDirection = { ...orderObject, direction: "INVALID" };
+				strictEqual(Query.Order.isInstance(orderWithInvalidDirection), false);
+			});
+
 			test("Order - Missing IgnoreCase", () => {
 				const { ignoreCase, ...orderWithoutIgnoreCase } = orderObject;
 				strictEqual(Query.Order.isInstance(orderWithoutIgnoreCase), false);
@@ -456,6 +486,11 @@ suite("JSON-RPC Query Tests", () => {
 			test("Order - Missing Null Handling", () => {
 				const { nullHandling, ...orderWithoutNullHandling } = orderObject;
 				strictEqual(Query.Order.isInstance(orderWithoutNullHandling), false);
+			});
+
+			test("Order - Invalid Null Handling", () => {
+				const orderWithInvalidNullHandling = { ...orderObject, nullHandling: "INVALID" };
+				strictEqual(Query.Order.isInstance(orderWithInvalidNullHandling), false);
 			});
 		});
 
@@ -543,7 +578,7 @@ suite("JSON-RPC Query Tests", () => {
 					strictEqual(Query.DocumentTreeResult.isInstance(documentTreeResultObject), true);
 				});
 
-				test("Document TreeResult - Core Values", () => {
+				test("Document Tree Result - Core Values", () => {
 					const {
 						relationshipModel,
 						sourceRole,
@@ -565,7 +600,7 @@ suite("JSON-RPC Query Tests", () => {
 
 				test("Document Tree Result - Invalid Type", () => {
 					const documentWithInvalidType = { ...documentTreeResultObject, type: "OTHER" };
-					strictEqual(Query.DocumentTreeResult.isInstance(documentWithInvalidType), true);
+					strictEqual(Query.DocumentTreeResult.isInstance(documentWithInvalidType), false);
 				});
 
 				test("Document Tree Result - Missing Document Reference", () => {

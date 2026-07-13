@@ -36,11 +36,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.mgmtp.a12.uaa.authorization.internal.UserUtils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -72,9 +71,7 @@ public class UaaConnector {
 	}
 
 	public static Optional<UserDetails> getCurrentPrincipal() {
-		return Optional.ofNullable(SecurityContextHolder.getContext())
-			.map(SecurityContext::getAuthentication)
-			.map(Authentication::getPrincipal)
+		return Optional.ofNullable(UserUtils.resolveCurrentUser())
 			.map(UserDetails.class::cast);
 	}
 }

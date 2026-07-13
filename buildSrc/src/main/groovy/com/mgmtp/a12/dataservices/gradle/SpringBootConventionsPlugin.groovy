@@ -35,11 +35,7 @@ package com.mgmtp.a12.dataservices.gradle
 import com.mgmtp.a12.dataservices.gradle.java.JavaConventionsPlugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.api.artifacts.VersionCatalogsExtension
-import org.gradle.api.file.RegularFile
-import org.gradle.api.provider.Provider
-import org.gradle.api.tasks.TaskProvider
 import org.gradle.jvm.tasks.Jar
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 import org.springframework.boot.gradle.tasks.run.BootRun
@@ -63,30 +59,8 @@ class SpringBootConventionsPlugin implements Plugin<Project> {
 			it.workingDir project.rootDir.path
 		}
 
-		TaskProvider<Task> generateBootLaunchScript = project.tasks.register('generateBootLaunchScript') {
-			it.description = 'Generates custom launch script used by BootJar (fat JAR).'
-			Provider<RegularFile> bootLaunchScript = project.layout.buildDirectory.file('scripts/bootLaunchScript.sh')
-			it.outputs.file(bootLaunchScript)
-			it.doLast {
-				def f = bootLaunchScript.get().asFile
-				f.parentFile.mkdirs()
-				f.text = """#!/bin/bash
-# --- Custom Spring Boot fat JAR launcher (preserves caller working directory) ---
-# Load optional JAVA_OPTS from generated file
-JAVA_OPTS='${JavaOptsConstants.HAZELCAST_JVM_ARGUMENTS.join(' ')}'
-# Execute the JAR in-place; \$0 is the fat JAR path, current directory is not changed
-exec java \$JAVA_OPTS -jar "\$0" "\$@"
-"""
-				f.setExecutable(true)
-			}
-		}
-
 		project.tasks.withType(BootJar).named('bootJar').configure {
 			it.archiveClassifier.set 'fatjar'
-			it.dependsOn(generateBootLaunchScript)
-			it.launchScript {
-				it.script = generateBootLaunchScript.get().outputs.files.singleFile
-			}
 		}
 	}
 }

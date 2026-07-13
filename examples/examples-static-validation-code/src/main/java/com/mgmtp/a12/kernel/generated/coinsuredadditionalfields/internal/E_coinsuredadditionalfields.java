@@ -35,8 +35,8 @@ import java.util.*;
 
 import com.mgmtp.a12.kernel.core.rt.a12internal.Pair;
 import com.mgmtp.a12.kernel.core.rt.a12internal.ValidatorException;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.core.*;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.*;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.core.*;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.*;
 
 public class  E_coinsuredadditionalfields implements IDynEnumsIntern {
 	private static final E_coinsuredadditionalfields valueCalcObject = new E_coinsuredadditionalfields();

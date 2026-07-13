@@ -38,24 +38,25 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.mgmtp.a12.uaa.authentication.user.LocalUserLoader;
+
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.dataformat.yaml.YAMLMapper;
 
 /**
  * Insurance User Configuration class. Insurance users are loaded from a YAML file and contain additional properties that are used in ABAC example
  *
  */
 @Configuration
-@Profile({ InsuranceUserConfiguration.DATASERVICES_EXAMPLE_ABAC_ENV })
+@Profile({ InsuranceUserConfiguration.DATASERVICES_EXAMPLE_AUTHORIZATION_UAA_ENV })
 public class InsuranceUserConfiguration {
 	private static final Logger LOGGER = LoggerFactory.getLogger(InsuranceUserConfiguration.class);
 	/**
 	 * Spring profile that activates the ABAC example environment for insurance users.
 	 */
-	public static final String DATASERVICES_EXAMPLE_ABAC_ENV = "dataservices-example-abac_env";
+	public static final String DATASERVICES_EXAMPLE_AUTHORIZATION_UAA_ENV = "dataservices-example-authorization-uaa_env";
 
-	private final ObjectMapper usersDeserializer = new ObjectMapper(new YAMLFactory());
+	private final ObjectMapper usersDeserializer = YAMLMapper.builder().build();
 
 	/**
 	 * Provides a loader for {@link InsuranceUser} instances deserialized from YAML resources.

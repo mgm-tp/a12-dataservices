@@ -57,6 +57,10 @@ import lombok.SneakyThrows;
 
 	@SneakyThrows public void createModel(final String modelPath) {
 		String modelContent = resourceFunctions.loadResource(modelPath);
+		createModelFromJson(modelContent);
+	}
+
+	@SneakyThrows public void createModelFromJson(final String modelContent) {
 		modelService.create(modelContent);
 	}
 
@@ -78,7 +82,7 @@ import lombok.SneakyThrows;
 	}
 
 	@SneakyThrows public void saveCdm(String relativePath, String modelName) {
-		saveCdmInternal(String.format(resourceFunctions.loadResource(relativePath), modelName));
+		saveCdmInternal(resourceFunctions.loadResource(relativePath).formatted(modelName));
 	}
 
 	@SneakyThrows public void saveCdm(String relativePath) {

@@ -34,6 +34,8 @@ package com.mgmtp.a12.dataservices.attachment.internal;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,9 +43,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.htmlunit.util.MimeType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
@@ -71,6 +73,7 @@ import com.mgmtp.a12.dataservices.attachment.persitence.AttachmentPersistenceRes
 import com.mgmtp.a12.dataservices.attachment.persitence.IAttachmentRepository;
 import com.mgmtp.a12.dataservices.attachment.persitence.internal.ThumbnailUtil;
 import com.mgmtp.a12.dataservices.authorization.AttachmentPermissionEvaluator;
+import com.mgmtp.a12.dataservices.common.content.ContentTypeDetector;
 import com.mgmtp.a12.dataservices.authorization.AuthConstants;
 import com.mgmtp.a12.dataservices.authorization.ModelPermissionEvaluator;
 import com.mgmtp.a12.dataservices.common.exception.BaseException;
@@ -108,6 +111,7 @@ public class DefaultAttachmentService implements AttachmentService {
 	private final RetryRegistry attachmentRetryRegistry;
 	private final ThumbnailUrlGenerator thumbnailUrlGenerator;
 	private final QueryService queryService;
+	private final ContentTypeDetector contentTypeDetector;
 
 	@Override
 	public AttachmentHeader createAttachment(@NonNull InputStream is, @NonNull String filename, @NonNull String documentModelName, @NonNull String pathToField,
@@ -116,9 +120,10 @@ public class DefaultAttachmentService implements AttachmentService {
 		return internalCreateAttachment(attachmentHeader, is, documentModelName);
 	}
 
+	// TODO A12S-6792: Shouldn't we remove the whole SME Workspace support from core?
 	/**
 	 * Creates a new attachment with the given ID, input stream, filename, and annotations.
-	 * The content of the attachment will be treated as secured. This method is only for Seed Data.
+	 * The content of the attachment will be treated as secured. This method is only to support SME Workpace handling.
 	 *
 	 * @param attachmentId The unique identifier for the attachment. Cannot be null.
 	 * @param is The input stream containing the attachment data. Cannot be null.
@@ -229,7 +234,7 @@ public class DefaultAttachmentService implements AttachmentService {
 					}
 				},
 				() -> {
-					throw new NotFoundException(ATTACHMENT_NOT_FOUND_ERROR_KEY, String.format("No URL from attachmentId %s could be found.", attachmentId));
+					throw new NotFoundException(ATTACHMENT_NOT_FOUND_ERROR_KEY, "No URL from attachmentId %s could be found.".formatted(attachmentId));
 				});
 	}
 
@@ -265,7 +270,7 @@ public class DefaultAttachmentService implements AttachmentService {
 		try (InputStream thumbnailStream = t.getContent().get()) {
 			String thumbnailId = UUID.randomUUID().toString();
 			AttachmentPersistenceResult result = attachmentRepository.create(thumbnailId, thumbnailStream,
-				thumbnailId, TypeOfTheContent.ATTACHMENT_THUMBNAIL);
+				thumbnailId, TypeOfTheContent.ATTACHMENT_THUMBNAIL, MimeType.IMAGE_PNG);
 			if (ThumbnailType.BIG == type) {
 				attachment.getHeader().setThumbnailBigId(result.getAttachmentId());
 			} else {
@@ -344,8 +349,18 @@ public class DefaultAttachmentService implements AttachmentService {
 		}
 
 		try (InputStream contentStream = attachment.getContent().get()) {
+			final String mimeType;
+			final InputStream streamForCreate;
+			if (dataServicesCoreProperties.getAttachments().getMimeType().getProbeMimeType().isEnabled()) {
+				byte[] bytes = IOUtils.toByteArray(contentStream);
+				mimeType = contentTypeDetector.probeContentType(new ByteArrayInputStream(bytes), attachmentHeader.getFilename());
+				streamForCreate = new ByteArrayInputStream(bytes);
+			} else {
+				mimeType = null;
+				streamForCreate = contentStream;
+			}
 			AttachmentPersistenceResult persistenceResult = attachmentRepository
-				.create(attachmentHeader.getAttachmentId(), contentStream, attachmentHeader.getFilename(), typeOfTheContent);
+				.create(attachmentHeader.getAttachmentId(), streamForCreate, attachmentHeader.getFilename(), typeOfTheContent, mimeType);
 			attachmentHeader.setSize(persistenceResult.getSize());
 			attachmentHeader.setMimeType(persistenceResult.getMimeType());
 			attachmentHeader.setTypeOfTheContent(typeOfTheContent);

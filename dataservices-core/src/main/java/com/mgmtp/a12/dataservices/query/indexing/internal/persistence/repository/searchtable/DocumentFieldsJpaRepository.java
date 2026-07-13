@@ -36,6 +36,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -77,11 +78,11 @@ public interface DocumentFieldsJpaRepository extends JpaRepository<DocumentField
 	@Query("select distinct docRef from DocumentFieldEntity where docRef in :docRefs")
 	List<String> findDocRefsIn(@Param("docRefs") List<String> docRefs);
 
-	@Query(value = "SELECT '%' || element || '%' FROM unnest(tsvector_to_array(to_tsvector('simple', ?1))) AS element", nativeQuery = true)
+	@NativeQuery("SELECT '%' || element || '%' FROM unnest(tsvector_to_array(to_tsvector('simple', ?1))) AS element")
 	List<String> convertInputToSearchTerms(String input);
 
 	@Modifying
-	@Query(value = "TRUNCATE TABLE document_fields", nativeQuery = true)
+	@NativeQuery("TRUNCATE TABLE document_fields")
 	void truncateTable();
 
 }

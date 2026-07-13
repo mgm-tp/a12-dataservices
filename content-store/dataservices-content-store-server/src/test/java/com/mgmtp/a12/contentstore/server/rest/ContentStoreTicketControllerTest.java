@@ -44,7 +44,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mgmtp.a12.contentstore.AbstractSpringContextServerTests;
 import com.mgmtp.a12.contentstore.configuration.ContentStoreProperties;
 import com.mgmtp.a12.contentstore.exception.ExceptionKeys;
@@ -114,9 +114,9 @@ public class ContentStoreTicketControllerTest extends AbstractSpringContextServe
 			).andExpect(status().isBadRequest())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(jsonPath("$.longMessage.key").value(ExceptionKeys.INVALID_INPUT_ERROR_KEY))
-			.andExpect(jsonPath("$.longMessage.default").value(String.format(Constants.INVALID_INPUT_ERROR_PATTEN, invalidDuration)))
+			.andExpect(jsonPath("$.longMessage.default").value(Constants.INVALID_INPUT_ERROR_PATTEN.formatted(invalidDuration)))
 			.andExpect(jsonPath("$.shortMessage.key").value(ExceptionKeys.INVALID_INPUT_ERROR_KEY))
-			.andExpect(jsonPath("$.shortMessage.default").value(String.format(Constants.INVALID_INPUT_ERROR_PATTEN, invalidDuration)))
+			.andExpect(jsonPath("$.shortMessage.default").value(Constants.INVALID_INPUT_ERROR_PATTEN.formatted(invalidDuration)))
 			.andDo(print());
 	}
 }

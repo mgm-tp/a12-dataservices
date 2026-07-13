@@ -39,12 +39,13 @@ import com.mgmtp.a12.dataservices.document.DataServicesDocument;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 import com.mgmtp.a12.model.header.Header;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * Central place to check document related permissions.
  *
  */
-public interface DocumentPermissionEvaluator {
+@OnlyForUsage public interface DocumentPermissionEvaluator {
 	/**
 	 * Check if current user has Document Create permission.
 	 *
@@ -97,6 +98,46 @@ public interface DocumentPermissionEvaluator {
 	 * @throws org.springframework.security.access.AccessDeniedException if user does not have Document Multi Delete permission.
 	 */
 	void checkDocumentMultiDeletePermission(Collection<Header> headers);
+
+	/**
+	 * Check if current user has Document Delete permission for the given model.
+	 * This is a coarse-grained model-level check that does not require a document instance.
+	 * Used as an early authorization gate before business logic (e.g., document lookup).
+	 *
+	 * @param documentModel The document model name.
+	 * @throws AccessDeniedException if user does not have permission.
+	 */
+	void checkDocumentDeletePermissionByModel(String documentModel);
+
+	/**
+	 * Check if current user has Document Update permission for the given model.
+	 * This is a coarse-grained model-level check that does not require a document instance.
+	 * Used as an early authorization gate before business logic (e.g., document lookup).
+	 *
+	 * @param documentModel The document model name.
+	 * @throws AccessDeniedException if user does not have permission.
+	 */
+	void checkDocumentUpdatePermissionByModel(String documentModel);
+
+	/**
+	 * Check if current user has Document Create permission for the given model.
+	 * This is a coarse-grained model-level check that does not require a document instance.
+	 * Used as an early authorization gate before business logic (e.g., document conversion/validation).
+	 *
+	 * @param documentModel The document model name.
+	 * @throws AccessDeniedException if user does not have permission.
+	 */
+	void checkDocumentCreatePermissionByModel(String documentModel);
+
+	/**
+	 * Check if current user has Document Partial Update permission for the given model.
+	 * This is a coarse-grained model-level check that does not require a document instance.
+	 * Used as an early authorization gate before business logic (e.g., document lookup).
+	 *
+	 * @param documentModel The document model name.
+	 * @throws AccessDeniedException if user does not have permission.
+	 */
+	void checkDocumentPartialUpdatePermissionByModel(String documentModel);
 
 	/**
 	 * Check if current user has Export List CDD permission.

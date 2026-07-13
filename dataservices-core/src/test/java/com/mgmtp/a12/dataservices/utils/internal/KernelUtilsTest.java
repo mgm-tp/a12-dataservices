@@ -36,11 +36,69 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.mgmtp.a12.kernel.md.document.apiV2.DocumentPointer;
+
 public class KernelUtilsTest {
 
 	@Test
 	public void splitFieldPath_success() {
 		Assert.assertEquals(KernelUtils.splitFieldPath("/B/A"), List.of("B", "A"));
 		Assert.assertEquals(KernelUtils.splitFieldPath("B/A"), List.of("B", "A"));
+	}
+
+	@Test(enabled = true, description = "lastRepetitionIsWildcard returns true when the last repetition index is 0")
+	public void shouldReturnTrueWhenLastRepetitionIsZero() {
+		Assert.assertTrue(KernelUtils.isLastRepetitionWildcard(new int[] { 1, 0 }));
+		Assert.assertTrue(KernelUtils.isLastRepetitionWildcard(new int[] { 0 }));
+	}
+
+	@Test(enabled = true, description = "lastRepetitionIsWildcard returns false when the last repetition index is non-zero")
+	public void shouldReturnFalseWhenLastRepetitionIsNonZero() {
+		Assert.assertFalse(KernelUtils.isLastRepetitionWildcard(new int[] { 1, 2 }));
+		Assert.assertFalse(KernelUtils.isLastRepetitionWildcard(new int[] { 1 }));
+	}
+
+	@Test(enabled = true, description = "lastRepetitionIsWildcard returns false for null or empty repetitions arrays")
+	public void shouldReturnFalseForWildcardCheckWhenRepetitionsNullOrEmpty() {
+		Assert.assertFalse(KernelUtils.isLastRepetitionWildcard(null));
+		Assert.assertFalse(KernelUtils.isLastRepetitionWildcard(new int[0]));
+	}
+
+	@Test(enabled = true, description = "hasIntermediateWildcard returns true when a non-last repetition index is 0")
+	public void shouldDetectIntermediateWildcardWhenNonLastIndexIsZero() {
+		Assert.assertTrue(KernelUtils.hasIntermediateWildcard(new int[] { 0, 2 }));
+		Assert.assertTrue(KernelUtils.hasIntermediateWildcard(new int[] { 1, 0, 3 }));
+	}
+
+	@Test(enabled = true, description = "hasIntermediateWildcard returns false when only the last repetition index is 0")
+	public void shouldReportNoIntermediateWildcardWhenOnlyLastIsZero() {
+		Assert.assertFalse(KernelUtils.hasIntermediateWildcard(new int[] { 1, 0 }));
+		Assert.assertFalse(KernelUtils.hasIntermediateWildcard(new int[] { 1, 2, 0 }));
+		Assert.assertFalse(KernelUtils.hasIntermediateWildcard(new int[] { 1, 2 }));
+	}
+
+	@Test(enabled = true, description = "hasAnyWildcard returns true when any repetition index (intermediate or last) is 0")
+	public void shouldDetectAnyWildcardWhenAnyIndexIsZero() {
+		Assert.assertTrue(KernelUtils.hasAnyWildcard(new int[] { 1, 0 }));
+		Assert.assertTrue(KernelUtils.hasAnyWildcard(new int[] { 0, 2 }));
+		Assert.assertTrue(KernelUtils.hasAnyWildcard(new int[] { 1, 0, 3 }));
+		Assert.assertTrue(KernelUtils.hasAnyWildcard(new int[] { 0 }));
+	}
+
+	@Test(enabled = true, description = "hasAnyWildcard returns false when no repetition index is 0 or the array is null/empty")
+	public void shouldReportNoWildcardWhenNoIndexIsZero() {
+		Assert.assertFalse(KernelUtils.hasAnyWildcard(new int[] { 1, 2 }));
+		Assert.assertFalse(KernelUtils.hasAnyWildcard(new int[] { 1 }));
+		Assert.assertFalse(KernelUtils.hasAnyWildcard(null));
+		Assert.assertFalse(KernelUtils.hasAnyWildcard(new int[0]));
+	}
+
+	@Test(enabled = true, description = "pointerPreservingWildcard builds a DocumentPointer that retains a trailing wildcard 0 as the last repetition index")
+	public void shouldBuildPointerPreservingWildcardLastIndex() {
+		DocumentPointer pointer = KernelUtils.pointerPreservingWildcard("BusinessPartnerRoot/Attachment", new int[] { 1, 0 });
+		Assert.assertNotNull(pointer);
+		List<Integer> repetitions = pointer.repetitionIndexes();
+		Assert.assertFalse(repetitions.isEmpty());
+		Assert.assertEquals(repetitions.getLast().intValue(), 0);
 	}
 }

@@ -85,7 +85,9 @@ public class DeleteLinkOperation {
 				RelationshipValidationSupport.validateLink(linkToDelete, relationshipLinkSpec.getLinkDescriptor());
 
 				relationshipLinkService.delete(relationshipLinkSpec.getId());
-			} catch (NotFoundException ex) {} // ignored.
+			} catch (NotFoundException ignored) {
+				// ignored.
+			}
 
 			return null;
 		}, CoreOperationConstants.DELETE_LINK_OPERATION);

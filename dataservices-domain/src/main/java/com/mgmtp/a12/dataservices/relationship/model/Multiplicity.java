@@ -31,16 +31,17 @@
  */
 package com.mgmtp.a12.dataservices.relationship.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.io.Serializable;
 
 /**
  * Defines multiplicity constraints for a relationship link.
- * Supports lower and upper bounds and unbounded upper limit.
+ * Supports upper bound and unbounded upper limit.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Data public class Multiplicity implements Serializable {
-	private Integer lowerLimit;
 	private Boolean unbounded;
 	private Integer upperLimit;
 }

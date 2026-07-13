@@ -2,7 +2,7 @@
   "header": {
     "id": "RecursiveBusinessPartnerCDM",
     "modelType": "document",
-    "modelVersion": "28.4.0",
+    "modelVersion": "29.2.0",
     "locales": [
       {
         "code": "en"
@@ -24,13 +24,11 @@
     ],
     "modelReferences": [
       {
-        "alias": "BusinessPartnerSuper",
         "modelType": "document",
         "purpose": "include",
         "reference": "BusinessPartnerSuper"
       },
       {
-        "alias": "Contract",
         "modelType": "document",
         "purpose": "include",
         "reference": "Contract"
@@ -187,7 +185,6 @@
           "name": "BusinessPartnerRoot",
           "Group": {
             "repeatability": 1,
-            "modelAlias": "BusinessPartnerSuper",
             "elements": [
               {
                 "type": "Group",
@@ -779,7 +776,10 @@
                   ]
                 }
               }
-            ]
+            ],
+            "includeConfig": {
+              "reference": "BusinessPartnerSuper"
+            }
           }
         },
         {
@@ -813,7 +813,6 @@
                 "name": "ContractRoot",
                 "Group": {
                   "repeatability": 100,
-                  "modelAlias": "Contract",
                   "elements": [
                     {
                       "type": "Field",
@@ -1939,7 +1938,10 @@
                         ]
                       }
                     }
-                  ]
+                  ],
+                  "includeConfig": {
+                    "reference": "Contract"
+                  }
                 }
               },
               {
@@ -1966,7 +1968,6 @@
                 ],
                 "Group": {
                   "repeatability": 100,
-                  "modelAlias": "Contract",
                   "elements": [
                     {
                       "type": "Field",
@@ -3277,7 +3278,10 @@
                         ]
                       }
                     }
-                  ]
+                  ],
+                  "includeConfig": {
+                    "reference": "Contract"
+                  }
                 }
               },
               {

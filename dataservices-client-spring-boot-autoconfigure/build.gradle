@@ -11,6 +11,7 @@ dependencies {
 	api libs.restServerConnectorSpringBootAutoconfigure
 	api libs.uaaRestClient
 	api libs.uaaRestClientSpringBootAutoconfigure
+	implementation libs.springBootStarterRestClient
 	testImplementation libs.springBootStarterWeb
 	testImplementation libs.springTest
 	testImplementation libs.springBootTest
@@ -22,6 +23,7 @@ dependencies {
 	testImplementation libs.json
 	testImplementation libs.mgmModelApi
 	testImplementation project(':dataservices-test-resources')
+	testRuntimeOnly libs.slf4jJcl
 }
 
 processTestResources {

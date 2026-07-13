@@ -31,10 +31,13 @@
  */
 package com.mgmtp.a12.dataservices.actuator.internal;
 
+import com.mgmtp.a12.dataservices.constants.UserConstants;
 import com.mgmtp.a12.dataservices.server.AbstractSpringContextServerTests;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
@@ -62,6 +65,7 @@ import static org.testng.Assert.assertTrue;
 		"management.endpoint." + CONFIGURATION_ENDPOINT + ".enabled=true",
 		"mgmtp.a12.dataservices.contentstore.storage.contentStorage=DB"
 })
+@WithUserDetails(value = UserConstants.ACTUATOR_USER, setupBefore = TestExecutionEvent.TEST_EXECUTION)
 public class ConfigurationActuatorTest extends AbstractSpringContextServerTests {
 
 	@Autowired private FilterChainProxy springSecurityFilterChain;

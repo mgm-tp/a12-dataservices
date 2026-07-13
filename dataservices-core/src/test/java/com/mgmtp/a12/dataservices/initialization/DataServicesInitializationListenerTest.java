@@ -34,31 +34,33 @@ package com.mgmtp.a12.dataservices.initialization;
 import java.io.IOException;
 
 import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.mgmtp.a12.dataservices.AbstractDataServicesCoreTest;
 import com.mgmtp.a12.dataservices.initialization.events.DataServicesInitializationFinishedEvent;
 import com.mgmtp.a12.dataservices.initialization.internal.DataServicesInitializationService;
 
-import static org.mockito.Mockito.spy;
-
 public class DataServicesInitializationListenerTest extends AbstractDataServicesCoreTest {
 	@Mock private ApplicationContext applicationContext;
 	@Mock private ApplicationEventPublisher applicationEventPublisher;
 	@Mock private DataServicesInitializationService initializationService;
-	@InjectMocks private DataServicesInitializationListener dataServicesInitializationListener =
-		spy(new DataServicesInitializationListener());
+	private DataServicesInitializationListener dataServicesInitializationListener;
 
+	@BeforeMethod
+	public void init() {
+		MockitoAnnotations.openMocks(this);
+		dataServicesInitializationListener =
+			new DataServicesInitializationListener(applicationContext, applicationEventPublisher, initializationService);
+	}
 	@Test void testOnApplicationInitialization() throws IOException {
-		ContextRefreshedEvent contextRefreshedEvent = new ContextRefreshedEvent(applicationContext);
-
-		dataServicesInitializationListener.onApplicationInitialization(contextRefreshedEvent);
+		dataServicesInitializationListener.onApplicationInitialization(new ContextRefreshedEvent(applicationContext));
 
 		Mockito.verify(initializationService, Mockito.times(1)).runInitialization();
 		Mockito.verify(applicationEventPublisher, Mockito.times(1)).publishEvent(ArgumentMatchers.any(DataServicesInitializationFinishedEvent.class));

@@ -43,6 +43,7 @@ import com.mgmtp.a12.dataservices.query.validation.IQueryOperatorValidator;
 import com.mgmtp.a12.dataservices.relationship.model.RelationshipModel;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 import com.mgmtp.a12.kernel.md.model.api.services.IDocumentModelSearchService;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 import lombok.NonNull;
 
@@ -52,7 +53,7 @@ import lombok.NonNull;
  * models and services to enhance performance and ensures access to only the models permitted
  * for the current user.
  */
-public interface QueryContext {
+@OnlyForUsage public interface QueryContext {
 
 	/**
 	 * Get the original query root that was used to create this context. preprocess of the projection might change the query.

@@ -34,6 +34,7 @@ package com.mgmtp.a12.dataservices.migration.internal;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mgmtp.a12.dataservices.migration.ErrorHandling;
 import com.mgmtp.a12.dataservices.migration.MigrationStep;
@@ -44,6 +45,7 @@ import com.mgmtp.a12.dataservices.migration.MigrationTask;
 @Component
 public class ErrorMigrationTask {
 
+	@Transactional
 	@MigrationTask(name = "Error migration task", onFailure = ErrorHandling.CONTINUE)
 	public void migrateData() {
 		throw new RuntimeException("Migration exception in ErrorMigrationTask");

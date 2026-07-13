@@ -32,12 +32,13 @@
 package com.mgmtp.a12.dataservices.query;
 
 import com.mgmtp.a12.dataservices.query.constraint.ILogicOperator;
+import com.mgmtp.a12.model.utils.OnlyForUsage;
 
 /**
  * An interface representing an entity capable of handling constraints during document selection or query execution.
  * Implementing classes should define their specific logic for applying or retrieving the constraints.
  */
-public interface ConstraintAware {
+@OnlyForUsage public interface ConstraintAware {
 	/**
 	 * Constraints applied during selection of the current document.
 	 *

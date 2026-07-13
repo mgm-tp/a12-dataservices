@@ -37,7 +37,7 @@ import java.util.Set;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
 import com.mgmtp.a12.dataservices.exception.query.QueryJsonParsingException;
 import com.mgmtp.a12.dataservices.query.security.QueryAuthorizationService;

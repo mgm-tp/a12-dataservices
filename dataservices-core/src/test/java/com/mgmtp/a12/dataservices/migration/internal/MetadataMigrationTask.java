@@ -34,22 +34,21 @@ package com.mgmtp.a12.dataservices.migration.internal;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mgmtp.a12.dataservices.migration.ErrorHandling;
 import com.mgmtp.a12.dataservices.migration.MigrationStep;
 import com.mgmtp.a12.dataservices.migration.MigrationTask;
 
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.ObjectMapper;
 
 @Slf4j
-@MigrationStep(name = "test metadata", version = "36.0.0", description = "test metadata", author="SuperAuthor")
+@MigrationStep(name = "test metadata", version = "36.0.0", description = "test metadata", author = "SuperAuthor")
 @Order(5)
 @Component
 public class MetadataMigrationTask {
 
 	@MigrationTask(name = "test", runAlways = true, onFailure = ErrorHandling.HALT)
-	public void migrateData(String json) throws JsonProcessingException {
+	public void migrateData(String json) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		if (!objectMapper.readValue(json, Boolean.class)) {
 			throw new RuntimeException("Expected value is true");

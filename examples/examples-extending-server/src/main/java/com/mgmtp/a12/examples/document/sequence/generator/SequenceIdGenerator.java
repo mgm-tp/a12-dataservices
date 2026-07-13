@@ -38,7 +38,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import com.mgmtp.a12.dataservices.constants.SeedDataConstants;
+import com.mgmtp.a12.dataservices.constants.SmeWorkspaceConstants;
 import com.mgmtp.a12.dataservices.document.IDocumentIdGenerator;
 import com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2;
 
@@ -47,13 +47,13 @@ import jakarta.persistence.PersistenceContext;
 
 /**
  * Document ID generator producing sequential IDs from the database sequence `document_seq`.
- * If an ID is already present and not marked with {@link com.mgmtp.a12.dataservices.constants.SeedDataConstants#IGNORED_ID}, the generator respects it.
+ * If an ID is already present and not marked with {@link SmeWorkspaceConstants#IGNORED_ID}, the generator respects it.
  */
 @ConditionalOnProperty(prefix = "com.mgmtp.a12.examples.documents.sequence-id-generator", name = "enabled", havingValue = "true")
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Component public class SequenceIdGenerator implements IDocumentIdGenerator {
 
-	@PersistenceContext private EntityManager entityManager;
+	@PersistenceContext(unitName = "dsPersistenceUnit") private EntityManager entityManager;
 
 	/**
 	 * Generates a document ID using the database sequence when no usable ID is present.
@@ -64,7 +64,7 @@ import jakarta.persistence.PersistenceContext;
 	@Override public Optional<String> generateId(DocumentV2 document) {
 		return Optional.ofNullable(document)
 			.flatMap(DocumentV2::getId)
-			.filter(id -> !SeedDataConstants.IGNORED_ID.equals(id))
+			.filter(id -> !SmeWorkspaceConstants.IGNORED_ID.equals(id))
 			.or(() -> Optional.of(String.valueOf(entityManager.createNativeQuery("SELECT NEXTVAL('document_seq')").getSingleResult())));
 	}
 }

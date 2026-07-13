@@ -76,7 +76,7 @@ public class NumberBGreaterThanZeroCondition implements ICustomConditionFactory 
 
 					return DocumentV2Utils.getFieldInstances(document, "/top/numberB").stream()
 						.reduce((a, b) -> {
-							throw new IntegrityException(ExceptionKeys.DOCUMENT_FIELD_ERROR_KEY, String.format("Ambiguous field %s", "/top/numberB"));
+							throw new IntegrityException(ExceptionKeys.DOCUMENT_FIELD_ERROR_KEY, "Ambiguous field %s".formatted("/top/numberB"));
 						})
 						.map(Map.Entry::getValue)
 						.map(FieldInstanceV2::value)

@@ -33,12 +33,14 @@ package com.mgmtp.a12.dataservices.document;
 
 import java.time.Instant;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Metadata proxy to mirror metadata from {@link com.mgmtp.a12.kernel.md.document.apiV2.immutable.DocumentV2} using Java methods.
  * It's possible to extend this metadata by custom ones.
  * In this case you must provide your own bean of {@link IDataServicesDocumentMetadataExtractor}.
  */
-public interface DataServicesDocumentMetadata {
+@OnlyForUsage public interface DataServicesDocumentMetadata {
 
 	/**
 	 * Returns the document reference of the current document.

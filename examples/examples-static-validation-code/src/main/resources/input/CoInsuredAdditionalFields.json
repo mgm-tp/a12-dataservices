@@ -1,380 +1,380 @@
 {
-	"header": {
-		"id": "CoInsuredAdditionalFields",
-		"modelType": "document",
-		"modelVersion": "28.1.0",
-		"locales": [
-			{
-				"code": "en"
-			},
-			{
-				"code": "en_US"
-			},
-			{
-				"code": "de"
-			}
-		],
-		"labels": [
-			{
-				"locale": "en",
-				"text": "Co-Insured Additional Fields"
-			},
-			{
-				"locale": "de",
-				"text": "Mitversicherte Zusatzfelder"
-			}
-		],
-		"annotations": [
-			{
-				"name": "roles",
-				"value": "admin,guest"
-			}
-		],
-		"modelReferences": []
-	},
-	"content": {
-		"modelInfo": {
-			"name": "CoInsuredAdditionalFields",
-			"immutable": false,
-			"joinedModelsInfo": "CoInsuredAdditionalFields-document-meta-data+Add"
-		},
-		"modelConfig": {
-			"decimalSeparator": ".",
-			"timeZone": "UTC",
-			"conditionLanguage": {
-				"code": "en_US"
-			}
-		},
-		"modelRoot": {
-			"rootGroups": [
-				{
-					"type": "Group",
-					"id": "group_3cab4",
-					"name": "CoInsuredRoot",
-					"Group": {
-						"repeatability": 1,
-						"elements": [
-							{
-								"type": "Field",
-								"id": "field_aa07e",
-								"name": "Name",
-								"Field": {
-									"fieldType": {
-										"type": "StringType"
-									},
-									"label": [
-										{
-											"locale": "en",
-											"text": "Name of Policy Holder"
-										},
-										{
-											"locale": "en_US",
-											"text": "Name of Policy Holder"
-										},
-										{
-											"locale": "de",
-											"text": "Name des Versicherungsnehmers"
-										}
-									]
-								}
-							},
-							{
-								"type": "Field",
-								"id": "field_d5f5f",
-								"name": "ID",
-								"Field": {
-									"fieldType": {
-										"type": "StringType"
-									}
-								}
-							},
-							{
-								"type": "Field",
-								"id": "field_d6580",
-								"name": "Role",
-								"Field": {
-									"fieldType": {
-										"type": "EnumerationType",
-										"EnumerationType": {
-											"values": [
-												{
-													"value": "EXP",
-													"label": [
-														{
-															"locale": "en",
-															"text": "Expert"
-														},
-														{
-															"locale": "en_US",
-															"text": "Third Party Expert"
-														},
-														{
-															"locale": "de",
-															"text": "Experte"
-														}
-													]
-												},
-												{
-													"value": "CON",
-													"label": [
-														{
-															"locale": "en",
-															"text": "Consultant"
-														},
-														{
-															"locale": "en_US",
-															"text": "Chief Consultant Officer"
-														},
-														{
-															"locale": "de",
-															"text": "Berater"
-														}
-													]
-												},
-												{
-													"value": "LAW",
-													"label": [
-														{
-															"locale": "en",
-															"text": "Barrister"
-														},
-														{
-															"locale": "en_US",
-															"text": "Attorney"
-														},
-														{
-															"locale": "de",
-															"text": "Anwalt"
-														}
-													]
-												}
-											]
-										}
-									},
-									"label": [
-										{
-											"locale": "en",
-											"text": "Role of co-insured partner"
-										}
-									]
-								}
-							},
-							{
-								"type": "Computation",
-								"id": "computation_65146",
-								"name": "AddID",
-								"Computation": {
-									"computedFieldRelPath": "../ID",
-									"computationAlternatives": [
-										{
-											"operation": "\"0000-0000-0000-0000\""
-										}
-									],
-									"errorMessage": [
-										{
-											"locale": "en",
-											"text": "error text for computation of AddID"
-										},
-										{
-											"locale": "en_US",
-											"text": "error text for computation of AddID"
-										},
-										{
-											"locale": "de",
-											"text": "error text for computation of AddID"
-										}
-									]
-								}
-							}
-						]
-					}
-				},
-				{
-					"type": "Group",
-					"id": "abc6a6767a60488754aace2accb73824_group_8f4b1",
-					"name": "__meta",
-					"Group": {
-						"repeatability": 1,
-						"label": [
-							{
-								"locale": "en",
-								"text": "Meta"
-							},
-							{
-								"locale": "de",
-								"text": "Meta"
-							}
-						],
-						"usageType": "metadata",
-						"elements": [
-							{
-								"type": "Field",
-								"id": "abc6a6767a60488754aace2accb73824_field_1169c",
-								"name": "docRef",
-								"Field": {
-									"fieldType": {
-										"type": "StringType"
-									},
-									"label": [
-										{
-											"locale": "en",
-											"text": "Document Reference"
-										},
-										{
-											"locale": "de",
-											"text": "Dokumentreferenz"
-										}
-									]
-								}
-							},
-							{
-								"type": "Field",
-								"id": "abc6a6767a60488754aace2accb73824_field_cfb40",
-								"name": "modelReference",
-								"Field": {
-									"fieldType": {
-										"type": "StringType"
-									},
-									"label": [
-										{
-											"locale": "en",
-											"text": "Document Model Reference"
-										},
-										{
-											"locale": "de",
-											"text": "Document Model-Referenz"
-										}
-									]
-								}
-							},
-							{
-								"type": "Field",
-								"id": "abc6a6767a60488754aace2accb73824_field_17e3b",
-								"name": "modelVersion",
-								"Field": {
-									"fieldType": {
-										"type": "StringType"
-									},
-									"label": [
-										{
-											"locale": "en",
-											"text": "Model Version"
-										},
-										{
-											"locale": "de",
-											"text": "Model-Version"
-										}
-									]
-								}
-							},
-							{
-								"type": "Field",
-								"id": "abc6a6767a60488754aace2accb73824_field_cdaf9",
-								"name": "creator",
-								"Field": {
-									"fieldType": {
-										"type": "StringType"
-									},
-									"label": [
-										{
-											"locale": "en",
-											"text": "Creator"
-										},
-										{
-											"locale": "de",
-											"text": "Erstellt von"
-										}
-									]
-								}
-							},
-							{
-								"type": "Field",
-								"id": "abc6a6767a60488754aace2accb73824_field_65672",
-								"name": "createdAt",
-								"Field": {
-									"fieldType": {
-										"type": "DateTimeType",
-										"DateTimeType": {
-											"format": "yyyy-MM-dd'T'HH:mm:ss"
-										}
-									},
-									"label": [
-										{
-											"locale": "en",
-											"text": "Created At"
-										},
-										{
-											"locale": "de",
-											"text": "Erstellt am"
-										}
-									]
-								}
-							},
-							{
-								"type": "Field",
-								"id": "abc6a6767a60488754aace2accb73824_field_1fa32",
-								"name": "modifier",
-								"Field": {
-									"fieldType": {
-										"type": "StringType"
-									},
-									"label": [
-										{
-											"locale": "en",
-											"text": "Modifier"
-										},
-										{
-											"locale": "de",
-											"text": "Bearbeitet von"
-										}
-									]
-								}
-							},
-							{
-								"type": "Field",
-								"id": "abc6a6767a60488754aace2accb73824_field_5cd66",
-								"name": "modifiedAt",
-								"Field": {
-									"fieldType": {
-										"type": "DateTimeType",
-										"DateTimeType": {
-											"format": "yyyy-MM-dd'T'HH:mm:ss"
-										}
-									},
-									"label": [
-										{
-											"locale": "en",
-											"text": "Modified At"
-										},
-										{
-											"locale": "de",
-											"text": "Bearbeitet am"
-										}
-									]
-								}
-							},
-							{
-								"type": "Group",
-								"id": "abc6a6767a60488754aace2accb73824_group_4c9a1",
-								"name": "extensions",
-								"Group": {
-									"repeatability": 1,
-									"label": [
-										{
-											"locale": "en",
-											"text": "Extensions"
-										},
-										{
-											"locale": "de",
-											"text": "Erweiterungen"
-										}
-									]
-								}
-							}
-						]
-					}
-				}
-			]
-		}
-	}
+  "header": {
+    "id": "CoInsuredAdditionalFields",
+    "modelType": "document",
+    "modelVersion": "29.2.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Co-Insured Additional Fields"
+      },
+      {
+        "locale": "de",
+        "text": "Mitversicherte Zusatzfelder"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest"
+      }
+    ],
+    "modelReferences": []
+  },
+  "content": {
+    "modelInfo": {
+      "name": "CoInsuredAdditionalFields",
+      "immutable": false,
+      "joinedModelsInfo": "CoInsuredAdditionalFields-document-meta-data+Add"
+    },
+    "modelConfig": {
+      "decimalSeparator": ".",
+      "timeZone": "UTC",
+      "conditionLanguage": {
+        "code": "en_US"
+      }
+    },
+    "modelRoot": {
+      "rootGroups": [
+        {
+          "type": "Group",
+          "id": "group_3cab4",
+          "name": "CoInsuredRoot",
+          "Group": {
+            "repeatability": 1,
+            "elements": [
+              {
+                "type": "Field",
+                "id": "field_aa07e",
+                "name": "Name",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Name of Policy Holder"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "Name of Policy Holder"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Name des Versicherungsnehmers"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_d5f5f",
+                "name": "ID",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  }
+                }
+              },
+              {
+                "type": "Field",
+                "id": "field_d6580",
+                "name": "Role",
+                "Field": {
+                  "fieldType": {
+                    "type": "EnumerationType",
+                    "EnumerationType": {
+                      "values": [
+                        {
+                          "value": "EXP",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Expert"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Third Party Expert"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Experte"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "CON",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Consultant"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Chief Consultant Officer"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Berater"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "LAW",
+                          "label": [
+                            {
+                              "locale": "en",
+                              "text": "Barrister"
+                            },
+                            {
+                              "locale": "en_US",
+                              "text": "Attorney"
+                            },
+                            {
+                              "locale": "de",
+                              "text": "Anwalt"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Role of co-insured partner"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Computation",
+                "id": "computation_65146",
+                "name": "AddID",
+                "Computation": {
+                  "computedFieldRelPath": "../ID",
+                  "computationAlternatives": [
+                    {
+                      "operation": "\"0000-0000-0000-0000\""
+                    }
+                  ],
+                  "errorMessage": [
+                    {
+                      "locale": "en",
+                      "text": "error text for computation of AddID"
+                    },
+                    {
+                      "locale": "en_US",
+                      "text": "error text for computation of AddID"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "error text for computation of AddID"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "Group",
+          "id": "abc6a6767a60488754aace2accb73824_group_8f4b1",
+          "name": "__meta",
+          "Group": {
+            "repeatability": 1,
+            "label": [
+              {
+                "locale": "en",
+                "text": "Meta"
+              },
+              {
+                "locale": "de",
+                "text": "Meta"
+              }
+            ],
+            "usageType": "metadata",
+            "elements": [
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_1169c",
+                "name": "docRef",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Document Reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Dokumentreferenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_cfb40",
+                "name": "modelReference",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Document Model Reference"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Document Model-Referenz"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_17e3b",
+                "name": "modelVersion",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Model Version"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Model-Version"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_cdaf9",
+                "name": "creator",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Creator"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erstellt von"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_65672",
+                "name": "createdAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Created At"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erstellt am"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_1fa32",
+                "name": "modifier",
+                "Field": {
+                  "fieldType": {
+                    "type": "StringType"
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Modifier"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Bearbeitet von"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Field",
+                "id": "abc6a6767a60488754aace2accb73824_field_5cd66",
+                "name": "modifiedAt",
+                "Field": {
+                  "fieldType": {
+                    "type": "DateTimeType",
+                    "DateTimeType": {
+                      "format": "yyyy-MM-dd'T'HH:mm:ss"
+                    }
+                  },
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Modified At"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Bearbeitet am"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "Group",
+                "id": "abc6a6767a60488754aace2accb73824_group_4c9a1",
+                "name": "extensions",
+                "Group": {
+                  "repeatability": 1,
+                  "label": [
+                    {
+                      "locale": "en",
+                      "text": "Extensions"
+                    },
+                    {
+                      "locale": "de",
+                      "text": "Erweiterungen"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
 }

@@ -61,7 +61,7 @@ import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
 import com.mgmtp.a12.dataservices.constants.PathConstants;
 import com.mgmtp.a12.dataservices.document.DocumentReference;
 import com.mgmtp.a12.dataservices.exception.query.QueryIndexingException;
-import com.mgmtp.a12.dataservices.migration.internal.TransactionHandler;
+import com.mgmtp.a12.dataservices.internal.TransactionHandler;
 import com.mgmtp.a12.dataservices.query.indexing.QueryIndexManager;
 import com.mgmtp.a12.dataservices.query.indexing.internal.DocumentSearchIndexBehaviour;
 import com.mgmtp.a12.dataservices.query.indexing.internal.persistence.entity.searchtable.DocumentFieldEntity;
@@ -88,7 +88,7 @@ import lombok.extern.slf4j.Slf4j;
 	@Autowired private TransactionHandler transactionHandler;
 
 	@Override protected void initializeWithSecurityBypass() throws Exception {
-		modelsFunctions.createModels(PathConstants.DOCUMENT_MODEL_ROOT_DIR + "Contract.json");
+		modelsFunctions.createModels(PathConstants.CONTRACT_DOCUMENT_MODEL_PATH);
 		log.info("Creating {} documents", DOCUMENT_COUNT);
 		StopWatch stopWatch = StopWatch.createStarted();
 		IntStream.rangeClosed(1, DOCUMENT_COUNT)

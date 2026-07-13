@@ -93,7 +93,7 @@ import lombok.RequiredArgsConstructor;
 		try {
 			return QuantityParsers.parseTimeQuantity(durationInput);
 		} catch (MeasurementException ex) {
-			throw new InvalidInputException(ExceptionKeys.INVALID_INPUT_ERROR_KEY, String.format(Constants.INVALID_INPUT_ERROR_PATTEN, durationInput));
+			throw new InvalidInputException(ExceptionKeys.INVALID_INPUT_ERROR_KEY, Constants.INVALID_INPUT_ERROR_PATTEN.formatted(durationInput));
 		}
 	}
 }

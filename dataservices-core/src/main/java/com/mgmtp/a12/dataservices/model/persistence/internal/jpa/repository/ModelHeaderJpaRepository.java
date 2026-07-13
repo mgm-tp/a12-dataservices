@@ -35,7 +35,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.repository.query.Param;
 
 import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.entity.ModelHeaderEntity;
@@ -45,7 +45,7 @@ public interface ModelHeaderJpaRepository extends JpaRepository<ModelHeaderEntit
 
 	List<Header> findByModelType(String modelType);
 
-	@Query(value = "select mh.id from model_headers mh where mh.model_type = :modelType", nativeQuery = true)
+	@NativeQuery("select mh.id from model_headers mh where mh.model_type = :modelType")
 	List<String> findIdsByModelType(@Param("modelType") String modelType);
 
 	List<Header> findAllByModelTypeIn(List<String> modelTypes);

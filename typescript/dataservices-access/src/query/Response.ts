@@ -30,8 +30,9 @@
  * LEGALLY INVALID. SEE THE RESPECTIVE LICENSE TEXT FOR DETAILS.
  */
 import { JsonRpc2Response } from "../json-rpc/index.js";
+import { isNumber, isObject, isString } from "../common/TypeGuardUtils.js";
 
-import type { Query } from "./Query.js";
+import { Query } from "./Query.js";
 
 /**
  * Represents a JSON-RPC 2.0 response for a query.
@@ -83,11 +84,16 @@ export namespace QueryJsonRpc2Response {
 	export function isInstance(object: unknown): object is QueryJsonRpc2Response {
 		return (
 			JsonRpc2Response.ok.isInstance(object) &&
-			!!object.result &&
-			typeof object.result === "object" &&
+			"page" in object.result &&
+			Query.Paging.isInstance(object.result.page) &&
+			"fullSize" in object.result &&
+			isNumber(object.result.fullSize) &&
 			"entries" in object.result &&
 			Array.isArray(object.result.entries) &&
-			typeof object.result.fullSize === "number"
+			"links" in object.result &&
+			Array.isArray(object.result.links) &&
+			"otherResults" in object.result &&
+			isObject(object.result.otherResults)
 		);
 	}
 
@@ -135,6 +141,22 @@ export namespace QueryJsonRpc2Response {
 		readonly document: Document;
 	}
 
+	export namespace BaseEntry {
+		export function isInstance(obj: unknown): obj is BaseEntry {
+			return (
+				isObject(obj) &&
+				"type" in obj &&
+				obj.type === Query.DocumentTreeNodeType.ROOT &&
+				"docRef" in obj &&
+				isString(obj.docRef) &&
+				"documentModelName" in obj &&
+				isString(obj.documentModelName) &&
+				"document" in obj &&
+				isObject(obj.document)
+			);
+		}
+	}
+
 	export type DocumentEntry = BaseEntry<GenericDocument>;
 	export type AggregationEntry = BaseEntry<AggregationResult>;
 	export type AggregationResult = [unknown, ...number[]];
@@ -154,6 +176,37 @@ export namespace QueryJsonRpc2Response {
 		readonly sourceDocRef: string;
 		readonly targetRole: string;
 		readonly targetDocRef: string;
+	}
+
+	export namespace Link {
+		export function isInstance(obj: unknown): obj is Link {
+			return (
+				isObject(obj) &&
+				"type" in obj &&
+				(obj.type === Query.DocumentTreeNodeType.LINK ||
+					obj.type === Query.DocumentTreeNodeType.CHILD) &&
+				"documentModelName" in obj &&
+				isString(obj.documentModelName) &&
+				"docRef" in obj &&
+				isString(obj.docRef) &&
+				"document" in obj &&
+				isObject(obj.document) &&
+				"relationshipModel" in obj &&
+				isString(obj.relationshipModel) &&
+				"linkId" in obj &&
+				isString(obj.linkId) &&
+				"depth" in obj &&
+				isNumber(obj.depth) &&
+				"sourceRole" in obj &&
+				isString(obj.sourceRole) &&
+				"sourceDocRef" in obj &&
+				isString(obj.sourceDocRef) &&
+				"targetRole" in obj &&
+				isString(obj.targetRole) &&
+				"targetDocRef" in obj &&
+				isString(obj.targetDocRef)
+			);
+		}
 	}
 
 	/**

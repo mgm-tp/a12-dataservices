@@ -32,8 +32,6 @@
 package com.mgmtp.a12.kernel.generated.contract.internal;
 
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -48,28 +46,28 @@ import com.mgmtp.a12.kernel.core.rt.a12internal.meta.IMetaModel;
 import com.mgmtp.a12.kernel.core.rt.a12internal.utils.IMetaKeys;
 import com.mgmtp.a12.kernel.core.rt.a12internal.validation.IValidator;
 import com.mgmtp.a12.kernel.core.rt.internal.utils.IExtmpMetaKeysBase;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.core.IDynEnumsIntern;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.core.IMetaDataValidierung;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.formatdef.*;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.meta.*;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.sorter.SortOrder;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.meta.util.MapBuilder;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.IMetaKeysInternal;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.Constants;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.PresentationInformationValues;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.VersionCompatibilityCheck;
-import com.mgmtp.a12.kernel.core.rt._30_8.internal.util.TrieNode;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.core.IDynEnumsIntern;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.core.IMetaDataValidierung;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.formatdef.*;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.meta.*;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.sorter.SortOrder;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.meta.util.MapBuilder;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.IMetaKeysInternal;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.Constants;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.PresentationInformationValues;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.VersionCompatibilityCheck;
+import com.mgmtp.a12.kernel.core.rt._31_1.internal.util.TrieNode;
 public class Meta_contract implements IMetaModel, IMetaEntityInternal {
 
 	// Don't remove 'new String(..)' to prevent constant inlining (at compile-time).
-	private static final String RUNTIME_VERSION = new String("30.8");
+	private static final String RUNTIME_VERSION = new String("31.1");
 
     private final MetaModelImpl meta;
     private Meta_Felder_contract metaFelder = new Meta_Felder_contract();
     private Meta_Regel_contract metaRegeln = new Meta_Regel_contract();
-    private final List<Locale> unterstuetzteSprachen = Arrays.asList( new Locale("en"), Locale.US, new Locale("de") );
+    private final List<Locale> unterstuetzteSprachen = Arrays.asList( Locale.of("en"), Locale.US, Locale.of("de") );
 
-    private static final Map<Locale, PresentationInformationValues> DEFAULT_PRESENTATION_INFO = new MapBuilder<Locale, PresentationInformationValues>().put(new Locale("de"), new PresentationInformationValues(".", ",", "-", "JMT", PresentationInformation.FALSE, "~", "dd.MM.yyyy HH:mm", "HH:mm")).put(new Locale("en"), new PresentationInformationValues(".", ",", "-", "JMT", PresentationInformation.FALSE, "~", "MM/dd/yyyy HH:mm", "HH:mm")).put(Locale.US, new PresentationInformationValues(".", ",", "-", "JMT", PresentationInformation.FALSE, "~", "yyyy-MM-dd HH:mm", "HH:mm")).build();
+    private static final Map<Locale, PresentationInformationValues> DEFAULT_PRESENTATION_INFO = new MapBuilder<Locale, PresentationInformationValues>().put(Locale.of("de"), new PresentationInformationValues(".", ",", "-", "JMT", PresentationInformation.FALSE, "~", "dd.MM.yyyy HH:mm", "HH:mm")).put(Locale.of("en"), new PresentationInformationValues(".", ",", "-", "JMT", PresentationInformation.FALSE, "~", "MM/dd/yyyy HH:mm", "HH:mm")).put(Locale.US, new PresentationInformationValues(".", ",", "-", "JMT", PresentationInformation.FALSE, "~", "yyyy-MM-dd HH:mm", "HH:mm")).build();
 
 	public static final int[] LEGAL_CHARACTERS_START = null;
 	public static final int[] LEGAL_CHARACTERS_END = null;
@@ -100,31 +98,28 @@ public class Meta_contract implements IMetaModel, IMetaEntityInternal {
 
 	private static void initContainer_0(Container_t[] result){
 	     result[0] = new Container_t("/ContractRoot", Long.valueOf(1), new String[] {}, new MapBuilder<String, Object>().build(), Set.of());
-	     result[1] = new Container_t("/ContractRoot/ContractDates", Long.valueOf(1), new String[] {}, new MapBuilder<String, Object>().build(), Set.of());
-	     result[2] = new Container_t("/ContractRoot/ChangeLog", Long.valueOf(10000), new String[] {}, new MapBuilder<String, Object>().build(), Set.of());
-	     result[3] = new Container_t("/ContractRoot/ChangeLog/Changes", Long.valueOf(99), new String[] {}, new MapBuilder<String, Object>().build(), Set.of());
-	     result[4] = new Container_t("/ContractRoot/ChangeLog/Changes/SubChanges", Long.valueOf(99), new String[] {}, new MapBuilder<String, Object>().build(), Set.of());
-	     result[5] = new Container_t("/__meta", Long.valueOf(1), new String[] {}, new MapBuilder<String, Object>().build(), Set.of());
-	     result[6] = new Container_t("/__meta/extensions", Long.valueOf(1), new String[] {}, new MapBuilder<String, Object>().build(), Set.of());
+	     result[1] = new Container_t("/ContractRoot/Car", Long.valueOf(1), new String[] {}, new MapBuilder<String, Object>().build(), Set.of());
+	     result[2] = new Container_t("/__meta", Long.valueOf(1), new String[] {}, new MapBuilder<String, Object>().build(), Set.of());
+	     result[3] = new Container_t("/__meta/extensions", Long.valueOf(1), new String[] {}, new MapBuilder<String, Object>().build(), Set.of());
 	}
 
 
 	static Container_t[] initContainer() {
-		Container_t[] result = new Container_t[7];
+		Container_t[] result = new Container_t[4];
 		initContainer_0(result);
 
 		return result;
 	};
 
 	private Model_t da = new Model_t (
-		"28.4.0", //Produkt-Version
+		"29.4.0", //Produkt-Version
 	    '.', //dezimaltrenner
-		Arrays.asList( new Locale("en"), Locale.US, new Locale("de") ), // unterstuetzte Sprachen
+		Arrays.asList( Locale.of("en"), Locale.US, Locale.of("de") ), // unterstuetzte Sprachen
 		MetaDataHelper.createSetOfStrings(), // Namen der Applikationsbedingungen
 		MetaDataHelper.createSetOfStrings(), // Names of custom field types
 		null,
 	    // additional Values:
-	    new MapBuilder<String, Object>().put("BaseYear", null).put("TimeZone", "UTC").put("ModelId", "Contract").put("Annotation", new MapBuilder<String, Object>().put("roles", "admin,guest,ModelRead").build()).build(),
+	    new MapBuilder<String, Object>().put("BaseYear", null).put("TimeZone", "UTC").put("ModelId", "ContractAutomotive").put("Annotation", new MapBuilder<String, Object>().put("roles", "admin").put("superTypes", "Contract").build()).build(),
 	    Set.of("TimeZone", "BaseYear", "ModelId")
 		);
 

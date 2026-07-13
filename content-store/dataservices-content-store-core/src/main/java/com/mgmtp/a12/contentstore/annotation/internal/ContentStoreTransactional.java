@@ -55,7 +55,7 @@ public @interface ContentStoreTransactional {
 	 * @see #transactionManager
 	 */
 	@AliasFor(annotation = Transactional.class, attribute = "transactionManager")
-	String value() default "contentstoreTransactionManager";
+	String value() default "csTransactionManager";
 
 	/**
 	 * A *qualifier* value for the specified transaction.
@@ -72,7 +72,7 @@ public @interface ContentStoreTransactional {
 	 * @since 4.2
 	 */
 	@AliasFor(annotation = Transactional.class, attribute = "value")
-	String transactionManager() default "contentstoreTransactionManager";
+	String transactionManager() default "csTransactionManager";
 
 	/**
 	 * Defines zero (0) or more transaction labels.

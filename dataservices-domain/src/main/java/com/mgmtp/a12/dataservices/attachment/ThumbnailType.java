@@ -51,14 +51,5 @@ public enum ThumbnailType {
 	ThumbnailType(String nameSuffix) {
 		this.nameSuffix = nameSuffix;
 	}
-
-	/**
-	 * @deprecated This is not used anymore and will be removed in the next breaking release.
-	 */
-	@Deprecated(since = "38.1.0", forRemoval = true)
-	public String getNameSuffix() {
-		return nameSuffix;
-	}
-
 }
 

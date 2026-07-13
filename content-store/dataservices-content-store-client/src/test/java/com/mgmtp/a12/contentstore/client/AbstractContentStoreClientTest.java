@@ -40,9 +40,6 @@ import org.mockserver.integration.ClientAndServer;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.mgmtp.a12.connector.rest.RestDeleteConnector;
 import com.mgmtp.a12.connector.rest.RestGetConnector;
 import com.mgmtp.a12.connector.rest.RestPostConnector;
@@ -53,6 +50,9 @@ import com.mgmtp.a12.contentstore.client.content.ContentStorePrivateClient;
 import com.mgmtp.a12.contentstore.client.content.ContentStorePublicClient;
 import com.mgmtp.a12.contentstore.client.content.ContentStoreTicketClient;
 
+import tools.jackson.databind.ObjectWriter;
+import tools.jackson.databind.json.JsonMapper;
+
 import static com.mgmtp.a12.contentstore.client.constants.Constants.PERSISTENT_TYPE_PUBLIC;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 
@@ -62,15 +62,12 @@ public abstract class AbstractContentStoreClientTest {
 	public String persistentType;
 	public String contentUpload;
 
-	public ObjectWriter objectWriter = new ObjectMapper()
-		.registerModule(new Jdk8Module())
-		.writer().withDefaultPrettyPrinter();
+	public ObjectWriter objectWriter = JsonMapper.builder().build().writer().withDefaultPrettyPrinter();
 
 	public ClientAndServer mockServer;
 	public ContentStorePrivateClient contentStorePrivateClient;
 	public ContentStorePublicClient contentStorePublicClient;
 	public ContentStoreTicketClient contentStoreTicketClient;
-
 
 	public RestServerConnectorFactory connectorFactory;
 	public RestGetConnector getConnector;
@@ -103,8 +100,6 @@ public abstract class AbstractContentStoreClientTest {
 	@AfterClass public void afterClass() {
 		mockServer.stop();
 	}
-
-
 
 	public RestServerConnectorFactory createServerConnectorFactory() {
 		return RestServerConnectorFactoryBuilder

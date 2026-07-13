@@ -48,7 +48,6 @@ import org.mockserver.model.Parameter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mgmtp.a12.contentstore.ContentPersistenceResult;
 import com.mgmtp.a12.contentstore.DownloadUrlResponse;
 import com.mgmtp.a12.contentstore.client.AbstractContentStoreClientTest;
@@ -84,7 +83,7 @@ public class ContentStorePrivateClientTest extends AbstractContentStoreClientTes
 		Assert.assertEquals(mockedResponse.getUrl(), response.getUrl());
 	}
 
-	@Test public void testUploadContent_shouldSuccess() throws JsonProcessingException {
+	@Test public void testUploadContent_shouldSuccess() {
 		InputStream inputStream = new ByteArrayInputStream(contentUpload.getBytes());
 		String id = UUID.randomUUID().toString();
 		ContentPersistenceResult mockedResponse = getContentPersistenceResponse();
@@ -95,22 +94,23 @@ public class ContentStorePrivateClientTest extends AbstractContentStoreClientTes
 
 		assertUploadResponse(response, mockedResponse);
 	}
-	@Test(expectedExceptions = {NullPointerException.class}, expectedExceptionsMessageRegExp = "content is marked non-null but is null")
+
+	@Test(expectedExceptions = { NullPointerException.class }, expectedExceptionsMessageRegExp = "content is marked non-null but is null")
 	public void testUploadContent_contentIsNull_shouldThrowException() {
 		contentStorePrivateClient.uploadContent(null, UUID.randomUUID().toString(), PERSISTENT_TYPE_PUBLIC, null, null);
 	}
 
-	@Test(expectedExceptions = {NullPointerException.class}, expectedExceptionsMessageRegExp = "contentId is marked non-null but is null")
+	@Test(expectedExceptions = { NullPointerException.class }, expectedExceptionsMessageRegExp = "contentId is marked non-null but is null")
 	public void testUploadContent_idIsNull_shouldThrowException() {
 		contentStorePrivateClient.uploadContent(new ByteArrayInputStream(contentUpload.getBytes()), null, PERSISTENT_TYPE_PUBLIC, null, null);
 	}
 
-	@Test public void testUploadContentWithFilename_shouldSuccess() throws JsonProcessingException {
+	@Test public void testUploadContentWithFilename_shouldSuccess() {
 		String id = UUID.randomUUID().toString();
 		InputStream inputStream = new ByteArrayInputStream(contentUpload.getBytes());
 		ContentPersistenceResult mockedResponse = getContentPersistenceResponse();
 
-		String fileName = RandomStringUtils.randomAlphabetic(10);
+		String fileName = RandomStringUtils.insecure().nextAlphabetic(10);
 		Map<String, String> params = Map.of(FILENAME_PARAM, fileName);
 		mockApiUpload(id, mockedResponse, params);
 
@@ -119,8 +119,8 @@ public class ContentStorePrivateClientTest extends AbstractContentStoreClientTes
 		assertUploadResponse(responseForFilename, mockedResponse);
 	}
 
-	@Test public void testGetDownloadUrl_shouldSuccess() throws JsonProcessingException {
-		String url = RandomStringUtils.randomAlphabetic(50);
+	@Test public void testGetDownloadUrl_shouldSuccess() {
+		String url = RandomStringUtils.insecure().nextAlphabetic(50);
 		mockApiGetDownloadUrl(url);
 
 		try (MockedStatic<UrlUtils> urlUtilsMockedStatic = Mockito.mockStatic(UrlUtils.class)) {
@@ -149,12 +149,12 @@ public class ContentStorePrivateClientTest extends AbstractContentStoreClientTes
 			);
 	}
 
-	@Test public void testUploadContentWithFilenameAndMineType_shouldSuccess() throws JsonProcessingException {
+	@Test public void testUploadContentWithFilenameAndMineType_shouldSuccess() {
 		String id = UUID.randomUUID().toString();
 		InputStream inputStream = new ByteArrayInputStream(contentUpload.getBytes());
 		ContentPersistenceResult mockedResponse = getContentPersistenceResponse();
-		String fileName = RandomStringUtils.randomAlphabetic(10);
-		String mineType = RandomStringUtils.randomAlphabetic(10);
+		String fileName = RandomStringUtils.insecure().nextAlphabetic(10);
+		String mineType = RandomStringUtils.insecure().nextAlphabetic(10);
 		Map<String, String> params = Map.of(FILENAME_PARAM, fileName, MIME_TYPE_PARAM, mineType);
 
 		mockApiUpload(id, mockedResponse, params);
@@ -164,7 +164,7 @@ public class ContentStorePrivateClientTest extends AbstractContentStoreClientTes
 		assertUploadResponse(response, mockedResponse);
 	}
 
-	private void mockApiGetDownloadUrl(String url) throws JsonProcessingException {
+	private void mockApiGetDownloadUrl(String url) {
 		DownloadUrlResponse response = new DownloadUrlResponse();
 		response.setUrl(url);
 
@@ -184,7 +184,7 @@ public class ContentStorePrivateClientTest extends AbstractContentStoreClientTes
 			);
 	}
 
-	public void mockApiUpload(String id, ContentPersistenceResult response, Map<String, String> queryParams) throws JsonProcessingException {
+	public void mockApiUpload(String id, ContentPersistenceResult response, Map<String, String> queryParams) {
 		String jsonResponse = objectWriter.writeValueAsString(response);
 
 		HttpResponse httpResponse = response()
@@ -216,8 +216,8 @@ public class ContentStorePrivateClientTest extends AbstractContentStoreClientTes
 	private ContentPersistenceResult getContentPersistenceResponse() {
 		ContentPersistenceResult mockedResponse = new ContentPersistenceResult();
 		mockedResponse.setContentId(UUID.randomUUID().toString());
-		mockedResponse.setContentType(RandomStringUtils.randomAlphabetic(10));
-		mockedResponse.setUrl(Optional.of(RandomStringUtils.randomAlphabetic(50)));
+		mockedResponse.setContentType(RandomStringUtils.insecure().nextAlphabetic(10));
+		mockedResponse.setUrl(Optional.of(RandomStringUtils.insecure().nextAlphabetic(50)));
 		mockedResponse.setSize(1000);
 		return mockedResponse;
 	}

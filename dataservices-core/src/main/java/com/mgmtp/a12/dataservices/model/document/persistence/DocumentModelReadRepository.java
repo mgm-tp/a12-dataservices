@@ -31,9 +31,11 @@
  */
 package com.mgmtp.a12.dataservices.model.document.persistence;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.repository.ModelHeaderJpaRepository;
+import com.mgmtp.a12.dataservices.model.persistence.internal.jpa.repository.ModelJpaRepository;
 import com.mgmtp.a12.dataservices.utils.internal.DocumentModelUtils;
 import com.mgmtp.a12.kernel.md.model.api.IDocumentModel;
 import com.mgmtp.a12.model.header.Header;
@@ -46,7 +48,11 @@ import lombok.NonNull;
  */
 @Component public class DocumentModelReadRepository extends AbstractDocumentModelReadRepository<IDocumentModel> {
 
-	@Autowired private DocumentModelUtils documentModelUtils;
+	protected DocumentModelReadRepository(ModelJpaRepository modelJpaRepository,
+		ModelHeaderJpaRepository modelHeaderJpaRepository,
+		ApplicationEventPublisher eventPublisher, DocumentModelUtils documentModelUtils) {
+		super(modelJpaRepository, modelHeaderJpaRepository, eventPublisher, documentModelUtils);
+	}
 
 	@Override protected IDocumentModel buildModelFromHeaderAndContent(@NonNull Header header, @NonNull String modelContent) {
 		return documentModelUtils.deserializeDocumentModel(header.getId(), modelContent);

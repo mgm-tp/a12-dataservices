@@ -31,10 +31,12 @@
  */
 package com.mgmtp.a12.contentstore.server.rest;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 /**
  * Constants used for HTTP endpoints of the content store.
  */
-public interface RestConstants {
+@OnlyForUsage public interface RestConstants {
 
 	/** Request parameter name for a content identifier. */
 	String CONTENT_ID_PARAM = "contentId";

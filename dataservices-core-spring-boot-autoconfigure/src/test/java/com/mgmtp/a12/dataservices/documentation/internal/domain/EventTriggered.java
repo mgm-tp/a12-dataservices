@@ -48,7 +48,7 @@ public class EventTriggered extends AbstractLoggedElement {
 	@Getter private Object event;
 
 	public EventTriggered(Object event, List<StackTraceElement> callHistory, LoggedEventDirection direction) throws IntrospectionException {
-		super(LoggedEventType.EVENT, tidyUpId("event_" + event.getClass().getName()), String.format("**%s**", event.getClass().getSimpleName()), Instant.now(),
+		super(LoggedEventType.EVENT, tidyUpId("event_" + event.getClass().getName()), "**%s**".formatted(event.getClass().getSimpleName()), Instant.now(),
 			direction, callHistory);
 		this.event = event;
 		this.setProperties(Arrays.stream(Introspector.getBeanInfo(event.getClass()).getPropertyDescriptors())

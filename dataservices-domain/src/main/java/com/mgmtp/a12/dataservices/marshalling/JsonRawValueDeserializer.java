@@ -33,16 +33,16 @@ package com.mgmtp.a12.dataservices.marshalling;
 
 import java.io.IOException;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
 
 /**
  * Deserializes any JSON value into its raw string representation.
- * The raw value preserves JSON formatting as produced by {@link com.fasterxml.jackson.databind.JsonNode#toString()}.
+ * The raw value preserves JSON formatting as produced by {@link tools.jackson.databind.JsonNode#toString()}.
  */
-public class JsonRawValueDeserializer extends JsonDeserializer<String> {
-	
+public class JsonRawValueDeserializer extends ValueDeserializer<String> {
+
 	/**
 	 * Deserializes the current JSON token into a raw string.
 	 *
@@ -51,8 +51,8 @@ public class JsonRawValueDeserializer extends JsonDeserializer<String> {
 	 * @return the raw JSON string representation of the value.
 	 * @throws IOException if reading from the parser fails.
 	 */
-	@Override public String deserialize(JsonParser parser, DeserializationContext deserializationContext) throws IOException {
-		return parser.getCodec().readTree(parser).toString();
+	@Override public String deserialize(JsonParser parser, DeserializationContext deserializationContext) {
+		return parser.getValueAsString();
 	}
 
 }

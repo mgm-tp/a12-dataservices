@@ -1,0 +1,19 @@
+plugins {
+	id 'com.mgmtp.a12.dataservices.java-conventions'
+}
+
+dependencies {
+	api project(':dataservices-modelgraph-api')
+	//TODO A12S-6822: move ModelUtils away from common-lib and drop this dependency
+	api project(':dataservices-common:dataservices-common-lib')
+
+	implementation libs.commonsLang3
+	implementation libs.jacksonDatabind
+	implementation libs.jacksonAnnotations
+
+	testImplementation libs.testng
+	testImplementation libs.mockitoCore
+	testImplementation libs.mockitoTestNG
+}
+
+description = 'Common library for model graph generation, providing infrastructure-agnostic implementations'

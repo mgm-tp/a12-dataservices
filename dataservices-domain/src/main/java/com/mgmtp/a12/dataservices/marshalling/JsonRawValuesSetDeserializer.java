@@ -33,26 +33,24 @@ package com.mgmtp.a12.dataservices.marshalling;
 
 import java.io.IOException;
 import java.util.Set;
-import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mgmtp.a12.dataservices.common.exception.InvalidInputException;
 import com.mgmtp.a12.dataservices.exception.ExceptionKeys;
+
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.TreeNode;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.node.ArrayNode;
 
 /**
  * Deserializes a JSON array into a set of raw JSON element strings.
  * Each array element is converted to its `toString()` JSON representation and collected into a {@link Set}.
  */
-public class JsonRawValuesSetDeserializer extends JsonDeserializer<Set<String>> {
+public class JsonRawValuesSetDeserializer extends ValueDeserializer<Set<String>> {
 
 	/**
 	 * Deserializes the current JSON token as a set of raw JSON strings.
@@ -63,20 +61,20 @@ public class JsonRawValuesSetDeserializer extends JsonDeserializer<Set<String>> 
 	 * @throws IOException if reading from the parser fails.
 	 * @throws com.mgmtp.a12.dataservices.common.exception.InvalidInputException if the current token is not an array.
 	 */
-	@Override public Set<String> deserialize(JsonParser parser, DeserializationContext deserializationContext) throws IOException {
-		TreeNode treeNode = parser.getCodec().readTree(parser);
+	@Override public Set<String> deserialize(JsonParser parser, DeserializationContext deserializationContext) {
+		TreeNode treeNode = parser.readValueAsTree();
 		if (treeNode.isArray()) {
 			return stream((ArrayNode) treeNode)
 				.map(JsonNode::toString)
 				.collect(Collectors.toSet());
 		} else {
-			throw new InvalidInputException(ExceptionKeys.DOCUMENT_INTEGRITY_ERROR_KEY, String.format("Not a JSON array: %s", treeNode.toString()))
+			throw new InvalidInputException(ExceptionKeys.DOCUMENT_INTEGRITY_ERROR_KEY, "Not a JSON array: %s".formatted(treeNode.toString()))
 				.withAnonymityMessage("Deserialization of JSON array failed.");
 		}
 	}
 
 	private static Stream<JsonNode> stream(ArrayNode treeNode) {
-		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(treeNode.elements(), Spliterator.ORDERED), false);
+		return treeNode.elements().stream();
 	}
 
 }

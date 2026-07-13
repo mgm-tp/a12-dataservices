@@ -37,7 +37,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mgmtp.a12.dataservices.constants.DocumentModelConstants;
 import com.mgmtp.a12.dataservices.constants.PathConstants;
 import com.mgmtp.a12.dataservices.constants.RelationshipModelConstants;
@@ -55,7 +54,7 @@ public class RpcOrderedLinkIT extends AbstractLinkIT {
 
 	@Autowired protected RelationshipLinkJpaRepository relationshipLinkJpaRepository;
 
-	protected void assertQueryIsOrdered(String... expectedOrder) throws JsonProcessingException {
+	protected void assertQueryIsOrdered(String... expectedOrder) {
 		QueryRoot queryLink = constructQueryLink(DocumentModelConstants.BUSINESS_PARTNER_DOCUMENT_MODEL, partner1DocRef, RoleConstants.CONTRACT_ROLE);
 		PagedResultSet<DocumentTreeResult> result = queryOperation.rpc(queryLink);
 		Assert.assertEquals(result.getFullSize(), expectedOrder.length);
@@ -66,16 +65,16 @@ public class RpcOrderedLinkIT extends AbstractLinkIT {
 		for (int i = 0; i < expectedOrder.length; i++) {
 			String expected = expectedOrder[i];
 			String actual = links.get(i).getLinkId();
-			Assert.assertEquals(actual, expected, String.format("On position #%d there is", i));
+			Assert.assertEquals(actual, expected, "On position #%d there is".formatted(i));
 		}
 	}
 
 	protected String addLinkWithPositionAndPredecessor(DocumentReference secondDocRef, String position, String predecessorLink) throws IOException {
 		String TEMPLATE = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "add/add_link_with_position.json");
 		String request =
-			String.format(TEMPLATE, RoleConstants.PARTNER_ROLE, partner1DocRef, RoleConstants.CONTRACT_ROLE, secondDocRef, predecessorLink,
+			TEMPLATE.formatted(RoleConstants.PARTNER_ROLE, partner1DocRef, RoleConstants.CONTRACT_ROLE, secondDocRef, predecessorLink,
 				position);
-		JsonRpc2Response rpcResponse = sendRpcRequest(request).get(0);
+		JsonRpc2Response rpcResponse = sendRpcRequest(request).getFirst();
 		return (convertResponse(rpcResponse.getResult().toString(), RelationshipLinkSpec.class)).getId();
 	}
 
@@ -83,26 +82,26 @@ public class RpcOrderedLinkIT extends AbstractLinkIT {
 		throws IOException {
 		String template = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "templates/relink_document_template_with_position.json");
 		String request =
-			String.format(template, RoleConstants.PARTNER_ROLE, partner1DocRef, RoleConstants.CONTRACT_ROLE, campaignDocRef, predecessorLink, position,
+			template.formatted(RoleConstants.PARTNER_ROLE, partner1DocRef, RoleConstants.CONTRACT_ROLE, campaignDocRef, predecessorLink, position,
 				linkRef);
-		JsonRpc2Response rpcResponse = sendRpcRequest(request).get(0);
+		JsonRpc2Response rpcResponse = sendRpcRequest(request).getFirst();
 		return (convertResponse(rpcResponse.getResult().toString(), RelationshipLinkSpec.class)).getId();
 	}
 
 	protected String addLinkWithoutPositionNorPredecessor(DocumentReference secondDocRef) throws IOException {
 		String TEMPLATE = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "add/add_link_head.json");
-		String request = String.format(TEMPLATE, RoleConstants.PARTNER_ROLE, partner1DocRef, RoleConstants.CONTRACT_ROLE, secondDocRef, "");
-		JsonRpc2Response rpcResponse = sendRpcRequest(request).get(0);
+		String request = TEMPLATE.formatted(RoleConstants.PARTNER_ROLE, partner1DocRef, RoleConstants.CONTRACT_ROLE, secondDocRef, "");
+		JsonRpc2Response rpcResponse = sendRpcRequest(request).getFirst();
 		return (convertResponse(rpcResponse.getResult().toString(), RelationshipLinkSpec.class)).getId();
 	}
 
 	protected String relinkWithoutPositionNorPredecessor(DocumentReference secondDocRef, String linkRef) throws IOException {
 		String TEMPLATE = loadResourceFromClasspathAsString(PathConstants.RPC_PATH + "templates/relink_document_template.json");
 		String request =
-			String.format(TEMPLATE, RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL, RelationshipModelConstants.RoleConstants.PARTNER_ROLE,
+			TEMPLATE.formatted(RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL, RelationshipModelConstants.RoleConstants.PARTNER_ROLE,
 				partner1DocRef,
 				RelationshipModelConstants.RoleConstants.CONTRACT_ROLE, secondDocRef, "", linkRef);
-		JsonRpc2Response rpcResponse = sendRpcRequest(request).get(0);
+		JsonRpc2Response rpcResponse = sendRpcRequest(request).getFirst();
 		return (convertResponse(rpcResponse.getResult().toString(), RelationshipLinkSpec.class)).getId();
 	}
 }

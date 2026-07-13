@@ -36,7 +36,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.NativeQuery;
 import org.springframework.data.repository.query.Param;
 
 import com.mgmtp.a12.dataservices.query.generator.sql.QueryGeneratorConstants;
@@ -51,8 +51,7 @@ public interface DocumentSearchJpaRepository extends JpaRepository<DocumentSearc
 	// Wen can't pass an array of DocumentReference as hibernate can not serialize that.
 	// Hibernate only passes a native Postgres array if the input is a String array, a List won't be handled correctly.
 	// Using EXCEPT is substantially faster than using NOT IN or <> ALL()
-	@Query(value =
-		"""
+	@NativeQuery("""
 			select doc_ref
 			from (
 			  select t.doc_ref
@@ -62,11 +61,11 @@ public interface DocumentSearchJpaRepository extends JpaRepository<DocumentSearc
 			  from document_search
 			  where model_name in (:modelNames)
 			) m
-			""", nativeQuery = true)
+			""")
 	List<String> findMissingDocRefs(@Param("modelNames") Collection<String> modelName, @Param("docRefs") String[] docRefs);
 
 	@Modifying
-	@Query(value = "TRUNCATE TABLE " + QueryGeneratorConstants.TableNames.DOCUMENT_SEARCH_TABLE_NAME, nativeQuery = true)
+	@NativeQuery("TRUNCATE TABLE " + QueryGeneratorConstants.TableNames.DOCUMENT_SEARCH_TABLE_NAME)
 	void truncateTable();
 
 }

@@ -1,0 +1,30 @@
+{
+	"header": {
+		"id": "ContractPartner",
+		"modelType": "relationship",
+		"modelVersion": "3.0.0"
+	},
+	"content": {
+		"associationType": "OWNED",
+		"storage": "EXTERNAL",
+		"embeddedGroupPath": null,
+		"labels": [],
+		"linkDocumentModel": null,
+		"duplicatesAllowed": false,
+		"entityCharacteristics": [
+			{
+				"role": "Contract",
+				"documentModel": "Contract",
+				"ordered": false,
+				"navigable": true,
+				"linkConstraints": {
+					"multiplicity": {
+						"lowerLimit": 0,
+						"unbounded": true
+					}
+				},
+				"candidateConstraints": {}
+			}
+		]
+	}
+}

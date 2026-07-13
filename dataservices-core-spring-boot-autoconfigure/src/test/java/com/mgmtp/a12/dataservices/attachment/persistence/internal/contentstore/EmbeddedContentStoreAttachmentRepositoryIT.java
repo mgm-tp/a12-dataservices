@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.commons.io.input.BrokenInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,7 +45,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.mgmtp.a12.contentstore.utils.Constants;
 import com.mgmtp.a12.dataservices.AbstractSpringContextIT;
 import com.mgmtp.a12.dataservices.EmbeddedPostgresInitializer;
 import com.mgmtp.a12.dataservices.ResourceFunctions;
@@ -54,13 +52,9 @@ import com.mgmtp.a12.dataservices.attachment.AttachmentUrl;
 import com.mgmtp.a12.dataservices.attachment.TypeOfTheContent;
 import com.mgmtp.a12.dataservices.attachment.persitence.AttachmentPersistenceResult;
 import com.mgmtp.a12.dataservices.attachment.persitence.internal.contentstore.EmbeddedContentStoreAttachmentRepository;
-import com.mgmtp.a12.dataservices.common.exception.UnexpectedException;
 import com.mgmtp.a12.dataservices.constants.PathConstants;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.expectThrows;
 
 @ContextConfiguration(initializers = EmbeddedPostgresInitializer.class)
 @TestPropertySource(properties = {
@@ -97,40 +91,6 @@ public class EmbeddedContentStoreAttachmentRepositoryIT extends AbstractSpringCo
 		Assert.assertTrue(actualResult.getSize() > 0);
 		Assert.assertTrue(actualResult.getUrl().isPresent());
 		Assert.assertTrue(PUBLIC_URL_PATTERN.test(actualResult.getUrl().get()));
-	}
-
-	@Test
-	public void testCreateWithProbMimeType_shouldSuccess_whenGivenTextInputStreamAsAttachmentSecured() throws IOException {
-		this.dataServicesCoreProperties.getAttachments().getMimeType().getProbeMimeType().setEnabled(true);
-		AttachmentPersistenceResult actualResult = persistSecuredAttachment();
-		Assert.assertNotNull(actualResult);
-		Assert.assertEquals(actualResult.getMimeType(), MediaType.IMAGE_PNG_VALUE);
-		Assert.assertEquals(actualResult.getAttachmentId(), SECURED_ATTACHMENT_ID);
-		Assert.assertTrue(actualResult.getSize() > 0);
-		Assert.assertTrue(actualResult.getUrl().isEmpty());
-		this.dataServicesCoreProperties.getAttachments().getMimeType().getProbeMimeType().setEnabled(false);
-	}
-
-	@Test
-	public void testCreateWithProbMimeType_shouldSuccess_whenGivenTextInputStreamAsAttachmentPublic() throws IOException {
-		this.dataServicesCoreProperties.getAttachments().getMimeType().getProbeMimeType().setEnabled(true);
-		AttachmentPersistenceResult actualResult = persistPublicAttachment();
-		Assert.assertNotNull(actualResult);
-		Assert.assertEquals(actualResult.getMimeType(), MediaType.IMAGE_PNG_VALUE);
-		Assert.assertEquals(actualResult.getAttachmentId(), PUBLIC_ATTACHMENT_ID);
-		Assert.assertTrue(actualResult.getSize() > 0);
-		Assert.assertTrue(actualResult.getUrl().isPresent());
-		this.dataServicesCoreProperties.getAttachments().getMimeType().getProbeMimeType().setEnabled(false);
-	}
-
-	@Test
-	public void testCreateWithProbMimeType_shouldThrowException_whenGivenBrokenInputStream() {
-		dataServicesCoreProperties.getAttachments().getMimeType().getProbeMimeType().setEnabled(true);
-		UnexpectedException ex = expectThrows(UnexpectedException.class, () ->
-			attachmentRepository.create(SECURED_ATTACHMENT_ID, new BrokenInputStream(), FILENAME, TypeOfTheContent.ATTACHMENT_SECURED));
-		assertNotNull(ex);
-		assertEquals(ex.getMessage(), Constants.INVALID_CONTENT_INPUT_STREAM);
-		dataServicesCoreProperties.getAttachments().getMimeType().getProbeMimeType().setEnabled(false);
 	}
 
 	@Test
@@ -179,20 +139,20 @@ public class EmbeddedContentStoreAttachmentRepositoryIT extends AbstractSpringCo
 	private AttachmentPersistenceResult persistSecuredAttachment() throws IOException {
 		return attachmentRepository.create(SECURED_ATTACHMENT_ID,
 			resourceFunctions.loadResourceAsStream(PathConstants.ATTACHMENT_PATH + IMAGE_ATTACHMENT_PNG_FILE),
-			IMAGE_ATTACHMENT_PNG_FILE, TypeOfTheContent.ATTACHMENT_SECURED);
+			IMAGE_ATTACHMENT_PNG_FILE, TypeOfTheContent.ATTACHMENT_SECURED, null);
 	}
 
 	private AttachmentPersistenceResult persistPublicAttachment() throws IOException {
 		return attachmentRepository.create(PUBLIC_ATTACHMENT_ID,
 			resourceFunctions.loadResourceAsStream(PathConstants.ATTACHMENT_PATH + IMAGE_ATTACHMENT_PNG_FILE),
-			IMAGE_ATTACHMENT_PNG_FILE, TypeOfTheContent.ATTACHMENT_PUBLIC);
+			IMAGE_ATTACHMENT_PNG_FILE, TypeOfTheContent.ATTACHMENT_PUBLIC, null);
 	}
 
 	private AttachmentPersistenceResult persistThumbnail() {
 		String contenttId = UUID.randomUUID().toString();
 		AttachmentPersistenceResult actualThumbnailResult =
 			attachmentRepository.create(contenttId, new ByteArrayInputStream(CONTENT.getBytes()), contenttId,
-				TypeOfTheContent.ATTACHMENT_THUMBNAIL);
+				TypeOfTheContent.ATTACHMENT_THUMBNAIL, null);
 		thumbnailBigId = contenttId;
 		return actualThumbnailResult;
 	}

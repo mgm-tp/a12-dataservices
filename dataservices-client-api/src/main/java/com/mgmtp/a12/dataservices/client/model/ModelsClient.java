@@ -35,20 +35,24 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.List;
 
+import com.mgmtp.a12.model.utils.OnlyForUsage;
+
 import lombok.NonNull;
 
 /**
  * ModelsClient interface provides all Models based functionality
  */
-public interface ModelsClient {
+@OnlyForUsage public interface ModelsClient {
 
 	/**
-	 * Upload bulk of models.
+	 * Import runtime models from a ZIP or JAR archive.
 	 *
-	 * @param modelBulk InputStream of zip/jar file containing all the models to import
-	 * @return List of imported models names
+	 * The archive is sent to the server which extracts and imports each model individually.
+	 *
+	 * @param modelsArchive InputStream of zip/jar file containing all the models to import
+	 * @return List of imported model IDs
 	 */
-	List<String> importModelBulk(@NonNull InputStream modelBulk);
+	List<String> importRuntimeModels(@NonNull InputStream modelsArchive);
 
 	/**
 	 * Create model from JSON string.

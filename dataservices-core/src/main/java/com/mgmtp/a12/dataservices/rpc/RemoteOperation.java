@@ -52,6 +52,20 @@ import lombok.NoArgsConstructor;
 public @interface RemoteOperation {
 
 	/**
+	 * When `false`, the operation is eligible for read replica routing when a read replica is
+	 * configured. The entire request is executed in a read-only transaction against the replica
+	 * datasource. Pair with `@Transactional(readOnly = true)` on the `rpc()` method to enforce
+	 * read-only semantics at the JDBC level as well.
+	 *
+	 * *Restriction:* a non-mutating operation must not open a write transaction
+	 * (e.g. via `Propagation.REQUIRES_NEW` without `readOnly = true`) anywhere in its call chain.
+	 * Doing so will cause a database error because the replica datasource is read-only.
+	 *
+	 * Default `true` preserves existing behavior — the primary datasource is always used.
+	 */
+	boolean isMutation() default true;
+
+	/**
 	 * Unique operation name. required parameter. Used to look-up proper implementation of the Operation
 	 */
 	String name();

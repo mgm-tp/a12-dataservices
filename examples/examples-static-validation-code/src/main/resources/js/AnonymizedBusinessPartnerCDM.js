@@ -453,7 +453,7 @@ var Meta_anonymizedbusinesspartnercdm = (function () {
 		this._metaRegeln = new Meta_Regel_anonymizedbusinesspartnercdm();
 		this._unterstuetzteSprachen = ["en", "en_US"];
 		this._da = new Model_t(
-				"28.4.0", // Produkt-Version
+				"29.4.0", // Produkt-Version
 				".", // dezimaltrenner
 				["en", "en_US"], // unterstuetzte Sprachen
 				MetaDataHelper.createSetOfStrings(), //  Namen der Applikationsbedingungen
@@ -486,7 +486,7 @@ var Meta_anonymizedbusinesspartnercdm = (function () {
 		metaPlfFeldInfo
 			.addLokalePflichtFeldInfos(this._meta.getValue(IMetaKeysInternal.MODEL_ADDITIV_PFLICHTFELD));
 	}
-	Object.defineProperty(Meta_anonymizedbusinesspartnercdm, "RUNTIME_VERSION", { get: function () { return "30.8"; },
+	Object.defineProperty(Meta_anonymizedbusinesspartnercdm, "RUNTIME_VERSION", { get: function () { return "31.1"; },
 		enumerable: true,
 		configurable: true
 	});

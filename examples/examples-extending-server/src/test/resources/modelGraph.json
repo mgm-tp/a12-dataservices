@@ -143,7 +143,7 @@
 			"header": {
 				"id": "ProductBundle",
 				"modelType": "relationship",
-				"modelVersion": "3.0.0",
+				"modelVersion": "4.0.0",
 				"locales": [
 					{
 						"code": "de"
@@ -194,7 +194,6 @@
 						"text": "ProductBundle"
 					}
 				],
-				"associationType": "SHARED",
 				"linkDocumentModel": null,
 				"duplicatesAllowed": false,
 				"entityCharacteristics": [
@@ -212,17 +211,11 @@
 						],
 						"documentModel": "DomainProduct",
 						"ordered": false,
-						"navigable": true,
 						"linkConstraints": {
 							"multiplicity": {
-								"lowerLimit": 0,
 								"unbounded": true,
 								"upperLimit": 1
 							}
-						},
-						"candidateConstraints": {
-							"population": "",
-							"populationParameters": []
 						}
 					},
 					{
@@ -239,29 +232,21 @@
 						],
 						"documentModel": "DomainBundle",
 						"ordered": false,
-						"navigable": true,
 						"linkConstraints": {
 							"multiplicity": {
-								"lowerLimit": 0,
 								"unbounded": true,
 								"upperLimit": null
 							}
-						},
-						"candidateConstraints": {
-							"population": "",
-							"populationParameters": []
 						}
 					}
-				],
-				"storage": "EXTERNAL",
-				"embeddedGroupPath": ""
+				]
 			}
 		},
 		{
 			"header": {
 				"id": "ProductBrand",
 				"modelType": "relationship",
-				"modelVersion": "3.0.0",
+				"modelVersion": "4.0.0",
 				"locales": [
 					{
 						"code": "de"
@@ -312,7 +297,6 @@
 						"text": "ProductBrand"
 					}
 				],
-				"associationType": "SHARED",
 				"linkDocumentModel": null,
 				"duplicatesAllowed": false,
 				"entityCharacteristics": [
@@ -330,22 +314,11 @@
 						],
 						"documentModel": "DomainProduct",
 						"ordered": false,
-						"navigable": true,
 						"linkConstraints": {
 							"multiplicity": {
-								"lowerLimit": 1,
 								"unbounded": true,
 								"upperLimit": 1
 							}
-						},
-						"candidateConstraints": {
-							"population": "",
-							"populationParameters": [
-								{
-									"name": "requiredField",
-									"value": "requiredField"
-								}
-							]
 						}
 					},
 					{
@@ -362,34 +335,21 @@
 						],
 						"documentModel": "DomainBrand",
 						"ordered": false,
-						"navigable": true,
 						"linkConstraints": {
 							"multiplicity": {
-								"lowerLimit": 0,
 								"unbounded": true,
 								"upperLimit": null
 							}
-						},
-						"candidateConstraints": {
-							"population": "",
-							"populationParameters": [
-								{
-									"name": "requiredField",
-									"value": "requiredField"
-								}
-							]
 						}
 					}
-				],
-				"storage": "EXTERNAL",
-				"embeddedGroupPath": ""
+				]
 			}
 		},
 		{
 			"header": {
 				"id": "ProductTree",
 				"modelType": "relationship",
-				"modelVersion": "3.0.0",
+				"modelVersion": "4.0.0",
 				"locales": [
 					{
 						"code": "de"
@@ -440,7 +400,6 @@
 						"text": "ProductTree_EN"
 					}
 				],
-				"associationType": "SHARED",
 				"linkDocumentModel": null,
 				"duplicatesAllowed": false,
 				"entityCharacteristics": [
@@ -458,22 +417,11 @@
 						],
 						"documentModel": "TreeProduct",
 						"ordered": false,
-						"navigable": true,
 						"linkConstraints": {
 							"multiplicity": {
-								"lowerLimit": 1,
 								"unbounded": true,
 								"upperLimit": 1
 							}
-						},
-						"candidateConstraints": {
-							"population": "",
-							"populationParameters": [
-								{
-									"name": "requiredField",
-									"value": "requiredField"
-								}
-							]
 						}
 					},
 					{
@@ -490,34 +438,21 @@
 						],
 						"documentModel": "TreeProduct",
 						"ordered": false,
-						"navigable": true,
 						"linkConstraints": {
 							"multiplicity": {
-								"lowerLimit": 0,
 								"unbounded": true,
 								"upperLimit": 1
 							}
-						},
-						"candidateConstraints": {
-							"population": "",
-							"populationParameters": [
-								{
-									"name": "requiredField",
-									"value": "requiredField"
-								}
-							]
 						}
 					}
-				],
-				"storage": "EXTERNAL",
-				"embeddedGroupPath": ""
+				]
 			}
 		},
 		{
 			"header": {
 				"id": "ComputationCategory",
 				"modelType": "relationship",
-				"modelVersion": "3.0.0",
+				"modelVersion": "4.0.0",
 				"locales": [
 					{
 						"code": "de"
@@ -568,7 +503,6 @@
 						"text": "ComputationCategory"
 					}
 				],
-				"associationType": "SHARED",
 				"linkDocumentModel": null,
 				"duplicatesAllowed": true,
 				"entityCharacteristics": [
@@ -586,17 +520,11 @@
 						],
 						"documentModel": "ComputationModel",
 						"ordered": false,
-						"navigable": true,
 						"linkConstraints": {
 							"multiplicity": {
-								"lowerLimit": 0,
 								"unbounded": true,
 								"upperLimit": 1
 							}
-						},
-						"candidateConstraints": {
-							"population": "",
-							"populationParameters": []
 						}
 					},
 					{
@@ -613,22 +541,14 @@
 						],
 						"documentModel": "DomainCategory",
 						"ordered": false,
-						"navigable": true,
 						"linkConstraints": {
 							"multiplicity": {
-								"lowerLimit": 0,
 								"unbounded": true,
 								"upperLimit": null
 							}
-						},
-						"candidateConstraints": {
-							"population": "",
-							"populationParameters": []
 						}
 					}
-				],
-				"storage": "EXTERNAL",
-				"embeddedGroupPath": ""
+				]
 			}
 		}
 	]

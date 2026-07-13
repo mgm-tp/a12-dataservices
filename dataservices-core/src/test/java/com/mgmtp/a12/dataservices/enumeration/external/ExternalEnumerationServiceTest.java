@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -60,18 +59,14 @@ public class ExternalEnumerationServiceTest extends AbstractDataServicesCoreTest
 	@Mock private ModelPermissionEvaluator<IDocumentModel> modelPermissionEvaluator;
 	@Mock private DocumentService documentService;
 	@Mock private ExternalEnumerationLoader externalEnumerationLoader;
-	private DataServicesCoreProperties dataServicesCoreProperties = Mockito.spy(DataServicesCoreProperties.class);
+	private final DataServicesCoreProperties dataServicesCoreProperties = Mockito.spy(DataServicesCoreProperties.class);
 	@Mock private DefaultDocumentService defaultDocumentService;
 
 	private ExternalEnumerationService externalEnumerationService;
 
-	@BeforeMethod public void before() throws IllegalAccessException {
-		externalEnumerationService = new ExternalEnumerationService();
-		FieldUtils.writeField(externalEnumerationService, "externalEnumerationLoaders", Optional.of(List.of(externalEnumerationLoader)), true);
-		FieldUtils.writeField(externalEnumerationService, "defaultDocumentService", defaultDocumentService, true);
-		FieldUtils.writeField(externalEnumerationService, "documentService", documentService, true);
-		FieldUtils.writeField(externalEnumerationService, "dataServicesCoreProperties", dataServicesCoreProperties, true);
-		FieldUtils.writeField(externalEnumerationService, "modelPermissionEvaluator", modelPermissionEvaluator, true);
+	@BeforeMethod public void before() {
+		externalEnumerationService = new ExternalEnumerationService(modelPermissionEvaluator,  documentService, Optional.of(List.of(externalEnumerationLoader)),
+			dataServicesCoreProperties, defaultDocumentService);
 	}
 
 	@Test

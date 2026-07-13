@@ -31,6 +31,7 @@
  */
 package com.mgmtp.a12.dataservices.autoconfigure;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -42,21 +43,22 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.domain.EntityScanPackages;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseDataSource;
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
-import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
-import org.springframework.boot.autoconfigure.quartz.QuartzDataSource;
-import org.springframework.boot.autoconfigure.quartz.QuartzDataSourceScriptDatabaseInitializer;
-import org.springframework.boot.autoconfigure.quartz.QuartzProperties;
-import org.springframework.boot.autoconfigure.quartz.QuartzTransactionManager;
-import org.springframework.boot.autoconfigure.quartz.SchedulerFactoryBeanCustomizer;
-import org.springframework.boot.autoconfigure.sql.init.OnDatabaseInitializationCondition;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
+import org.springframework.boot.jpa.EntityManagerFactoryBuilder;
+import org.springframework.boot.jpa.autoconfigure.JpaProperties;
+import org.springframework.boot.liquibase.autoconfigure.LiquibaseDataSource;
+import org.springframework.boot.liquibase.autoconfigure.LiquibaseProperties;
+import org.springframework.boot.persistence.autoconfigure.EntityScanPackages;
+import org.springframework.boot.quartz.autoconfigure.QuartzDataSource;
+import org.springframework.boot.quartz.autoconfigure.QuartzDataSourceScriptDatabaseInitializer;
+import org.springframework.boot.quartz.autoconfigure.QuartzJdbcProperties;
+import org.springframework.boot.quartz.autoconfigure.QuartzTransactionManager;
+import org.springframework.boot.quartz.autoconfigure.SchedulerFactoryBeanCustomizer;
+import org.springframework.boot.sql.autoconfigure.init.OnDatabaseInitializationCondition;
 import org.springframework.boot.sql.init.dependency.DatabaseInitializationDependencyConfigurer;
+import org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitialization;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -76,7 +78,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import com.mgmtp.a12.dataservices.autoconfigure.internal.datasource.RoutingDataSource;
 import com.mgmtp.a12.dataservices.configuration.DataServicesCoreProperties;
+import com.mgmtp.a12.dataservices.configuration.internal.validation.condition.DataSourceReplicaRoutingEnabledCondition;
+import com.mgmtp.a12.dataservices.internal.DataSourceContextHolder;
 import com.zaxxer.hikari.HikariDataSource;
 
 import jakarta.annotation.Nullable;
@@ -96,20 +101,13 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 @EnableTransactionManagement
-@EnableJpaRepositories(
-	basePackages = DataServicesCoreProperties.DS_PACKAGE_PREFIX,
-	entityManagerFactoryRef = "dsEntityManagerFactory",
-	transactionManagerRef = "dsTransactionManager"
-)
+@EnableJpaRepositories(basePackages = DataServicesCoreProperties.DS_PACKAGE_PREFIX, entityManagerFactoryRef = "dsEntityManagerFactory", transactionManagerRef = "dsTransactionManager")
 @Configuration(proxyBeanMethods = false) public class DataServicesRepositoryConfiguration {
 	/**
 	 * Base configuration properties prefix for the DataServices datasource.
 	 */
 	public static final String DATASERVICES_DATASOURCE_PROPERTY_BASE = "spring.datasources.dataservices";
-	/**
-	 * HikariCP configuration properties prefix for the DataServices datasource.
-	 */
-	public static final String DATASERVICES_DATASOURCE_HIKARI_PROPERTY_BASE = "spring.datasources.dataservices.hikari";
+	public static final String DATASERVICES_READ_REPLICA_DATASOURCE_PROPERTY_BASE = "spring.datasources.dataservices-read-replica";
 
 	/**
 	 * Configures the primary {@link DataSource} for DataServices when embedded Postgres is disabled.
@@ -123,23 +121,76 @@ import lombok.RequiredArgsConstructor;
 		 * @return The bound {@link DataSourceProperties} for the DataServices datasource.
 		 */
 		@ConfigurationProperties(DATASERVICES_DATASOURCE_PROPERTY_BASE)
-		@Bean public DataSourceProperties dsDatasourceProperties() {
+		@Primary @Bean("dsDatasourceProperties") public DataSourceProperties dsDatasourceProperties() {
 			return new DataSourceProperties();
 		}
 
 		/**
-		 * Creates the primary {@link DataSource} for DataServices backed by HikariCP.
+		 * Creates the primary {@link HikariDataSource} for DataServices.
 		 *
 		 * @param dsDatasourceProperties Bound datasource properties; must not be `null`.
-		 * @return The configured {@link HikariDataSource}.
+		 * @return The configured primary {@link HikariDataSource}.
 		 */
-		@ConfigurationProperties(DATASERVICES_DATASOURCE_HIKARI_PROPERTY_BASE)
-		@Primary @Bean public DataSource dsDataSource(@Qualifier("dsDatasourceProperties") DataSourceProperties dsDatasourceProperties) {
-			HikariDataSource dataSource = dsDatasourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
+		@Bean("dsPrimaryDataSource") public HikariDataSource dsPrimaryDataSource(@Qualifier("dsDatasourceProperties") DataSourceProperties dsDatasourceProperties) {
+			HikariDataSource dataSource = dsDatasourceProperties.initializeDataSourceBuilder()
+				.type(HikariDataSource.class)
+				.build();
 			if (StringUtils.isNotBlank(dsDatasourceProperties.getName())) {
 				dataSource.setPoolName(dsDatasourceProperties.getName());
 			}
 			return dataSource;
+		}
+
+		/**
+		 * Binds DataServices read-replica datasource properties.
+		 *
+		 * @return The bound {@link DataSourceProperties} for the read-replica datasource.
+		 */
+		@ConfigurationProperties(DATASERVICES_READ_REPLICA_DATASOURCE_PROPERTY_BASE)
+		@Bean("dsReplicaDataSourceProperties") public DataSourceProperties dsReplicaDataSourceProperties() {
+			return new DataSourceProperties();
+		}
+
+		/**
+		 * Creates the read-replica {@link HikariDataSource} for DataServices.
+		 * Only created when `spring.datasources.dataservices-read-replica.url` is configured.
+		 *
+		 * @param replicaDataSourceProperties Bound replica datasource properties; must not be `null`.
+		 * @return The configured replica {@link HikariDataSource}.
+		 */
+		@Conditional(DataSourceReplicaRoutingEnabledCondition.class)
+		@Bean("dsReplicaDataSource") public HikariDataSource dsReplicaDataSource(
+			@Qualifier("dsReplicaDataSourceProperties") DataSourceProperties replicaDataSourceProperties) {
+			return replicaDataSourceProperties.initializeDataSourceBuilder()
+				.type(HikariDataSource.class)
+				.build();
+		}
+
+		/**
+		 * Exposes the active {@link DataSource} for DataServices.
+		 *
+		 * When a read-replica datasource is configured, returns a {@link RoutingDataSource} that routes
+		 * read-only transactions to the replica and read-write transactions to the primary.
+		 * When no replica is configured, returns the primary datasource directly.
+		 *
+		 * @param primaryDataSource The primary HikariCP datasource.
+		 * @param replicaDataSource Provider for the optional replica datasource.
+		 * @return The active {@link DataSource}.
+		 */
+		@Primary @Bean("dsDataSource") public DataSource dsDataSource(
+			@Qualifier("dsPrimaryDataSource") HikariDataSource primaryDataSource,
+			@Qualifier("dsReplicaDataSource") ObjectProvider<DataSource> replicaDataSource) {
+			DataSource replica = replicaDataSource.getIfAvailable();
+			if (replica != null) {
+				RoutingDataSource routingDataSource = new RoutingDataSource();
+				routingDataSource.setTargetDataSources(Map.of(
+					DataSourceContextHolder.DataSourceType.PRIMARY, primaryDataSource,
+					DataSourceContextHolder.DataSourceType.REPLICA, replica));
+				routingDataSource.setDefaultTargetDataSource(primaryDataSource);
+				routingDataSource.afterPropertiesSet();
+				return routingDataSource;
+			}
+			return primaryDataSource;
 		}
 	}
 
@@ -153,7 +204,7 @@ import lombok.RequiredArgsConstructor;
 		 * @return The bound {@link JpaProperties}.
 		 */
 		@ConfigurationProperties(prefix = DATASERVICES_DATASOURCE_PROPERTY_BASE + ".jpa")
-		@Primary @Bean public JpaProperties dsJpaProperties() {
+		@Primary @Bean("dsJpaProperties") public JpaProperties dsJpaProperties() {
 			return new JpaProperties();
 		}
 
@@ -163,7 +214,7 @@ import lombok.RequiredArgsConstructor;
 		 * @param dsJpaProperties Bound JPA properties; must not be `null`.
 		 * @return The configured {@link HibernateJpaVendorAdapter}.
 		 */
-		@Bean public JpaVendorAdapter dsJpaVendorAdapter(@Qualifier("dsJpaProperties") JpaProperties dsJpaProperties) {
+		@Primary @Bean("dsJpaVendorAdapter") public JpaVendorAdapter dsJpaVendorAdapter(@Qualifier("dsJpaProperties") JpaProperties dsJpaProperties) {
 			AbstractJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
 			adapter.setShowSql(dsJpaProperties.isShowSql());
 			if (dsJpaProperties.getDatabase() != null) {
@@ -184,8 +235,11 @@ import lombok.RequiredArgsConstructor;
 		 * @param dsJpaProperties Bound JPA properties.
 		 * @return The {@link EntityManagerFactoryBuilder}.
 		 */
-		@Bean public EntityManagerFactoryBuilder dsEntityManagerFactoryBuilder(@Qualifier("dsJpaVendorAdapter") JpaVendorAdapter dsJpaVendorAdapter,
-			ObjectProvider<PersistenceUnitManager> persistenceUnitManager, @Qualifier("dsJpaProperties") JpaProperties dsJpaProperties) {
+		@Primary @Bean("dsEntityManagerFactoryBuilder") @DependsOnDatabaseInitialization public EntityManagerFactoryBuilder dsEntityManagerFactoryBuilder(
+			@Qualifier("dsJpaVendorAdapter") JpaVendorAdapter dsJpaVendorAdapter,
+			ObjectProvider<PersistenceUnitManager> persistenceUnitManager,
+			@Qualifier("dsJpaProperties") JpaProperties dsJpaProperties) {
+
 			return new EntityManagerFactoryBuilder(dsJpaVendorAdapter, datasource -> dsJpaProperties.getProperties(), persistenceUnitManager.getIfAvailable());
 		}
 
@@ -201,7 +255,8 @@ import lombok.RequiredArgsConstructor;
 		 * @return The configured {@link LocalContainerEntityManagerFactoryBean}.
 		 */
 		@DependsOn("dsLiquibase")
-		@Primary @Bean public LocalContainerEntityManagerFactoryBean dsEntityManagerFactory(@Qualifier("dsDataSource") DataSource dsDataSource,
+		@Primary @Bean("dsEntityManagerFactory") public LocalContainerEntityManagerFactoryBean dsEntityManagerFactory(
+			@Qualifier("dsDataSource") DataSource dsDataSource,
 			@Qualifier("dsJpaProperties") JpaProperties dsJpaProperties, BeanFactory beanFactory,
 			@Qualifier("dsEntityManagerFactoryBuilder") EntityManagerFactoryBuilder dsEntityManagerFactoryBuilder) {
 			return dsEntityManagerFactoryBuilder
@@ -247,7 +302,7 @@ import lombok.RequiredArgsConstructor;
 		 * @return The bound {@link LiquibaseProperties}.
 		 */
 		@ConfigurationProperties(prefix = DATASERVICES_DATASOURCE_PROPERTY_BASE + ".liquibase")
-		@Bean public LiquibaseProperties dsLiquibaseProperties() {
+		@Primary @Bean("dsLiquibaseProperties") public LiquibaseProperties dsLiquibaseProperties() {
 			return new LiquibaseProperties();
 		}
 
@@ -255,12 +310,12 @@ import lombok.RequiredArgsConstructor;
 		 * Configures the Liquibase migration runner for DataServices.
 		 * If a migration-specific DataSource is not provided, the primary DataServices datasource is used.
 		 *
-		 * @param dsDataSource The primary DataServices {@link DataSource}; may be `null` if a unique bean is not available.
+		 * @param dsDataSource The DataServices {@link DataSource}; may be `null` if a unique bean is not available.
 		 * @param migrationDataSource Optional Liquibase-specific {@link DataSource} to run migrations.
 		 * @param dsLiquibaseProperties Bound Liquibase properties.
 		 * @return The configured {@link SpringLiquibase} instance.
 		 */
-		@Bean public SpringLiquibase dsLiquibase(@Qualifier("dsDataSource") ObjectProvider<DataSource> dsDataSource,
+		@Primary @Bean("dsLiquibase") public SpringLiquibase dsLiquibase(@Qualifier("dsDataSource") ObjectProvider<DataSource> dsDataSource,
 			@LiquibaseDataSource @Qualifier("dsMigrationDataSource") ObjectProvider<DataSource> migrationDataSource,
 			@Qualifier("dsLiquibaseProperties") LiquibaseProperties dsLiquibaseProperties) {
 
@@ -347,10 +402,10 @@ import lombok.RequiredArgsConstructor;
 		/**
 		 * Exposes the Quartz {@link DataSource} backed by the DataServices datasource.
 		 *
-		 * @param dsDataSource The primary DataServices datasource provider.
+		 * @param dsDataSource The DataServices datasource provider.
 		 * @return The Quartz {@link DataSource}; may be `null` if not available.
 		 */
-		@Bean @QuartzDataSource public DataSource quartzDataSource(@Qualifier("dsDataSource") ObjectProvider<DataSource> dsDataSource) {
+		@Primary @Bean @QuartzDataSource public DataSource quartzDataSource(@Qualifier("dsDataSource") ObjectProvider<DataSource> dsDataSource) {
 			return dsDataSource.getIfAvailable();
 		}
 
@@ -361,7 +416,7 @@ import lombok.RequiredArgsConstructor;
 		 * @return The Quartz transaction manager.
 		 */
 		@Bean @QuartzTransactionManager
-		public PlatformTransactionManager quartzTransactionManager(@Qualifier("dsTransactionManager") PlatformTransactionManager dsTransactionManager) {
+		public PlatformTransactionManager quartzTransactionManager(PlatformTransactionManager dsTransactionManager) {
 			return dsTransactionManager;
 		}
 
@@ -373,10 +428,10 @@ import lombok.RequiredArgsConstructor;
 		 * @param quartzTransactionManager Provider for the Quartz transaction manager.
 		 * @return The customizer to apply to the scheduler factory.
 		 */
-		@Bean
+
 		@Order(0)
 		@ConditionalOnMissingBean(name = "dsQuartzCustomizer")
-		public SchedulerFactoryBeanCustomizer dsQuartzCustomizer(@QuartzDataSource ObjectProvider<DataSource> quartzDataSource,
+		@Bean public SchedulerFactoryBeanCustomizer dsQuartzCustomizer(@QuartzDataSource ObjectProvider<DataSource> quartzDataSource,
 			@QuartzTransactionManager ObjectProvider<PlatformTransactionManager> quartzTransactionManager) {
 			return schedulerFactoryBean -> {
 				quartzDataSource.ifAvailable(schedulerFactoryBean::setDataSource);
@@ -391,11 +446,10 @@ import lombok.RequiredArgsConstructor;
 		 * @param properties Quartz properties controlling schema initialization.
 		 * @return The database initializer for Quartz.
 		 */
-		@Bean
-		@ConditionalOnMissingBean(QuartzDataSourceScriptDatabaseInitializer.class)
+		@Bean @ConditionalOnMissingBean(QuartzDataSourceScriptDatabaseInitializer.class) @DependsOnDatabaseInitialization
 		@Conditional(OnQuartzDatasourceInitializationCondition.class)
 		public QuartzDataSourceScriptDatabaseInitializer quartzDataSourceScriptDatabaseInitializer(
-			@QuartzDataSource ObjectProvider<DataSource> quartzDataSource, QuartzProperties properties) {
+			@QuartzDataSource ObjectProvider<DataSource> quartzDataSource, QuartzJdbcProperties properties) {
 			return new QuartzDataSourceScriptDatabaseInitializer(quartzDataSource.getIfAvailable(), properties);
 		}
 
@@ -407,4 +461,5 @@ import lombok.RequiredArgsConstructor;
 
 		}
 	}
+
 }

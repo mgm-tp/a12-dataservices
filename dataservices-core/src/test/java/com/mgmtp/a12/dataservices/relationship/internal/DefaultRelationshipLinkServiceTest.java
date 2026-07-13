@@ -63,7 +63,8 @@ import com.mgmtp.a12.dataservices.relationship.RelationshipLinkSpecification;
 import com.mgmtp.a12.dataservices.relationship.RelationshipRole;
 import com.mgmtp.a12.dataservices.relationship.events.RelationshipLinkAfterCreateEvent;
 import com.mgmtp.a12.dataservices.relationship.model.RelationshipModel;
-import com.mgmtp.a12.dataservices.relationship.persistence.internal.RelationshipLinkRepository;
+import com.mgmtp.a12.dataservices.relationship.factory.RelationshipLinkFactory;
+import com.mgmtp.a12.dataservices.relationship.persistence.RelationshipLinkRepository;
 import com.mgmtp.a12.dataservices.relationship.persistence.internal.jpa.entity.RelationshipLinkEntity;
 import com.mgmtp.a12.dataservices.relationship.spec.LinkDescriptor;
 import com.mgmtp.a12.dataservices.relationship.spec.RelationshipRoleSpec;
@@ -127,15 +128,15 @@ public class DefaultRelationshipLinkServiceTest extends AbstractDataServicesCore
 		Assert.assertEquals(result, mockedResult);
 		Assert.assertEquals(result.getPageable(), pageable);
 		Assert.assertEquals(result.getContent().size(), 1);
-		Assert.assertEquals(result.getContent().get(0), mockedRelationshipLinkEntity);
+		Assert.assertEquals(result.getContent().getFirst(), mockedRelationshipLinkEntity);
 		Mockito.verify(relationshipModelLoader, Mockito.times(1)).loadModel(RelationshipModelConstants.PARTNER_ADDRESSES_MODEL);
 		Mockito.verify(repository, Mockito.times(1)).findByRelationshipModelName(RelationshipModelConstants.PARTNER_ADDRESSES_MODEL, pageable);
 	}
 
 	@Test void testLoadPageSizeIsLargerThanMaxConfig_successfully() throws IOException {
 		RelationshipLinkSpecification relationshipLinkSpecification = new RelationshipLinkSpecification(RelationshipModelConstants.PARTNER_ADDRESSES_MODEL);
-		Integer maxPageSize = dataServicesCoreProperties.getSearch().getPaging().getLinks().getPageLimit();
-		Pageable pageable = PageRequest.of(1, 300, Sort.by(ORDER_BY_ROLES_SORT_COLUMNS));
+		Integer maxPageSize = dataServicesCoreProperties.getQuery().getMaxLinksSize();
+		Pageable pageable = PageRequest.of(1, 10000, Sort.by(ORDER_BY_ROLES_SORT_COLUMNS));
 		Pageable expectPageable = PageRequest.of(1, maxPageSize, Sort.by(ORDER_BY_ROLES_SORT_COLUMNS));
 
 		RelationshipModel mockRelationshipModel = relationshipModelResolver.getRelationshipModelById(RelationshipModelConstants.PARTNER_ADDRESSES_MODEL);
@@ -151,7 +152,7 @@ public class DefaultRelationshipLinkServiceTest extends AbstractDataServicesCore
 		Assert.assertEquals(result, mockedResult);
 		Assert.assertEquals(result.getPageable().getPageSize(), maxPageSize);
 		Assert.assertEquals(result.getContent().size(), 1);
-		Assert.assertEquals(result.getContent().get(0), mockedRelationshipLinkEntity);
+		Assert.assertEquals(result.getContent().getFirst(), mockedRelationshipLinkEntity);
 		Mockito.verify(relationshipModelLoader, Mockito.times(1)).loadModel(RelationshipModelConstants.PARTNER_ADDRESSES_MODEL);
 		Mockito.verify(repository, Mockito.times(1)).findByRelationshipModelName(
 			Mockito.eq(RelationshipModelConstants.PARTNER_ADDRESSES_MODEL),
@@ -188,7 +189,7 @@ public class DefaultRelationshipLinkServiceTest extends AbstractDataServicesCore
 		Assert.assertEquals(result, mockedResult);
 		Assert.assertEquals(result.getPageable(), pageable);
 		Assert.assertEquals(result.getContent().size(), 1);
-		Assert.assertEquals(result.getContent().get(0), mockedRelationshipLinkEntity);
+		Assert.assertEquals(result.getContent().getFirst(), mockedRelationshipLinkEntity);
 		Mockito.verify(relationshipModelLoader, Mockito.times(1)).loadModel(RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL);
 		Mockito.verify(repository, Mockito.times(1)).findByRelationshipModelNameAndSource(
 			RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL,
@@ -229,7 +230,7 @@ public class DefaultRelationshipLinkServiceTest extends AbstractDataServicesCore
 		Assert.assertEquals(result, mockedResult);
 		Assert.assertEquals(result.getPageable(), pageable);
 		Assert.assertEquals(result.getContent().size(), 1);
-		Assert.assertEquals(result.getContent().get(0), mockedRelationshipLinkEntity);
+		Assert.assertEquals(result.getContent().getFirst(), mockedRelationshipLinkEntity);
 		Mockito.verify(relationshipModelLoader, Mockito.times(1)).loadModel(RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL);
 		Mockito.verify(repository, Mockito.times(1)).findByRelationshipModelNameAndSourceAndTarget(
 			RelationshipModelConstants.CONTRACT_COINSURED_BUSINESS_PARTNER_MODEL,
@@ -245,20 +246,18 @@ public class DefaultRelationshipLinkServiceTest extends AbstractDataServicesCore
 		LinkDescriptor linkDescriptor = new LinkDescriptor();
 		linkDescriptor.setRelationshipModel(RelationshipModelConstants.PRODUCT_BUNDLE_RM);
 
-		RelationshipRoleSpec relationshipRoleSpec1 = new RelationshipRoleSpec();
-		relationshipRoleSpec1.setRole(RelationshipModelConstants.RoleConstants.PRODUCT_ROLE);
-		relationshipRoleSpec1.setDocRef(DocumentReference.builder()
-			.documentId(RandomStringUtils.randomAlphabetic(10))
-			.documentModelName(DocumentModelConstants.PRODUCT_MODEL_NAME)
-			.build());
+		RelationshipRoleSpec relationshipRoleSpec1 = new RelationshipRoleSpec(RelationshipModelConstants.RoleConstants.PRODUCT_ROLE,
+			DocumentReference.builder()
+				.documentId(RandomStringUtils.secure().nextAlphabetic(10))
+				.documentModelName(DocumentModelConstants.PRODUCT_MODEL_NAME)
+				.build());
 		linkDescriptor.getEntities().add(relationshipRoleSpec1);
 
-		RelationshipRoleSpec relationshipRoleSpec2 = new RelationshipRoleSpec();
-		relationshipRoleSpec1.setRole(RelationshipModelConstants.RoleConstants.BUNDLE_ROLE);
-		relationshipRoleSpec1.setDocRef(DocumentReference.builder()
-			.documentId(RandomStringUtils.randomAlphabetic(10))
-			.documentModelName(DocumentModelConstants.DOMAIN_BUNDLE_MODEL_NAME)
-			.build());
+		RelationshipRoleSpec relationshipRoleSpec2 = new RelationshipRoleSpec(RelationshipModelConstants.RoleConstants.BUNDLE_ROLE,
+			DocumentReference.builder()
+				.documentId(RandomStringUtils.secure().nextAlphabetic(10))
+				.documentModelName(DocumentModelConstants.DOMAIN_BUNDLE_MODEL_NAME)
+				.build());
 		linkDescriptor.getEntities().add(relationshipRoleSpec2);
 		return linkDescriptor;
 	}
@@ -268,11 +267,11 @@ public class DefaultRelationshipLinkServiceTest extends AbstractDataServicesCore
 		link.setId(id);
 
 		DocumentReference documentReference1 = DocumentReference.builder()
-			.documentId(RandomStringUtils.randomAlphabetic(10))
+			.documentId(RandomStringUtils.secure().nextAlphabetic(10))
 			.documentModelName(DocumentModelConstants.PRODUCT_MODEL_NAME)
 			.build();
 		DocumentReference documentReference2 = DocumentReference.builder()
-			.documentId(RandomStringUtils.randomAlphabetic(10))
+			.documentId(RandomStringUtils.secure().nextAlphabetic(10))
 			.documentModelName(DocumentModelConstants.DOMAIN_BUNDLE_MODEL_NAME)
 			.build();
 		Map<String, RelationshipRole> roles = new HashMap<>();

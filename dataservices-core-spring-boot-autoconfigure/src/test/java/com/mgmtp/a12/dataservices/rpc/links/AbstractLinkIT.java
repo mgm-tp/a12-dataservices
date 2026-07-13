@@ -53,7 +53,7 @@ import com.mgmtp.a12.dataservices.query.topology.QueryLink;
 import com.mgmtp.a12.dataservices.query.topology.QueryRoot;
 import com.mgmtp.a12.dataservices.relationship.OffsetBasedPageRequest;
 import com.mgmtp.a12.dataservices.relationship.internal.RelationshipSortConstants;
-import com.mgmtp.a12.dataservices.relationship.persistence.internal.RelationshipLinkRepository;
+import com.mgmtp.a12.dataservices.relationship.persistence.RelationshipLinkRepository;
 import com.mgmtp.a12.dataservices.rpc.OperationError;
 
 import static org.testng.Assert.assertEquals;

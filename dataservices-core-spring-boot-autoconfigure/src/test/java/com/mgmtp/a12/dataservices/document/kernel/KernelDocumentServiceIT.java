@@ -32,6 +32,7 @@
 package com.mgmtp.a12.dataservices.document.kernel;
 
 import java.io.StringReader;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -213,7 +214,10 @@ public class KernelDocumentServiceIT extends AbstractSpringContextIT {
 	private KernelDocumentService prepareKernelDocumentServiceInstance(boolean validation, List<String> partialValidationForModels, List<String> skipValidationForModels,
 			List<String> computationEnabledForModels, boolean enabledCleanupErrorAndNotComputedValue) {
 
-		return new KernelDocumentService(validation, partialValidationForModels, skipValidationForModels, computationEnabledForModels, rtService, documentModelResolver, enabledCleanupErrorAndNotComputedValue);
+		return new KernelDocumentService(validation, partialValidationForModels,
+			Collections.emptyList(), Collections.emptyList(),
+			skipValidationForModels, computationEnabledForModels,
+			rtService, documentModelResolver, enabledCleanupErrorAndNotComputedValue);
 	}
 
 	private void validateComputation(DocumentV2 document, String path, String expectedString) {

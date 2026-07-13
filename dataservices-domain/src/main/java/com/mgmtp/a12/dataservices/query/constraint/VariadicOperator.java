@@ -71,5 +71,20 @@ public abstract class VariadicOperator implements ILogicOperator {
 			operands.add(operand);
 			return self();
 		}
+
+		/**
+		 * Sets the operands for this variadic operator.
+		 *
+		 * Honors the PECS principle by accepting `Collection<? extends ILogicOperator>`,
+		 * allowing collections of concrete operator subtypes (e.g. `List<ExactMatchOperator>`)
+		 * to be passed directly without requiring an explicit upcast.
+		 *
+		 * @param operands collection of operands; a defensive copy is created.
+		 * @return this builder for fluent chaining.
+		 */
+		public B operands(Collection<? extends ILogicOperator> operands) {
+			this.operands = new ArrayList<>(operands);
+			return self();
+		}
 	}
 }

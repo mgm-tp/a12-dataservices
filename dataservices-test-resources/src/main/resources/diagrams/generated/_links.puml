@@ -1,5 +1,3 @@
-@startuml
-
 !procedure group(x)
 class x << (G,#DDAAFF) >>
 !endprocedure
@@ -75,9 +73,12 @@ left to right direction
 
 title Document Models
 
-relLink('"ContractAmendment"', ContractAmendment, '--upo{ "0..∞" Contract: "Contract"', '--o{ "0..∞" Contract: "Amendment"')
-relLink('"ContractBusinessPartner"', ContractBusinessPartner, '--upo{ "0..∞" Contract: "Contract"', '--o| "0..1" BusinessPartnerSuper: "Partner"')
-relLink('"ContractCoInsuredPartner"', ContractCoInsuredPartner, '--upo{ "0..∞" Contract: "Contract"', '--|{ "1..8" BusinessPartnerSuper: "Partner"', CoInsuredAdditionalFields)
-relLink('"PartnerAddresses"', PartnerAddresses, '--upo{ "0..∞" BusinessPartnerSuper: "Partner"', '--o{ "0..∞" Address: "Address"')
-relLink('"PartnerPostalAddress"', PartnerPostalAddress, '--upo{ "0..10" BusinessPartnerSuper: "Partner"', '--o| "0..1" Address: "Address"')
-@enduml
+relLink('"ClaimAmendmentContracts"', ClaimAmendmentContracts, '--up|{ "null..∞" InsuranceClaimSuper: "InsuranceClaim"', '--|{ "null..∞" Contract: "Amendment"')
+relLink('"ClaimBusinessPartner"', ClaimBusinessPartner, '--up|{ "null..∞" InsuranceClaimSuper: "Claim"', '--|| "null..1" BusinessPartnerSuper: "Partner"')
+relLink('"ClaimInvolvedPartner"', ClaimInvolvedPartner, '--up|{ "null..∞" InsuranceClaimSuper: "Claim"', '--|{ "null..10" BusinessPartnerSuper: "Partner"', ClaimPartnerAdditionalFields)
+relLink('"ClaimMainContract"', ClaimMainContract, '--up|{ "null..∞" InsuranceClaimSuper: "InsuranceClaim"', '--|| "null..1" Contract: "MainPolicy"')
+relLink('"ContractAmendment"', ContractAmendment, '--up|{ "null..∞" Contract: "Contract"', '--|{ "null..∞" Contract: "Amendment"')
+relLink('"ContractBusinessPartner"', ContractBusinessPartner, '--up|{ "null..∞" Contract: "Contract"', '--|| "null..1" BusinessPartnerSuper: "Partner"')
+relLink('"ContractCoInsuredPartner"', ContractCoInsuredPartner, '--up|{ "null..∞" Contract: "Contract"', '--|{ "null..8" BusinessPartnerSuper: "Partner"', CoInsuredAdditionalFields)
+relLink('"PartnerAddresses"', PartnerAddresses, '--up|{ "null..∞" BusinessPartnerSuper: "Partner"', '--|{ "null..∞" Address: "Address"')
+relLink('"PartnerPostalAddress"', PartnerPostalAddress, '--up|{ "null..10" BusinessPartnerSuper: "Partner"', '--|| "null..1" Address: "Address"')

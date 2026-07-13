@@ -72,7 +72,7 @@ public class QueryDebuggerGeneratorsConfiguration {
 	}
 
 	@Bean SimpleSearchOperatorSqlGenerator simpleSearchOperatorSqlGenerator(DataServicesCoreProperties dataServicesCoreProperties) {
-		return new SimpleSearchOperatorSqlGenerator(null, dataServicesCoreProperties);
+		return new SimpleSearchOperatorSqlGenerator(dataServicesCoreProperties);
 	}
 
 	@Bean HasOperatorSqlGenerator hasOperatorSqlGenerator() {
@@ -91,7 +91,7 @@ public class QueryDebuggerGeneratorsConfiguration {
 		return new NumericAggregationFunctionGenerator();
 	}
 
-	@Bean UnknownAggregationFunctionGenerator  unknownAggregationFunctionGenerator() {
+	@Bean UnknownAggregationFunctionGenerator unknownAggregationFunctionGenerator() {
 		return new UnknownAggregationFunctionGenerator();
 	}
 

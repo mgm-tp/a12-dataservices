@@ -84,7 +84,6 @@ public class RpcExceptionSupport {
 			.build();
 	}
 
-
 	/**
 	 * Creates an {@link RpcException} with structured details and no operation id.
 	 *
@@ -98,33 +97,6 @@ public class RpcExceptionSupport {
 		return RpcOperationExceptionBuilder
 			.withKeyPrefix(keyPrefix)
 			.withCode(code)
-			.withTitle(title)
-			.withDescription(description)
-			.build();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @deprecated Use {@link #createException(int, String, String, String, String)} instead.
-	 */
-	@Deprecated(since = "36.0.1")
-	public static RpcException createException(String keyPrefix, String title, String description, String operationId) {
-		return RpcOperationExceptionBuilder
-			.withKeyPrefix(keyPrefix)
-			.withTitle(title)
-			.withDescription(description)
-			.withOperation(operationId)
-			.build();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @deprecated Use {@link #createException(int, String, String, String)} instead.
-	 */
-	@Deprecated(since = "36.0.1")
-	public static RpcException createException(String keyPrefix, String title, String description) {
-		return RpcOperationExceptionBuilder
-			.withKeyPrefix(keyPrefix)
 			.withTitle(title)
 			.withDescription(description)
 			.build();

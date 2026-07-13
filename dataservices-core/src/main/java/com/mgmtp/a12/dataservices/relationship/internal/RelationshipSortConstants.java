@@ -31,7 +31,7 @@
  */
 package com.mgmtp.a12.dataservices.relationship.internal;
 
-public class RelationshipSortConstants {
-	public static final String ID_FIELD_NAME = "id";
-	public static final String[] ORDER_BY_ROLES_SORT_COLUMNS = { "source_role_order", "target_role_order", ID_FIELD_NAME };
+public interface RelationshipSortConstants {
+	String ID_FIELD_NAME = "id";
+	String[] ORDER_BY_ROLES_SORT_COLUMNS = { "source_role_order", "target_role_order", ID_FIELD_NAME };
 }

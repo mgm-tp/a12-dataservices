@@ -1,0 +1,105 @@
+{
+  "header": {
+    "id": "ClaimBusinessPartner",
+    "modelType": "relationship",
+    "modelVersion": "4.0.0",
+    "locales": [
+      {
+        "code": "en"
+      },
+      {
+        "code": "en_US"
+      },
+      {
+        "code": "de"
+      }
+    ],
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Insurance Claim and Business Partner"
+      },
+      {
+        "locale": "de",
+        "text": "Versicherungsanspruch und Geschäftspartner"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "roles",
+        "value": "admin,guest,ModelRead"
+      }
+    ],
+    "modelReferences": [
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "InsuranceClaimSuper",
+        "reference": "InsuranceClaimSuper"
+      },
+      {
+        "purpose": "Document model",
+        "modelType": "document",
+        "alias": "BusinessPartnerSuper",
+        "reference": "BusinessPartnerSuper"
+      }
+    ]
+  },
+  "content": {
+    "duplicatesAllowed": false,
+    "labels": [
+      {
+        "locale": "en",
+        "text": "Insurance Claim and Business Partner"
+      },
+      {
+        "locale": "de",
+        "text": "Versicherungsanspruch und Geschäftspartner"
+      }
+    ],
+    "entityCharacteristics": [
+      {
+        "ordered": false,
+        "linkConstraints": {
+          "multiplicity": {
+            "unbounded": true,
+            "upperLimit": null
+          }
+        },
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Insurance Claim"
+          },
+          {
+            "locale": "de",
+            "text": "Versicherungsanspruch"
+          }
+        ],
+        "role": "Claim",
+        "documentModel": "InsuranceClaimSuper"
+      },
+      {
+        "ordered": false,
+        "linkConstraints": {
+          "multiplicity": {
+            "unbounded": false,
+            "upperLimit": 1
+          }
+        },
+        "labels": [
+          {
+            "locale": "en",
+            "text": "Main Policy Holder"
+          },
+          {
+            "locale": "de",
+            "text": "Hauptversicherungsnehmer"
+          }
+        ],
+        "role": "Partner",
+        "documentModel": "BusinessPartnerSuper"
+      }
+    ]
+  }
+}

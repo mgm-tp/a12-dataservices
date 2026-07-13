@@ -36,24 +36,28 @@ import org.apache.commons.lang3.StringUtils;
 import com.mgmtp.a12.contentstore.DownloadUrlResponse;
 import com.mgmtp.a12.contentstore.client.configuration.ContentStoreClientProperties;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
  * Utility class for URL operations of the Content Store.
  *
  * +computeDownloadUrl+ method computes the full download URL.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UrlUtils {
 
 	/**
 	 * This method is about to compute download URL from download URL response.
-	 * If client base URL from ContentStoreClientProperties is configured,
-	 * this method will concatenate base URL and relative download URL in to full downloadable URL.
+	 * If client base prefix from ContentStoreClientProperties is configured,
+	 * this method will concatenate base prefix and relative download URL in to full downloadable URL.
 	 *
 	 * @param downloadUrlResponse The response contains download URL to be computed.
 	 * @param properties The client properties configuration.
 	 */
 	public static void computeDownloadUrl(DownloadUrlResponse downloadUrlResponse, ContentStoreClientProperties properties) {
-		if (StringUtils.isNotBlank(properties.getContent().getBaseUrl())) {
-			downloadUrlResponse.setUrl(properties.getContent().getBaseUrl() + downloadUrlResponse.getUrl());
+		if (StringUtils.isNotBlank(properties.getContent().getBasePrefix())) {
+			downloadUrlResponse.setUrl(properties.getContent().getBasePrefix() + downloadUrlResponse.getUrl());
 		}
 	}
 }
